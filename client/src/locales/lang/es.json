@@ -1,0 +1,143 @@
+{
+    "auth": {
+        "signIn": {
+            "title": "Bienvenido!",
+            "subtitle": "Por favor ingrese sus credenciales para continuar!",
+            "forgotPassword": "Olvidó su contraseña?",
+            "footer": "No tienes cuenta?"
+        },
+        "signUp": {
+            "title": "Registrate",
+            "subtitle": "Y comencemos a administrar tus finanzas personales",
+            "footer": "Ya tienes una cuenta?"
+        },
+        "forgotPassword": {
+            "title": "Recuperar Contraseña",
+            "subtitle": "Por favor ingrese su email para recibir un código de verificación"
+        },
+        "forgotPasswordEmailSent": {
+            "title": "Revisa tu correo",
+            "subtitle": "Hemos enviado un email con las instrucciones para que recuperes tu contraseña"
+        },
+        "resetPassword": {
+            "title": "Restablecer Contraseña",
+            "footer": "Volver a"
+        }
+    },
+    "profile": {
+        "appearance": "Tema"
+    },
+    "expenses": {
+        "header": "Gastos"
+    },
+    "savings": {
+        "header": "Ahorros"
+    },
+    "incomes": {
+        "header": "Ingresos"
+    },
+    "bankAccounts": {
+        "header": "Cuentas de Banco"
+    },
+    "creditCards": {
+        "header": "Tarjetas de Créditos"
+    },
+    "categories": {
+        "header": "Caategorías"
+    },
+    "jobs": {
+        "header": "Trabajos"
+    },
+    "settings": {
+        "header": "Configuraciones",
+        "tabs": {
+            "profile": "Perfil",
+            "password": "Contraseña"
+        },
+        "sections": {
+            "general": {
+                "title": "General",
+                "desc": "Información básica"
+            },
+            "preferences": {
+                "title": "Preferencias",
+                "desc": "Sus preferencias personalizas de su cuenta"
+            },
+            "password": {
+                "title": "Contraseña",
+                "desc": "Ingrese su actual y la nueva contraseña para restablecer sus credenciales"
+            }
+        }
+    },
+    "actions": {
+        "signOut": "Cerrar Sesión",
+        "signIn": "Iniciar Sesion",
+        "signUp": "Registrarse",
+        "signingIn": "Iniciando Sesión...",
+        "creatingAccount": "Creando cuenta...",
+        "sendEmail": "Enviar Email",
+        "reSendEmail": "Re-enviar Email",
+        "update": "Actualizar",
+        "updating": "Actualizando",
+        "save": "Guardar",
+        "saving": "Guardando",
+        "submit": "Enviar",
+        "submitting": "Enviando...",
+        "delete": "Eliminar",
+        "deleting": "Eliminando"
+    },
+    "fields": {
+        "email": "Email",
+        "name": "Nombre",
+        "language": "Idioma",
+        "password": "Contraseña",
+        "newPassword": "Nueva Contraseña",
+        "currentPassword": "Contraseña Actual",
+        "confirmPassword": "Repetir Contraseña",
+        "rememberMe": "Recordarme"
+    },
+    "validations": {
+        "minString": "El valor es muy corto (min:",
+        "maxString": "El valor es muy largo (max:",
+        "required": "Por favor ingrese un valor",
+        "email": "Por favor ingrese un email válido",
+        "passwordMismatch": "Las contraseñas ingresadas no coinciden",
+        "alphanumeric": "Solo Letras y Números son permitidos"
+    },
+    "notifications": {
+        "profile": {
+            "updated": "Perfil actualizado"
+        },
+        "password": {
+            "updated": "Contraseña Actualizada"
+        }
+    },
+    "error": {
+        "auth": {
+            "invalidCredentials": "Credenciales incorrectas",
+            "firebase": {
+                "auth/user-disabled": "Usuario inactivo"
+            }
+        }
+    },
+    "messages": {
+        "backTo": "Volver a "
+    },
+    "nav": {
+        "home": "Inicio",
+        "account": {
+            "settings": "Cuenta"
+        },
+        "expenses": "Gastos",
+        "savings": "Ahorros",
+        "incomes": "Ingresos",
+        "profile": "Perfil",
+        "configuration": "Configuración",
+        "configurationItems": {
+            "bankAccounts": "Cuentas de Bancos",
+            "creditCards": "Tarjetas de Crédito",
+            "categories": "Categorías",
+            "jobs": "Trabajos"
+        }
+    }
+}
