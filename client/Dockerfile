@@ -7,5 +7,4 @@ COPY . .
 RUN npm run build
 
 FROM nginx:alpine as runner
-WORKDIR /app
-COPY --from=builder /app/build .
+COPY --from=builder /app/build /usr/share/nginx/html
