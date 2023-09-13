@@ -7,7 +7,7 @@ import type {
     SignInResponse,
     SignUpResponse,
 } from '@/@types/auth'
-import BaseService from "@/services/BaseService";
+import BaseService from '@/services/BaseService'
 
 export async function apiSignIn(data: SignInCredential) {
     return ApiService.fetchData<SignInResponse>({

@@ -11,8 +11,8 @@ import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import type { SignUpCredential } from '@/@types/auth'
-import { UserCredential } from "@firebase/auth";
-import { auth } from '@/services/FirebaseService';
+import { UserCredential } from '@firebase/auth'
+import { auth } from '@/services/FirebaseService'
 
 type Status = 'success' | 'failed'
 
@@ -25,19 +25,21 @@ function useAuth() {
 
     const { token, signedIn } = useAppSelector((state) => state.auth.session)
 
-    const signIn = async (credential: UserCredential): Promise<
+    const signIn = async (
+        credential: UserCredential
+    ): Promise<
         | {
               status: Status
               message: string
           }
         | undefined
     > => {
-        if (!!credential.user) {
-            const token = await credential.user.getIdToken();
-            dispatch(signInSuccess(token));
+        if (credential.user) {
+            const token = await credential.user.getIdToken()
+            dispatch(signInSuccess(token))
             const redirectUrl = query.get(REDIRECT_URL_KEY)
             navigate(
-              redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
             )
             return {
                 status: 'success',
@@ -103,15 +105,15 @@ function useAuth() {
     }
 
     const signOut = async () => {
-        await auth.signOut();
+        await auth.signOut()
         handleSignOut()
     }
 
     const isAuthenticated = async () => {
-      if (!auth.currentUser) return false;
-      const token = await auth.currentUser.getIdToken(true);
-      dispatch(signInSuccess(token));
-      return true;
+        if (!auth.currentUser) return false
+        const token = await auth.currentUser.getIdToken(true)
+        dispatch(signInSuccess(token))
+        return true
     }
 
     return {

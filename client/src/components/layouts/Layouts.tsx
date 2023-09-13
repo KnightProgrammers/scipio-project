@@ -1,6 +1,11 @@
-import { useMemo, lazy, Suspense, useState, useEffect } from "react";
+import { useMemo, lazy, Suspense, useCallback, useState } from 'react'
 import Loading from '@/components/shared/Loading'
-import { setUser, signOutSuccess, useAppDispatch, useAppSelector } from "@/store";
+import {
+    setUser,
+    signOutSuccess,
+    useAppDispatch,
+    useAppSelector,
+} from '@/store'
 import {
     LAYOUT_TYPE_CLASSIC,
     LAYOUT_TYPE_MODERN,
@@ -12,7 +17,7 @@ import {
 import useAuth from '@/utils/hooks/useAuth'
 import useDirection from '@/utils/hooks/useDirection'
 import useLocale from '@/utils/hooks/useLocale'
-import { apiUserProfile } from "@/services/AuthService";
+import { apiUserProfile } from '@/services/AuthService'
 
 const layouts = {
     [LAYOUT_TYPE_CLASSIC]: lazy(() => import('./ClassicLayout')),
@@ -25,7 +30,7 @@ const layouts = {
 
 const Layout = () => {
     const layoutType = useAppSelector((state) => state.theme.layout.type)
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true)
 
     const { authenticated } = useAuth()
     const dispatch = useAppDispatch()
@@ -34,31 +39,33 @@ const Layout = () => {
 
     useLocale()
 
-    const getUserData = async () => {
+    const getUserData = useCallback(async () => {
         try {
-            const {data: user} = await apiUserProfile();
+            const { data: user } = await apiUserProfile()
             dispatch(setUser(user))
         } catch {
-            signOutSuccess();
+            signOutSuccess()
         }
-        setIsLoading(false);
-    }
+        setIsLoading(false)
+    }, [dispatch])
 
     useMemo(() => {
-        authenticated && getUserData();
-    }, [authenticated])
+        authenticated && getUserData()
+    }, [authenticated, getUserData])
 
     const AppLayout = useMemo(() => {
         if (authenticated) {
             return layouts[layoutType]
         }
         return lazy(() => import('./AuthLayout'))
-    }, [layoutType, authenticated, isLoading])
+    }, [layoutType, authenticated])
 
-    if(authenticated && isLoading) {
-        return <div className="flex flex-auto flex-col h-[100vh]">
-            <Loading loading={true} />
-        </div>;
+    if (authenticated && isLoading) {
+        return (
+            <div className="flex flex-auto flex-col h-[100vh]">
+                <Loading loading={true} />
+            </div>
+        )
     }
 
     return (
