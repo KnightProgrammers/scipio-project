@@ -4,15 +4,13 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Alert from '@/components/ui/Alert'
 import ActionLink from '@/components/shared/ActionLink'
-import { apiForgotPassword } from '@/services/AuthService'
 import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
-import type { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
-import { auth } from '@/services/FirebaseService';
-import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from '@/services/FirebaseService'
+import { sendPasswordResetEmail } from 'firebase/auth'
 
 interface ForgotPasswordFormProps extends CommonProps {
     signInUrl?: string
@@ -41,7 +39,9 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
     ) => {
         setSubmitting(true)
         try {
-            await sendPasswordResetEmail(auth, values.email, {url: window.location.origin});
+            await sendPasswordResetEmail(auth, values.email, {
+                url: window.location.origin,
+            })
             setSubmitting(false)
             setEmailSent(true)
         } catch (error) {

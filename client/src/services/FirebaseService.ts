@@ -8,11 +8,11 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth(app)
 
-auth.useDeviceLanguage();
+auth.useDeviceLanguage()
 
 auth.languageCode = 'es'
 

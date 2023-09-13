@@ -12,7 +12,7 @@ RUN npm install -g npm
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN npm run build:ts
+RUN npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /usr/app

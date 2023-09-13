@@ -1,18 +1,12 @@
 import { join } from 'path';
-import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
-import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
+import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
 import mongoose from 'mongoose';
 import { config } from "./config";
 
 
-
-export interface AppOptions extends FastifyServerOptions, Partial<AutoloadPluginOptions> {
-
-}
 // Pass --options via CLI arguments in command to enable these options.
-const options: AppOptions = {
+const options: any = {
   logger: {
     transport: {
       target: 'pino-pretty',
@@ -24,9 +18,9 @@ const options: AppOptions = {
   }
 }
 
-const app: FastifyPluginAsync<AppOptions> = async (
-    fastify,
-    opts
+const app: any = async (
+    fastify: any,
+    opts: any
 ): Promise<void> => {
   
   mongoose
@@ -41,8 +35,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
   await fastify.register(cors, {
     // put your options here
   })
-
-  fastify.withTypeProvider<TypeBoxTypeProvider>()
 
   // Do not touch the following lines
 
