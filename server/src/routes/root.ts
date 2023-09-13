@@ -1,14 +1,12 @@
 import { FastifyPluginAsync } from 'fastify'
-import User from '../models/user.model';
 
 const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.get('/', async function (request, reply) {
-    const u = await User.create({
-      name: 'Javier',
-      email: 'javier@test.com',
-      firebaseId: 'test'
-    })
-    return { u }
+    reply.status(200).send({
+      app: 'Scipio',
+      version: process.env.npm_package_version,
+      environment: process.env.NODE_ENV || 'development'
+    });
   })
 }
 
