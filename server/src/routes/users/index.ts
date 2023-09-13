@@ -1,4 +1,3 @@
-import { FastifyPluginAsync } from "fastify";
 import { Static, Type } from '@sinclair/typebox';
 import * as gavatar from "gravatar";
 import firebaseApp from '../../services/firebase';
@@ -17,8 +16,8 @@ export const User = Type.Object({
 
 export type UserType = Static<typeof User>
 
-const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get<{ Reply: UserType }>(
+const users: any = async (fastify: any): Promise<void> => {
+  fastify.get(
     '/me', {
       schema: {
         response: {
@@ -26,7 +25,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    async function (request, reply) {
+    async function (request: any, reply: any) {
       const authToken: string = (request.headers.authorization || '').split('Bearer ')[1];
       const decodedIdToken = await firebaseApp.auth().verifyIdToken(authToken);
       let user = await UserSchema.findOne({firebaseId: decodedIdToken.uid});

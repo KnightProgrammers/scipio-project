@@ -1,4 +1,3 @@
-import { FastifyPluginAsync } from "fastify";
 import { Static, Type } from '@sinclair/typebox';
 import firebaseApp from '../../services/firebase';
 
@@ -21,8 +20,8 @@ export const UserRegistration = Type.Object({
 export type UserType = Static<typeof User>
 export type UserRegistrationType = Static<typeof UserRegistration>
 
-const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.post<{ Body: UserRegistrationType, Reply: UserType }>(
+const auth: any = async (fastify: any): Promise<void> => {
+  fastify.post(
     '/sign-up', {
       schema: {
         body: UserRegistration,
@@ -31,7 +30,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    async function (request, reply) {
+    async function (request: any, reply: any) {
       const {email, name, password} = request.body;
       const user = await firebaseApp.auth().createUser({
         email,

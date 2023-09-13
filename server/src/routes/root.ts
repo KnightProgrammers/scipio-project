@@ -1,7 +1,5 @@
-import { FastifyPluginAsync } from 'fastify'
-
-const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
+const root: any = async (fastify: any): Promise<void> => {
+  fastify.get('/', async function (_: any, reply: any) {
     reply.status(200).send({
       app: 'Scipio',
       version: process.env.npm_package_version,
