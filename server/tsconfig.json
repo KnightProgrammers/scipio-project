@@ -1,0 +1,12 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "sourceMap": true,
+    "typeRoots": [
+      "types"
+    ]
+  },
+  "include": ["src/**/*.ts"],
+  "esModuleInterop": false
+}
