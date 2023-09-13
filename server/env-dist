@@ -1,0 +1,7 @@
+MONGO_DB_PROTOCOL=mongodb+srv
+MONGO_DB_HOST=localhost
+MONGO_DB_PORT=27017
+MONGO_DB_NAME=scipio
+MONGO_DB_USER=admin
+MONGO_DB_PASSWORD=password
+MONGO_DB_PARAMS=?authSource=admin

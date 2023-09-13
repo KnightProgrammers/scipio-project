@@ -28,9 +28,9 @@ const app: FastifyPluginAsync<AppOptions> = async (
     fastify,
     opts
 ): Promise<void> => {
-  // Place here your custom code!
+  
   mongoose
-    .connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}?authSource=admin`, {
+    .connect(`${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`, {
       user: config.db.user,
       pass: config.db.password,
       autoCreate: true,
