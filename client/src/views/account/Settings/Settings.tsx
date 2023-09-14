@@ -1,10 +1,9 @@
-import { useState, useEffect, Suspense, lazy } from 'react'
+import { useState, useEffect, Suspense, lazy, useCallback } from 'react'
 import Tabs from '@/components/ui/Tabs'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import Container from '@/components/shared/Container'
 import { useNavigate, useLocation } from 'react-router-dom'
-import isEmpty from 'lodash/isEmpty'
-import { apiGetAccountSettingData } from '@/services/AccountServices'
+import { apiUserProfile } from '@/services/AccountServices'
 import { Loading } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
 
@@ -15,8 +14,6 @@ type AccountSetting = {
     avatar: string
     lang: string
 }
-
-type GetAccountSettingData = AccountSetting
 
 const Profile = lazy(() => import('./components/Profile'))
 const Password = lazy(() => import('./components/Password'))
@@ -53,18 +50,17 @@ const Settings = () => {
         navigate(`/account/settings/${val}`)
     }
 
-    const fetchData = async () => {
-        const response = await apiGetAccountSettingData<GetAccountSettingData>()
+    const fetchData = useCallback(async () => {
+        const response = await apiUserProfile()
         setData(response.data)
-    }
+    }, [setData])
 
     useEffect(() => {
         setCurrentTab(path)
-        if (isEmpty(data)) {
-            fetchData()
+        if (!data) {
+            fetchData().catch(console.error)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [setCurrentTab, data, fetchData, path])
 
     return (
         <Container>

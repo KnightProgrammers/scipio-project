@@ -113,6 +113,7 @@
         }
     },
     "error": {
+        "generic": "Algo salió mal, Por favor intente nuevamente",
         "auth": {
             "invalidCredentials": "Credenciales incorrectas",
             "firebase": {

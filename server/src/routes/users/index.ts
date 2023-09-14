@@ -38,7 +38,6 @@ const users: any = async (fastify: any): Promise<void> => {
       }
       if (!user.avatar && decodedIdToken.picture) {
         user.avatar = decodedIdToken.picture;
-        await user.save();
       }
       if (!user.avatar && !decodedIdToken.picture) {
         user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});

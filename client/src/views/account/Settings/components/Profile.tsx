@@ -125,6 +125,7 @@ const Profile = ({
                 placement: 'top-center',
             }
         )
+        console.log(values)
         const lang = values.lang || 'en'
         await i18n.changeLanguage(lang)
         dispatch(setLang(lang))
@@ -134,12 +135,22 @@ const Profile = ({
     return (
         <Formik
             enableReinitialize
-            initialValues={data}
+            initialValues={{
+                name: data.name,
+                email: data.email,
+                lang: data.lang || i18n.language,
+            }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true)
                 setTimeout(() => {
-                    onFormSubmit(values, setSubmitting)
+                    onFormSubmit(
+                        {
+                            ...data,
+                            ...values,
+                        },
+                        setSubmitting
+                    )
                 }, 2000)
             }}
         >
@@ -177,6 +188,7 @@ const Profile = ({
                                     type="email"
                                     autoComplete="off"
                                     name="email"
+                                    disabled={true}
                                     label={t('fields.email')}
                                     component={Input}
                                     prefix={

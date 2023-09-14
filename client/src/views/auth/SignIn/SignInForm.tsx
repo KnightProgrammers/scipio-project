@@ -64,11 +64,9 @@ const SignInForm = (props: SignInFormProps) => {
             const credential = await signInWithPopup(auth, googleAuthProvider)
             GoogleAuthProvider.credentialFromResult(credential)
             await signIn(credential)
-        } catch (e) {
+        } catch {
             setLoadingWithProvider(false)
-            setMessage(
-                t(`error.auth.firebase.${e.code}`) || 'Error with Google'
-            )
+            setMessage(t('error.generic') || 'Error with Google')
         }
     }
     const onSignInWithPassword = async (
@@ -82,9 +80,11 @@ const SignInForm = (props: SignInFormProps) => {
                 values.password
             )
             await signIn(credential)
-        } catch (e) {
+        } catch {
             setSubmitting(false)
-            setMessage(t('error.auth.invalidCredentials') || e.message)
+            setMessage(
+                t('error.auth.invalidCredentials') || 'Something went wrong'
+            )
         }
     }
 

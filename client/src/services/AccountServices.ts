@@ -1,8 +1,8 @@
-import ApiService from './ApiService'
+import BaseService from '@/services/BaseService'
 
-export async function apiGetAccountSettingData<T>() {
-    return ApiService.fetchData<T>({
-        url: '/account/setting',
+export async function apiUserProfile() {
+    return BaseService.request({
+        url: '/users/me',
         method: 'get',
     })
 }
