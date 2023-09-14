@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
@@ -19,10 +20,10 @@ const options: any = {
 }
 
 const app: any = async (
-    fastify: any,
-    opts: any
+  fastify: any,
+  opts: any
 ): Promise<void> => {
-  
+
   mongoose
     .connect(`${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`, {
       user: config.db.user,
@@ -32,27 +33,25 @@ const app: any = async (
     .then(() => fastify.log.info('MongoDB connected...'))
     .catch(err => fastify.log.error(err));
 
-  await fastify.register(cors, {
-    // put your options here
-  })
+  await fastify.register(cors, () => (req: any, callback: any) => {
+    const corsOptions = {
+      // This is NOT recommended for production as it enables reflection exploits
+      origin: true
+    };
 
-  // Do not touch the following lines
+    // do not include CORS headers for requests from localhost
+    if (/^localhost$/m.test(req.headers.origin)) {
+      corsOptions.origin = false
+    }
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
-    options: opts
-  })
+    // callback expects two parameters: error and options
+    callback(null, corsOptions)
+  });
 
-  // This loads all plugins defined in routes
-  // define your routes in one of these
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
     options: opts
-  })
-
+  });
 };
 
 export default app;

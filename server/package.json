@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "scipio-server",
+  "private": true,
   "version": "1.0.0",
-  "description": "This project was bootstrapped with Fastify-CLI.",
   "main": "app.ts",
   "directories": {
     "test": "test"
@@ -14,9 +14,6 @@
     "dev": "npm run build && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
     "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@fastify/autoload": "5.7.1",
     "@fastify/cors": "8.3.0",
@@ -29,16 +26,20 @@
     "fastify-plugin": "4.5.1",
     "firebase-admin": "11.10.1",
     "gravatar": "1.8.2",
+    "module-alias": "2.2.3",
     "mongoose": "7.5.1"
   },
   "devDependencies": {
-    "@types/gravatar": "^1.8.3",
-    "@types/node": "^20.6.0",
+    "@types/gravatar": "1.8.3",
+    "@types/node": "20.6.0",
     "@types/tap": "15.0.9",
     "concurrently": "8.2.1",
     "fastify-tsconfig": "1.0.1",
     "tap": "16.3.8",
     "ts-node": "10.9.1",
     "typescript": "5.2.2"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }

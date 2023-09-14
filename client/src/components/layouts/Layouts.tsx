@@ -17,7 +17,7 @@ import {
 import useAuth from '@/utils/hooks/useAuth'
 import useDirection from '@/utils/hooks/useDirection'
 import useLocale from '@/utils/hooks/useLocale'
-import { apiUserProfile } from '@/services/AuthService'
+import { apiGetUserProfile } from '@/services/AccountServices'
 
 const layouts = {
     [LAYOUT_TYPE_CLASSIC]: lazy(() => import('./ClassicLayout')),
@@ -41,7 +41,7 @@ const Layout = () => {
 
     const getUserData = useCallback(async () => {
         try {
-            const { data: user } = await apiUserProfile()
+            const { data: user } = await apiGetUserProfile()
             dispatch(setUser(user))
         } catch {
             signOutSuccess()

@@ -8,9 +8,11 @@ import FormRow from './FormRow'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
+import { updatePassword } from 'firebase/auth'
+import { auth } from '@/services/FirebaseService'
+import { useNavigate } from 'react-router-dom'
 
 type PasswordFormModel = {
-    password: string
     newPassword: string
     confirmNewPassword: string
 }
@@ -18,10 +20,9 @@ type PasswordFormModel = {
 const Password = () => {
     const { t } = useTranslation()
 
+    const navigate = useNavigate()
+
     const validationSchema = Yup.object().shape({
-        password: Yup.string().required(
-            t('validations.required') || 'Required'
-        ),
         newPassword: Yup.string()
             .required(t('validations.required') || 'Required')
             .min(8, `${t('validations.minString')} 8)`),
@@ -30,30 +31,47 @@ const Password = () => {
             t('validations.passwordMismatch') || 'Password not match'
         ),
     })
-    const onFormSubmit = (
+    const onFormSubmit = async (
         values: PasswordFormModel,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        toast.push(
-            <Notification
-                title={
-                    t('notifications.password.updated') || 'Password updated'
+        const user = auth.currentUser
+        if (!user) {
+            navigate('/sign-in')
+            return
+        }
+        try {
+            await updatePassword(user, values.newPassword)
+            toast.push(
+                <Notification
+                    title={
+                        t('notifications.password.updated') ||
+                        'Password updated'
+                    }
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
                 }
-                type="success"
-            />,
-            {
-                placement: 'top-center',
-            }
-        )
+            )
+        } catch (e) {
+            toast.push(
+                <Notification
+                    title={t('error.generic') || 'Please try again'}
+                    type="danger"
+                />,
+                {
+                    placement: 'top-center',
+                }
+            )
+        }
         setSubmitting(false)
-        console.log('values', values)
     }
 
     return (
         <>
             <Formik
                 initialValues={{
-                    password: '',
                     newPassword: '',
                     confirmNewPassword: '',
                 }}
@@ -76,24 +94,6 @@ const Password = () => {
                                     )}
                                     desc={t('settings.sections.password.desc')}
                                 />
-                                <FormRow
-                                    name="password"
-                                    label={
-                                        t('fields.currentPassword') ||
-                                        'Current Password'
-                                    }
-                                    {...validatorProps}
-                                >
-                                    <Field
-                                        type="password"
-                                        autoComplete="off"
-                                        name="password"
-                                        placeholder={t(
-                                            'fields.currentPassword'
-                                        )}
-                                        component={Input}
-                                    />
-                                </FormRow>
                                 <FormRow
                                     name="newPassword"
                                     label={
