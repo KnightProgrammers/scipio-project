@@ -3,7 +3,7 @@ import Tabs from '@/components/ui/Tabs'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import Container from '@/components/shared/Container'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { apiUserProfile } from '@/services/AccountServices'
+import { apiGetUserProfile } from '@/services/AccountServices'
 import { Loading } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
 
@@ -51,7 +51,7 @@ const Settings = () => {
     }
 
     const fetchData = useCallback(async () => {
-        const response = await apiUserProfile()
+        const response = await apiGetUserProfile()
         setData(response.data)
     }, [setData])
 

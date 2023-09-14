@@ -15,7 +15,8 @@ import type { OptionProps, ControlProps } from 'react-select'
 import type { FieldProps } from 'formik'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
-import { setLang, useAppDispatch } from '@/store'
+import { setLang, setUser, useAppDispatch } from '@/store'
+import { apiUpdateUserProfile } from '@/services/AccountServices'
 
 export type ProfileFormModel = {
     id: string
@@ -116,19 +117,30 @@ const Profile = ({
         values: ProfileFormModel,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        toast.push(
-            <Notification
-                title={t('notifications.profile.updated') || ''}
-                type="success"
-            />,
-            {
-                placement: 'top-center',
-            }
-        )
-        console.log(values)
-        const lang = values.lang || 'en'
-        await i18n.changeLanguage(lang)
-        dispatch(setLang(lang))
+        try {
+            const { data: user } = await apiUpdateUserProfile(values)
+            toast.push(
+                <Notification
+                    title={t('notifications.profile.updated') || ''}
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
+                }
+            )
+            const lang = values.lang || 'en'
+            await i18n.changeLanguage(lang)
+            dispatch(setLang(lang))
+            dispatch(setUser(user))
+        } catch {
+            toast.push(
+                <Notification title={t('error.generic') || ''} type="danger" />,
+                {
+                    placement: 'top-center',
+                }
+            )
+        }
+
         setSubmitting(false)
     }
 
@@ -143,15 +155,13 @@ const Profile = ({
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true)
-                setTimeout(() => {
-                    onFormSubmit(
-                        {
-                            ...data,
-                            ...values,
-                        },
-                        setSubmitting
-                    )
-                }, 2000)
+                onFormSubmit(
+                    {
+                        ...data,
+                        ...values,
+                    },
+                    setSubmitting
+                )
             }}
         >
             {({ values, touched, errors, isSubmitting }) => {
