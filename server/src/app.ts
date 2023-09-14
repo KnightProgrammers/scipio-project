@@ -46,26 +46,13 @@ const app: any = async (
 
     // callback expects two parameters: error and options
     callback(null, corsOptions)
-  })
+  });
 
-    // Do not touch the following lines
+  void fastify.register(AutoLoad, {
+    dir: join(__dirname, 'routes'),
+    options: opts
+  });
+};
 
-    // This loads all plugins defined in plugins
-    // those should be support plugins that are reused
-    // through your application
-    void fastify.register(AutoLoad, {
-      dir: join(__dirname, 'plugins'),
-      options: opts
-    })
-
-    // This loads all plugins defined in routes
-    // define your routes in one of these
-    void fastify.register(AutoLoad, {
-      dir: join(__dirname, 'routes'),
-      options: opts
-    })
-
-  };
-
-  export default app;
-  export { app, options }
+export default app;
+export { app, options }
