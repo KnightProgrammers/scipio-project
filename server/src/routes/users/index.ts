@@ -1,9 +1,8 @@
-import { Static, Type } from '@sinclair/typebox';
+import { Static, Type } from "@sinclair/typebox";
 import * as gavatar from "gravatar";
-import firebaseApp from '../../services/firebase';
-import UserSchema from '../../models/user.model';
-
-
+import firebaseApp from "@/services/firebase";
+import UserSchema from "@/models/user.model";
+import AuthMiddleware from "@/middlewares/auth.middleware";
 export const User = Type.Object({
   id: Type.Readonly(Type.String()),
   name: Type.Required(Type.String()),
@@ -17,6 +16,9 @@ export const User = Type.Object({
 export type UserType = Static<typeof User>
 
 const users: any = async (fastify: any): Promise<void> => {
+  fastify.decorateRequest('user', null);
+  fastify.addHook('onRequest', AuthMiddleware);
+
   fastify.get(
     '/me', {
       schema: {
@@ -26,20 +28,18 @@ const users: any = async (fastify: any): Promise<void> => {
       },
     },
     async function (request: any, reply: any) {
-      const authToken: string = (request.headers.authorization || '').split('Bearer ')[1];
-      const decodedIdToken = await firebaseApp.auth().verifyIdToken(authToken);
-      let user = await UserSchema.findOne({firebaseId: decodedIdToken.uid});
+      let user = request.user;
       if (!user) {
+        const authToken: string = (request.headers.authorization || '').split('Bearer ')[1];
+        const decodedIdToken = await firebaseApp.auth().verifyIdToken(authToken);
         user = await UserSchema.create({
           name: decodedIdToken.name,
           email: decodedIdToken.email,
-          firebaseId: decodedIdToken.uid
+          firebaseId: decodedIdToken.uid,
+          avatar: decodedIdToken.picture
         });
       }
-      if (!user.avatar && decodedIdToken.picture) {
-        user.avatar = decodedIdToken.picture;
-      }
-      if (!user.avatar && !decodedIdToken.picture) {
+      if (!user.avatar) {
         user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});
         await user.save();
       }
@@ -50,6 +50,22 @@ const users: any = async (fastify: any): Promise<void> => {
         avatar: user.avatar || null
       })
     });
+  fastify.post(
+    '/me', {
+      schema: {
+        body: User,
+        response: {
+          201: User
+        },
+      },
+    },
+    async function (request: any, reply: any) {
+      const user: UserType = request.body;
+      console.log(user);
+
+      reply.status(201).send(user);
+    }
+  );
 }
 
 export default users;

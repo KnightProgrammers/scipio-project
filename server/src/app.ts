@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
@@ -22,7 +23,7 @@ const app: any = async (
     fastify: any,
     opts: any
 ): Promise<void> => {
-  
+
   mongoose
     .connect(`${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`, {
       user: config.db.user,
