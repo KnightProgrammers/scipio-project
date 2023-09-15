@@ -1,0 +1,17 @@
+{
+  "name": "scipio-db-seed",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "buid:watch": "tsc -w",
+    "start": "node --env-file=.env dist/db-seed/src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "models": "file:../server/src/models",
+    "mongoose": "7.5.1",
+    "pino-pretty": "^10.2.0",
+    "typescript": "5.2.2"
+  }
+}
