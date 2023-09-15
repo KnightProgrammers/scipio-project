@@ -89,19 +89,19 @@ npm run dev
 
 **Environment Vars**
 
-| Var                     | Type    | Required | Default Value            | Description                                           |
-|-------------------------|---------|----------|--------------------------|-------------------------------------------------------|
-| `FIREBASE_CLIENT_EMAIL` | String  | `true`   |                          | Firebase Credential                                   |
-| `FIREBASE_PRIVATE_KEY`  | String  | `true`   |                          | Firebase Credential                                   |
-| `FIREBASE_PROJECT_ID`   | Number  | `true`   |                          | Firebase Credential                                   |
-| `MONGO_DB_PROTOCOL`     | String  | `false`  | `mongodb`                | Database connection protocol                          |
-| `MONGO_DB_HOST`         | String  | `false`  | `localhost`              | Database connection host                              |
-| `MONGO_DB_PORT`         | Number  | `false`  |                          | Database connection port                              |
-| `MONGO_DB_NAME`         | String  | `false`  |                          | Database name                                         |
-| `MONGO_DB_USER`         | String  | `false`  | `admin`                  | Database connection credential                        |
-| `MONGO_DB_PASSWORD`     | String  | `false`  | `password`               | Database connection credential                        |
-| `MONGO_DB_PARAMS`       | Number  | `false`  |                          | Database connection configuration params              | 
-| `NODE_ENV`              | String  | `false`  |                          | Indicates the environment where the server is running | 
+| Var                     | Type    | Required | Default Value | Description                                           |
+|-------------------------|---------|----------|---------------|-------------------------------------------------------|
+| `FIREBASE_CLIENT_EMAIL` | String  | `true`   |               | Firebase Credential                                   |
+| `FIREBASE_PRIVATE_KEY`  | String  | `true`   |               | Firebase Credential                                   |
+| `FIREBASE_PROJECT_ID`   | String  | `true`   |               | Firebase Credential                                   |
+| `MONGO_DB_PROTOCOL`     | String  | `false`  | `mongodb`     | Database connection protocol                          |
+| `MONGO_DB_HOST`         | String  | `false`  | `localhost`   | Database connection host                              |
+| `MONGO_DB_PORT`         | String  | `false`  |               | Database connection port                              |
+| `MONGO_DB_NAME`         | String  | `false`  |               | Database name                                         |
+| `MONGO_DB_USER`         | String  | `false`  |               | Database connection credential                        |
+| `MONGO_DB_PASSWORD`     | String  | `false`  |               | Database connection credential                        |
+| `MONGO_DB_PARAMS`       | String  | `false`  |               | Database connection configuration params              | 
+| `NODE_ENV`              | String  | `false`  |               | Indicates the environment where the server is running | 
 
 ------
 
@@ -143,15 +143,16 @@ npm run start
 
 **Environment Vars**
 
-| Var                     | Type    | Required | Default Value            | Description                              |
-|-------------------------|---------|----------|--------------------------|------------------------------------------|
-| `MONGO_DB_PROTOCOL`     | String  | `false`  | `mongodb`                | Database connection protocol             |
-| `MONGO_DB_HOST`         | String  | `false`  | `localhost`              | Database connection host                 |
-| `MONGO_DB_PORT`         | Number  | `false`  |                          | Database connection port                 |
-| `MONGO_DB_NAME`         | String  | `false`  |                          | Database name                            |
-| `MONGO_DB_USER`         | String  | `false`  | `admin`                  | Database connection credential           |
-| `MONGO_DB_PASSWORD`     | String  | `false`  | `password`               | Database connection credential           |
-| `MONGO_DB_PARAMS`       | Number  | `false`  |                          | Database connection configuration params | 
+| Var                 | Type   | Required | Default Value | Description                                        |
+|---------------------|--------|----------|---------------|----------------------------------------------------|
+| `MONGO_DB_PROTOCOL` | String | `false`  | `mongodb`     | Database connection protocol                       |
+| `MONGO_DB_HOST`     | String | `false`  | `localhost`   | Database connection host                           |
+| `MONGO_DB_PORT`     | String | `false`  |               | Database connection port                           |
+| `MONGO_DB_NAME`     | String | `false`  |               | Database name                                      |
+| `MONGO_DB_USER`     | String | `false`  |               | Database connection credential                     |
+| `MONGO_DB_PASSWORD` | String | `false`  |               | Database connection credential                     |
+| `MONGO_DB_PARAMS`   | String | `false`  |               | Database connection configuration params           | 
+| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
 
 ------
 
@@ -159,4 +160,4 @@ npm run start
 
 This project is licensed under the terms of the **GPL-3.0** license.
 
-> You can check out the full license [](./LICENSE) license.
+> You can check out the full license [GPL-3.0](./LICENSE) license.
