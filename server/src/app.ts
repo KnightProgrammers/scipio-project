@@ -4,9 +4,6 @@ import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
 import mongoose from 'mongoose';
 import { config } from "./config";
-import CountryModel from "@/models/country.model";
-import UserModel from "@/models/user.model";
-import * as console from "console";
 
 
 // Pass --options via CLI arguments in command to enable these options.
@@ -55,39 +52,6 @@ const app: any = async (
     dir: join(__dirname, 'routes'),
     options: opts
   });
-
-
-  const uy = await CountryModel.findOne({
-    name: 'Uruguay'
-  });
-
-
-  const ar = await CountryModel.findOne({
-    name: 'Argentina'
-  });
-
-  const javier = await UserModel.findOne({
-    email: 'javier@test.com',
-  });
-
-  if (javier && ar) {
-    javier.country = ar;
-    await javier.save();
-  }
-
-  const julia = await UserModel.findOne({
-    email: 'julia@test.com',
-  });
-  if (julia && uy) {
-    julia.country = uy;
-    await julia.save();
-  }
-  const users = await UserModel.find({
-    country: uy
-  });
-
-  console.log(users)
-
 };
 
 export default app;
