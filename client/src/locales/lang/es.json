@@ -94,7 +94,8 @@
         "newPassword": "Nueva Contraseña",
         "currentPassword": "Contraseña Actual",
         "confirmPassword": "Repetir Contraseña",
-        "rememberMe": "Recordarme"
+        "rememberMe": "Recordarme",
+        "country": "Pais"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",

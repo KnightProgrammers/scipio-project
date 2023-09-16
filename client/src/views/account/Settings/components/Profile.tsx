@@ -10,6 +10,7 @@ import FormRow from './FormRow'
 import { Field, Form, Formik } from 'formik'
 import { components } from 'react-select'
 import { HiOutlineUserCircle, HiOutlineMail, HiCheck } from 'react-icons/hi'
+import { BiWorld } from 'react-icons/bi'
 import * as Yup from 'yup'
 import type { OptionProps, ControlProps } from 'react-select'
 import type { FieldProps } from 'formik'
@@ -24,6 +25,7 @@ export type ProfileFormModel = {
     email: string
     avatar: string
     lang: string
+    country: string
 }
 
 type ProfileProps = {
@@ -98,6 +100,7 @@ const Profile = ({
         email: '',
         avatar: '',
         lang: '',
+        country: '',
     },
 }: ProfileProps) => {
     const { t } = useTranslation()
@@ -150,6 +153,7 @@ const Profile = ({
             initialValues={{
                 name: data.name,
                 email: data.email,
+                country: data.country,
                 lang: data.lang || i18n.language,
             }}
             validationSchema={validationSchema}
@@ -204,6 +208,21 @@ const Profile = ({
                                     prefix={
                                         <HiOutlineMail className="text-xl" />
                                     }
+                                />
+                            </FormRow>
+                            <FormRow
+                                name="country"
+                                label={t('fields.country') || 'Name'}
+                                {...validatorProps}
+                            >
+                                <Field
+                                    type="text"
+                                    autoComplete="off"
+                                    name="country"
+                                    disabled={true}
+                                    label={t('fields.country')}
+                                    component={Input}
+                                    prefix={<BiWorld className="text-xl" />}
                                 />
                             </FormRow>
                             <FormDesription

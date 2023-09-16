@@ -4,14 +4,15 @@ import firebaseApp from "@/services/firebase";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 export const User = Type.Object({
-  id: Type.String(),
+  id: Type.Readonly(Type.String()),
   name: Type.Required(Type.String()),
   email: Type.Required(Type.String({ format: 'email' })),
   avatar: Type.Readonly(Type.Union([
     Type.String(),
     Type.Null()
   ])),
-  lang: Type.String()
+  lang: Type.String(),
+  country: Type.Readonly(Type.String()),
 })
 
 export type UserType = Static<typeof User>
@@ -49,7 +50,8 @@ const users: any = async (fastify: any): Promise<void> => {
         name: user.name,
         email: user.email,
         avatar: user.avatar || null,
-        lang: user.lang || null
+        lang: user.lang || null,
+        country: user.country.name
       })
     });
   fastify.post(
@@ -63,7 +65,6 @@ const users: any = async (fastify: any): Promise<void> => {
     },
     async function (request: any, reply: any) {
       let newData: UserType = request.body;
-      console.log(newData);
       const user = request.user;
       user.name =  newData.name;
       user.lang = newData.lang;
@@ -73,7 +74,8 @@ const users: any = async (fastify: any): Promise<void> => {
         name: user.name,
         email: user.email,
         avatar: user.avatar || null,
-        lang: user.lang || null
+        lang: user.lang || null,
+        country: user.country.name
       });
     }
   );

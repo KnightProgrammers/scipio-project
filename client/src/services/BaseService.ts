@@ -5,7 +5,7 @@ import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
 import store, { signOutSuccess } from '../store'
 
-const unauthorizedCode = [401]
+const unauthorizedCode = [401, 403]
 
 const BaseService = axios.create({
     timeout: 60000,

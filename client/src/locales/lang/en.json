@@ -94,7 +94,8 @@
         "newPassword": "New Password",
         "currentPassword": "Current Password",
         "confirmPassword": "Confirm Password",
-        "rememberMe": "Remember Me"
+        "rememberMe": "Remember Me",
+        "country": "Country"
     },
     "validations": {
         "minString": "The value is too short (min:",
