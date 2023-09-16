@@ -51,7 +51,7 @@ const users: any = async (fastify: any): Promise<void> => {
         email: user.email,
         avatar: user.avatar || null,
         lang: user.lang || null,
-        country: user.country.name
+        country: !!user.country ? user.country.name : null
       })
     });
   fastify.post(

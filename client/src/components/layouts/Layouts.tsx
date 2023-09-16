@@ -1,4 +1,4 @@
-import { useMemo, lazy, Suspense, useCallback, useState } from 'react'
+import { useMemo, lazy, Suspense, useState, useEffect } from 'react'
 import Loading from '@/components/shared/Loading'
 import {
     setUser,
@@ -18,6 +18,8 @@ import useAuth from '@/utils/hooks/useAuth'
 import useDirection from '@/utils/hooks/useDirection'
 import useLocale from '@/utils/hooks/useLocale'
 import { apiGetUserProfile } from '@/services/AccountServices'
+import { useNavigate } from "react-router-dom";
+import loading from "@/components/shared/Loading";
 
 const layouts = {
     [LAYOUT_TYPE_CLASSIC]: lazy(() => import('./ClassicLayout')),
@@ -30,28 +32,29 @@ const layouts = {
 
 const Layout = () => {
     const layoutType = useAppSelector((state) => state.theme.layout.type)
-    const [isLoading, setIsLoading] = useState(true)
+    const user = useAppSelector((state) => state.auth.user)
+    const [isLoading, setIsLoading] = useState(false)
 
     const { authenticated } = useAuth()
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     useDirection()
-
     useLocale()
 
-    const getUserData = useCallback(async () => {
-        try {
-            const { data: user } = await apiGetUserProfile()
-            dispatch(setUser(user))
-        } catch {
-            signOutSuccess()
+    useEffect(() => {
+        if (authenticated && !user.id && !isLoading) {
+            setIsLoading(true)
+            apiGetUserProfile()
+                .then(({ data: user }) => {
+                    dispatch(setUser(user))
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    dispatch(signOutSuccess())
+                })
         }
-        setIsLoading(false)
-    }, [dispatch])
-
-    useMemo(() => {
-        authenticated && getUserData()
-    }, [authenticated, getUserData])
+    }, [authenticated, dispatch, user, isLoading])
 
     const AppLayout = useMemo(() => {
         if (authenticated) {

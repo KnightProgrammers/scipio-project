@@ -7,6 +7,7 @@ export type UserState = {
     name?: string
     email?: string
     lang?: string
+    country?: string
 }
 
 const initialState: UserState = {
@@ -15,6 +16,7 @@ const initialState: UserState = {
     name: '',
     email: '',
     lang: '',
+    country: '',
 }
 
 const userSlice = createSlice({
@@ -27,6 +29,7 @@ const userSlice = createSlice({
             state.email = action.payload?.email
             state.name = action.payload?.name
             state.lang = action.payload?.lang
+            state.country = action.payload?.country
         },
     },
 })
