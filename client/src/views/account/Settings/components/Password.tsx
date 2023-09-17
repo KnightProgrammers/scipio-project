@@ -90,7 +90,7 @@ const Password = () => {
                             <FormContainer>
                                 <FormDescription
                                     title={t(
-                                        'settings.sections.password.title'
+                                        'pages.settings.sections.password.title'
                                     )}
                                     desc={t('pages.settings.sections.password.desc')}
                                 />
