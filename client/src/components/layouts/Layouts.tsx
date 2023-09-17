@@ -19,7 +19,8 @@ import useDirection from '@/utils/hooks/useDirection'
 import useLocale from '@/utils/hooks/useLocale'
 import { apiGetUserProfile } from '@/services/AccountServices'
 import { useNavigate } from "react-router-dom";
-import loading from "@/components/shared/Loading";
+
+const WelcomeWizard = lazy(() => import('../shared/WelcomeWizard'));
 
 const layouts = {
     [LAYOUT_TYPE_CLASSIC]: lazy(() => import('./ClassicLayout')),
@@ -69,6 +70,18 @@ const Layout = () => {
                 <Loading loading={true} />
             </div>
         )
+    }
+
+    if (authenticated && !user.country) {
+        return <Suspense
+          fallback={
+              <div className="flex flex-auto flex-col h-[100vh]">
+                  <Loading loading={true} />
+              </div>
+          }
+        >
+            <WelcomeWizard />
+        </Suspense>
     }
 
     return (

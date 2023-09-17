@@ -163,7 +163,7 @@ const SignInForm = (props: SignInFormProps) => {
                                             {t('fields.rememberMe')}
                                         </Field>
                                         <ActionLink to={forgotPasswordUrl}>
-                                            {t('auth.signIn.forgotPassword')}
+                                            {t('pages.auth.signIn.forgotPassword')}
                                         </ActionLink>
                                     </div>
                                     <Button
@@ -181,7 +181,7 @@ const SignInForm = (props: SignInFormProps) => {
                         )}
                     </Formik>
                     <div className="text-center">
-                        <span>{t('auth.signIn.footer')} </span>
+                        <span>{t('pages.auth.signIn.footer')} </span>
                         <ActionLink to={signUpUrl}>
                             {t('actions.signUp')}
                         </ActionLink>

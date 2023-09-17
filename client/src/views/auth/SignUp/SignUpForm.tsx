@@ -73,7 +73,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                     console.error(e)
                 })
         }
-    }, [t, countries.length])
+    }, [t, countries.length]);
 
     const onSignUp = async (
         values: SignUpFormSchema,
@@ -208,7 +208,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     : t('actions.signUp')}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>{t('auth.signUp.footer')} </span>
+                                <span>{t('pages.auth.signUp.footer')} </span>
                                 <ActionLink to={signInUrl}>
                                     {t('actions.signIn')}
                                 </ActionLink>

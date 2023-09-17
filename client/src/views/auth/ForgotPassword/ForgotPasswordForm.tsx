@@ -56,16 +56,16 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                 {emailSent ? (
                     <>
                         <h3 className="mb-1">
-                            {t('auth.forgotPasswordEmailSent.title')}
+                            {t('pages.auth.forgotPasswordEmailSent.title')}
                         </h3>
-                        <p>{t('auth.forgotPasswordEmailSent.subtitle')}</p>
+                        <p>{t('pages.auth.forgotPasswordEmailSent.subtitle')}</p>
                     </>
                 ) : (
                     <>
                         <h3 className="mb-1">
-                            {t('auth.forgotPassword.title')}
+                            {t('pages.auth.forgotPassword.title')}
                         </h3>
-                        <p>{t('auth.forgotPassword.subtitle')}</p>
+                        <p>{t('pages.auth.forgotPassword.subtitle')}</p>
                     </>
                 )}
             </div>

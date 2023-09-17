@@ -1,71 +1,80 @@
 {
-    "auth": {
-        "signIn": {
-            "title": "Welcome back!",
-            "subtitle": "Please enter your credentials to sign in!",
-            "forgotPassword": "Forgot Password?",
-            "footer": "Don't have an account yet?"
-        },
-        "signUp": {
-            "title": "Sign Up",
-            "subtitle": "And lets get start managing your personal finances",
-            "footer": "Already have an account?"
-        },
-        "forgotPassword": {
-            "title": "Forgot Password",
-            "subtitle": "Please enter your email address to receive a verification code"
-        },
-        "forgotPasswordEmailSent": {
-            "title": "Check your email",
-            "subtitle": "We have sent a password recovery instruction to your email"
-        },
-        "resetPassword": {
-            "title": "Set new password",
-            "footer": "Back to"
-        }
-    },
-    "profile": {
-        "appearance": "Appearance"
-    },
-    "expenses": {
-        "header": "Expenses"
-    },
-    "savings": {
-        "header": "Savings"
-    },
-    "incomes": {
-        "header": "Incomes"
-    },
-    "bankAccounts": {
-        "header": "Bank Accounts"
-    },
-    "creditCards": {
-        "header": "Credit Cards"
-    },
-    "categories": {
-        "header": "Categories"
-    },
-    "jobs": {
-        "header": "Jobs"
-    },
-    "settings": {
-        "header": "Settings",
-        "tabs": {
-            "profile": "Profile",
-            "password": "Password"
-        },
-        "sections": {
-            "general": {
-                "title": "General",
-                "desc": "Basic info"
+    "pages": {
+        "auth": {
+            "signIn": {
+                "title": "Welcome back!",
+                "subtitle": "Please enter your credentials to sign in!",
+                "forgotPassword": "Forgot Password?",
+                "footer": "Don't have an account yet?"
             },
-            "preferences": {
-                "title": "Preferences",
-                "desc": "Your personalized preference displayed in your account"
+            "signUp": {
+                "title": "Sign Up",
+                "subtitle": "And lets get start managing your personal finances",
+                "footer": "Already have an account?"
             },
-            "password": {
-                "title": "Password",
-                "desc": "Enter your current & new password to reset your password"
+            "forgotPassword": {
+                "title": "Forgot Password",
+                "subtitle": "Please enter your email address to receive a verification code"
+            },
+            "forgotPasswordEmailSent": {
+                "title": "Check your email",
+                "subtitle": "We have sent a password recovery instruction to your email"
+            },
+            "resetPassword": {
+                "title": "Set new password",
+                "footer": "Back to"
+            }
+        },
+        "profile": {
+            "appearance": "Appearance"
+        },
+        "expenses": {
+            "header": "Expenses"
+        },
+        "savings": {
+            "header": "Savings"
+        },
+        "incomes": {
+            "header": "Incomes"
+        },
+        "bankAccounts": {
+            "header": "Bank Accounts"
+        },
+        "creditCards": {
+            "header": "Credit Cards"
+        },
+        "categories": {
+            "header": "Categories"
+        },
+        "jobs": {
+            "header": "Jobs"
+        },
+        "settings": {
+            "header": "Settings",
+            "tabs": {
+                "profile": "Profile",
+                "password": "Password"
+            },
+            "sections": {
+                "general": {
+                    "title": "General",
+                    "desc": "Basic info"
+                },
+                "preferences": {
+                    "title": "Preferences",
+                    "desc": "Your personalized preference displayed in your account"
+                },
+                "password": {
+                    "title": "Password",
+                    "desc": "Enter your current & new password to reset your password"
+                }
+            }
+        },
+        "welcome": {
+            "headers": {
+                "start": "Welcome!",
+                "country": "Select a Country",
+                "lang": "Select a Language"
             }
         }
     },
@@ -84,7 +93,8 @@
         "submit": "Submit",
         "submitting": "Submiting...",
         "delete": "Delete",
-        "deleting": "Deleting"
+        "deleting": "Deleting",
+        "next": "Next"
     },
     "fields": {
         "email": "Email",
@@ -121,6 +131,9 @@
                 "auth/user-disabled": "User inactive"
             }
         }
+    },
+    "placeholders": {
+        "country": "Select a country"
     },
     "messages": {
         "backTo": "Back to "

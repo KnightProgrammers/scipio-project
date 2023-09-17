@@ -3,8 +3,8 @@ import Button from '@/components/ui/Button'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import { FormContainer } from '@/components/ui/Form'
-import FormDesription from './FormDesription'
-import FormRow from './FormRow'
+import FormDescription from './FormDescription'
+import FormRow from '../../../../components/shared/FormRow'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -88,11 +88,11 @@ const Password = () => {
                     return (
                         <Form>
                             <FormContainer>
-                                <FormDesription
+                                <FormDescription
                                     title={t(
                                         'settings.sections.password.title'
                                     )}
-                                    desc={t('settings.sections.password.desc')}
+                                    desc={t('pages.settings.sections.password.desc')}
                                 />
                                 <FormRow
                                     name="newPassword"

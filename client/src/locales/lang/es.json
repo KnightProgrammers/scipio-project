@@ -1,71 +1,80 @@
 {
-    "auth": {
-        "signIn": {
-            "title": "Bienvenido!",
-            "subtitle": "Por favor ingrese sus credenciales para continuar!",
-            "forgotPassword": "Olvidó su contraseña?",
-            "footer": "No tienes cuenta?"
-        },
-        "signUp": {
-            "title": "Registrate",
-            "subtitle": "Y comencemos a administrar tus finanzas personales",
-            "footer": "Ya tienes una cuenta?"
-        },
-        "forgotPassword": {
-            "title": "Recuperar Contraseña",
-            "subtitle": "Por favor ingrese su email para recibir un código de verificación"
-        },
-        "forgotPasswordEmailSent": {
-            "title": "Revisa tu correo",
-            "subtitle": "Hemos enviado un email con las instrucciones para que recuperes tu contraseña"
-        },
-        "resetPassword": {
-            "title": "Restablecer Contraseña",
-            "footer": "Volver a"
-        }
-    },
-    "profile": {
-        "appearance": "Tema"
-    },
-    "expenses": {
-        "header": "Gastos"
-    },
-    "savings": {
-        "header": "Ahorros"
-    },
-    "incomes": {
-        "header": "Ingresos"
-    },
-    "bankAccounts": {
-        "header": "Cuentas de Banco"
-    },
-    "creditCards": {
-        "header": "Tarjetas de Créditos"
-    },
-    "categories": {
-        "header": "Caategorías"
-    },
-    "jobs": {
-        "header": "Trabajos"
-    },
-    "settings": {
-        "header": "Configuraciones",
-        "tabs": {
-            "profile": "Perfil",
-            "password": "Contraseña"
-        },
-        "sections": {
-            "general": {
-                "title": "General",
-                "desc": "Información básica"
+    "pages": {
+        "auth": {
+            "signIn": {
+                "title": "Bienvenido!",
+                "subtitle": "Por favor ingrese sus credenciales para continuar!",
+                "forgotPassword": "Olvidó su contraseña?",
+                "footer": "No tienes cuenta?"
             },
-            "preferences": {
-                "title": "Preferencias",
-                "desc": "Sus preferencias personalizas de su cuenta"
+            "signUp": {
+                "title": "Registrate",
+                "subtitle": "Y comencemos a administrar tus finanzas personales",
+                "footer": "Ya tienes una cuenta?"
             },
-            "password": {
-                "title": "Contraseña",
-                "desc": "Ingrese su actual y la nueva contraseña para restablecer sus credenciales"
+            "forgotPassword": {
+                "title": "Recuperar Contraseña",
+                "subtitle": "Por favor ingrese su email para recibir un código de verificación"
+            },
+            "forgotPasswordEmailSent": {
+                "title": "Revisa tu correo",
+                "subtitle": "Hemos enviado un email con las instrucciones para que recuperes tu contraseña"
+            },
+            "resetPassword": {
+                "title": "Restablecer Contraseña",
+                "footer": "Volver a"
+            }
+        },
+        "profile": {
+            "appearance": "Tema"
+        },
+        "expenses": {
+            "header": "Gastos"
+        },
+        "savings": {
+            "header": "Ahorros"
+        },
+        "incomes": {
+            "header": "Ingresos"
+        },
+        "bankAccounts": {
+            "header": "Cuentas de Banco"
+        },
+        "creditCards": {
+            "header": "Tarjetas de Créditos"
+        },
+        "categories": {
+            "header": "Caategorías"
+        },
+        "jobs": {
+            "header": "Trabajos"
+        },
+        "settings": {
+            "header": "Configuraciones",
+            "tabs": {
+                "profile": "Perfil",
+                "password": "Contraseña"
+            },
+            "sections": {
+                "general": {
+                    "title": "General",
+                    "desc": "Información básica"
+                },
+                "preferences": {
+                    "title": "Preferencias",
+                    "desc": "Sus preferencias personalizas de su cuenta"
+                },
+                "password": {
+                    "title": "Contraseña",
+                    "desc": "Ingrese su actual y la nueva contraseña para restablecer sus credenciales"
+                }
+            }
+        },
+        "welcome": {
+            "headers": {
+                "start": "Bienvenido!",
+                "country": "Selecciona un Pais",
+                "lang": "Selecciona un idioma"
             }
         }
     },
@@ -84,7 +93,8 @@
         "submit": "Enviar",
         "submitting": "Enviando...",
         "delete": "Eliminar",
-        "deleting": "Eliminando"
+        "deleting": "Eliminando",
+        "next": "Siguiente"
     },
     "fields": {
         "email": "Email",
@@ -121,6 +131,9 @@
                 "auth/user-disabled": "Usuario inactivo"
             }
         }
+    },
+    "placeholders": {
+        "country": "Selecciona un pais"
     },
     "messages": {
         "backTo": "Volver a "

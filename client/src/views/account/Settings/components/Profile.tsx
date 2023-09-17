@@ -1,23 +1,22 @@
 import Input from '@/components/ui/Input'
-import Avatar from '@/components/ui/Avatar'
 import Button from '@/components/ui/Button'
 import Select from '@/components/ui/Select'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import { FormContainer } from '@/components/ui/Form'
-import FormDesription from './FormDesription'
-import FormRow from './FormRow'
+import FormDescription from './FormDescription'
+import FormRow from '../../../../components/shared/FormRow'
 import { Field, Form, Formik } from 'formik'
 import { components } from 'react-select'
 import { HiOutlineUserCircle, HiOutlineMail, HiCheck } from 'react-icons/hi'
 import { BiWorld } from 'react-icons/bi'
 import * as Yup from 'yup'
-import type { OptionProps, ControlProps } from 'react-select'
 import type { FieldProps } from 'formik'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { setLang, setUser, useAppDispatch } from '@/store'
 import { apiUpdateUserProfile } from '@/services/AccountServices'
+import { CustomControl, CustomSelectOption } from "@/components/shared";
 
 export type ProfileFormModel = {
     id: string
@@ -32,66 +31,23 @@ type ProfileProps = {
     data: ProfileFormModel
 }
 
-type LanguageOption = {
+export type LanguageOption = {
     value: string
     label: string
     imgPath: string
 }
 
-const { Control } = components
-
-const langOptions: LanguageOption[] = [
-    { value: 'en', label: 'English (US)', imgPath: '/img/countries/us.png' },
+export const langOptions: LanguageOption[] = [
+    {
+        value: 'en',
+        label: 'English (US)',
+        imgPath: '/img/countries/us.png' },
     {
         value: 'es',
         label: 'Español (Latinoamérica)',
         imgPath: '/img/countries/sp.png',
     },
 ]
-
-const CustomSelectOption = ({
-    innerProps,
-    label,
-    data,
-    isSelected,
-}: OptionProps<LanguageOption>) => {
-    return (
-        <div
-            className={`flex items-center justify-between p-2 ${
-                isSelected
-                    ? 'bg-gray-100 dark:bg-gray-500'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-600'
-            }`}
-            {...innerProps}
-        >
-            <div className="flex items-center">
-                <Avatar shape="circle" size={20} src={data.imgPath} />
-                <span className="ml-2 rtl:mr-2">{label}</span>
-            </div>
-            {isSelected && <HiCheck className="text-emerald-500 text-xl" />}
-        </div>
-    )
-}
-
-const CustomControl = ({
-    children,
-    ...props
-}: ControlProps<LanguageOption>) => {
-    const selected = props.getValue()[0]
-    return (
-        <Control {...props}>
-            {selected && (
-                <Avatar
-                    className="ltr:ml-4 rtl:mr-4"
-                    shape="circle"
-                    size={18}
-                    src={selected.imgPath}
-                />
-            )}
-            {children}
-        </Control>
-    )
-}
 
 const Profile = ({
     data = {
@@ -173,9 +129,9 @@ const Profile = ({
                 return (
                     <Form>
                         <FormContainer>
-                            <FormDesription
-                                title={t('settings.sections.general.title')}
-                                desc={t('settings.sections.general.desc')}
+                            <FormDescription
+                                title={t('pages.settings.sections.general.title')}
+                                desc={t('pages.settings.sections.general.desc')}
                             />
                             <FormRow
                                 name="name"
@@ -225,10 +181,10 @@ const Profile = ({
                                     prefix={<BiWorld className="text-xl" />}
                                 />
                             </FormRow>
-                            <FormDesription
+                            <FormDescription
                                 className="mt-8"
-                                title={t('settings.sections.preferences.title')}
-                                desc={t('settings.sections.preferences.desc')}
+                                title={t('pages.settings.sections.preferences.title')}
+                                desc={t('pages.settings.sections.preferences.desc')}
                             />
                             <FormRow
                                 name="lang"
