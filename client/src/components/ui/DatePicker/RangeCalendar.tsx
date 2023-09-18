@@ -113,7 +113,7 @@ const RangeCalendar = forwardRef<HTMLDivElement, RangeCalendarProps>(
                 {...rest}
             />
         )
-    }
+    },
 )
 
 RangeCalendar.displayName = 'RangeCalendar'

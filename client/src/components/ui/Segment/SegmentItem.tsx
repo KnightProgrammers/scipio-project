@@ -51,22 +51,22 @@ const SegmentItem = forwardRef<HTMLButtonElement, SegmentItemProps>(
             switch (size) {
                 case SIZES.LG:
                     sizeClass = classNames(
-                        `h-${CONTROL_SIZES.lg} md:px-8 py-2 px-4 text-base`
+                        `h-${CONTROL_SIZES.lg} md:px-8 py-2 px-4 text-base`,
                     )
                     break
                 case SIZES.SM:
                     sizeClass = classNames(
-                        `h-${CONTROL_SIZES.sm} px-3 py-2 text-sm`
+                        `h-${CONTROL_SIZES.sm} px-3 py-2 text-sm`,
                     )
                     break
                 case SIZES.XS:
                     sizeClass = classNames(
-                        `h-${CONTROL_SIZES.xs} px-3 py-1 text-xs`
+                        `h-${CONTROL_SIZES.xs} px-3 py-1 text-xs`,
                     )
                     break
                 default:
                     sizeClass = classNames(
-                        `h-${CONTROL_SIZES.md} md:px-8 py-2 px-4`
+                        `h-${CONTROL_SIZES.md} md:px-8 py-2 px-4`,
                     )
                     break
             }
@@ -108,7 +108,7 @@ const SegmentItem = forwardRef<HTMLButtonElement, SegmentItemProps>(
                     active && 'segment-item-active',
                     disabled && 'segment-item-disabled',
                     getSegmentSize(),
-                    className
+                    className,
                 )}
                 onClick={onSegmentItemClick}
                 {...rest}
@@ -116,7 +116,7 @@ const SegmentItem = forwardRef<HTMLButtonElement, SegmentItemProps>(
                 {children}
             </button>
         )
-    }
+    },
 )
 
 SegmentItem.displayName = 'SegmentItem'

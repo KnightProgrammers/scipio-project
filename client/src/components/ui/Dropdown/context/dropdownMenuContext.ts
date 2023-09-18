@@ -9,7 +9,7 @@ type Item = {
 type DropdownMenuContextProps = {
     registerItem?: (
         element: HTMLElement | null,
-        props: { disabled?: boolean }
+        props: { disabled?: boolean },
     ) => void
     unregisterItem?: (id: string) => void
 }
@@ -21,7 +21,7 @@ export const DropdownMenuContextProvider = DropdownMenuContext.Provider
 export const DropdownMenuContextConsumer = DropdownMenuContext.Consumer
 
 export function useDropdownMenuContext<E extends HTMLElement>(
-    menuRef: React.RefObject<E>
+    menuRef: React.RefObject<E>,
 ) {
     const [open, setOpen] = useState(false)
 
@@ -33,7 +33,7 @@ export function useDropdownMenuContext<E extends HTMLElement>(
         (element: HTMLElement | null, props: { disabled?: boolean }) => {
             setItems((items) => [...items, { element, props }])
         },
-        []
+        [],
     )
 
     const unregisterItem = useCallback((id: string) => {
@@ -58,7 +58,7 @@ export function useDropdownMenuContext<E extends HTMLElement>(
                 focusSelf()
             }
         },
-        [items, focusSelf]
+        [items, focusSelf],
     )
 
     const lookupNextActiveItemIndex = useCallback(
@@ -70,7 +70,7 @@ export function useDropdownMenuContext<E extends HTMLElement>(
             }
             return null
         },
-        [items]
+        [items],
     )
 
     const focusItemAt = useCallback(
@@ -85,7 +85,7 @@ export function useDropdownMenuContext<E extends HTMLElement>(
                 } else if (index === -1) {
                     activeItemIndex = lookupNextActiveItemIndex(
                         items.length - 1,
-                        -1
+                        -1,
                     )
                 }
 
@@ -94,7 +94,7 @@ export function useDropdownMenuContext<E extends HTMLElement>(
                 }
             }
         },
-        [items, focusItem, focusSelf, lookupNextActiveItemIndex]
+        [items, focusItem, focusSelf, lookupNextActiveItemIndex],
     )
 
     const openMenu = useCallback(() => {

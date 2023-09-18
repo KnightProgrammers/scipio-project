@@ -28,16 +28,16 @@ const sideNavCollapseStyle = {
 const SideNav = () => {
     const themeColor = useAppSelector((state) => state.theme.themeColor)
     const primaryColorLevel = useAppSelector(
-        (state) => state.theme.primaryColorLevel
+        (state) => state.theme.primaryColorLevel,
     )
     const navMode = useAppSelector((state) => state.theme.navMode)
     const mode = useAppSelector((state) => state.theme.mode)
     const direction = useAppSelector((state) => state.theme.direction)
     const currentRouteKey = useAppSelector(
-        (state) => state.base.common.currentRouteKey
+        (state) => state.base.common.currentRouteKey,
     )
     const sideNavCollapse = useAppSelector(
-        (state) => state.theme.layout.sideNavCollapse
+        (state) => state.theme.layout.sideNavCollapse,
     )
 
     const { larger } = useResponsive()
@@ -81,7 +81,7 @@ const SideNav = () => {
                     className={classNames(
                         'side-nav',
                         sideNavColor(),
-                        !sideNavCollapse && 'side-nav-expand'
+                        !sideNavCollapse && 'side-nav-expand',
                     )}
                 >
                     <div className="side-nav-header">

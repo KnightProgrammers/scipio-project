@@ -83,7 +83,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>((props, ref) => {
                 menuControl.closeMenu()
             }
         },
-        [onClose, onOpen, onToggle, open, menuControl]
+        [onClose, onOpen, onToggle, open, menuControl],
     )
 
     const handleClick = useCallback(
@@ -94,7 +94,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>((props, ref) => {
             }
             handleToggle()
         },
-        [disabled, handleToggle]
+        [disabled, handleToggle],
     )
 
     const handleMouseEnter = useCallback(() => {
@@ -134,25 +134,25 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>((props, ref) => {
     if (arrayIndexOf(CLICK, trigger)) {
         toggleEventHandlers.onClick = chainedFunction(
             handleClick,
-            toggleEventHandlers.onClick
+            toggleEventHandlers.onClick,
         )
     }
 
     if (arrayIndexOf(CONTEXT, trigger)) {
         toggleEventHandlers.onContextMenu = chainedFunction(
             handleClick,
-            onContextMenu
+            onContextMenu,
         )
     }
 
     if (arrayIndexOf(HOVER, trigger)) {
         dropdownProps.onMouseEnter = chainedFunction(
             handleMouseEnter,
-            onMouseEnter
+            onMouseEnter,
         )
         dropdownProps.onMouseLeave = chainedFunction(
             handleMouseLeave,
-            onMouseLeave
+            onMouseLeave,
         )
     }
 

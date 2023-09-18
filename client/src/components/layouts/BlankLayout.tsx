@@ -8,14 +8,14 @@ const ConfiguratorToggle = () => {
     const dispatch = useAppDispatch()
     const themeColor = useAppSelector((state) => state.theme.themeColor)
     const primaryColorLevel = useAppSelector(
-        (state) => state.theme.primaryColorLevel
+        (state) => state.theme.primaryColorLevel,
     )
 
     return (
         <div
             className={classNames(
                 'fixed ltr:right-0 rtl:left-0 top-96 p-3 ltr:rounded-tl-md ltr:rounded-bl-md rtl:rounded-tr-md rtl:rounded-br-md text-white text-xl cursor-pointer select-none',
-                `bg-${themeColor}-${primaryColorLevel}`
+                `bg-${themeColor}-${primaryColorLevel}`,
             )}
             onClick={() => {
                 dispatch(setPanelExpand(true))

@@ -73,7 +73,7 @@ const fadeMotionProps = {
 
 const scaleTransition = (
     offsetX: number | string,
-    offsetY: number | string
+    offsetY: number | string,
 ): Record<NotificationPlacement, MotionTransition> => {
     return {
         'top-end': {
@@ -137,7 +137,7 @@ const scaleTransition = (
 
 const fadeTransition = (
     offsetX: number | string,
-    offsetY: number | string
+    offsetY: number | string,
 ): Record<NotificationPlacement, MotionTransition> => {
     return {
         'top-end': {

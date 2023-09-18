@@ -31,7 +31,7 @@ const Next = (props: NextProps) => {
     const pagerNextClass = classNames(
         pagerClass.default,
         'pagination-pager-next',
-        disabled ? pagerClass.disabled : pagerClass.inactive
+        disabled ? pagerClass.disabled : pagerClass.inactive,
     )
 
     return (

@@ -63,7 +63,7 @@ const DropdownItem = forwardRef<HTMLElement, DropdownItemProps>(
         const { mode, direction } = useConfig()
 
         const menuitemRef = useUncertainRef<HTMLElement>(
-            ref
+            ref,
         ) as RefObject<HTMLElement>
         const menuitemId = useUniqueId('menu-item-')
         const submenuRef = useRef(null)
@@ -93,7 +93,7 @@ const DropdownItem = forwardRef<HTMLElement, DropdownItemProps>(
                 onSelect?.(eventKey as string, e)
                 menu?.onSelect?.(eventKey as string, e)
             },
-            [eventKey, onSelect, menu]
+            [eventKey, onSelect, menu],
         )
 
         const handleClick = useCallback(
@@ -108,7 +108,7 @@ const DropdownItem = forwardRef<HTMLElement, DropdownItemProps>(
                     activate(e)
                 }
             },
-            [disabled, submenu, openSubmenuIfExists, activate]
+            [disabled, submenu, openSubmenuIfExists, activate],
         )
 
         const handleMouseOver = useCallback(() => {
@@ -209,7 +209,7 @@ const DropdownItem = forwardRef<HTMLElement, DropdownItemProps>(
                         variant={mode}
                         className={classNames(
                             'dropdown-submenu-item',
-                            className
+                            className,
                         )}
                     >
                         <span>{children}</span>
@@ -241,7 +241,7 @@ const DropdownItem = forwardRef<HTMLElement, DropdownItemProps>(
                 {renderSubmenu()}
             </MenuItem>
         )
-    }
+    },
 )
 
 DropdownItem.displayName = 'DropdownItem'

@@ -123,13 +123,13 @@ const DatePickerRange = forwardRef<HTMLInputElement, DatePickerRangeProps>(
 
         const firstDateLabel = _value?.[0]
             ? capitalize(
-                  dayjs(_value[0]).locale(finalLocale).format(dateFormat)
+                  dayjs(_value[0]).locale(finalLocale).format(dateFormat),
               )
             : ''
 
         const secondDateLabel = _value?.[1]
             ? capitalize(
-                  dayjs(_value[1]).locale(finalLocale).format(dateFormat)
+                  dayjs(_value[1]).locale(finalLocale).format(dateFormat),
               )
             : ''
 
@@ -197,7 +197,7 @@ const DatePickerRange = forwardRef<HTMLInputElement, DatePickerRangeProps>(
                 />
             </BasePicker>
         )
-    }
+    },
 )
 
 DatePickerRange.displayName = 'DatePickerRange'

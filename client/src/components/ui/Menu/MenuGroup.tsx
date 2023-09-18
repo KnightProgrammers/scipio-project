@@ -26,7 +26,7 @@ const MenuGroup = (props: MenuGroupProps) => {
                 <div
                     className={classNames(
                         'menu-title',
-                        `menu-title-${variant}`
+                        `menu-title-${variant}`,
                     )}
                     id={entityHeaderId}
                 >

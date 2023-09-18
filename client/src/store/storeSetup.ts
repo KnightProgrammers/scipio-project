@@ -66,8 +66,8 @@ export function injectReducer<S>(key: string, reducer: Reducer<S, Action>) {
         store.replaceReducer(
             persistReducer(
                 persistConfig,
-                rootReducer(store.asyncReducers) as Reducer
-            )
+                rootReducer(store.asyncReducers) as Reducer,
+            ),
         )
     }
     persistor.persist()

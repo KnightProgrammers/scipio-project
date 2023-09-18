@@ -6,7 +6,7 @@ export function getDate(
     seconds: string,
     format: '12' | '24',
     pmLabel: string,
-    amPm?: string
+    amPm?: string,
 ) {
     const date = dayjs()
     let _hours = parseInt(hours, 10)

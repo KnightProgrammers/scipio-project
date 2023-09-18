@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function requiredFieldValidation(
     value: any,
-    message: string
+    message: string,
 ): string {
     let validationMessage = ''
     if (!value) {

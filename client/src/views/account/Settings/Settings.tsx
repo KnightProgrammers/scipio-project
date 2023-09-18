@@ -46,7 +46,7 @@ const Settings = () => {
     const { t } = useTranslation()
 
     const path = location.pathname.substring(
-        location.pathname.lastIndexOf('/') + 1
+        location.pathname.lastIndexOf('/') + 1,
     )
 
     const onTabChange = (val: string) => {

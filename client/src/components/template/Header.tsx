@@ -19,7 +19,7 @@ const Header = (props: HeaderProps) => {
                 className={classNames(
                     'header-wrapper',
                     HEADER_HEIGHT_CLASS,
-                    container && 'container mx-auto'
+                    container && 'container mx-auto',
                 )}
             >
                 <div className="header-action header-action-start">

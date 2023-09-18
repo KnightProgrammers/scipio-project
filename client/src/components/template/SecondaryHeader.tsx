@@ -22,13 +22,13 @@ const SecondaryHeader = (props: SecondaryHeaderProps) => {
                     className={classNames(
                         'h-16 flex items-center',
                         `secondary-header-${mode}`,
-                        className
+                        className,
                     )}
                 >
                     <div
                         className={classNames(
                             'flex items-center px-4',
-                            contained && 'container mx-auto'
+                            contained && 'container mx-auto',
                         )}
                     >
                         <HorizontalMenuContent manuVariant={mode} />

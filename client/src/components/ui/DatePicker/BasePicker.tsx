@@ -123,7 +123,7 @@ const BasePicker = forwardRef<HTMLInputElement, BasePickerProps>(
         }
 
         const handleInputBlur = (
-            event: FocusEvent<HTMLInputElement, Element>
+            event: FocusEvent<HTMLInputElement, Element>,
         ) => {
             typeof onBlur === 'function' && onBlur(event)
             if (inputtable && inputtableBlurClose) {
@@ -132,7 +132,7 @@ const BasePicker = forwardRef<HTMLInputElement, BasePickerProps>(
         }
 
         const handleInputFocus = (
-            event: FocusEvent<HTMLInputElement, Element>
+            event: FocusEvent<HTMLInputElement, Element>,
         ) => {
             typeof onFocus === 'function' && onFocus(event)
             if (inputtable) {
@@ -157,7 +157,7 @@ const BasePicker = forwardRef<HTMLInputElement, BasePickerProps>(
                         },
                     },
                 ],
-            }
+            },
         )
 
         useRootClose(() => closeDropdown(), {
@@ -203,7 +203,7 @@ const BasePicker = forwardRef<HTMLInputElement, BasePickerProps>(
                 </div>
             </>
         )
-    }
+    },
 )
 
 BasePicker.displayName = 'BasePicker'

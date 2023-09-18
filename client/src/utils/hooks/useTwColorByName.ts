@@ -32,7 +32,7 @@ function useTwColorByName(prefix = 'bg'): (name: string) => string {
             const color = whiteListTwColor[index]
             return `${prefix}-${color} dark:${prefix}-${color}`
         },
-        [prefix]
+        [prefix],
     )
 
     return generateTwColor

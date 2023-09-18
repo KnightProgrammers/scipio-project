@@ -117,7 +117,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
             value,
             onGroupChange,
             groupValue,
-        ]
+        ],
     )
 
     const checkboxColor =
@@ -133,7 +133,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
     const labelClass = classNames(
         labelDefaultClass,
         labelDisabledClass,
-        className
+        className,
     )
 
     return (
@@ -154,7 +154,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
                 <span
                     className={classNames(
                         'ltr:ml-2 rtl:mr-2',
-                        disabled ? 'opacity-50' : ''
+                        disabled ? 'opacity-50' : '',
                     )}
                 >
                     {children}

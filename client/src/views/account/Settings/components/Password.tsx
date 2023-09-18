@@ -28,12 +28,12 @@ const Password = () => {
             .min(8, `${t('validations.minString')} 8)`),
         confirmNewPassword: Yup.string().oneOf(
             [Yup.ref('newPassword'), ''],
-            t('validations.passwordMismatch') || 'Password not match'
+            t('validations.passwordMismatch') || 'Password not match',
         ),
     })
     const onFormSubmit = async (
         values: PasswordFormModel,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         const user = auth.currentUser
         if (!user) {
@@ -52,7 +52,7 @@ const Password = () => {
                 />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
         } catch (e) {
             toast.push(
@@ -62,7 +62,7 @@ const Password = () => {
                 />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
         }
         setSubmitting(false)
@@ -90,10 +90,10 @@ const Password = () => {
                             <FormContainer>
                                 <FormDescription
                                     title={t(
-                                        'pages.settings.sections.password.title'
+                                        'pages.settings.sections.password.title',
                                     )}
                                     desc={t(
-                                        'pages.settings.sections.password.desc'
+                                        'pages.settings.sections.password.desc',
                                     )}
                                 />
                                 <FormRow
@@ -125,7 +125,7 @@ const Password = () => {
                                         autoComplete="off"
                                         name="confirmNewPassword"
                                         placeholder={t(
-                                            'fields.confirmPassword'
+                                            'fields.confirmPassword',
                                         )}
                                         component={Input}
                                     />

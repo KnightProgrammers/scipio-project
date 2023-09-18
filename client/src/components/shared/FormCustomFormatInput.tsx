@@ -37,13 +37,13 @@ function charIsNumber(char?: string) {
 }
 function caretUnknownFormatBoundary(formattedValue: string) {
     const boundaryAry = Array.from({ length: formattedValue.length + 1 }).map(
-        () => true
+        () => true,
     )
 
     for (let i = 0, ln = boundaryAry.length; i < ln; i++) {
         boundaryAry[i] = Boolean(
             charIsNumber(formattedValue[i]) ||
-                charIsNumber(formattedValue[i - 1])
+                charIsNumber(formattedValue[i - 1]),
         )
     }
 

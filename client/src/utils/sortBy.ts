@@ -5,7 +5,7 @@ export type Primer = (value: Primitive) => Primitive
 const sortBy = <T extends Record<string, Primitive>>(
     field: keyof T,
     reverse: boolean,
-    primer?: (value: Primitive) => Primitive
+    primer?: (value: Primitive) => Primitive,
 ) => {
     const key = primer
         ? function (x: T) {

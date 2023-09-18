@@ -44,7 +44,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         'card',
         className,
         bordered ? `card-border` : `card-shadow`,
-        clickable && 'cursor-pointer user-select-none'
+        clickable && 'cursor-pointer user-select-none',
     )
 
     const cardBodyClasss = classNames('card-body', bodyClass)
@@ -52,12 +52,12 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         'card-header',
         headerBorder && 'card-header-border',
         headerExtra && 'card-header-extra',
-        headerClass
+        headerClass,
     )
     const cardFooterClass = classNames(
         'card-footer',
         footerBorder && `card-footer-border`,
-        footerClass
+        footerClass,
     )
 
     const renderHeader = () => {

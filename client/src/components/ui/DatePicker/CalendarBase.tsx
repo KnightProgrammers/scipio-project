@@ -83,7 +83,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
         const daysRefs = useRef<HTMLButtonElement[][][]>(
             Array(dateViewCount)
                 .fill(0)
-                .map(() => [])
+                .map(() => []),
         )
 
         const [_month, setMonth] = useControllableState({
@@ -93,7 +93,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
         })
 
         const [yearSelection, setYearSelection] = useState(
-            _month?.getFullYear()
+            _month?.getFullYear(),
         )
         const [monthSelection, setMonthSelection] = useState(_month?.getMonth())
 
@@ -106,7 +106,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
             direction: 'down' | 'up' | 'left' | 'right',
             monthIndex: number,
             payload: DayKeydownPayload,
-            n = 1
+            n = 1,
         ) => {
             const changeRow = ['down', 'up'].includes(direction)
 
@@ -134,7 +134,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
         const handleDayKeyDown = (
             monthIndex: number,
             payload: DayKeydownPayload,
-            event: KeyboardEvent<HTMLButtonElement>
+            event: KeyboardEvent<HTMLButtonElement>,
         ) => {
             switch (event.key) {
                 case 'ArrowDown': {
@@ -211,7 +211,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
                         yearLabelFormat={yearLabelFormat}
                         onChange={(year) => {
                             setMonth(
-                                new Date(year, monthSelection as number, 1)
+                                new Date(year, monthSelection as number, 1),
                             )
                             setYearSelection(year)
                             setSelectionState('date')
@@ -237,7 +237,11 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
                         onNextLevel={() => setSelectionState('year')}
                         onChange={(monthValue) => {
                             setMonth(
-                                new Date(yearSelection as number, monthValue, 1)
+                                new Date(
+                                    yearSelection as number,
+                                    monthValue,
+                                    1,
+                                ),
                             )
                             setMonthSelection(monthValue)
                             setSelectionState('date')
@@ -281,7 +285,7 @@ const CalendarBase = forwardRef<HTMLDivElement, CalendarBaseProps>(
                 )}
             </div>
         )
-    }
+    },
 )
 
 CalendarBase.displayName = 'CalendarBase'

@@ -46,7 +46,7 @@ const DefaultOption = ({
                 'select-option',
                 isSelected && 'selected',
                 isDisabled && 'disabled',
-                isFocused && 'focused'
+                isFocused && 'focused',
             )}
             {...innerProps}
         >
@@ -101,7 +101,7 @@ const DefaultLoadingIndicator = ({
 export interface SelectProps<
     Option,
     IsMulti extends boolean = false,
-    Group extends GroupBase<Option> = GroupBase<Option>
+    Group extends GroupBase<Option> = GroupBase<Option>,
 > extends CommonProps,
         ReactSelectProps<Option, IsMulti, Group>,
         AsyncProps<Option, IsMulti, Group>,
@@ -117,10 +117,10 @@ export interface SelectProps<
 function _Select<
     Option,
     IsMulti extends boolean = false,
-    Group extends GroupBase<Option> = GroupBase<Option>
+    Group extends GroupBase<Option> = GroupBase<Option>,
 >(
     props: SelectProps<Option, IsMulti, Group>,
-    ref: ForwardedRef<ReactSelect | CreatableSelect | AsyncSelect>
+    ref: ForwardedRef<ReactSelect | CreatableSelect | AsyncSelect>,
 ) {
     const {
         size,
@@ -244,11 +244,11 @@ function _Select<
 const Select = forwardRef(_Select) as <
     Option,
     IsMulti extends boolean = false,
-    Group extends GroupBase<Option> = GroupBase<Option>
+    Group extends GroupBase<Option> = GroupBase<Option>,
 >(
     props: SelectProps<Option, IsMulti, Group> & {
         ref?: ForwardedRef<ReactSelect | CreatableSelect | AsyncSelect>
-    }
+    },
 ) => ReturnType<typeof _Select>
 
 export default Select

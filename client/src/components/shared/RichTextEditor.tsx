@@ -13,7 +13,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
                 <ReactQuill ref={ref} {...props} />
             </div>
         )
-    }
+    },
 )
 
 RichTextEditor.displayName = 'RichTextEditor'

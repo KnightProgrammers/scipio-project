@@ -71,8 +71,8 @@ const TimeInputField = forwardRef<HTMLInputElement, TimeInputFieldProps>(
                     clamp(
                         parseInt(event.currentTarget.value, 10) + 1,
                         min,
-                        max as number
-                    ).toString()
+                        max as number,
+                    ).toString(),
                 )
 
                 if (value !== padded) {
@@ -86,8 +86,8 @@ const TimeInputField = forwardRef<HTMLInputElement, TimeInputFieldProps>(
                     clamp(
                         parseInt(event.currentTarget.value, 10) - 1,
                         min,
-                        max as number
-                    ).toString()
+                        max as number,
+                    ).toString(),
                 )
 
                 if (value !== padded) {
@@ -126,7 +126,7 @@ const TimeInputField = forwardRef<HTMLInputElement, TimeInputFieldProps>(
                 {withSeparator && <span> : </span>}
             </>
         )
-    }
+    },
 )
 
 TimeInputField.displayName = 'TimeInputField'

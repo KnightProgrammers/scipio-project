@@ -10,7 +10,7 @@ interface NavInfo extends NavigationTree {
 
 const getRouteInfo = (
     navTree: NavInfo | NavInfo[],
-    key: string
+    key: string,
 ): NavInfo | undefined => {
     if (!Array.isArray(navTree) && navTree.key === key) {
         return navTree
@@ -30,7 +30,7 @@ const getRouteInfo = (
             ) {
                 if (
                     (navTree as any)[p].subMenu.some(
-                        (el: NavInfo) => el.key === key
+                        (el: NavInfo) => el.key === key,
                     )
                 ) {
                     isIncludeActivedRoute = true
@@ -63,7 +63,7 @@ const findNestedRoute = (navTree: NavigationTree[], key: string): boolean => {
 
 const getTopRouteKey = (
     navTree: NavigationTree[],
-    key: string
+    key: string,
 ): NavigationTree => {
     let foundNav = {} as NavigationTree
     navTree.forEach((nav) => {

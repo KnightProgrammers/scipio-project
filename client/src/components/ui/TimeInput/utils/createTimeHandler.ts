@@ -24,7 +24,7 @@ export function createTimeHandler({
     return (
         value: string,
         triggerShift: boolean,
-        forceTriggerShift = false
+        forceTriggerShift = false,
     ) => {
         const parsed = parseInt(value, 10)
 

@@ -4,7 +4,7 @@ import { setDarkMode, useAppSelector, useAppDispatch, setMode } from '@/store'
 
 function useDarkMode(): [
     darkModeOn: boolean,
-    updateDarkMode: (isActive: boolean) => void
+    updateDarkMode: (isActive: boolean) => void,
 ] {
     const isEnabled = useAppSelector((state) => state.darkMode.isEnabled)
     const { MODE_DARK, MODE_LIGHT } = THEME_ENUM

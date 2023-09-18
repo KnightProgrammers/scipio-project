@@ -41,7 +41,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                                         key={secondarySubNav.key}
                                         title={t(
                                             secondarySubNav.translateKey,
-                                            secondarySubNav.title
+                                            secondarySubNav.title,
                                         )}
                                     >
                                         {secondarySubNav.subMenu.map(
@@ -50,7 +50,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                                                     key={tertiarySubNav.key}
                                                     nav={tertiarySubNav}
                                                 />
-                                            )
+                                            ),
                                         )}
                                     </Dropdown.Menu>
                                 ) : (
@@ -58,7 +58,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                                         key={secondarySubNav.key}
                                         nav={secondarySubNav}
                                     />
-                                )
+                                ),
                             )}
                         </Dropdown>
                     )

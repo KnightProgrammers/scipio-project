@@ -21,7 +21,7 @@ export interface DateTableProps extends CommonProps, MonthBaseProps {
     onDayKeyDown: (
         monthIndex: number,
         payload: DayKeydownPayload,
-        event: React.KeyboardEvent<HTMLButtonElement>
+        event: React.KeyboardEvent<HTMLButtonElement>,
     ) => void
     labelFormat?: { month: string; year: string }
     weekdayLabelFormat?: string
@@ -99,14 +99,14 @@ const DateTable = (props: DateTableProps) => {
                         renderCenter={dateViewCount > 1}
                         onNext={() =>
                             onMonthChange(
-                                dayjs(month).add(paginateBy, 'months').toDate()
+                                dayjs(month).add(paginateBy, 'months').toDate(),
                             )
                         }
                         onPrevious={() =>
                             onMonthChange(
                                 dayjs(month)
                                     .subtract(paginateBy, 'months')
-                                    .toDate()
+                                    .toDate(),
                             )
                         }
                     >

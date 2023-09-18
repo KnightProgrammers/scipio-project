@@ -30,7 +30,7 @@ const Skeleton = forwardRef<ElementType, SkeletonProps>((props, ref) => {
                 variant === 'circle' && 'skeleton-circle',
                 variant === 'block' && 'skeleton-block',
                 animation && 'animate-pulse',
-                className
+                className,
             )}
             style={{
                 width,

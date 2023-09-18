@@ -9,7 +9,7 @@ export interface CheckboxGroupContextProps {
     onChange?: (
         value: CheckboxValue,
         checked: boolean,
-        event: React.ChangeEvent<HTMLInputElement>
+        event: React.ChangeEvent<HTMLInputElement>,
     ) => void
     value?: CheckboxGroupValue
     vertical?: boolean

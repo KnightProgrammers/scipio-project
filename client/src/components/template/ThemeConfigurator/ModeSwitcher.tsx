@@ -14,7 +14,7 @@ const ModeSwitcher = () => {
         (checked: boolean) => {
             updateDarkMode(checked)
         },
-        [updateDarkMode]
+        [updateDarkMode],
     )
 
     return (

@@ -43,11 +43,11 @@ const WelcomeWizard = () => {
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
             console.error(e)
         },
-        [t]
+        [t],
     )
 
     useEffect(() => {
@@ -78,7 +78,7 @@ const WelcomeWizard = () => {
             try {
                 const user = await apiPathUserProfile(
                     selectedCountry.value,
-                    i18n.language
+                    i18n.language,
                 )
                 dispatch(setUser(user))
             } catch (e) {
@@ -124,7 +124,7 @@ const WelcomeWizard = () => {
                                     Control: CustomControl,
                                 }}
                                 value={langOptions.filter(
-                                    (option) => option.value === i18n.language
+                                    (option) => option.value === i18n.language,
                                 )}
                                 onChange={(option) =>
                                     !!option &&

@@ -56,7 +56,7 @@ const Profile = ({
     })
     const onFormSubmit = async (
         values: ProfileFormModel,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         try {
             const { data: user } = await apiUpdateUserProfile(values)
@@ -67,7 +67,7 @@ const Profile = ({
                 />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
             const lang = values.lang || 'en'
             await i18n.changeLanguage(lang)
@@ -78,7 +78,7 @@ const Profile = ({
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
         }
 
@@ -102,7 +102,7 @@ const Profile = ({
                         ...data,
                         ...values,
                     },
-                    setSubmitting
+                    setSubmitting,
                 )
             }}
         >
@@ -113,7 +113,7 @@ const Profile = ({
                         <FormContainer>
                             <FormDescription
                                 title={t(
-                                    'pages.settings.sections.general.title'
+                                    'pages.settings.sections.general.title',
                                 )}
                                 desc={t('pages.settings.sections.general.desc')}
                             />
@@ -168,10 +168,10 @@ const Profile = ({
                             <FormDescription
                                 className="mt-8"
                                 title={t(
-                                    'pages.settings.sections.preferences.title'
+                                    'pages.settings.sections.preferences.title',
                                 )}
                                 desc={t(
-                                    'pages.settings.sections.preferences.desc'
+                                    'pages.settings.sections.preferences.desc',
                                 )}
                             />
                             <FormRow
@@ -192,12 +192,12 @@ const Profile = ({
                                             value={langOptions.filter(
                                                 (option) =>
                                                     option.value ===
-                                                    values?.lang
+                                                    values?.lang,
                                             )}
                                             onChange={(option) =>
                                                 form.setFieldValue(
                                                     field.name,
-                                                    option?.value
+                                                    option?.value,
                                                 )
                                             }
                                         />

@@ -5,7 +5,7 @@ export default function chainedFunction<T = any>(...funcs: (T | null)[]) {
         .reduce((acc: any, f: any) => {
             if (typeof f !== 'function') {
                 throw new Error(
-                    'Invalid Argument Type, must only provide functions, undefined, or null.'
+                    'Invalid Argument Type, must only provide functions, undefined, or null.',
                 )
             }
 

@@ -47,13 +47,13 @@ const ResetPasswordForm = (props: ResetPasswordFormProps) => {
         password: Yup.string().required(t('validations.required') || ''),
         confirmPassword: Yup.string().oneOf(
             [Yup.ref('password')],
-            t('validations.passwordMismatch') || ''
+            t('validations.passwordMismatch') || '',
         ),
     })
 
     const onSubmit = async (
         values: ResetPasswordFormSchema,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         const { password } = values
         setSubmitting(true)

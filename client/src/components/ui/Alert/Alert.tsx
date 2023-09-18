@@ -98,7 +98,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
     const { clear } = useTimeout(
         onClose as () => void,
         duration,
-        (duration as number) > 0
+        (duration as number) > 0,
     )
 
     const handleClose = (e: MouseEvent<HTMLDivElement>) => {
@@ -135,7 +135,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
         closable ? 'justify-between' : '',
         closable && !title ? 'items-center' : '',
         rounded && 'rounded-lg',
-        className
+        className,
     )
 
     if (display === 'hide') {

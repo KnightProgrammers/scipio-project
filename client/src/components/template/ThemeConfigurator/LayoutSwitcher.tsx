@@ -80,7 +80,7 @@ const LayoutSwitcher = () => {
                                                 <HiCheckCircle
                                                     className={classNames(
                                                         textTheme,
-                                                        'absolute top-2 right-2 text-lg'
+                                                        'absolute top-2 right-2 text-lg',
                                                     )}
                                                 />
                                             }
@@ -98,7 +98,7 @@ const LayoutSwitcher = () => {
                                         <div
                                             className={classNames(
                                                 active && textTheme,
-                                                'mt-2 font-semibold'
+                                                'mt-2 font-semibold',
                                             )}
                                         >
                                             {layout.label}

@@ -71,19 +71,19 @@ const SignInForm = (props: SignInFormProps) => {
     }
     const onSignInWithPassword = async (
         values: SignInFormSchema,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         try {
             const credential = await signInWithEmailAndPassword(
                 auth,
                 values.email,
-                values.password
+                values.password,
             )
             await signIn(credential)
         } catch {
             setSubmitting(false)
             setMessage(
-                t('error.auth.invalidCredentials') || 'Something went wrong'
+                t('error.auth.invalidCredentials') || 'Something went wrong',
             )
         }
     }
@@ -164,7 +164,7 @@ const SignInForm = (props: SignInFormProps) => {
                                         </Field>
                                         <ActionLink to={forgotPasswordUrl}>
                                             {t(
-                                                'pages.auth.signIn.forgotPassword'
+                                                'pages.auth.signIn.forgotPassword',
                                             )}
                                         </ActionLink>
                                     </div>

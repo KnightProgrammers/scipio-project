@@ -18,7 +18,7 @@ const TimeLineItem = forwardRef<HTMLLIElement, TimeLineItemProps>(
                 className={classNames(
                     'timeline-item',
                     isLast ? 'timeline-item-last' : '',
-                    className
+                    className,
                 )}
             >
                 <div className="timeline-item-wrapper">
@@ -33,7 +33,7 @@ const TimeLineItem = forwardRef<HTMLLIElement, TimeLineItemProps>(
                     <div
                         className={classNames(
                             'timeline-item-content',
-                            isLast && 'timeline-item-content-last'
+                            isLast && 'timeline-item-content-last',
                         )}
                     >
                         {children}
@@ -41,7 +41,7 @@ const TimeLineItem = forwardRef<HTMLLIElement, TimeLineItemProps>(
                 </div>
             </li>
         )
-    }
+    },
 )
 
 TimeLineItem.displayName = 'TimeLineItem'

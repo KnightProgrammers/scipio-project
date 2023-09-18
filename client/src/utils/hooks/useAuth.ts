@@ -26,7 +26,7 @@ function useAuth() {
     const { token, signedIn } = useAppSelector((state) => state.auth.session)
 
     const signIn = async (
-        credential: UserCredential
+        credential: UserCredential,
     ): Promise<
         | {
               status: Status
@@ -39,7 +39,7 @@ function useAuth() {
             dispatch(signInSuccess(token))
             const redirectUrl = query.get(REDIRECT_URL_KEY)
             navigate(
-                redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath,
             )
             return {
                 status: 'success',
@@ -69,13 +69,15 @@ function useAuth() {
                                 email: '',
                                 lang: '',
                                 country: null,
-                            }
-                        )
+                            },
+                        ),
                     )
                 }
                 const redirectUrl = query.get(REDIRECT_URL_KEY)
                 navigate(
-                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                    redirectUrl
+                        ? redirectUrl
+                        : appConfig.authenticatedEntryPath,
                 )
                 return {
                     status: 'success',
@@ -101,7 +103,7 @@ function useAuth() {
                 email: '',
                 lang: '',
                 country: null,
-            })
+            }),
         )
         navigate(appConfig.unAuthenticatedEntryPath)
     }

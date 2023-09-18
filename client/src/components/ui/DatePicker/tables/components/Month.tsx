@@ -45,7 +45,7 @@ export interface MonthProps extends CommonProps, MonthBaseProps {
     range?: [Date, Date]
     onDayKeyDown?: (
         payload: DayKeydownPayload,
-        event: KeyboardEvent<HTMLButtonElement>
+        event: KeyboardEvent<HTMLButtonElement>,
     ) => void
     daysRefs: HTMLButtonElement[][]
     renderDay?: (date: Date) => ReactNode
@@ -94,7 +94,7 @@ const Month = forwardRef<HTMLTableElement, MonthProps>((props, ref) => {
     const weekdays = getWeekdaysNames(
         finalLocale,
         firstDayOfWeek,
-        weekdayLabelFormat
+        weekdayLabelFormat,
     ).map((weekday) => (
         <th key={weekday} className="week-day-cell">
             <span className="week-day-cell-content">{weekday}</span>
@@ -135,7 +135,7 @@ const Month = forwardRef<HTMLTableElement, MonthProps>((props, ref) => {
                     return !dayProps.disabled && !dayProps.outOfMonth
                 }) || dayjs(month).startOf('month').toDate(),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+        [],
     )
 
     const rows = days.map((row, rowIndex) => {

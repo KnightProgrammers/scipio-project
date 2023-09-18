@@ -11,7 +11,7 @@ interface SegmentItemOptionProps extends CommonProps {
     disabled?: boolean
     hoverable?: boolean
     onSegmentItemClick?: (
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void
 }
 
@@ -48,7 +48,7 @@ const SegmentItemOption = forwardRef<HTMLDivElement, SegmentItemOptionProps>(
                     hoverable &&
                         `hover:ring-1 hover:${ringTheme} hover:${borderTheme}`,
                     disabled && 'opacity-50 cursor-not-allowed',
-                    className
+                    className,
                 )}
                 onClick={onSegmentItemClick}
             >
@@ -61,7 +61,7 @@ const SegmentItemOption = forwardRef<HTMLDivElement, SegmentItemOptionProps>(
                 {active && customCheck}
             </div>
         )
-    }
+    },
 )
 
 SegmentItemOption.displayName = 'SegmentItemOption'

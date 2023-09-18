@@ -33,7 +33,7 @@ const TableRowSkeleton = (props: TableRowSkeletonProps) => {
                                     <Skeleton />
                                 </div>
                             </Td>
-                        )
+                        ),
                     )}
                 </Tr>
             ))}

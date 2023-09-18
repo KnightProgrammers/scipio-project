@@ -17,7 +17,7 @@ const Timeline = forwardRef<HTMLUListElement, TimelineProps>((props, ref) => {
         (item: DetailedReactHTMLElement<any, HTMLElement>, index: number) => ({
             isLast: index === count - 1,
             ...item.props,
-        })
+        }),
     )
 
     return (

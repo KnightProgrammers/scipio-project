@@ -56,7 +56,7 @@ const Tooltip = (props: TooltipProps) => {
                 setTooltipOpen(bool)
             }
         },
-        [isOpen]
+        [isOpen],
     )
 
     return (
@@ -95,7 +95,7 @@ const Tooltip = (props: TooltipProps) => {
                                     ref={ref}
                                     className={classNames(
                                         defaultTooltipClass,
-                                        className
+                                        className,
                                     )}
                                     style={style}
                                     initial={{

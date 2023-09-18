@@ -165,7 +165,7 @@ const _Notification = ({ className }: { className?: string }) => {
                 setUnreadNotification(false)
             }
         },
-        [notificationList]
+        [notificationList],
     )
 
     return (
@@ -231,7 +231,7 @@ const _Notification = ({ className }: { className?: string }) => {
                         <div
                             className={classNames(
                                 'flex items-center justify-center',
-                                notificationHeight
+                                notificationHeight,
                             )}
                         >
                             <Spinner size={40} />
@@ -241,7 +241,7 @@ const _Notification = ({ className }: { className?: string }) => {
                         <div
                             className={classNames(
                                 'flex items-center justify-center',
-                                notificationHeight
+                                notificationHeight,
                             )}
                         >
                             <div className="text-center">

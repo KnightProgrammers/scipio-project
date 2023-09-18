@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 function useTimeOutMessage(
-    interval = 3000
+    interval = 3000,
 ): [string, React.Dispatch<React.SetStateAction<string>>] {
     const [message, setMessage] = useState('')
 

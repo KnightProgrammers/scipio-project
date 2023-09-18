@@ -32,7 +32,7 @@ const TextBlockSkeleton = (props: TextBlockSkeletonProps) => {
                             index === rowCount - 1 ? lastChildWidth : undefined
                         }
                     />
-                )
+                ),
             )}
         </div>
     )

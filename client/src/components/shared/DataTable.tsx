@@ -103,7 +103,7 @@ export type DataTableResetHandle = {
 
 function _DataTable<T>(
     props: DataTableProps<T>,
-    ref: ForwardedRef<DataTableResetHandle>
+    ref: ForwardedRef<DataTableResetHandle>,
 ) {
     const {
         skeletonAvatarColumns,
@@ -135,7 +135,7 @@ function _DataTable<T>(
                 value: number,
                 label: `${number} / page`,
             })),
-        [pageSizes]
+        [pageSizes],
     )
 
     const handleCheckBoxChange = (checked: boolean, row: T) => {
@@ -146,7 +146,7 @@ function _DataTable<T>(
 
     const handleIndeterminateCheckBoxChange = (
         checked: boolean,
-        rows: Row<T>[]
+        rows: Row<T>[],
     ) => {
         if (!loading) {
             onIndeterminateCheckBoxChange?.(checked, rows)
@@ -190,7 +190,7 @@ function _DataTable<T>(
                             onIndeterminateCheckBoxChange={(e) => {
                                 handleIndeterminateCheckBoxChange(
                                     e.target.checked,
-                                    table.getRowModel().rows
+                                    table.getRowModel().rows,
                                 )
                             }}
                         />
@@ -204,7 +204,7 @@ function _DataTable<T>(
                             onCheckBoxChange={(e) =>
                                 handleCheckBoxChange(
                                     e.target.checked,
-                                    row.original
+                                    row.original,
                                 )
                             }
                         />
@@ -266,14 +266,14 @@ function _DataTable<T>(
                                                     header.column.getCanSort() &&
                                                         'cursor-pointer select-none point',
                                                     loading &&
-                                                        'pointer-events-none'
+                                                        'pointer-events-none',
                                                 )}
                                                 onClick={header.column.getToggleSortingHandler()}
                                             >
                                                 {flexRender(
                                                     header.column.columnDef
                                                         .header,
-                                                    header.getContext()
+                                                    header.getContext(),
                                                 )}
                                                 {header.column.getCanSort() && (
                                                     <Sorter
@@ -310,7 +310,7 @@ function _DataTable<T>(
                                                     {flexRender(
                                                         cell.column.columnDef
                                                             .cell,
-                                                        cell.getContext()
+                                                        cell.getContext(),
                                                     )}
                                                 </Td>
                                             )
@@ -334,7 +334,7 @@ function _DataTable<T>(
                         menuPlacement="top"
                         isSearchable={false}
                         value={pageSizeOption.filter(
-                            (option) => option.value === pageSize
+                            (option) => option.value === pageSize,
                         )}
                         options={pageSizeOption}
                         onChange={(option) => handleSelectChange(option?.value)}
@@ -348,7 +348,7 @@ function _DataTable<T>(
 const DataTable = forwardRef(_DataTable) as <T>(
     props: DataTableProps<T> & {
         ref?: ForwardedRef<DataTableResetHandle>
-    }
+    },
 ) => ReturnType<typeof _DataTable>
 
 export type { ColumnDef, Row, CellContext }

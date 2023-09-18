@@ -27,7 +27,7 @@ const AppRoute = <T extends Record<string, unknown>>({
 
     const layoutType = useAppSelector((state) => state.theme.layout.type)
     const previousLayout = useAppSelector(
-        (state) => state.theme.layout.previousType
+        (state) => state.theme.layout.previousType,
     )
 
     const handleLayoutChange = useCallback(() => {

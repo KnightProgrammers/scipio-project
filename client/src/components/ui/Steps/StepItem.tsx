@@ -55,12 +55,12 @@ const StepItem = forwardRef<HTMLDivElement, StepItemProps>((props, ref) => {
     const stepItemClass = classNames(
         `step-item step-item-${status}`,
         vertical && 'step-item-vertical',
-        className
+        className,
     )
 
     const stepWrapperClass = classNames(
         'step-item-wrapper',
-        onStepChange && 'step-clickable'
+        onStepChange && 'step-clickable',
     )
 
     const stepIconClass = classNames(
@@ -68,20 +68,20 @@ const StepItem = forwardRef<HTMLDivElement, StepItemProps>((props, ref) => {
         status === COMPLETE && `bg-${color} text-white`,
         status === ERROR && `step-item-icon-error`,
         status === IN_PROGRESS &&
-            `text-${color} dark:text-gray-100 border-${color} step-item-icon-current`
+            `text-${color} dark:text-gray-100 border-${color} step-item-icon-current`,
     )
 
     const stepConnectClass = classNames(
         'step-connect',
         title && 'ml-2.5 rtl:mr-2.5',
         vertical && 'step-connect-vertical',
-        status === COMPLETE ? `bg-${color}` : `inactive`
+        status === COMPLETE ? `bg-${color}` : `inactive`,
     )
 
     const stepTitleClass = classNames(
         'step-item-title',
         status === ERROR && `step-item-title-error`,
-        onStepChange && status !== ERROR && `hover:text-${color}`
+        onStepChange && status !== ERROR && `hover:text-${color}`,
     )
 
     const handleStepChange = () => {

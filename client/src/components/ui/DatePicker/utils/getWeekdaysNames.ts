@@ -5,7 +5,7 @@ import type { FirstDayOfWeek } from '../../@types/date'
 export function getWeekdaysNames(
     locale: string,
     firstDayOfWeek: FirstDayOfWeek = 'monday',
-    format = 'dd'
+    format = 'dd',
 ) {
     const names = []
     const date = getStartOfWeek(new Date(), firstDayOfWeek)
