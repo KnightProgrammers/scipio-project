@@ -103,7 +103,7 @@ const users: any = async (fastify: any): Promise<void> => {
     },
     async function (request: any, reply: any) {
       const { country: countryName, lang } = request.body;
-      const country = await CountryModel.findOne({name: countryName});
+      const country = await CountryModel.findOne({name: countryName, isSupported: true});
       if (!country) {
         throw new errorCodes.FST_ERR_NOT_FOUND('Country');
       }
