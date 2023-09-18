@@ -58,7 +58,9 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                         <h3 className="mb-1">
                             {t('pages.auth.forgotPasswordEmailSent.title')}
                         </h3>
-                        <p>{t('pages.auth.forgotPasswordEmailSent.subtitle')}</p>
+                        <p>
+                            {t('pages.auth.forgotPasswordEmailSent.subtitle')}
+                        </p>
                     </>
                 ) : (
                     <>

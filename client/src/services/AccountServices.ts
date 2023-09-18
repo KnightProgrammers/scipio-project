@@ -1,5 +1,5 @@
 import BaseService from '@/services/BaseService'
-import { UserDataType } from "@/@types/system";
+import { UserDataType } from '@/@types/system'
 
 export async function apiGetUserProfile(): User {
     return BaseService.request({
@@ -16,13 +16,16 @@ export async function apiUpdateUserProfile(data: object) {
     })
 }
 
-export async function apiPathUserProfile(country: string, lang: string): Promise<UserDataType> {
+export async function apiPathUserProfile(
+    country: string,
+    lang: string
+): Promise<UserDataType> {
     return BaseService.request({
         url: '/users/me',
         method: 'patch',
         data: {
             country,
-            lang
+            lang,
         },
     })
 }

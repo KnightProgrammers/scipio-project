@@ -7,8 +7,7 @@ import { FormContainer } from '@/components/ui/Form'
 import FormDescription from './FormDescription'
 import FormRow from '../../../../components/shared/FormRow'
 import { Field, Form, Formik } from 'formik'
-import { components } from 'react-select'
-import { HiOutlineUserCircle, HiOutlineMail, HiCheck } from 'react-icons/hi'
+import { HiOutlineUserCircle, HiOutlineMail } from 'react-icons/hi'
 import { BiWorld } from 'react-icons/bi'
 import * as Yup from 'yup'
 import type { FieldProps } from 'formik'
@@ -16,7 +15,8 @@ import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { setLang, setUser, useAppDispatch } from '@/store'
 import { apiUpdateUserProfile } from '@/services/AccountServices'
-import { CustomControl, CustomSelectOption } from "@/components/shared";
+import { CustomControl, CustomSelectOption } from '@/components/shared'
+import { langOptions, LanguageOption } from '@/@types/system'
 
 export type ProfileFormModel = {
     id: string
@@ -30,24 +30,6 @@ export type ProfileFormModel = {
 type ProfileProps = {
     data: ProfileFormModel
 }
-
-export type LanguageOption = {
-    value: string
-    label: string
-    imgPath: string
-}
-
-export const langOptions: LanguageOption[] = [
-    {
-        value: 'en',
-        label: 'English (US)',
-        imgPath: '/img/countries/us.png' },
-    {
-        value: 'es',
-        label: 'Español (Latinoamérica)',
-        imgPath: '/img/countries/sp.png',
-    },
-]
 
 const Profile = ({
     data = {
@@ -130,7 +112,9 @@ const Profile = ({
                     <Form>
                         <FormContainer>
                             <FormDescription
-                                title={t('pages.settings.sections.general.title')}
+                                title={t(
+                                    'pages.settings.sections.general.title'
+                                )}
                                 desc={t('pages.settings.sections.general.desc')}
                             />
                             <FormRow
@@ -183,8 +167,12 @@ const Profile = ({
                             </FormRow>
                             <FormDescription
                                 className="mt-8"
-                                title={t('pages.settings.sections.preferences.title')}
-                                desc={t('pages.settings.sections.preferences.desc')}
+                                title={t(
+                                    'pages.settings.sections.preferences.title'
+                                )}
+                                desc={t(
+                                    'pages.settings.sections.preferences.desc'
+                                )}
                             />
                             <FormRow
                                 name="lang"

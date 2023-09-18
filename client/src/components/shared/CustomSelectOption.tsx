@@ -26,4 +26,4 @@ const CustomSelectOption = ({
     )
 }
 
-export default CustomSelectOption;
+export default CustomSelectOption

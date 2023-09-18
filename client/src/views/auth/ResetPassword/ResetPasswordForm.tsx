@@ -130,7 +130,9 @@ const ResetPasswordForm = (props: ResetPasswordFormProps) => {
                                     : t('actions.submit')}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>{t('pages.auth.resetPassword.footer')} </span>
+                                <span>
+                                    {t('pages.auth.resetPassword.footer')}{' '}
+                                </span>
                                 <ActionLink to={signInUrl}>
                                     {t('actions.signIn')}
                                 </ActionLink>

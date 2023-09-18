@@ -18,9 +18,8 @@ import useAuth from '@/utils/hooks/useAuth'
 import useDirection from '@/utils/hooks/useDirection'
 import useLocale from '@/utils/hooks/useLocale'
 import { apiGetUserProfile } from '@/services/AccountServices'
-import { useNavigate } from "react-router-dom";
 
-const WelcomeWizard = lazy(() => import('../shared/WelcomeWizard'));
+const WelcomeWizard = lazy(() => import('../shared/WelcomeWizard'))
 
 const layouts = {
     [LAYOUT_TYPE_CLASSIC]: lazy(() => import('./ClassicLayout')),
@@ -38,7 +37,6 @@ const Layout = () => {
 
     const { authenticated } = useAuth()
     const dispatch = useAppDispatch()
-    const navigate = useNavigate()
 
     useDirection()
     useLocale()
@@ -49,7 +47,7 @@ const Layout = () => {
             apiGetUserProfile()
                 .then(({ data: user }) => {
                     dispatch(setUser(user))
-                    setIsLoading(false);
+                    setIsLoading(false)
                 })
                 .catch(() => {
                     dispatch(signOutSuccess())
@@ -73,15 +71,17 @@ const Layout = () => {
     }
 
     if (authenticated && !user.country) {
-        return <Suspense
-          fallback={
-              <div className="flex flex-auto flex-col h-[100vh]">
-                  <Loading loading={true} />
-              </div>
-          }
-        >
-            <WelcomeWizard />
-        </Suspense>
+        return (
+            <Suspense
+                fallback={
+                    <div className="flex flex-auto flex-col h-[100vh]">
+                        <Loading loading={true} />
+                    </div>
+                }
+            >
+                <WelcomeWizard />
+            </Suspense>
+        )
     }
 
     return (

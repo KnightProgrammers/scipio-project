@@ -73,7 +73,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                     console.error(e)
                 })
         }
-    }, [t, countries.length]);
+    }, [t, countries.length])
 
     const onSignUp = async (
         values: SignUpFormSchema,

@@ -11,3 +11,22 @@ export type UserDataType = {
     lang: string
     country: string
 }
+
+export type LanguageOption = {
+    value: string
+    label: string
+    imgPath: string
+}
+
+export const langOptions: LanguageOption[] = [
+    {
+        value: 'en',
+        label: 'English (US)',
+        imgPath: '/img/countries/us.png',
+    },
+    {
+        value: 'es',
+        label: 'Español (Latinoamérica)',
+        imgPath: '/img/countries/sp.png',
+    },
+]

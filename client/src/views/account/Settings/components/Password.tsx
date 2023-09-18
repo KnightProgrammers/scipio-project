@@ -92,7 +92,9 @@ const Password = () => {
                                     title={t(
                                         'pages.settings.sections.password.title'
                                     )}
-                                    desc={t('pages.settings.sections.password.desc')}
+                                    desc={t(
+                                        'pages.settings.sections.password.desc'
+                                    )}
                                 />
                                 <FormRow
                                     name="newPassword"
