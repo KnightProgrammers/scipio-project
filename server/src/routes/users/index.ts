@@ -20,7 +20,10 @@ export const User = Type.Object({
     Type.Null()
   ])),
   lang: Type.String(),
-  country: Type.Optional(Type.Readonly(UserCountry))
+  country: Type.Readonly(Type.Union([
+    UserCountry,
+    Type.Null()
+  ])),
 })
 
 export type UserType = Static<typeof User>
@@ -53,7 +56,6 @@ const users: any = async (fastify: any): Promise<void> => {
         user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});
         await user.save();
       }
-      console.log({user})
       reply.status(200).send({
         id: user.id,
         name: user.name,
