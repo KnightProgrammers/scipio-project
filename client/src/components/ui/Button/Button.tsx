@@ -59,7 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     const buttonColorLevel = splitedColor[1] || primaryColorLevel
 
     const [increaseLevel, decreaseLevel] = useColorLevel(
-        buttonColorLevel as ColorLevel
+        buttonColorLevel as ColorLevel,
     )
 
     const getButtonSize = () => {
@@ -70,7 +70,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
                     `h-${CONTROL_SIZES.lg}`,
                     icon && !children
                         ? `w-${CONTROL_SIZES.lg} ${sizeIconClass} text-2xl`
-                        : 'px-8 py-2 text-base'
+                        : 'px-8 py-2 text-base',
                 )
                 break
             case SIZES.SM:
@@ -78,7 +78,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
                     `h-${CONTROL_SIZES.sm}`,
                     icon && !children
                         ? `w-${CONTROL_SIZES.sm} ${sizeIconClass} text-lg`
-                        : 'px-3 py-2 text-sm'
+                        : 'px-3 py-2 text-sm',
                 )
                 break
             case SIZES.XS:
@@ -86,7 +86,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
                     `h-${CONTROL_SIZES.xs}`,
                     icon && !children
                         ? `w-${CONTROL_SIZES.xs} ${sizeIconClass} text-base`
-                        : 'px-3 py-1 text-xs'
+                        : 'px-3 py-1 text-xs',
                 )
                 break
             default:
@@ -94,7 +94,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
                     `h-${CONTROL_SIZES.md}`,
                     icon && !children
                         ? `w-${CONTROL_SIZES.md} ${sizeIconClass} text-xl`
-                        : 'px-8 py-2'
+                        : 'px-8 py-2',
                 )
                 break
         }
@@ -187,7 +187,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
         `radius-${shape}`,
         getButtonSize(),
         className,
-        block ? 'w-full' : ''
+        block ? 'w-full' : '',
     )
 
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {

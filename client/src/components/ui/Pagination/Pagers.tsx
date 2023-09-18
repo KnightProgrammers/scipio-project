@@ -103,7 +103,7 @@ const Pagers = (props: PagersProps) => {
 
     const onPagerClick = (
         value: number,
-        e: React.MouseEvent<HTMLLIElement, MouseEvent>
+        e: React.MouseEvent<HTMLLIElement, MouseEvent>,
     ) => {
         e.preventDefault()
         let newPage = value
@@ -131,7 +131,7 @@ const Pagers = (props: PagersProps) => {
             }
             onChange(newPage)
         },
-        [currentPage, onChange]
+        [currentPage, onChange],
     )
 
     const getPages = useMemo(() => {
@@ -171,7 +171,7 @@ const Pagers = (props: PagersProps) => {
     const getPagerClass = (index: number) => {
         return classNames(
             pagerClass.default,
-            currentPage === index ? pagerClass.active : pagerClass.inactive
+            currentPage === index ? pagerClass.active : pagerClass.inactive,
         )
     }
 
@@ -190,7 +190,7 @@ const Pagers = (props: PagersProps) => {
                 <PrevMore
                     className={classNames(
                         pagerClass.default,
-                        pagerClass.inactive
+                        pagerClass.inactive,
                     )}
                     onArrow={(arrow) => onArrowClick(arrow)}
                 />
@@ -211,7 +211,7 @@ const Pagers = (props: PagersProps) => {
                 <NextMore
                     className={classNames(
                         pagerClass.default,
-                        pagerClass.inactive
+                        pagerClass.inactive,
                     )}
                     onArrow={(arrow) => onArrowClick(arrow)}
                 />

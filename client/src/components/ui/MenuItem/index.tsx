@@ -32,7 +32,7 @@ const MenuItem = forwardRef<HTMLElement, MenuItemProps>((props, ref) => {
 
     const themeColor = useAppSelector((state) => state.theme.themeColor)
     const primaryColorLevel = useAppSelector(
-        (state) => state.theme.primaryColorLevel
+        (state) => state.theme.primaryColorLevel,
     )
 
     const menuItemActiveClass = `menu-item-active bg-${themeColor}-${primaryColorLevel}`
@@ -44,7 +44,7 @@ const MenuItem = forwardRef<HTMLElement, MenuItemProps>((props, ref) => {
         isActive && menuItemActiveClass,
         disabled && disabledClass,
         !disabled && menuItemHoverClass,
-        className
+        className,
     )
 
     const hanldeOnClick = (e: MouseEvent) => {

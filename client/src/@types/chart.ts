@@ -28,7 +28,7 @@ export type ChartXAxis = {
         formatter?(
             value: string,
             timestamp?: number,
-            opts?: any
+            opts?: any,
         ): string | string[]
         datetimeUTC?: boolean
         datetimeFormatter?: {

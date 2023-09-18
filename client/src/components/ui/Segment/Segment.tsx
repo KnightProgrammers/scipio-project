@@ -44,7 +44,7 @@ const Segment = forwardRef<HTMLDivElement, SegmentProps>((props, ref) => {
         (itemValue: SegmentValue) => {
             setValue(itemValue)
         },
-        [setValue]
+        [setValue],
     )
 
     const onDeactivate = useCallback(
@@ -56,12 +56,12 @@ const Segment = forwardRef<HTMLDivElement, SegmentProps>((props, ref) => {
             if (selectionType === 'multiple') {
                 setValue((prevValue = []) => {
                     return (prevValue as string[]).filter(
-                        (value) => value !== itemValue
+                        (value) => value !== itemValue,
                     )
                 })
             }
         },
-        [setValue, selectionType]
+        [setValue, selectionType],
     )
 
     const segmentValue = useMemo(() => {

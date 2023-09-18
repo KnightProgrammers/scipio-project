@@ -34,7 +34,7 @@ const Group = forwardRef<HTMLDivElement, CheckboxGroupProps>((props, ref) => {
         (
             itemValue: CheckboxValue,
             itemChecked: boolean,
-            event: SyntheticEvent
+            event: SyntheticEvent,
         ) => {
             const nextValue = cloneDeep(value) || []
             if (itemChecked) {
@@ -46,7 +46,7 @@ const Group = forwardRef<HTMLDivElement, CheckboxGroupProps>((props, ref) => {
             setValue(nextValue)
             onChange?.(nextValue, event)
         },
-        [onChange, setValue, value]
+        [onChange, setValue, value],
     )
 
     useEffect(() => {
@@ -67,7 +67,7 @@ const Group = forwardRef<HTMLDivElement, CheckboxGroupProps>((props, ref) => {
             color,
             onChange: onCheckboxGroupChange,
         }),
-        [vertical, onCheckboxGroupChange, name, color, value]
+        [vertical, onCheckboxGroupChange, name, color, value],
     )
 
     return (

@@ -9,7 +9,7 @@ function SelectFieldItem(props: SelectFieldItemProps) {
     const fieldName = props.field.name
 
     const [value, setValue] = useState<SelectOption | SelectOption[] | null>(
-        null
+        null,
     )
 
     return (
@@ -23,7 +23,7 @@ function SelectFieldItem(props: SelectFieldItemProps) {
                         ? ''
                         : Array.isArray(option)
                         ? option.map((o) => o.value).join(',')
-                        : option.value
+                        : option.value,
                 )
                 setValue(option ? option : null)
             }}

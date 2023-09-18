@@ -14,7 +14,7 @@ const Line = (props: LineProps) => {
     const progressBackgroundClass = classNames(
         'progress-bg',
         size === SIZES.SM ? 'h-1.5' : 'h-2',
-        `bg-${strokeColor}`
+        `bg-${strokeColor}`,
     )
 
     return (

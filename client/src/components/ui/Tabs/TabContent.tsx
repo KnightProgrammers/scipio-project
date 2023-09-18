@@ -17,7 +17,7 @@ const TabContent = forwardRef<HTMLDivElement, TabContentProps>((props, ref) => {
     const tabContentClass = classNames(
         'tab-content',
         isSelected && 'tab-content-active',
-        className
+        className,
     )
 
     return (

@@ -4,7 +4,7 @@ import type { FirstDayOfWeek } from '../../@types/date'
 
 export function getMonthDays(
     month: Date,
-    firstDayOfWeek: FirstDayOfWeek = 'monday'
+    firstDayOfWeek: FirstDayOfWeek = 'monday',
 ): Date[][] {
     const currentMonth = month.getMonth()
     const startOfMonth = new Date(month.getFullYear(), currentMonth, 1)

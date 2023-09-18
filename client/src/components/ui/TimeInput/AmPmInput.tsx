@@ -36,7 +36,7 @@ const AmPmInput = forwardRef<HTMLInputElement, AmPmInputProps>((props, ref) => {
             event.preventDefault()
             onChange(
                 value === amLabel ? (pmLabel as string) : (amLabel as string),
-                true
+                true,
             )
         }
     }

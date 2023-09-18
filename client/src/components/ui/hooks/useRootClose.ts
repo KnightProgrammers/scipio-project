@@ -63,7 +63,7 @@ function onEventListener<K extends keyof DocumentEventMap>(
     target: Element | Window | Document | EventTarget,
     eventType: K,
     listener: EventListenerOrEventListenerObject | CustomEventListener,
-    options: boolean | AddEventListenerOptions = false
+    options: boolean | AddEventListenerOptions = false,
 ): { off: () => void } {
     target.addEventListener(eventType, listener, options)
 
@@ -76,7 +76,7 @@ function onEventListener<K extends keyof DocumentEventMap>(
 
 function useRootClose(
     onRootClose: ReactEventHandler | undefined,
-    { disabled, triggerTarget, overlayTarget }: Options
+    { disabled, triggerTarget, overlayTarget }: Options,
 ) {
     const handleDocumentMouseDown = useCallback(
         (event: any) => {
@@ -97,7 +97,7 @@ function useRootClose(
 
             onRootClose?.(event)
         },
-        [onRootClose, triggerTarget, overlayTarget]
+        [onRootClose, triggerTarget, overlayTarget],
     )
 
     useEffect(() => {
@@ -111,7 +111,7 @@ function useRootClose(
             doc(),
             'mousedown',
             handleDocumentMouseDown,
-            true
+            true,
         )
 
         return () => {

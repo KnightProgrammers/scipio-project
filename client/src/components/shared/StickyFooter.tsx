@@ -21,7 +21,7 @@ const StickyFooter = (props: StickyFooterProps) => {
             ([e]) => setIsSticky(e.intersectionRatio < 1),
             {
                 threshold: [1],
-            }
+            },
         )
 
         observer.observe(cachedRef as Element)
@@ -37,7 +37,7 @@ const StickyFooter = (props: StickyFooterProps) => {
             className={classNames(
                 'sticky -bottom-1',
                 className,
-                isSticky && stickyClass
+                isSticky && stickyClass,
             )}
             {...rest}
         >

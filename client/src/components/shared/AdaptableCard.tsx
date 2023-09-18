@@ -45,12 +45,12 @@ const AdaptableCard = (props: AdaptableCardProps) => {
                     } py-4 md:border-gray-200 md:dark:border-gray-600 rounded-br-none rounded-bl-none`,
                 type !== LAYOUT_TYPE_MODERN &&
                     shadow &&
-                    'rounded-none shadow-none border-0'
+                    'rounded-none shadow-none border-0',
             )}
             {...rest}
             bodyClass={classNames(
                 type === LAYOUT_TYPE_MODERN ? 'card-gutterless' : '',
-                bodyClass
+                bodyClass,
             )}
         >
             {children}

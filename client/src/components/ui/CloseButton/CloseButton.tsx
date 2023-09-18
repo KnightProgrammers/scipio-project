@@ -18,7 +18,7 @@ const CloseButton = forwardRef<HTMLElement, CloseButtonProps>((props, ref) => {
         'close-btn',
         defaultStyle && 'close-btn-default',
         absolute && closeButtonAbsoluteClass,
-        className
+        className,
     )
 
     return (

@@ -107,7 +107,7 @@ export const apexDonutChartDefaultOption: ApexOptions = {
                                 (a: string, b: string) => {
                                     return a + b
                                 },
-                                0
+                                0,
                             )
                         },
                     },

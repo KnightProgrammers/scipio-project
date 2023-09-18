@@ -4,7 +4,7 @@ import type { Direction } from '@/@types/theme'
 
 function useDirection(): [
     direction: Direction,
-    updateDirection: (dir: Direction) => void
+    updateDirection: (dir: Direction) => void,
 ] {
     const direction = useAppSelector((state) => state.theme.direction)
 

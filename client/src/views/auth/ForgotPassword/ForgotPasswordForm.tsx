@@ -35,7 +35,7 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
 
     const onSendMail = async (
         values: ForgotPasswordFormSchema,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         setSubmitting(true)
         try {

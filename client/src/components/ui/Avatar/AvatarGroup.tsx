@@ -28,7 +28,7 @@ const GroupContainer = ({
         className={classNames(
             'avatar-group',
             chained && 'avatar-group-chained',
-            className
+            className,
         )}
     >
         {children}
@@ -52,7 +52,7 @@ const AvatarGroup = (props: AvatarGroupProps) => {
     const childWithKey = Children.toArray(children).map((child, index) =>
         cloneElement(child as ReactElement, {
             key: `grouped-avatar-${index}`,
-        })
+        }),
     )
 
     if (maxCount && maxCount < childCount) {
@@ -78,7 +78,7 @@ const AvatarGroup = (props: AvatarGroupProps) => {
                 </Tooltip>
             ) : (
                 <Fragment key="avatar-more-tooltip">{avatar}</Fragment>
-            )
+            ),
         )
         return (
             <GroupContainer className={className} chained={chained}>

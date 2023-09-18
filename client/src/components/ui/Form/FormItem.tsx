@@ -67,13 +67,13 @@ const FormItem = forwardRef<HTMLDivElement, FormItemProps>((props, ref) => {
         'form-item',
         formItemLayout,
         className,
-        invalid ? 'invalid' : ''
+        invalid ? 'invalid' : '',
     )
 
     const formLabelClass = classNames(
         'form-label',
         label && getFormLabelLayoutClass(),
-        labelClass
+        labelClass,
     )
 
     const formLabelStyle = () => {

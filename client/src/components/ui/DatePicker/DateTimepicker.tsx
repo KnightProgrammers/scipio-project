@@ -105,16 +105,16 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
         })
 
         const [calendarMonth, setCalendarMonth] = useState(
-            _value || defaultMonth || new Date()
+            _value || defaultMonth || new Date(),
         )
 
         const [focused, setFocused] = useState(false)
         const [inputState, setInputState] = useState(
             _value instanceof Date
                 ? capitalize(
-                      dayjs(_value).locale(finalLocale).format(dateFormat)
+                      dayjs(_value).locale(finalLocale).format(dateFormat),
                   )
-                : ''
+                : '',
         )
 
         const closeDropdown = () => {
@@ -134,7 +134,7 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
 
             if (value instanceof Date && !focused) {
                 setInputState(
-                    dayjs(value).locale(finalLocale).format(dateFormat)
+                    dayjs(value).locale(finalLocale).format(dateFormat),
                 )
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,14 +152,14 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
             setValue(date)
             if (!value && !closePickerOnChange) {
                 setInputState(
-                    dayjs(date).locale(finalLocale).format(dateFormat)
+                    dayjs(date).locale(finalLocale).format(dateFormat),
                 )
             }
             closePickerOnChange &&
                 setInputState(
                     capitalize(
-                        dayjs(date).locale(finalLocale).format(dateFormat)
-                    )
+                        dayjs(date).locale(finalLocale).format(dateFormat),
+                    ),
                 )
             closePickerOnChange && closeDropdown()
             window.setTimeout(() => inputRef.current?.focus(), 0)
@@ -178,14 +178,14 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
             dayjs(date, dateFormat, finalLocale).toDate()
 
         const handleInputBlur = (
-            event: FocusEvent<HTMLInputElement, Element>
+            event: FocusEvent<HTMLInputElement, Element>,
         ) => {
             typeof onBlur === 'function' && onBlur(event)
             setFocused(false)
         }
 
         const handleInputFocus = (
-            event: FocusEvent<HTMLInputElement, Element>
+            event: FocusEvent<HTMLInputElement, Element>,
         ) => {
             typeof onFocus === 'function' && onFocus(event)
             setFocused(true)
@@ -214,7 +214,7 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
                     time.getHours(),
                     time.getMinutes(),
                     time.getSeconds(),
-                    time.getMilliseconds()
+                    time.getMilliseconds(),
                 )
                 setValue(newDateTime)
 
@@ -223,8 +223,8 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
                         capitalize(
                             dayjs(newDateTime)
                                 .locale(finalLocale)
-                                .format(dateFormat)
-                        )
+                                .format(dateFormat),
+                        ),
                     )
                 }
 
@@ -233,8 +233,8 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
                         capitalize(
                             dayjs(newDateTime)
                                 .locale(finalLocale)
-                                .format(dateFormat)
-                        )
+                                .format(dateFormat),
+                        ),
                     )
             }
             closePickerOnChange && closeDropdown()
@@ -242,7 +242,9 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
 
         const handleOk = () => {
             setInputState(
-                capitalize(dayjs(_value).locale(finalLocale).format(dateFormat))
+                capitalize(
+                    dayjs(_value).locale(finalLocale).format(dateFormat),
+                ),
             )
             closeDropdown()
             window.setTimeout(() => inputRef.current?.focus(), 0)
@@ -317,7 +319,7 @@ const DateTimepicker = forwardRef<HTMLInputElement, DateTimepickerProps>(
                 </div>
             </BasePicker>
         )
-    }
+    },
 )
 
 DateTimepicker.displayName = 'DateTimepicker'

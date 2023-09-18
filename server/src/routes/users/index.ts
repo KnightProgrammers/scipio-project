@@ -5,6 +5,11 @@ import firebaseApp from "@/services/firebase";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import CountryModel from "@/models/country.model";
+
+const UserCountry = Type.Object({
+  code: Type.Readonly(Type.String()),
+  name: Type.Readonly(Type.String()),
+});
 export const User = Type.Object({
   id: Type.Readonly(Type.String()),
   name: Type.Required(Type.String()),
@@ -14,7 +19,10 @@ export const User = Type.Object({
     Type.Null()
   ])),
   lang: Type.String(),
-  country: Type.Readonly(Type.String()),
+  country: Type.Readonly(Type.Union([
+    UserCountry,
+    Type.Null()
+  ])),
 })
 
 export type UserType = Static<typeof User>
@@ -53,7 +61,10 @@ const users: any = async (fastify: any): Promise<void> => {
         email: user.email,
         avatar: user.avatar || null,
         lang: user.lang || null,
-        country: !!user.country ? user.country.name : null
+        country: !!user.country ? {
+          name: user.country.name,
+          code: user.country.code
+        } : null
       })
     });
   fastify.post(
@@ -77,7 +88,10 @@ const users: any = async (fastify: any): Promise<void> => {
         email: user.email,
         avatar: user.avatar || null,
         lang: user.lang || null,
-        country: user.country.name
+        country: {
+          name: user.country.name,
+          code: user.country.code
+        }
       });
     }
   );
@@ -117,7 +131,10 @@ const users: any = async (fastify: any): Promise<void> => {
         email: user.email,
         avatar: user.avatar || null,
         lang: user.lang || null,
-        country: user.country.name
+        country: {
+          name: country.name,
+          code: country.code
+        }
       });
     }
   );

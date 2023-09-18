@@ -36,7 +36,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretDownFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-bottom-2 w-full left-0'
+                            '-bottom-2 w-full left-0',
                         )}
                     />
                 )
@@ -45,7 +45,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretDownFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-bottom-2 left-0 ml-3'
+                            '-bottom-2 left-0 ml-3',
                         )}
                     />
                 )
@@ -54,7 +54,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretDownFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-bottom-2 right-0 mr-3'
+                            '-bottom-2 right-0 mr-3',
                         )}
                     />
                 )
@@ -63,7 +63,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretLeftFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-left-2 top-1/2 transform -translate-y-1/2'
+                            '-left-2 top-1/2 transform -translate-y-1/2',
                         )}
                     />
                 )
@@ -72,7 +72,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretLeftFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-left-2 top-2'
+                            '-left-2 top-2',
                         )}
                     />
                 )
@@ -81,7 +81,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretLeftFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-left-2 bottom-2'
+                            '-left-2 bottom-2',
                         )}
                     />
                 )
@@ -90,7 +90,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretUpFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-top-2 w-full left-0'
+                            '-top-2 w-full left-0',
                         )}
                     />
                 )
@@ -99,7 +99,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretUpFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-top-2 left-0 ml-3'
+                            '-top-2 left-0 ml-3',
                         )}
                     />
                 )
@@ -108,7 +108,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretUpFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-top-2 right-0 mr-3'
+                            '-top-2 right-0 mr-3',
                         )}
                     />
                 )
@@ -117,7 +117,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretRightFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-right-2 top-1/2 transform -translate-y-1/2'
+                            '-right-2 top-1/2 transform -translate-y-1/2',
                         )}
                     />
                 )
@@ -126,7 +126,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretRightFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-right-2 top-2'
+                            '-right-2 top-2',
                         )}
                     />
                 )
@@ -135,7 +135,7 @@ const Arrow = ({ placement, color, colorDark }: ArrowProps) => {
                     <BsFillCaretRightFill
                         className={classNames(
                             arrowDefaultClass,
-                            '-right-2 bottom-2'
+                            '-right-2 bottom-2',
                         )}
                     />
                 )

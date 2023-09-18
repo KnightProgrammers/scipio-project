@@ -6,7 +6,7 @@ import type { CommonProps } from '@/@types/common'
 
 const _SideNavToggle = ({ className }: CommonProps) => {
     const sideNavCollapse = useAppSelector(
-        (state) => state.theme.layout.sideNavCollapse
+        (state) => state.theme.layout.sideNavCollapse,
     )
     const dispatch = useAppDispatch()
 

@@ -36,7 +36,7 @@ const useMessages = (msgKey: string) => {
             }
             return key
         },
-        [messages]
+        [messages],
     )
 
     const push = useCallback(
@@ -45,7 +45,7 @@ const useMessages = (msgKey: string) => {
             setMessages([...messages, { key, visible: true, node: message }])
             return key
         },
-        [messages, msgKey]
+        [messages, msgKey],
     )
 
     const removeAll = useCallback(() => {
@@ -63,14 +63,14 @@ const useMessages = (msgKey: string) => {
                         elm.visible = false
                     }
                     return elm
-                })
+                }),
             )
 
             setTimeout(() => {
                 setMessages(messages.filter((msg) => msg.visible))
             }, 50)
         },
-        [messages, getKey]
+        [messages, getKey],
     )
 
     return { messages, push, removeAll, remove }
@@ -147,10 +147,10 @@ const ToastWrapper = forwardRef((props: ToastWrapperProps, ref: any) => {
                         ref,
                         onClose: chainedFunction(
                             item.node?.props?.onClose,
-                            () => remove(item.key)
+                            () => remove(item.key),
                         ),
                         className: classNames(item.node?.props?.className),
-                    }
+                    },
                 )}
             </motion.div>
         )
@@ -203,7 +203,7 @@ ToastWrapper.getInstance = (props: ToastWrapperProps) => {
                 {...rest}
                 ref={wrapperRef}
                 callback={renderCallback}
-            />
+            />,
         )
     })
 }

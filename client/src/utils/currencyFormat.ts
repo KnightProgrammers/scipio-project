@@ -1,6 +1,6 @@
 export default function currencyFormat(
     amount: number,
-    currency = 'UYU'
+    currency = 'UYU',
 ): string {
     const formatter = new Intl.NumberFormat('es-UY', {
         style: 'currency',

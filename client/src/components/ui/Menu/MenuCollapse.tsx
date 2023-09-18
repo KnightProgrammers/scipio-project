@@ -52,7 +52,7 @@ const MenuCollapse = (props: MenuCollapseProps) => {
     const menuCollapseItemClass = classNames(
         'menu-collapse-item',
         `menu-collapse-item-${variant}`,
-        className
+        className,
     )
 
     return (

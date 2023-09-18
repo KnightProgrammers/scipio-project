@@ -7,7 +7,10 @@ export type UserState = {
     name?: string
     email?: string
     lang?: string
-    country?: string
+    country?: {
+        name: string
+        code: string
+    } | null
 }
 
 const initialState: UserState = {
@@ -16,7 +19,7 @@ const initialState: UserState = {
     name: '',
     email: '',
     lang: '',
-    country: '',
+    country: null,
 }
 
 const userSlice = createSlice({

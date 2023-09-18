@@ -10,7 +10,7 @@ import { useAppSelector } from '@/store'
 import Logo from '@/components/template/Logo'
 
 const VerticalMenuContent = lazy(
-    () => import('@/components/template/VerticalMenuContent')
+    () => import('@/components/template/VerticalMenuContent'),
 )
 
 type MobileNavToggleProps = {
@@ -35,10 +35,10 @@ const MobileNav = () => {
     const mode = useAppSelector((state) => state.theme.mode)
     const direction = useAppSelector((state) => state.theme.direction)
     const currentRouteKey = useAppSelector(
-        (state) => state.base.common.currentRouteKey
+        (state) => state.base.common.currentRouteKey,
     )
     const sideNavCollapse = useAppSelector(
-        (state) => state.theme.layout.sideNavCollapse
+        (state) => state.theme.layout.sideNavCollapse,
     )
 
     const { smaller } = useResponsive()

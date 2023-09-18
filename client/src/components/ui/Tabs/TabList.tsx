@@ -13,7 +13,7 @@ const TabList = forwardRef<HTMLDivElement, TabListProps>((props, ref) => {
     const tabListClass = classNames(
         'tab-list',
         `tab-list-${variant}`,
-        className
+        className,
     )
 
     return (

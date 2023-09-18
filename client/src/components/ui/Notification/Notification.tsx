@@ -39,7 +39,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
         const { clear } = useTimeout(
             onClose as () => void,
             duration,
-            duration > 0
+            duration > 0,
         )
 
         const handleClose = useCallback(
@@ -53,7 +53,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
                     }, 400)
                 }
             },
-            [onClose, clear, triggerByToast]
+            [onClose, clear, triggerByToast],
         )
 
         const notificationClass = classNames('notification', className)
@@ -72,7 +72,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
                 <div
                     className={classNames(
                         'notification-content',
-                        !children && 'no-child'
+                        !children && 'no-child',
                     )}
                 >
                     {type && !customIcon ? (
@@ -86,7 +86,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
                             <div
                                 className={classNames(
                                     'notification-title',
-                                    children && 'mb-1'
+                                    children && 'mb-1',
                                 )}
                             >
                                 {title}
@@ -107,7 +107,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
                 )}
             </div>
         )
-    }
+    },
 )
 
 Notification.displayName = 'Notification'

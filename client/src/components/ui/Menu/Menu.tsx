@@ -31,7 +31,7 @@ const Menu = forwardRef<HTMLElement, MenuProps>((props, ref) => {
     const menuClass = classNames(
         menuDefaultClass,
         `${menuDefaultClass}-${variant}`,
-        className
+        className,
     )
 
     return (

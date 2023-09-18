@@ -22,7 +22,7 @@ function mapCloneElement(children: ReactNode, func: any, context?: any) {
                 key: index,
                 ...func(child, index),
             }),
-        context
+        context,
     )
 }
 

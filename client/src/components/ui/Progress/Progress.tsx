@@ -56,7 +56,7 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) => {
     const progressClass = classNames(
         'progress',
         className,
-        variant === 'circle' ? 'circle' : 'line'
+        variant === 'circle' ? 'circle' : 'line',
     )
 
     const renderProgress = () => {

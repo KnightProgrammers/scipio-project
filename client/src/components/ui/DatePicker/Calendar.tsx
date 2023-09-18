@@ -9,35 +9,35 @@ export interface CalenderProps<MultipleSelection extends boolean = false>
     multipleSelection?: MultipleSelection
     value?: MultipleSelection extends true ? Date[] : Date | null
     onChange?(
-        value: MultipleSelection extends true ? Date[] : Date | null
+        value: MultipleSelection extends true ? Date[] : Date | null,
     ): void
 }
 
 const Calendar = <MultipleSelection extends boolean = false>(
-    props: CalenderProps<MultipleSelection>
+    props: CalenderProps<MultipleSelection>,
 ) => {
     const { multipleSelection, value, onChange, ...rest } = props
 
     const handleChange = (date: Date | Date[]) => {
         if (!multipleSelection) {
             return onChange?.(
-                date as MultipleSelection extends true ? Date[] : Date
+                date as MultipleSelection extends true ? Date[] : Date,
             )
         }
 
         const isSelected = (value as Date[])?.some((val) =>
-            isSameDate(val, date as Date)
+            isSameDate(val, date as Date),
         )
 
         return onChange?.(
             (isSelected
                 ? (value as Date[])?.filter(
-                      (val: Date) => !isSameDate(val, date as Date)
+                      (val: Date) => !isSameDate(val, date as Date),
                   )
                 : [
                       ...(value as Date[]),
                       date,
-                  ]) as MultipleSelection extends true ? Date[] : Date
+                  ]) as MultipleSelection extends true ? Date[] : Date,
         )
     }
 

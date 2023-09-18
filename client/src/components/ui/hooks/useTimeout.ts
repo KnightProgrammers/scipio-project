@@ -8,7 +8,7 @@ export type UseTimeoutReturn = {
 function useTimeout(
     fn: (() => void) | undefined,
     ms = 0,
-    enabled = true
+    enabled = true,
 ): UseTimeoutReturn {
     const timeout = useRef<ReturnType<typeof setTimeout>>()
     const callback = useRef(fn)

@@ -122,7 +122,7 @@ const TimeInputRange = forwardRef<HTMLInputElement, TimeInputRangeProps>(
                     <TimeInput
                         ref={useMergedRef(
                             fromTimeRef as Ref<HTMLInputElement>,
-                            ref
+                            ref,
                         )}
                         unstyle
                         value={_value[0]}
@@ -149,7 +149,7 @@ const TimeInputRange = forwardRef<HTMLInputElement, TimeInputRangeProps>(
                 </div>
             </Input>
         )
-    }
+    },
 )
 
 TimeInputRange.displayName = 'TimeInputRange'

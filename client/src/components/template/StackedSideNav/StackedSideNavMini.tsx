@@ -127,7 +127,7 @@ const StackedSideNavMini = (props: StackedSideNavMiniProps) => {
                                     </div>
                                 </Menu.MenuItem>
                             </Link>
-                        )
+                        ),
                     )}
                 </Menu>
             </ScrollBar>

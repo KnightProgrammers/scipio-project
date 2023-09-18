@@ -26,7 +26,7 @@ const CopyButton = () => {
             </Notification>,
             {
                 placement: 'top-center',
-            }
+            },
         )
     }
 

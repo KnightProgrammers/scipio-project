@@ -54,14 +54,14 @@ const Steps = forwardRef<HTMLDivElement, StepsProps>((props, ref) => {
                     itemProps.status = status as StepStatus
                     itemProps.className = classNames(
                         itemProps.className,
-                        'steps-item-active'
+                        'steps-item-active',
                     )
                 } else if (index < (current as number)) {
                     itemProps.status = COMPLETE as StepStatus
                 }
             }
             return itemProps
-        }
+        },
     )
 
     return (
@@ -70,7 +70,7 @@ const Steps = forwardRef<HTMLDivElement, StepsProps>((props, ref) => {
             className={classNames(
                 'steps',
                 vertical && 'steps-vertical',
-                className
+                className,
             )}
             {...rest}
         >

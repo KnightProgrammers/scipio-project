@@ -115,7 +115,7 @@ const Day = forwardRef<HTMLButtonElement, DayProps>((props, ref) => {
                 lastInRange &&
                     !disabled &&
                     'ltr:rounded-tr-lg ltr:rounded-br-lg rtl:rounded-tl-lg rtl:rounded-bl-lg',
-                className
+                className,
             )}
             onMouseEnter={(event) => onMouseEnter(value, event)}
         >

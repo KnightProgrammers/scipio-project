@@ -42,7 +42,7 @@ const Switcher = forwardRef<HTMLInputElement, SwitcherProps>((props, ref) => {
     const { themeColor, primaryColorLevel } = useConfig()
 
     const [switcherChecked, setSwitcherChecked] = useState(
-        defaultChecked || checked
+        defaultChecked || checked,
     )
 
     useEffect(() => {
@@ -98,7 +98,7 @@ const Switcher = forwardRef<HTMLInputElement, SwitcherProps>((props, ref) => {
         (switcherChecked || controlProps.checked) &&
             `switcher-checked bg-${switcherColor} dark:bg-${switcherColor}`,
         disabled && 'switcher-disabled',
-        className
+        className,
     )
 
     return (
@@ -120,7 +120,7 @@ const Switcher = forwardRef<HTMLInputElement, SwitcherProps>((props, ref) => {
                         'switcher-toggle-loading',
                         switcherChecked
                             ? 'switcher-checked-loading'
-                            : 'switcher-uncheck-loading'
+                            : 'switcher-uncheck-loading',
                     )}
                 />
             ) : (

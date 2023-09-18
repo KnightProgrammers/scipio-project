@@ -33,6 +33,7 @@ const WelcomeWizard = () => {
     const [loadingCountries, setLoadingCountries] = useState(false)
     const [selectedCountry, setSelectedCountry] = useState<object>({})
     const [countries, setCountries] = useState<CountryDataType[]>([])
+
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
 
@@ -42,11 +43,11 @@ const WelcomeWizard = () => {
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
                     placement: 'top-center',
-                }
+                },
             )
             console.error(e)
         },
-        [t]
+        [t],
     )
 
     useEffect(() => {
@@ -77,7 +78,7 @@ const WelcomeWizard = () => {
             try {
                 const user = await apiPathUserProfile(
                     selectedCountry.value,
-                    i18n.language
+                    i18n.language,
                 )
                 dispatch(setUser(user))
             } catch (e) {
@@ -123,7 +124,7 @@ const WelcomeWizard = () => {
                                     Control: CustomControl,
                                 }}
                                 value={langOptions.filter(
-                                    (option) => option.value === i18n.language
+                                    (option) => option.value === i18n.language,
                                 )}
                                 onChange={(option) =>
                                     !!option &&
@@ -159,7 +160,7 @@ const WelcomeWizard = () => {
                     )}
                 </div>
                 <div className="mt-4 text-center">
-                    {(step != STEPS.COUNTRY || !!selectedCountry) &&
+                    {(step != STEPS.COUNTRY || !!selectedCountry.value) &&
                         step != STEPS.SAVING && (
                             <Button
                                 disabled={

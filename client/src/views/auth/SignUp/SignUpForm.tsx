@@ -48,7 +48,7 @@ const SignUpForm = (props: SignUpFormProps) => {
         password: Yup.string().required(t('validations.required') || ''),
         confirmPassword: Yup.string().oneOf(
             [Yup.ref('password')],
-            t('validations.passwordMismatch') || ''
+            t('validations.passwordMismatch') || '',
         ),
         country: Yup.string().required(t('validations.required') || ''),
     })
@@ -68,7 +68,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                         />,
                         {
                             placement: 'top-center',
-                        }
+                        },
                     )
                     console.error(e)
                 })
@@ -77,7 +77,7 @@ const SignUpForm = (props: SignUpFormProps) => {
 
     const onSignUp = async (
         values: SignUpFormSchema,
-        setSubmitting: (isSubmitting: boolean) => void
+        setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         const { name, password, email, country } = values
         setSubmitting(true)

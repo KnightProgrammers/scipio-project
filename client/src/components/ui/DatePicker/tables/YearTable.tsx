@@ -47,7 +47,7 @@ const YearTable = (props: YearTableProps) => {
                         !disabled &&
                         `bg-${themeColor}-${primaryColorLevel} text-white year-picker-cell-active`,
                     !active && !disabled && 'hover:bg-gray-100',
-                    disabled && 'year-picker-cell-disabled'
+                    disabled && 'year-picker-cell-disabled',
                 )}
                 type="button"
                 onClick={() => onChange(year)}
@@ -64,7 +64,7 @@ const YearTable = (props: YearTableProps) => {
                 nextLevelDisabled
                 label={`${formatYear(range[0], yearLabelFormat)} - ${formatYear(
                     range[range.length - 1],
-                    yearLabelFormat
+                    yearLabelFormat,
                 )}`}
                 hasPrevious={
                     typeof minYear === 'number' ? minYear < range[0] : true

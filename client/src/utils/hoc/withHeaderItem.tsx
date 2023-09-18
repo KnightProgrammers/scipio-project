@@ -7,7 +7,7 @@ export type WithHeaderItemProps = {
 }
 
 const withHeaderItem = <T extends WithHeaderItemProps>(
-    Component: ComponentType<Omit<T, keyof WithHeaderItemProps>>
+    Component: ComponentType<Omit<T, keyof WithHeaderItemProps>>,
 ): FC<T> => {
     const WithHeaderItem: FC<T> = (props: T) => {
         const { className, hoverable = true } = props
@@ -17,7 +17,7 @@ const withHeaderItem = <T extends WithHeaderItemProps>(
                 className={classNames(
                     'header-action-item',
                     hoverable && 'header-action-item-hoverable',
-                    className
+                    className,
                 )}
             />
         )

@@ -33,7 +33,7 @@ const Menu = forwardRef<HTMLElement, DropdownInnerMenuProps>((props, ref) => {
     const menuRef = useUncertainRef<HTMLElement>(ref)
     const menuId = useUniqueId('menu-')
     const menuControl = useDropdownMenuContext<HTMLElement>(
-        menuRef as RefObject<HTMLElement>
+        menuRef as RefObject<HTMLElement>,
     )
 
     const getTransform = (deg: number) => {

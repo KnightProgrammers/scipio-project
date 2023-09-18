@@ -2,7 +2,7 @@
 export default function wildCardSearch(
     list: Array<Record<string, string | number>>,
     input: string,
-    specifyKey?: string
+    specifyKey?: string,
 ) {
     const searchText = (item: Record<string, string | number>) => {
         for (const key in item) {
