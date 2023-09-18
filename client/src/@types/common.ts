@@ -16,3 +16,8 @@ export type TableQueries = {
         key: string | number
     }
 }
+
+export interface SelectOption {
+    label: string
+    value: string
+}

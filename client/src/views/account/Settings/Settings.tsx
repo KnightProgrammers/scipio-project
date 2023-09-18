@@ -27,8 +27,8 @@ const settingsMenu: Record<
         path: string
     }
 > = {
-    profile: { label: 'settings.tabs.profile', path: 'profile' },
-    password: { label: 'settings.tabs.password', path: 'password' },
+    profile: { label: 'pages.settings.tabs.profile', path: 'profile' },
+    password: { label: 'pages.settings.tabs.password', path: 'password' },
 }
 
 const Settings = () => {

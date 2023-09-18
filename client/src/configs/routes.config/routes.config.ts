@@ -17,7 +17,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/expenses')),
         authority: [],
         meta: {
-            header: 'expenses.header',
+            header: 'pages.expenses.header',
         },
     },
     {
@@ -26,7 +26,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/savings')),
         authority: [],
         meta: {
-            header: 'savings.header',
+            header: 'pages.savings.header',
         },
     },
     {
@@ -35,7 +35,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/incomes')),
         authority: [],
         meta: {
-            header: 'incomes.header',
+            header: 'pages.incomes.header',
         },
     },
     {
@@ -44,7 +44,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/configuration/bankAccounts')),
         authority: [],
         meta: {
-            header: 'bankAccounts.header',
+            header: 'pages.bankAccounts.header',
         },
     },
     {
@@ -53,7 +53,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/configuration/creditCards')),
         authority: [],
         meta: {
-            header: 'creditCards.header',
+            header: 'pages.creditCards.header',
         },
     },
     {
@@ -62,7 +62,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/configuration/categories')),
         authority: [],
         meta: {
-            header: 'categories.header',
+            header: 'pages.categories.header',
         },
     },
     {
@@ -71,7 +71,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/configuration/jobs')),
         authority: [],
         meta: {
-            header: 'jobs.header',
+            header: 'pages.jobs.header',
         },
     },
     {
@@ -80,7 +80,7 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/account/Settings')),
         authority: [],
         meta: {
-            header: 'settings.header',
+            header: 'pages.settings.header',
         },
     },
 ]

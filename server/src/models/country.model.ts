@@ -4,6 +4,10 @@ export const CountrySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
+  },
+  isSupported: {
+    type: Boolean,
+    defaultValue: false
   }
 });
 

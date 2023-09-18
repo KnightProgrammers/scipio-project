@@ -14,6 +14,7 @@ export default async (request: any, reply: any) => {
         error: 401,
         code: 'tokenExpired',
         message: 'Token Expired',
+        e
       });
     }
   }

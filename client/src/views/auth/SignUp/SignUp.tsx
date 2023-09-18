@@ -7,10 +7,10 @@ const SignUp = () => {
     return (
         <>
             <div className="mb-8">
-                <h3 className="mb-1">{t('auth.signUp.title')}</h3>
-                <p>{t('auth.signUp.subtitle')}</p>
+                <h3 className="mb-1">{t('pages.auth.signUp.title')}</h3>
+                <p>{t('pages.auth.signUp.subtitle')}</p>
             </div>
-            <SignUpForm />
+            <SignUpForm className="text-left" />
         </>
     )
 }

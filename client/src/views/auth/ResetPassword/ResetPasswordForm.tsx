@@ -69,7 +69,7 @@ const ResetPasswordForm = (props: ResetPasswordFormProps) => {
     return (
         <div className={className}>
             <div className="mb-6">
-                <h3 className="mb-1">{t('auth.resetPassword.title')}</h3>
+                <h3 className="mb-1">{t('pages.auth.resetPassword.title')}</h3>
             </div>
             {message && (
                 <Alert showIcon className="mb-4" type="danger">
@@ -130,7 +130,9 @@ const ResetPasswordForm = (props: ResetPasswordFormProps) => {
                                     : t('actions.submit')}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>{t('auth.resetPassword.footer')} </span>
+                                <span>
+                                    {t('pages.auth.resetPassword.footer')}{' '}
+                                </span>
                                 <ActionLink to={signInUrl}>
                                     {t('actions.signIn')}
                                 </ActionLink>

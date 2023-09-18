@@ -68,6 +68,7 @@ function useAuth() {
                                 name: 'Anonymous',
                                 email: '',
                                 lang: '',
+                                country: '',
                             }
                         )
                     )

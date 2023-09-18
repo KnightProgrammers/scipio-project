@@ -21,6 +21,7 @@ export type SignUpCredential = {
     email: string
     password: string
     lang: string
+    country: string
 }
 
 export type ForgotPassword = {

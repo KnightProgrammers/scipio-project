@@ -121,7 +121,7 @@ const BankAccounts = () => {
     const { themeColor, primaryColorLevel } = useConfig()
 
     return (
-        <Container className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <Container className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {DATA.map((bank) => {
                 return (
                     <Card
@@ -141,7 +141,7 @@ const BankAccounts = () => {
                                 </span>
                             </div>
                         }
-                        className="m-2"
+                        className=""
                     >
                         {bank.accounts.map((account, index) => (
                             <ListItem key={index} cardBorder data={account} />

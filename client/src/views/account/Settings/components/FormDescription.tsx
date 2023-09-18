@@ -1,11 +1,11 @@
 import type { ComponentPropsWithoutRef } from 'react'
 
-interface FormDesriptionProps extends ComponentPropsWithoutRef<'div'> {
+interface FormDescriptionProps extends ComponentPropsWithoutRef<'div'> {
     title: string
     desc: string
 }
 
-const FormDesription = ({ title, desc, ...rest }: FormDesriptionProps) => {
+const FormDescription = ({ title, desc, ...rest }: FormDescriptionProps) => {
     return (
         <div {...rest}>
             <h5>{title}</h5>
@@ -14,4 +14,4 @@ const FormDesription = ({ title, desc, ...rest }: FormDesriptionProps) => {
     )
 }
 
-export default FormDesription
+export default FormDescription

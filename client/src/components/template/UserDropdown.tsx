@@ -66,7 +66,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 <Dropdown.Item variant="header" className="mb-1 px-0">
                     <div className="flex items-center justify-between px-2">
                         <div>
-                            <strong>{t('profile.appearance')}</strong>
+                            <strong>{t('pages.profile.appearance')}</strong>
                         </div>
                         <ModeSwitcher />
                     </div>
