@@ -68,7 +68,7 @@ function useAuth() {
                                 name: 'Anonymous',
                                 email: '',
                                 lang: '',
-                                country: '',
+                                country: null,
                             }
                         )
                     )
@@ -100,6 +100,7 @@ function useAuth() {
                 name: '',
                 email: '',
                 lang: '',
+                country: null,
             })
         )
         navigate(appConfig.unAuthenticatedEntryPath)

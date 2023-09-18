@@ -13,6 +13,10 @@ type AccountSetting = {
     email: string
     avatar: string
     lang: string
+    country: {
+        name: string
+        code: string
+    }
 }
 
 const Profile = lazy(() => import('./components/Profile'))
@@ -78,7 +82,12 @@ const Settings = () => {
                     <Suspense fallback={<></>}>
                         {currentTab === 'profile' &&
                             (data !== undefined ? (
-                                <Profile data={data} />
+                                <Profile
+                                    data={{
+                                        ...data,
+                                        country: data.country.name,
+                                    }}
+                                />
                             ) : (
                                 <Loading loading />
                             ))}

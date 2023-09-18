@@ -7,14 +7,14 @@ import countryList from '../fixtures/countries.json';
 export default async () => {
   const CountryModel = mongoose.model('Country', CountrySchema);
   logger.info(' • Seeding Countries');
-  for (const country of countryList) {
+  for (const {name, code, isSupported = false} of countryList) {
     try {
-      const exist = await CountryModel.findOne({name: country});
+      const exist = await CountryModel.findOne({name});
       if (exist) {
-        logger.debug(`\t "${country}" already exists`);
+        logger.debug(`\t "${name}" already exists`);
       } else {
-        await CountryModel.create({name: country});
-        logger.info(`\t "${country}" added`);
+        await CountryModel.create({name, code, isSupported});
+        logger.info(`\t "${name}" added`);
       }
     } catch (e) {
       console.error(e)
