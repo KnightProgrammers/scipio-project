@@ -18,10 +18,10 @@ const config = {
 
 (async function main() {
   logger.info("Connecting to DB")
-  logger.debug(`  ${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`)
+  logger.debug(`  ${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params ? `?${config.db.params}` : ''}`)
 
   const dbConnection = await mongoose.connect(
-    `${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`,
+    `${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params ? `?${config.db.params}` : ''}`,
     {
       user: config.db.user,
       pass: config.db.password,
