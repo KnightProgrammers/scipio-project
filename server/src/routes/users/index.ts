@@ -5,7 +5,6 @@ import firebaseApp from "@/services/firebase";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import CountryModel from "@/models/country.model";
-import * as console from "console";
 
 const UserCountry = Type.Object({
   code: Type.Readonly(Type.String()),
