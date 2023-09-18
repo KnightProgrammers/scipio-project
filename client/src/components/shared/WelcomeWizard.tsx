@@ -33,6 +33,7 @@ const WelcomeWizard = () => {
     const [loadingCountries, setLoadingCountries] = useState(false)
     const [selectedCountry, setSelectedCountry] = useState<object>({})
     const [countries, setCountries] = useState<CountryDataType[]>([])
+
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
 
@@ -159,7 +160,7 @@ const WelcomeWizard = () => {
                     )}
                 </div>
                 <div className="mt-4 text-center">
-                    {(step != STEPS.COUNTRY || !!selectedCountry) &&
+                    {(step != STEPS.COUNTRY || !!selectedCountry.value) &&
                         step != STEPS.SAVING && (
                             <Button
                                 disabled={

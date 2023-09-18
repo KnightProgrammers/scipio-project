@@ -5,6 +5,7 @@ import firebaseApp from "@/services/firebase";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import CountryModel from "@/models/country.model";
+import * as console from "console";
 
 const UserCountry = Type.Object({
   code: Type.Readonly(Type.String()),
@@ -19,7 +20,7 @@ export const User = Type.Object({
     Type.Null()
   ])),
   lang: Type.String(),
-  country: Type.Readonly(UserCountry),
+  country: Type.Optional(Type.Readonly(UserCountry))
 })
 
 export type UserType = Static<typeof User>
@@ -52,6 +53,7 @@ const users: any = async (fastify: any): Promise<void> => {
         user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});
         await user.save();
       }
+      console.log({user})
       reply.status(200).send({
         id: user.id,
         name: user.name,
