@@ -27,7 +27,7 @@
     "firebase-admin": "11.10.1",
     "gravatar": "1.8.2",
     "module-alias": "2.2.3",
-    "mongoose": "7.5.1"
+    "mongoose": "7.5.2"
   },
   "devDependencies": {
     "@types/gravatar": "1.8.3",
