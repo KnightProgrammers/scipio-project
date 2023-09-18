@@ -1,0 +1,68 @@
+name: DB Seed
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  db-seed:
+    name: "Database seed for ${{ inputs.environment }}"
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache server node modules
+        uses: actions/cache@v3
+        with:
+          path: server/node_modules
+          key: server-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: server-node_modules-
+      - name: Install Server dependencies
+        run: |
+          cd server
+          npm ci
+      - name: Run Server build typescript
+        run:  |
+          cd server
+          npm run build
+      - name: Cache DB Seed node modules
+        uses: actions/cache@v3
+        with:
+          path: db-seed/node_modules
+          key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: db-seed-node_modules-
+      - name: Install DB Seed dependencies
+        run: |
+          cd db-seed
+          npm ci
+      - name: Run DB Seed build typescript
+        run:  |
+          cd db-seed
+          npm run build
+      - name: Setup environment vars
+        env:
+          SECRETS_VARS: ${{ toJson(secrets) }}
+        run: echo "$SECRETS_VARS" > "db-seed/secrets.json"
+      - name: Install JSON to ENV lib
+        run: npm install -g json-to-env
+      - name: Generate .env file
+        run: |
+          json-to-env db-seed/secrets.json db-seed/.env
+          sed -i -e 's/export //g' db-seed/.env
+      - name: Run DB Seed
+        run:  |
+          cd db-seed
+          npm run start
