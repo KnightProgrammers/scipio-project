@@ -53,7 +53,8 @@
             "header": "Settings",
             "tabs": {
                 "profile": "Profile",
-                "password": "Password"
+                "password": "Password",
+                "currency": "Currencies"
             },
             "sections": {
                 "general": {

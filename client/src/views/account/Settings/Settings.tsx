@@ -21,6 +21,7 @@ type AccountSetting = {
 
 const Profile = lazy(() => import('./components/Profile'))
 const Password = lazy(() => import('./components/Password'))
+const Currency = lazy(() => import('./components/Currency'))
 
 const { TabNav, TabList } = Tabs
 
@@ -33,6 +34,7 @@ const settingsMenu: Record<
 > = {
     profile: { label: 'pages.settings.tabs.profile', path: 'profile' },
     password: { label: 'pages.settings.tabs.password', path: 'password' },
+    currency: { label: 'pages.settings.tabs.currency', path: 'currency' },
 }
 
 const Settings = () => {
@@ -92,6 +94,7 @@ const Settings = () => {
                                 <Loading loading />
                             ))}
                         {currentTab === 'password' && <Password />}
+                        {currentTab === 'currency' && <Currency />}
                     </Suspense>
                 </div>
             </AdaptableCard>

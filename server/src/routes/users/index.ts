@@ -1,10 +1,12 @@
-import { errorCodes } from 'fastify'
+import { errorCodes } from "fastify";
 import { Static, Type } from "@sinclair/typebox";
 import * as gavatar from "gravatar";
 import firebaseApp from "@/services/firebase";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import CountryModel from "@/models/country.model";
+import CurrencyModel from "@/models/currency.model";
+
 
 const UserCountry = Type.Object({
   code: Type.Readonly(Type.String()),
@@ -19,13 +21,21 @@ export const User = Type.Object({
     Type.Null()
   ])),
   lang: Type.String(),
-  country: Type.Readonly(Type.Union([
+  country: Type.Optional(Type.Union([
     UserCountry,
     Type.Null()
   ])),
 })
 
 export type UserType = Static<typeof User>
+
+export const Currency = Type.Object({
+  id: Type.Required(Type.String()),
+  name: Type.Required(Type.String()),
+  code: Type.Required(Type.String())
+})
+
+export type CurrencyType = Static<typeof Currency>
 
 const users: any = async (fastify: any): Promise<void> => {
   fastify.decorateRequest('user', null);
@@ -138,6 +148,56 @@ const users: any = async (fastify: any): Promise<void> => {
       });
     }
   );
+
+  fastify.get(
+      '/me/currencies', {
+        schema: {
+          response: {
+            200: {
+              type: 'array',
+              items: Currency
+            }
+          },
+        },
+      },
+      async function (request: any, reply: any) {
+        reply.status(200).send(request.user.currencies.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          code: c.code
+        })));
+      });
+
+  fastify.post(
+      '/me/currencies', {
+        schema: {
+          body: {
+            type: 'array',
+            items: {
+              type: 'string'
+            }
+          },
+          response: {
+            200: {
+              type: 'array',
+              items: Currency
+            }
+          },
+        },
+      },
+      async function (request: any, reply: any) {
+        const selectedIds = request.body;
+        const user = request.user;
+
+        user.currencies = await CurrencyModel.find({ _id: selectedIds });
+        user.save();
+
+        reply.status(200).send(user.currencies.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          code: c.code
+        })));
+      });
 }
 
 export default users;
