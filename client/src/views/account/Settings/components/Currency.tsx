@@ -56,10 +56,8 @@ const Currency = () => {
 
     return (
         <div>
-            <h5>Currencies</h5>
-            <p>
-                Filter all the available currency for the one that you will use
-            </p>
+            <h5>{t('pages.settings.sections.currency.title')}</h5>
+            <p>{t('pages.settings.sections.currency.desc')}</p>
             {isLoading && (
                 <>
                     {Array.apply(null, {length: 5}).map((_, index) => (
@@ -85,6 +83,7 @@ const Currency = () => {
                                     vertical
                                     name="countries"
                                     value={selectedCurrencies}
+                                    className="max-h-[550px] w-full overflow-y-auto"
                                     onChange={setSelectedCurrencies}
                                 >
                                     {
@@ -92,7 +91,7 @@ const Currency = () => {
                                             key={c.id}
                                             value={c.id}
                                         >
-                                            {c.code} - {c.name}
+                                            {c.code} ({t(`currencies.${c.code}`)})
                                         </Checkbox>)
                                     }
                                 </Checkbox.Group>

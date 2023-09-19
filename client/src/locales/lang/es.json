@@ -68,6 +68,10 @@
                 "password": {
                     "title": "Contraseña",
                     "desc": "Ingrese su actual y la nueva contraseña para restablecer sus credenciales"
+                },
+                "currency": {
+                    "title": "Monedas Favoritas",
+                    "desc": "Filtre todas las monedas disponibles por las que realmente usará"
                 }
             }
         },
@@ -155,5 +159,11 @@
             "categories": "Categorías",
             "jobs": "Trabajos"
         }
+    },
+    "currencies": {
+        "USD": "Dolar - US",
+        "UYU": "Peso - Uruguay",
+        "UYI": "Unidades Indexadas - Uruguay",
+        "EUR": "Euro"
     }
 }

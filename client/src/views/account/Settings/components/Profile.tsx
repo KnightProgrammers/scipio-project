@@ -98,7 +98,7 @@ const Profile = ({
                 name: data.name,
                 email: data.email,
                 country: data.country,
-                lang: data.lang || i18n.language,
+                lang: i18n.language,
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
