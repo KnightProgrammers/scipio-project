@@ -64,7 +64,7 @@ const Profile = ({
                 name: values.name,
                 email: values.email,
                 avatar: values.avatar,
-                lang: values.lang
+                lang: values.lang,
             })
             toast.push(
                 <Notification

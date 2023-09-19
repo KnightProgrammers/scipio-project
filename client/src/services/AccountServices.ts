@@ -1,5 +1,5 @@
 import BaseService from '@/services/BaseService'
-import { CurrencyType, UserDataType } from "@/@types/system";
+import { CurrencyType, UserDataType } from '@/@types/system'
 
 export async function apiGetUserProfile(): Promise<UserDataType> {
     return BaseService.request({
@@ -8,7 +8,9 @@ export async function apiGetUserProfile(): Promise<UserDataType> {
     })
 }
 
-export async function apiUpdateUserProfile(data: object): Promise<UserDataType> {
+export async function apiUpdateUserProfile(
+    data: object,
+): Promise<UserDataType> {
     return BaseService.request({
         url: '/users/me',
         method: 'post',
@@ -31,18 +33,20 @@ export async function apiPathUserProfile(
 }
 
 export async function apiGetUserCurrencies(): Promise<CurrencyType[]> {
-    const {data} = await BaseService.request({
+    const { data } = await BaseService.request({
         url: '/users/me/currencies',
         method: 'get',
-    });
-    return data;
+    })
+    return data
 }
 
-export async function apiSetUserCurrencies(data: string[]): Promise<CurrencyType[]> {
+export async function apiSetUserCurrencies(
+    data: string[],
+): Promise<CurrencyType[]> {
     const response = await BaseService.request({
         url: '/users/me/currencies',
         method: 'post',
-        data
-    });
-    return response.data;
+        data,
+    })
+    return response.data
 }

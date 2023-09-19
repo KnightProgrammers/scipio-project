@@ -1,10 +1,10 @@
 type DividerProps = {
-    label?: string,
+    label?: string
     className?: string
 }
 
 const Divider = (props: DividerProps) => {
-    const { label, className  } = props
+    const { label, className } = props
     if (label) {
         return (
             <div className={`grid grid-cols-4 gap-4 items-center ${className}`}>
@@ -14,7 +14,9 @@ const Divider = (props: DividerProps) => {
             </div>
         )
     } else {
-        return <div className={`border-gray-300 border-t my-2 ${className}`}></div>
+        return (
+            <div className={`border-gray-300 border-t my-2 ${className}`}></div>
+        )
     }
 }
 

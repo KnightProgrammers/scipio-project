@@ -1,5 +1,3 @@
-import { string } from "yup";
-
 export type CountryDataType = {
     id: string
     name: string
@@ -12,7 +10,7 @@ export type UserDataType = {
     avatar: string
     lang: string
     country: {
-        name: string,
+        name: string
         code: string
     }
 }
@@ -37,7 +35,7 @@ export const langOptions: LanguageOption[] = [
 ]
 
 export type CurrencyType = {
-    id: string,
-    name: string,
+    id: string
+    name: string
     code: string
 }

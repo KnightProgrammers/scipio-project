@@ -1,23 +1,32 @@
-import { Form, Formik } from "formik";
-import { Button, Checkbox, FormContainer, FormItem, Skeleton } from "@/components/ui";
-import { Divider } from "@/components/shared";
-import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
-import { CurrencyType } from "@/@types/system";
-import loading from "@/components/shared/Loading";
-import { apiGetUserCurrencies, apiSetUserCurrencies } from "@/services/AccountServices";
-import { apiGetCurrencies } from "@/services/CurrencyServices";
-import toast from "@/components/ui/toast";
-import Notification from "@/components/ui/Notification";
+import { Form, Formik } from 'formik'
+import {
+    Button,
+    Checkbox,
+    FormContainer,
+    FormItem,
+    Skeleton,
+} from '@/components/ui'
+import { Divider } from '@/components/shared'
+import { useTranslation } from 'react-i18next'
+import { useCallback, useEffect, useState } from 'react'
+import { CurrencyType } from '@/@types/system'
+import {
+    apiGetUserCurrencies,
+    apiSetUserCurrencies,
+} from '@/services/AccountServices'
+import { apiGetCurrencies } from '@/services/CurrencyServices'
+import toast from '@/components/ui/toast'
+import Notification from '@/components/ui/Notification'
 
 const Currency = () => {
     const { t } = useTranslation()
-    const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false);
-    const [isLoadingUserCurrencies, setIsLoadingUserCurrencies] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false)
+    const [isLoadingUserCurrencies, setIsLoadingUserCurrencies] =
+        useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const [currencies, setCurrencies] = useState<CurrencyType[]>()
     const [userCurrencies, setUserCurrencies] = useState<CurrencyType[]>()
-    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([]);
+    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
     const errorHandler = useCallback(
         (e: object) => {
@@ -32,27 +41,35 @@ const Currency = () => {
         [t],
     )
 
-    const isLoading = !userCurrencies && !currencies;
+    const isLoading = !userCurrencies && !currencies
 
     useEffect(() => {
-        setIsLoadingUserCurrencies(true);
+        setIsLoadingUserCurrencies(true)
         if (!userCurrencies && !isLoadingUserCurrencies) {
             apiGetUserCurrencies()
                 .then((data) => {
                     setUserCurrencies(data)
                     setSelectedCurrencies(data.map(({ id }) => id))
-                    setIsLoadingUserCurrencies(false);
+                    setIsLoadingUserCurrencies(false)
                 })
                 .catch(errorHandler)
         }
-        setIsLoadingCurrencies(true);
+        setIsLoadingCurrencies(true)
         if (!currencies && !isLoadingCurrencies) {
-            apiGetCurrencies().then((data) => {
-                setCurrencies(data);
-                setIsLoadingCurrencies(false);
-            }).catch(errorHandler)
+            apiGetCurrencies()
+                .then((data) => {
+                    setCurrencies(data)
+                    setIsLoadingCurrencies(false)
+                })
+                .catch(errorHandler)
         }
-    }, [errorHandler, isLoadingUserCurrencies, isLoadingCurrencies])
+    }, [
+        errorHandler,
+        isLoadingUserCurrencies,
+        isLoadingCurrencies,
+        currencies,
+        userCurrencies,
+    ])
 
     return (
         <div>
@@ -60,8 +77,8 @@ const Currency = () => {
             <p>{t('pages.settings.sections.currency.desc')}</p>
             {isLoading && (
                 <>
-                    {Array.apply(null, {length: 5}).map((_, index) => (
-                        <Skeleton className="my-2" height={35} key={index} />
+                    {[0, 1, 2, 3, 4, 5].map((_, index) => (
+                        <Skeleton key={index} className="my-2" height={35} />
                     ))}
                 </>
             )}
@@ -69,11 +86,13 @@ const Currency = () => {
                 <Formik
                     initialValues={{}}
                     onSubmit={async () => {
+                        setIsSubmitting(true)
                         try {
-                            await apiSetUserCurrencies(selectedCurrencies);
+                            await apiSetUserCurrencies(selectedCurrencies)
                         } catch (e) {
-                            errorHandler(e);
+                            errorHandler(e)
                         }
+                        setIsSubmitting(false)
                     }}
                 >
                     <Form>
@@ -86,14 +105,12 @@ const Currency = () => {
                                     className="max-h-[550px] w-full overflow-y-auto"
                                     onChange={setSelectedCurrencies}
                                 >
-                                    {
-                                        currencies?.map(c => <Checkbox
-                                            key={c.id}
-                                            value={c.id}
-                                        >
-                                            {c.code} ({t(`currencies.${c.code}`)})
-                                        </Checkbox>)
-                                    }
+                                    {currencies?.map((c) => (
+                                        <Checkbox key={c.id} value={c.id}>
+                                            {c.code} (
+                                            {t(`currencies.${c.code}`)})
+                                        </Checkbox>
+                                    ))}
                                 </Checkbox.Group>
                             </FormItem>
                             <Divider className="my-4" />
@@ -117,4 +134,4 @@ const Currency = () => {
     )
 }
 
-export default Currency;
+export default Currency
