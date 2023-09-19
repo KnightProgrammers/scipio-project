@@ -9,7 +9,10 @@ export type UserDataType = {
     email: string
     avatar: string
     lang: string
-    country: string
+    country: {
+        name: string
+        code: string
+    }
 }
 
 export type LanguageOption = {
@@ -30,3 +33,9 @@ export const langOptions: LanguageOption[] = [
         imgPath: '/img/countries/sp.png',
     },
 ]
+
+export type CurrencyType = {
+    id: string
+    name: string
+    code: string
+}

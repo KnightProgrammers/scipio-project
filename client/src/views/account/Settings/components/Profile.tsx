@@ -59,7 +59,13 @@ const Profile = ({
         setSubmitting: (isSubmitting: boolean) => void,
     ) => {
         try {
-            const { data: user } = await apiUpdateUserProfile(values)
+            const { data: user } = await apiUpdateUserProfile({
+                id: values.id,
+                name: values.name,
+                email: values.email,
+                avatar: values.avatar,
+                lang: values.lang,
+            })
             toast.push(
                 <Notification
                     title={t('notifications.profile.updated') || ''}
@@ -92,7 +98,7 @@ const Profile = ({
                 name: data.name,
                 email: data.email,
                 country: data.country,
-                lang: data.lang || i18n.language,
+                lang: i18n.language,
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { CountrySchema } from "@/models/country.model";
+import { CurrencySchema } from "@/models/currency.model";
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -18,7 +19,8 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  country: CountrySchema
+  country: CountrySchema,
+  currencies: [CurrencySchema]
 });
 
 export default mongoose.model('User', UserSchema);
