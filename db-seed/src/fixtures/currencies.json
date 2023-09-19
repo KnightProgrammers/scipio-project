@@ -1,0 +1,18 @@
+[
+  {
+    "code": "USD",
+    "name": "US Dolar"
+  },
+  {
+    "code": "UYU",
+    "name": "Uruguay peso"
+  },
+  {
+    "code": "UYI",
+    "name": "Uruguay Peso en Unidades Indexadas"
+  },
+  {
+    "code": "EUR",
+    "name": "Euro"
+  }
+]
