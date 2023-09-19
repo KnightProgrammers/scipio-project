@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import logger from "./helpers/logger";
 import countrySeed from "./seeds/country";
+import currencySeed from "./seeds/currency";
 
 
 const config = {
@@ -33,6 +34,7 @@ const config = {
   logger.info('-----------------');
   logger.info('Starting seeding:');
   await countrySeed();
+  await currencySeed();
   logger.info('-----------------');
   await dbConnection.disconnect();
   logger.info('Done!')
