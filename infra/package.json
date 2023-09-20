@@ -1,0 +1,14 @@
+{
+  "name": "scipio-infra",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --env-file=.env src/index.js",
+    "wait-for-deploy": "node --env-file=.env src/waitForDeploy.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "clear": "^0.1.0",
+    "figlet": "^1.6.0"
+  }
+}
