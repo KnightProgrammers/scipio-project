@@ -20,9 +20,10 @@ const deployCommand = async (options) => {
     if (!targetEnv) {
         throw new Error('Environment not found')
     }
+    const environmentTokenName = `CI Deploy - ${options.service} - ${environmentName}`;
 
     const projectAuthToken = await railwayClient.createEnvironmentToken({
-        name: "CI Deploy Token",
+        name: environmentTokenName,
         environmentId: targetEnv.id
     });
 
@@ -33,7 +34,7 @@ const deployCommand = async (options) => {
     } finally {
         const environmentTokens = await railwayClient.getEnvironmentTokens();
         const tokenFound = environmentTokens.find(({environmentId, name}) => 
-            name === "CI Deploy Token" && environmentId === targetEnv.id
+            name === environmentTokenName && environmentId === targetEnv.id
         )
         await railwayClient.deleteEnvironmentToken(tokenFound.id);
     }
