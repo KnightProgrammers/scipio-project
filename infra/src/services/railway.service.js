@@ -98,7 +98,7 @@ class RailwayService {
                 after
             }
         });
-        return result.data.deployments.edges.map(({node}) => node)[0];
+        return result.data.deployments.edges.map(({ node }) => node)[0];
     }
 
     async getDeployment(deploymentId) {
@@ -236,6 +236,19 @@ class RailwayService {
         });
         return result.data.environmentCreate
     }
+    async deleteEnvironment(environmentId) {
+        const result = await this._executeQuery({
+            query: `
+            mutation deleteEnvironment($environmentId: String!) {
+                environmentDelete(id: $environmentId)
+            }
+            `,
+            variables: {
+                environmentId
+            }
+        });
+        return result.data
+    }
 }
 
-module.exports = RailwayService;
+export default RailwayService;

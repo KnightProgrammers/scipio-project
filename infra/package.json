@@ -1,14 +1,17 @@
 {
   "name": "scipio-infra",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/cli.js",
+  "type": "module",
   "scripts": {
-    "start": "node --env-file=.env src/index.js",
+    "dev": "node --env-file=.env cli.js",
+    "start": "node --env-file=.env src/cli.js",
     "wait-for-deploy": "node --env-file=.env src/waitForDeploy.js"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
-    "clear": "^0.1.0",
-    "figlet": "^1.6.0"
+    "chalk": "5.3.0",
+    "clear": "0.1.0",
+    "commander": "11.0.0",
+    "figlet": "1.6.0"
   }
 }
