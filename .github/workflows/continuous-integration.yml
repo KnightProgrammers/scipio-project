@@ -76,6 +76,9 @@ jobs:
     name: "Create Beta Environment"
     runs-on: ubuntu-latest
     needs: [ e2e-tests ]
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
