@@ -1,12 +1,14 @@
 {
   "name": "scipio-infra",
   "version": "1.0.0",
-  "main": "src/cli.js",
+  "main": "src/index.js",
+  "bin": {
+    "scipio-infra": "./src/index.js"
+  },
   "type": "module",
   "scripts": {
-    "dev": "node --env-file=.env cli.js",
-    "start": "node --env-file=.env src/cli.js",
-    "wait-for-deploy": "node --env-file=.env src/waitForDeploy.js"
+    "dev": "node --env-file=.env index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "chalk": "5.3.0",
