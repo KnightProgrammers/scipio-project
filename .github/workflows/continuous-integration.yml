@@ -82,6 +82,10 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Install infra dependencies
         run: |
           cd infra
@@ -104,11 +108,17 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Install infra dependencies
         run: |
           cd infra
           npm install
       - name: Install scipio-infra globaly
-        run: npm install -g ./infra      
-      - name: Create environment
+        run: npm install -g ./infra
+      - name: Install railway cli
+        run: npm i -g @railway/cli
+      - name: Deploy ${{ matrix.service }} service 
         run: scipio-infra deploy -s ${{ matrix.service }} -e "beta-${{ github.event.number }}"
