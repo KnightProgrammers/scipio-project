@@ -18,7 +18,7 @@ const deployCommand = async (options) => {
     const targetEnv = environments.find(({ name }) => name === environmentName);
 
     if (!targetEnv) {
-        throw new Error('Environment not found')
+        throw new Error(`Environment "${environmentName}" not found`)
     }
     const environmentTokenName = `CI Deploy - ${options.service} - ${environmentName}`;
 

@@ -10,6 +10,7 @@ const program = new Command();
 import deployCommand from './commands/deploy.command.js';
 import deleteEnvironmentCommand from './commands/delete-environment.command.js';
 import createEnvironmentCommand from './commands/create-environment.command.js';
+import generatePrCommentCommand from './commands/generate-pr-comment.command.js';
 
 clear()
 
@@ -44,14 +45,20 @@ program.command('deploy')
 
 
 program.command('environment-create')
-    .description(`'Create a branch environment`)
+    .description('Create a branch environment')
     .argument('<environment-name>', 'Name of the environment to created')
     .action(createEnvironmentCommand);
 
 
 program.command('environment-delete')
-    .description(`'Delete branch environment after it's merged`)
+    .description(`Delete branch environment after it's merged`)
     .argument('<environment-name>', 'Name of the environment to delete')
     .action(deleteEnvironmentCommand);
+
+
+program.command('generate-pr-comment')
+    .description('Generates a Pull Request comment base on the latest deployment status of an environment')
+    .requiredOption('-e, --environment <name>', 'Name of the environment to be deployed')
+    .action(generatePrCommentCommand);
 
 program.parse();
