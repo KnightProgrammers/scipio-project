@@ -127,6 +127,9 @@ jobs:
     name: "Notify Deployment"
     runs-on: ubuntu-latest
     environment: Beta
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
