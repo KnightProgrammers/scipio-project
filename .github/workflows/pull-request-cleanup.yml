@@ -1,0 +1,28 @@
+name: Pull Request Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete-beta-env:
+    name: "Delete Beta Environment"
+    runs-on: ubuntu-latest
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install infra dependencies
+        run: |
+          cd infra
+          npm install
+      - name: Install scipio-infra globaly
+        run: npm install -g ./infra      
+      - name: Delete environment
+        run: scipio-infra environment-delete "beta-${{ github.event.number }}"
