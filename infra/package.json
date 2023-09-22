@@ -1,0 +1,19 @@
+{
+  "name": "scipio-infra",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "bin": {
+    "scipio-infra": "./src/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "chalk": "5.3.0",
+    "clear": "0.1.0",
+    "commander": "11.0.0",
+    "figlet": "1.6.0"
+  }
+}
