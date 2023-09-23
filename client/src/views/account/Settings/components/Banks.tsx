@@ -10,17 +10,23 @@ import {
 } from '@/components/ui'
 import { useTranslation } from 'react-i18next'
 import {
-    HiLibrary, HiOutlineExclamation,
+    HiLibrary,
+    HiOutlineExclamation,
     HiOutlinePencilAlt,
     HiOutlineTrash,
-    HiPlus
-} from "react-icons/hi";
+    HiPlus,
+} from 'react-icons/hi'
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { BankDataType } from '@/@types/system'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
 import { Loading } from '@/components/shared'
-import { apiCreateBank, apiDeleteBank, apiGetBankList, apiUpdateBank } from "@/services/BankServices";
+import {
+    apiCreateBank,
+    apiDeleteBank,
+    apiGetBankList,
+    apiUpdateBank,
+} from '@/services/BankServices'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
@@ -34,56 +40,78 @@ type BankDeleteConfirmationProps = {
     onConfirmation: () => void
 }
 const BankDeleteConfirmation = (props: BankDeleteConfirmationProps) => {
-    const { isOpen, bank, onClose, onConfirmation} = props
-    const [ isDeleting, setIsDeleting] = useState<boolean>(false);
+    const { isOpen, bank, onClose, onConfirmation } = props
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
     const { t } = useTranslation()
 
     const onDelete = async () => {
-        await apiDeleteBank(bank.id);
+        setIsDeleting(true)
+        await apiDeleteBank(bank.id)
+        setIsDeleting(false)
         toast.push(
             <Notification
-                title={t('pages.settings.sections.banks.notifications.confirmDelete') || ''}
+                title={
+                    t(
+                        'pages.settings.sections.banks.notifications.confirmDelete',
+                    ) || ''
+                }
                 type="success"
             />,
             {
                 placement: 'top-center',
             },
         )
-        onConfirmation();
+        onConfirmation()
     }
 
-    return <Dialog
-        isOpen={isOpen}
-        contentClassName="pb-0 px-0"
-        onClose={onClose}
-        onRequestClose={onClose}
-    >
-        <div className="px-6 pb-6 pt-2 flex">
-            <div><Avatar icon={<HiOutlineExclamation/>} shape="circle" className="text-red-600 bg-red-100 dark:text-red-400"/></div>
-            <div className="ml-4 rtl:mr-4">
-                <h5 className="mb-2">{t('pages.settings.sections.banks.deleteConfirmation.title')}</h5>
-                <p>{t('pages.settings.sections.banks.deleteConfirmation.description')}</p>
+    return (
+        <Dialog
+            isOpen={isOpen}
+            contentClassName="pb-0 px-0"
+            onClose={onClose}
+            onRequestClose={onClose}
+        >
+            <div className="px-6 pb-6 pt-2 flex">
+                <div>
+                    <Avatar
+                        icon={<HiOutlineExclamation />}
+                        shape="circle"
+                        className="text-red-600 bg-red-100 dark:text-red-400"
+                    />
+                </div>
+                <div className="ml-4 rtl:mr-4">
+                    <h5 className="mb-2">
+                        {t(
+                            'pages.settings.sections.banks.deleteConfirmation.title',
+                        )}
+                    </h5>
+                    <p>
+                        {t(
+                            'pages.settings.sections.banks.deleteConfirmation.description',
+                        )}
+                    </p>
+                </div>
             </div>
-        </div>
-        <div className="text-right px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg">
-            <Button
-                className="ltr:mr-2 rtl:ml-2"
-                onClick={onClose}
-                disabled={isDeleting}
-            >
-                {t('actions.cancel')}
-            </Button>
-            <Button
-                variant="solid"
-                color="red"
-                onClick={onDelete}
-                disabled={isDeleting}
-            >
-                {t('actions.delete')}
-            </Button>
-        </div>
-    </Dialog>
+            <div className="text-right px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg">
+                <Button
+                    className="ltr:mr-2 rtl:ml-2"
+                    disabled={isDeleting}
+                    onClick={onClose}
+                >
+                    {t('actions.cancel')}
+                </Button>
+                <Button
+                    variant="solid"
+                    color="red"
+                    disabled={isDeleting}
+                    onClick={onDelete}
+                >
+                    {t('actions.delete')}
+                </Button>
+            </div>
+        </Dialog>
+    )
 }
 
 type BankFormProps = {
@@ -150,7 +178,7 @@ const BankForm = (props: BankFormProps) => {
                             } else {
                                 await apiUpdateBank({
                                     ...bank,
-                                    ...values
+                                    ...values,
                                 })
                             }
                         } catch (e: unknown) {
@@ -338,17 +366,17 @@ const Banks = () => {
                     loadBanks()
                 }}
             />
-            {
-                !!selectedBank && <BankDeleteConfirmation
-                isOpen={isDeleteOpen}
-                bank={selectedBank}
-                onClose={onBankDeleteConfirmClose}
-                onConfirmation={() => {
-                    onBankDeleteConfirmClose()
-                    loadBanks()
-                }}
-              />
-            }
+            {!!selectedBank && (
+                <BankDeleteConfirmation
+                    isOpen={isDeleteOpen}
+                    bank={selectedBank}
+                    onClose={onBankDeleteConfirmClose}
+                    onConfirmation={() => {
+                        onBankDeleteConfirmClose()
+                        loadBanks()
+                    }}
+                />
+            )}
         </div>
     )
 }

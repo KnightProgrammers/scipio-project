@@ -20,22 +20,19 @@ export async function apiCreateBank(body: {
     return data
 }
 
-
 export async function apiUpdateBank(body: BankDataType): Promise<BankDataType> {
     const { data } = await ApiService.fetchData<BankDataType>({
         url: `/banks/${body.id}`,
         method: 'put',
-        data: body
+        data: body,
     })
     return data
 }
 
-
-
 export async function apiDeleteBank(bankId: string): Promise<BankDataType> {
     const { data } = await ApiService.fetchData<BankDataType>({
         url: `/banks/${bankId}`,
-        method: 'delete'
+        method: 'delete',
     })
     return data
 }
