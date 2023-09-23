@@ -54,7 +54,8 @@
             "tabs": {
                 "profile": "Perfil",
                 "password": "Contraseña",
-                "currency": "Monedas"
+                "currency": "Monedas",
+                "banks": "Bancos"
             },
             "sections": {
                 "general": {
@@ -72,6 +73,26 @@
                 "currency": {
                     "title": "Monedas Favoritas",
                     "desc": "Filtre todas las monedas disponibles por las que realmente usará"
+                },
+                "banks": {
+                    "title": "Bancos",
+                    "desc": "Gestione los bancos a los que asociará cuentas y tarjetas de crédito",
+                    "newBankAction": "Agregar banco",
+                    "form": {
+                        "newTitle": "Nuevo Banco",
+                        "editTitle": "Editar Banco"
+                    },
+                    "emptyState": {
+                        "title": "No hay bancos todavía",
+                        "description": "Create un nuevo banco para asociarle cuentas y tarjetas de crédito"
+                    },
+                    "deleteConfirmation": {
+                        "title": "Eliminar Banco",
+                        "description": "Está seguro que desea eliminar el banco?"
+                    },
+                    "notifications": {
+                        "confirmDelete": "Banco eliminado exitosamente"
+                    }
                 }
             }
         },
@@ -84,6 +105,7 @@
         }
     },
     "actions": {
+        "cancel": "Cancelar",
         "signOut": "Cerrar Sesión",
         "signIn": "Iniciar Sesion",
         "signUp": "Registrarse",
@@ -99,6 +121,7 @@
         "submitting": "Enviando...",
         "delete": "Eliminar",
         "deleting": "Eliminando",
+        "edit": "Editar",
         "next": "Siguiente"
     },
     "fields": {

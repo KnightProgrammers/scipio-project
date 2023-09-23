@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import firebaseApp from '../../services/firebase';
+import firebaseApp from '@/services/firebase.service';
 import CountryModel from "@/models/country.model";
 import UserSchema from "@/models/user.model";
 

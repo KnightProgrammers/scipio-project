@@ -1,5 +1,5 @@
-import firebaseApp from "../services/firebase";
-import UserSchema from "../models/user.model";
+import firebaseApp from "@/services/firebase.service";
+import UserSchema from "@/models/user.model";
 
 export default async (request: any, reply: any) => {
   const {authorization} = request.headers;

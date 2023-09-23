@@ -9,7 +9,7 @@ import {
 import { Divider } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useState } from 'react'
-import { CurrencyType } from '@/@types/system'
+import { CurrencyDataType } from '@/@types/system'
 import {
     apiGetUserCurrencies,
     apiSetUserCurrencies,
@@ -24,8 +24,8 @@ const Currency = () => {
     const [isLoadingUserCurrencies, setIsLoadingUserCurrencies] =
         useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [currencies, setCurrencies] = useState<CurrencyType[]>()
-    const [userCurrencies, setUserCurrencies] = useState<CurrencyType[]>()
+    const [currencies, setCurrencies] = useState<CurrencyDataType[]>()
+    const [userCurrencies, setUserCurrencies] = useState<CurrencyDataType[]>()
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
     const errorHandler = useCallback(

@@ -1,7 +1,7 @@
 import { errorCodes } from "fastify";
 import { Static, Type } from "@sinclair/typebox";
 import * as gavatar from "gravatar";
-import firebaseApp from "@/services/firebase";
+import firebaseApp from "@/services/firebase.service";
 import UserSchema from "@/models/user.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import CountryModel from "@/models/country.model";
