@@ -102,7 +102,6 @@ jobs:
       matrix:
         service: [ "server", "client" ]
       fail-fast: false
-      max-parallel: 1
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
       RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
