@@ -62,7 +62,9 @@ const generatePrCommentCommand = async (options) => {
 
     fs.writeFileSync('./pr-comment.md', content);
 
-    throw new Error('Deploy failed');
+    if (hadJobFailed) {
+        throw new Error('Deploy failed');
+    }
 
 }
 
