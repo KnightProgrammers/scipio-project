@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  scipio-db:
+    container_name: scipio-db
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - dbdata:/data/db
+    healthcheck:
+      test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  scipio-server:
+    build:
+      context: server
+    environment:
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      MONGO_DB_PROTOCOL: 'mongodb'
+      MONGO_DB_HOST: 'scipio-db'
+      MONGO_DB_PORT: '27017'
+      MONGO_DB_NAME: 'scipio-test'
+      MONGO_DB_USER: 'root'
+      MONGO_DB_PASSWORD: 'password'
+      PORT: '8080'
+      ENVIRONMENT: 'test'
+    ports:
+      - '8080:8080'
+    depends_on:
+      scipio-db:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/ping || exit 1
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  scipio-client:
+    build:
+      context: client
+      args:
+        VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+        VITE_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+        VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+        VITE_FIREBASE_APP_ID: ${FIREBASE_APP_ID}
+        VITE_API_BASE_URL: "http://localhost:8080"
+    ports:
+      - '3000:80'
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  dbdata:
+networks:
+  default:
+    driver: bridge
+    name: scipio

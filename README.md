@@ -37,6 +37,16 @@
 
 ## Getting Started
 
+**Environment Vars**
+> For more details check on the Development section of each service
+
+ - `FIREBASE_PROJECT_ID`
+ - `FIREBASE_CLIENT_EMAIL`
+ - `FIREBASE_PRIVATE_KEY`
+ - `FIREBASE_API_KEY`
+ - `FIREBASE_AUTH_DOMAIN`
+ - `FIREBASE_APP_ID`
+
 ```shell
 docker compose up --detach --wait --build
 ```
