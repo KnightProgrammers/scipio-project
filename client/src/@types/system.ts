@@ -45,3 +45,8 @@ export type BankDataType = {
     name: string
     icon: string | undefined
 }
+
+export type BankAccountDataType = {
+    id: string
+    accountNumber: string
+}

@@ -38,7 +38,11 @@
             "header": "Ingresos"
         },
         "bankAccounts": {
-            "header": "Cuentas de Banco"
+            "header": "Cuentas de Banco",
+            "emptyState": {
+                "title": "No hay bancos todavía",
+                "description": "En la sección Banco de tu perfil podrás agregar bancos a los que luego asociarás cuentas"
+            }
         },
         "creditCards": {
             "header": "Tarjetas de Créditos"

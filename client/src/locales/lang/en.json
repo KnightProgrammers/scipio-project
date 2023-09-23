@@ -38,7 +38,11 @@
             "header": "Incomes"
         },
         "bankAccounts": {
-            "header": "Bank Accounts"
+            "header": "Bank Accounts",
+            "emptyState": {
+                "title": "No banks yet",
+                "description": "On the Bank section of your profile you can add banks so you'll associate accounts"
+            }
         },
         "creditCards": {
             "header": "Credit Cards"

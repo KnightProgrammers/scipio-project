@@ -30,6 +30,7 @@ import {
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
+import useThemeClass from "@/utils/hooks/useThemeClass";
 
 const { Tr, Td, TBody } = Table
 
@@ -242,6 +243,7 @@ const Banks = () => {
     )
 
     const { t } = useTranslation()
+    const {textTheme} = useThemeClass()
 
     const openDrawer = () => {
         setIsFormOpen(true)
@@ -349,7 +351,7 @@ const Banks = () => {
                 </Card>
             )}
             <Button
-                className="mt-4"
+                className={`mt-4 ${textTheme}`}
                 size="sm"
                 variant="plain"
                 icon={<HiPlus />}
