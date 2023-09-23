@@ -28,6 +28,9 @@ const generatePrCommentCommand = async (options) => {
     }
 
     const services = await railwayClient.getServices();
+
+    let hadJobFailed = false;
+
     for (const service of services) {
         const deployment = await railwayClient.getLatestDeployment({
             first: 1,
@@ -38,6 +41,7 @@ const generatePrCommentCommand = async (options) => {
         content += '\n\n';
         content += `### ${toTitleCase(service.name.split('scipio-')[1])}`
         content += '\n';
+
         const DEPLOY_STATUS_LABEL = {
             CRASHED: 'Crashed ❌',
             FAILED: 'Failed ❌',
@@ -45,13 +49,20 @@ const generatePrCommentCommand = async (options) => {
             SKIPPED: 'Skipped 🧸',
             SUCCESS: 'Success ✅'
         }
+
+        if (['CRASHED', 'FAILED'].includes(deployment.status)) {
+            hadJobFailed = true;
+        }
+
         content += ` - **Status:** ${DEPLOY_STATUS_LABEL[deployment.status]} `
         content += '\n';
-        content += ` - **Url:** [${service.name}-scipio-project-${environmentName}.up.railway.app 🔗]`
-        content += `(https://${service.name}-scipio-project-${environmentName}.up.railway.app)`
+        content += ` - **Url:** [${service.name}-${environmentName}.up.railway.app 🔗]`
+        content += `(https://${service.name}-${environmentName}.up.railway.app)`
     }
 
     fs.writeFileSync('./pr-comment.md', content);
+
+    throw new Error('Deploy failed');
 
 }
 
