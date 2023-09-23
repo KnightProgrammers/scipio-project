@@ -34,8 +34,14 @@ export const langOptions: LanguageOption[] = [
     },
 ]
 
-export type CurrencyType = {
+export type CurrencyDataType = {
     id: string
     name: string
     code: string
+}
+
+export type BankDataType = {
+    id: string
+    name: string
+    icon: string | undefined
 }
