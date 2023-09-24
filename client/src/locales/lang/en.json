@@ -40,9 +40,24 @@
         "bankAccounts": {
             "header": "Bank Accounts",
             "emptyState": {
-                "title": "No banks yet",
-                "description": "On the Bank section of your profile you can add banks so you'll associate accounts"
-            }
+                "noBanks": {
+                    "title": "No banks yet",
+                    "description": "On the Bank section of your profile you can add banks so you'll associate accounts"
+                },
+                "noAccounts": {
+                    "description": "There is no bank accounts"
+                }
+            },
+            "fields": {
+                "accountBalance": "Balance",
+                "accountNumber": "Account Number"
+            },
+            "form": {
+                "newTitle": "New Bank Account",
+                "editTitle": "Edit Bank Account"
+            },
+            "goToBanksSection": "Go to the Banks section",
+            "addAccountButton": "Add an account"
         },
         "creditCards": {
             "header": "Credit Cards"
@@ -137,7 +152,8 @@
         "currentPassword": "Current Password",
         "confirmPassword": "Confirm Password",
         "rememberMe": "Remember Me",
-        "country": "Country"
+        "country": "Country",
+        "currency": "Currency"
     },
     "validations": {
         "minString": "The value is too short (min:",

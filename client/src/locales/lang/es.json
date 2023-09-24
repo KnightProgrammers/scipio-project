@@ -40,9 +40,24 @@
         "bankAccounts": {
             "header": "Cuentas de Banco",
             "emptyState": {
-                "title": "No hay bancos todavía",
-                "description": "En la sección Banco de tu perfil podrás agregar bancos a los que luego asociarás cuentas"
-            }
+                "noBanks": {
+                    "title": "No hay bancos todavía",
+                    "description": "En la sección Banco de tu perfil podrás agregar bancos a los que luego asociarás cuentas"
+                },
+                "noAccounts": {
+                    "description": "Sin cuentas de bancos"
+                }
+            },
+            "fields": {
+                "accountBalance": "Saldo",
+                "accountNumber": "Numero de Cuenta"
+            },
+            "form": {
+                "newTitle": "Nueva Cuenta de Banco",
+                "editTitle": "Editar Cuenta de Banco"
+            },
+            "goToBanksSection": "Ir a la sección de Bancos",
+            "addAccountButton": "Agregar una cuenta"
         },
         "creditCards": {
             "header": "Tarjetas de Créditos"
@@ -137,7 +152,8 @@
         "currentPassword": "Contraseña Actual",
         "confirmPassword": "Repetir Contraseña",
         "rememberMe": "Recordarme",
-        "country": "Pais"
+        "country": "Pais",
+        "currency": "Moneda"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",

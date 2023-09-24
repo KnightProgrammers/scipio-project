@@ -1,9 +1,9 @@
 import { Static, Type } from "@sinclair/typebox";
 
-export const Bank = Type.Object({
+export const Currency = Type.Object({
     id: Type.Optional(Type.String()),
     name: Type.Required(Type.String()),
-    icon: Type.Optional(Type.String())
+    code: Type.Required(Type.String())
 })
 
-export type BankType = Static<typeof Bank>
+export type CurrencyType = Static<typeof Currency>

@@ -1,13 +1,6 @@
-import { Static, Type } from "@sinclair/typebox";
 import CurrencyModel from "@/models/currency.model";
 import AuthMiddleware from "@/middlewares/auth.middleware";
-export const Currency = Type.Object({
-    id: Type.Required(Type.String()),
-    name: Type.Required(Type.String()),
-    code: Type.Required(Type.String())
-})
-
-export type CurrencyType = Static<typeof Currency>
+import { Currency } from "@/@types/currency.type";
 
 const currencies: any = async (fastify: any): Promise<void> => {
     fastify.decorateRequest('user', null);

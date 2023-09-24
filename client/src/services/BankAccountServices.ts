@@ -1,8 +1,8 @@
 import ApiService from './ApiService'
-import { BankAccountDataType } from '@/@types/system'
+import { BankAccountDataType, CurrencyDataType } from '@/@types/system'
 
-export async function apiGetBankAccountList(): Promise<any[]> {
-    const { data } = await ApiService.fetchData<any[]>({
+export async function apiGetBankAccountList(): Promise<unknown[]> {
+    const { data } = await ApiService.fetchData<unknown[]>({
         url: '/bank-accounts',
         method: 'get',
     })
@@ -11,9 +11,10 @@ export async function apiGetBankAccountList(): Promise<any[]> {
 
 export async function apiCreateBankAccount(body: {
     accountName: string
+    accountNumber: string
     accountBalance: number
     accountBankId: string
-    accountCurrencyId: string
+    accountCurrency: CurrencyDataType
 }): Promise<BankAccountDataType> {
     const { data } = await ApiService.fetchData<BankAccountDataType>({
         url: '/bank-accounts',

@@ -1,17 +1,42 @@
 import BankAccountSchema from "@/models/bank-account.model";
 import { UserType } from "@/routes/users";
+import { BankAccountType } from "@/@types/bank-account.type";
+import {CurrencyType} from "@/@types/currency.type";
+import { BankType } from "@/@types/bank.type";
 
 class BankAccountService {
-    static async getAll(bankId: string, user: UserType) {
+    static async getAll(bank: BankType, user: UserType): Promise<BankAccountType[]> {
         return BankAccountSchema.find({
-            accountUser: user,
-            accountBank: bankId,
+            accountUserId: user.id,
+            accountBankId: bank.id,
             accountIsDeleted: false
         });
     }
-    static async create(data: {name: string, user: UserType}) {
-        const { name, user } = data;
-        return BankAccountSchema.create({ name, user });
+    static async create(data: {
+        accountName: string,
+        accountNumber: string,
+        accountBalance: number
+        accountBankId: string,
+        accountUserId: string,
+        accountCurrency: CurrencyType,
+    }) {
+        const {
+            accountName,
+            accountNumber,
+            accountBalance,
+            accountBankId,
+            accountCurrency,
+            accountUserId
+        } = data;
+        return BankAccountSchema.create({
+            accountName,
+            accountNumber,
+            accountBalance,
+            accountBankId,
+            accountUserId,
+            accountCurrency,
+            accountIsDeleted: false
+        });
     }
     static async update(id: string, user: UserType, data: { accountNumber: string, accountBalance: number }) {
         const { accountBalance, accountNumber } = data;

@@ -1,5 +1,6 @@
 import BankSchema from "@/models/bank.model";
 import { UserType } from "@/routes/users";
+import { BankType } from "@/@types/bank.type";
 
 class BankService {
     static async getAll(user: UserType) {
@@ -28,6 +29,9 @@ class BankService {
             _id: id,
             user
         });
+    }
+    static async findOne(id: string, user: UserType): Promise<BankType|null> {
+        return BankSchema.findOne({_id: id, user});
     }
 }
 

@@ -3,9 +3,11 @@ import { UserType } from "@/routes/users";
 import BankService from "@/services/bank.service";
 import { BankAccount } from "@/@types/bank-account.type";
 import BankAccountService from "@/services/bank-account.service";
+import { errorCodes } from "fastify";
+import { BankType } from "@/@types/bank.type";
 
 
-const countries: any = async (fastify: any): Promise<void> => {
+const bankAccounts: any = async (fastify: any): Promise<void> => {
   fastify.decorateRequest('user', null);
   fastify.addHook('onRequest', AuthMiddleware);
 
@@ -28,17 +30,22 @@ const countries: any = async (fastify: any): Promise<void> => {
     async function (request: any, reply: any) {
       const user: UserType = request.user;
       const result = [];
-      const banks = await BankService.getAll(user);
+      const banks: BankType[] = await BankService.getAll(user);
       for (const bank of banks) {
-        const bankAccounts = await BankAccountService.getAll(bank.id, user);
+        const bankAccounts = await BankAccountService.getAll(bank, user);
         result.push({
           id: bank.id,
           name: bank.name,
           icon: bank.icon,
           accounts: bankAccounts.map(ba => ({
             id: ba.id,
+            accountName: ba.accountName,
             accountNumber: ba.accountNumber,
             accountBalance: ba.accountBalance,
+            accountCurrency: {
+              id: ba.accountCurrency.id,
+              code: ba.accountCurrency.code
+            },
           }))
         })
       }
@@ -48,17 +55,7 @@ const countries: any = async (fastify: any): Promise<void> => {
   fastify.post(
     '/', {
       schema: {
-        body: {
-          type: 'object',
-          properties: {
-            accountNumber: {
-              type: 'string'
-            },
-            accountBalance: {
-              type: 'number'
-            }
-          }
-        },
+        body: BankAccount,
         response: {
           201: BankAccount
         },
@@ -66,14 +63,27 @@ const countries: any = async (fastify: any): Promise<void> => {
     },
     async function (request: any, reply: any) {
       const user: UserType = request.user;
-      const { name } = request.body;
-      const bank = await BankService.create({ name, user });
+      const { accountName, accountBankId, accountNumber, accountBalance, accountCurrency } = request.body;
+      const accountBank = await BankService.findOne(accountBankId, user);
+      if (!accountBank) {
+        throw new errorCodes.FST_ERR_NOT_FOUND('Bank');
+      }
+      const bankAccount = await BankAccountService.create({
+        accountName,
+        accountNumber,
+        accountBalance,
+        accountBankId,
+        accountCurrency,
+        accountUserId: user.id
+      });
       reply.status(201).send({
-        id: bank.id,
-        name: bank.name,
-        icon: bank.icon
+        accountName: bankAccount.accountName,
+        accountNumber: bankAccount.accountNumber,
+        accountBalance: bankAccount.accountBalance,
+        accountCurrency: bankAccount.accountCurrency,
+        accountBankId: bankAccount.accountBankId
       });
     });
 }
 
-export default countries;
+export default bankAccounts;

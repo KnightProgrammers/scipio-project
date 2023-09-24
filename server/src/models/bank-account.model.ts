@@ -2,27 +2,37 @@ import mongoose from "mongoose";
 import { CurrencySchema } from "@/models/currency.model";
 
 export const BankAccountSchema = new mongoose.Schema({
+    accountName: {
+        type: String,
+        required: false,
+    },
     accountNumber: {
         type: String,
         required: true,
     },
     accountBalance: {
         type: Number,
-        defaultValue: 0
+        defaultValue: 0,
+        required: true
     },
     accountIsDeleted: {
         type: Boolean,
         defaultValue: false
     },
-    accountUser: {
+    accountUserId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
-    accountBank: {
+    accountBankId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bank'
+        ref: 'Bank',
+        required: true
     },
-    accountCurrency: CurrencySchema
+    accountCurrency: {
+        type: CurrencySchema,
+        required: true
+    }
 });
 
 export default mongoose.model('BankAccount', BankAccountSchema);

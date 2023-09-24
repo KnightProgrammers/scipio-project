@@ -49,4 +49,9 @@ export type BankDataType = {
 export type BankAccountDataType = {
     id: string
     accountNumber: string
+    accountName: string
+    accountBalance: number
+    accountCurrency: {
+        code: string
+    }
 }

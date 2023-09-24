@@ -5,7 +5,7 @@ import { Bank } from "@/@types/bank.type";
 import { errorCodes } from "fastify";
 
 
-const countries: any = async (fastify: any): Promise<void> => {
+const banks: any = async (fastify: any): Promise<void> => {
   fastify.decorateRequest('user', null);
   fastify.addHook('onRequest', AuthMiddleware);
 
@@ -110,4 +110,4 @@ const countries: any = async (fastify: any): Promise<void> => {
     });
 }
 
-export default countries;
+export default banks;
