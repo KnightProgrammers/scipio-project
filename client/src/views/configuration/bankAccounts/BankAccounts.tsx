@@ -198,7 +198,7 @@ const BankAccounts = () => {
         }
     }, [bankAccountList, isLoadingBankAccounts])
 
-    if (bankAccountList === undefined) {
+    if (bankAccountList === undefined || userCurrencies === undefined) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
     }
 
