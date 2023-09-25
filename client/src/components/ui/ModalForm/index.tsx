@@ -1,6 +1,6 @@
 import { Button, Dialog, FormContainer } from '@/components/ui'
 import { Divider, Loading } from '@/components/shared'
-import { Form, Formik, FormikErrors, FormikTouched } from 'formik'
+import { Form, Formik, FormikErrors, FormikTouched, FormikValues } from 'formik'
 import { useTranslation } from 'react-i18next'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 
@@ -8,7 +8,7 @@ type ModalFormProps = {
     isOpen: boolean
     onClose: () => void
     onSubmit: (data: unknown) => void
-    entity: unknown
+    entity: FormikValues
     fields: (
         errors: FormikErrors<unknown>,
         touched: FormikTouched<unknown>,

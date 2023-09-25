@@ -57,7 +57,12 @@
                 "editTitle": "Edit Bank Account"
             },
             "goToBanksSection": "Go to the Banks section",
-            "addAccountButton": "Add an account"
+            "addAccountButton": "Add an account",
+            "defaultLabel": "Account",
+            "deleteConfirmation": {
+                "title": "Delete Bank Account",
+                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}?\""
+            }
         },
         "creditCards": {
             "header": "Credit Cards"
@@ -153,7 +158,8 @@
         "confirmPassword": "Confirm Password",
         "rememberMe": "Remember Me",
         "country": "Country",
-        "currency": "Currency"
+        "currency": "Currency",
+        "label": "Label"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -169,7 +175,13 @@
         },
         "password": {
             "updated": "Password Updated"
-        }
+        },
+        "bankAccount": {
+            "created": "Bank account successfully created",
+            "edited": "Bank account successfully updated",
+            "deleted": "Bank account {{accountNumber}} successfully deleted"
+        },
+        "textCopied": "Copied!"
     },
     "error": {
         "generic": "Something went wrong, Please try again later",

@@ -1,4 +1,11 @@
-import { Container, IconText, Loading } from '@/components/shared'
+import {
+    ConfirmDialog,
+    Container,
+    CopyButton,
+    EllipsisButton,
+    IconText,
+    Loading,
+} from '@/components/shared'
 import {
     Avatar,
     Button,
@@ -18,6 +25,8 @@ import {
 import {
     apiGetBankAccountList,
     apiCreateBankAccount,
+    apiUpdateBankAccount,
+    apiDeleteBankAccount,
 } from '@/services/BankAccountServices'
 import EmptyState from '@/components/shared/EmptyState'
 import { useTranslation } from 'react-i18next'
@@ -81,6 +90,8 @@ const BankAccounts = () => {
         undefined,
     )
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
+        useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isLoadingBankAccounts, setIsLoadingBankAccounts] =
         useState<boolean>(false)
@@ -135,11 +146,10 @@ const BankAccounts = () => {
 
     const onFormSubmit = async (data: any) => {
         setIsSaving(true)
-        console.log(data)
         const currency = userCurrencies?.find(
             (c) => c.id === data.accountCurrency,
         )
-        if (!!selectedBank && !!currency) {
+        if (!!selectedBank && !!currency && !!selectedBankAccount) {
             try {
                 if (!data.id) {
                     await apiCreateBankAccount({
@@ -147,10 +157,17 @@ const BankAccounts = () => {
                         accountNumber: data.accountNumber,
                         accountBalance: data.accountBalance,
                         accountBankId: selectedBank.id,
-                        accountCurrency: currency,
+                        accountCurrencyId: currency.id,
                     })
                 } else {
-                    console.log(data)
+                    await apiUpdateBankAccount({
+                        id: data.id,
+                        accountName: data.accountName,
+                        accountNumber: data.accountNumber,
+                        accountBalance: data.accountBalance,
+                        accountBankId: selectedBank.id,
+                        accountCurrencyId: selectedBankAccount.accountCurrency.id,
+                    })
                 }
                 loadBankAccounts()
             } catch (e: unknown) {
@@ -158,6 +175,39 @@ const BankAccounts = () => {
             }
         }
         onFormClose()
+    }
+
+    const onDeleteConfirmClose = () => {
+        setIsConfirmDeleteOpen(false)
+        setSelectedBank(undefined)
+        setSelectedBankAccount(undefined)
+    }
+
+    const onDelete = async () => {
+        setIsConfirmDeleteOpen(false)
+        setIsLoadingBankAccounts(true)
+        try {
+            if (selectedBankAccount) {
+                await apiDeleteBankAccount(selectedBankAccount.id)
+            }
+            toast.push(
+                <Notification
+                    title={
+                        t('notifications.bankAccount.deleted', {
+                            accountNumber: selectedBankAccount?.accountNumber,
+                        }) || ''
+                    }
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
+                },
+            )
+            loadBankAccounts()
+        } catch (e) {
+            errorHandler(e)
+        }
+        onDeleteConfirmClose()
     }
 
     useEffect(() => {
@@ -252,64 +302,75 @@ const BankAccounts = () => {
                         ) : (
                             <>
                                 {bank.accounts.map((a: BankAccountDataType) => (
-                                    <Dropdown
-                                        placement="bottom-center"
-                                        style={{ width: '100%' }}
-                                        renderTitle={
-                                            <Card
-                                                key={a.id}
-                                                bordered
-                                                className="my-2 w-full cursor-pointer"
-                                            >
-                                                <div className="w-full flex items-center">
-                                                    <div className="font-light italic text-xs w-full">
-                                                        {a.accountName}
-                                                    </div>
-                                                </div>
-                                                <div className="flex grid grid-cols-2">
-                                                    <div className="my-1">
-                                                        <span className="font-bold">
-                                                            {a.accountNumber}
-                                                        </span>
-                                                    </div>
-                                                    <div className="my-1 text-right">
-                                                        {currencyFormat(
-                                                            a.accountBalance,
-                                                            a.accountCurrency
-                                                                .code,
-                                                            i18n.language,
-                                                            userState.country
-                                                                ?.code,
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </Card>
-                                        }
+                                    <Card
+                                        key={a.id}
+                                        bordered
+                                        className="my-2 w-full relative"
                                     >
-                                        <Dropdown.Item
-                                            eventKey="edit"
-                                            onClick={() => {
-                                                setSelectedBank(bank)
-                                                setSelectedBankAccount(a)
-                                                setIsFormOpen(true)
-                                            }}
+                                        <Dropdown
+                                            className="absolute right-4 top-2"
+                                            placement="middle-end-top"
+                                            renderTitle={<EllipsisButton />}
                                         >
-                                            <IconText
-                                                className="text-sm font-semibold w-full"
-                                                icon={<HiOutlinePencilAlt />}
+                                            <Dropdown.Item
+                                                eventKey="edit"
+                                                onClick={() => {
+                                                    setSelectedBank(bank)
+                                                    setSelectedBankAccount(a)
+                                                    setIsFormOpen(true)
+                                                }}
                                             >
-                                                {t('actions.edit')}
-                                            </IconText>
-                                        </Dropdown.Item>
-                                        <Dropdown.Item eventKey="delete">
-                                            <IconText
-                                                className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                icon={<HiOutlineTrash />}
+                                                <IconText
+                                                    className="text-sm font-semibold w-full"
+                                                    icon={
+                                                        <HiOutlinePencilAlt />
+                                                    }
+                                                >
+                                                    {t('actions.edit')}
+                                                </IconText>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                eventKey="delete"
+                                                onClick={() => {
+                                                    setSelectedBank(bank)
+                                                    setSelectedBankAccount(a)
+                                                    setIsConfirmDeleteOpen(true)
+                                                }}
                                             >
-                                                {t('actions.delete')}
-                                            </IconText>
-                                        </Dropdown.Item>
-                                    </Dropdown>
+                                                <IconText
+                                                    className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                    icon={<HiOutlineTrash />}
+                                                >
+                                                    {t('actions.delete')}
+                                                </IconText>
+                                            </Dropdown.Item>
+                                        </Dropdown>
+                                        <div className="w-full flex items-center">
+                                            <div className="font-light italic text-xs w-full">
+                                                {a.accountName ||
+                                                    t(
+                                                        'pages.bankAccounts.defaultLabel',
+                                                    )}
+                                            </div>
+                                        </div>
+                                        <div className="flex grid grid-cols-2">
+                                            <div className="my-1">
+                                                <span className="font-bold">
+                                                    <CopyButton
+                                                        text={a.accountNumber}
+                                                    />
+                                                </span>
+                                            </div>
+                                            <div className="my-1 text-right">
+                                                {currencyFormat(
+                                                    a.accountBalance,
+                                                    a.accountCurrency.code,
+                                                    i18n.language,
+                                                    userState.country?.code,
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Card>
                                 ))}
                             </>
                         )}
@@ -320,7 +381,7 @@ const BankAccounts = () => {
                 isOpen={isFormOpen}
                 entity={{
                     ...selectedBankAccount,
-                    accountCurrency: selectedBankAccount?.accountCurrency?.id,
+                    accountCurrency: selectedBankAccount?.accountCurrency.id,
                 }}
                 title={`${selectedBank?.name} - ${
                     selectedBankAccount
@@ -334,7 +395,7 @@ const BankAccounts = () => {
                 ) => (
                     <>
                         <FormItem
-                            label={t(`fields.name`) || ''}
+                            label={t(`fields.label`) || ''}
                             invalid={
                                 !!errors.accountName || !!touched.accountName
                             }
@@ -344,7 +405,7 @@ const BankAccounts = () => {
                                 type="text"
                                 autoComplete="off"
                                 name="accountName"
-                                placeholder={t(`fields.name`)}
+                                placeholder={t(`fields.label`)}
                                 component={Input}
                             />
                         </FormItem>
@@ -401,19 +462,30 @@ const BankAccounts = () => {
                             }
                             errorMessage={errors.accountCurrency?.toString()}
                         >
-                            <Field
-                                value
-                                type="text"
-                                autoComplete="off"
-                                name="accountCurrency"
-                                placeholder={t('fields.currency')}
-                                options={userCurrencies?.map((c) => ({
-                                    value: c.id,
-                                    label: t(`currencies.${c.code}`),
-                                }))}
-                                isLoading={!userCurrencies}
-                                component={SelectFieldItem}
-                            />
+                            {
+                                !selectedBankAccount
+                                    ? <Field
+                                        value
+                                        type="text"
+                                        autoComplete="off"
+                                        name="accountCurrency"
+                                        placeholder={t('fields.currency')}
+                                        options={userCurrencies?.map((c) => ({
+                                            value: c.id,
+                                            label: t(`currencies.${c.code}`),
+                                        }))}
+                                        isLoading={!userCurrencies}
+                                        component={SelectFieldItem}
+                                    />
+                                    : <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="accountCurrencyName"
+                                        disabled
+                                        value={t(`currencies.${selectedBankAccount.accountCurrency.code}`)}
+                                        component={Input}
+                                    />
+                            }
                         </FormItem>
                     </>
                 )}
@@ -421,6 +493,24 @@ const BankAccounts = () => {
                 onClose={onFormClose}
                 onSubmit={onFormSubmit}
             />
+            <ConfirmDialog
+                isOpen={isConfirmDeleteOpen}
+                type="danger"
+                title={t('pages.bankAccounts.deleteConfirmation.title')}
+                confirmButtonColor="red-600"
+                confirmText={t('actions.delete')}
+                cancelText={t('actions.cancel')}
+                onClose={onDeleteConfirmClose}
+                onRequestClose={onDeleteConfirmClose}
+                onCancel={onDeleteConfirmClose}
+                onConfirm={onDelete}
+            >
+                <p>
+                    {t('pages.bankAccounts.deleteConfirmation.description', {
+                        accountNumber: selectedBankAccount?.accountNumber,
+                    })}
+                </p>
+            </ConfirmDialog>
         </Container>
     )
 }

@@ -1,10 +1,11 @@
 import AuthMiddleware from "@/middlewares/auth.middleware";
 import { UserType } from "@/routes/users";
 import BankService from "@/services/bank.service";
-import { BankAccount } from "@/@types/bank-account.type";
+import { BankAccount, NewBankAccountBody } from "@/@types/bank-account.type";
 import BankAccountService from "@/services/bank-account.service";
 import { errorCodes } from "fastify";
 import { BankType } from "@/@types/bank.type";
+import CurrencyService from "@/services/currency.service";
 
 
 const bankAccounts: any = async (fastify: any): Promise<void> => {
@@ -55,7 +56,7 @@ const bankAccounts: any = async (fastify: any): Promise<void> => {
   fastify.post(
     '/', {
       schema: {
-        body: BankAccount,
+        body: NewBankAccountBody,
         response: {
           201: BankAccount
         },
@@ -63,27 +64,102 @@ const bankAccounts: any = async (fastify: any): Promise<void> => {
     },
     async function (request: any, reply: any) {
       const user: UserType = request.user;
-      const { accountName, accountBankId, accountNumber, accountBalance, accountCurrency } = request.body;
+      const { accountName, accountBankId, accountNumber, accountBalance, accountCurrencyId } = request.body;
       const accountBank = await BankService.findOne(accountBankId, user);
       if (!accountBank) {
         throw new errorCodes.FST_ERR_NOT_FOUND('Bank');
       }
-      const bankAccount = await BankAccountService.create({
+      const accountCurrency = await CurrencyService.findOne(accountCurrencyId);
+      if (!accountCurrency) {
+        throw new errorCodes.FST_ERR_NOT_FOUND('Currency');
+      }
+      const bankAccount: any = await BankAccountService.create({
         accountName,
         accountNumber,
         accountBalance,
         accountBankId,
-        accountCurrency,
+        accountCurrencyId,
         accountUserId: user.id
       });
       reply.status(201).send({
+        id: bankAccount.id,
         accountName: bankAccount.accountName,
         accountNumber: bankAccount.accountNumber,
         accountBalance: bankAccount.accountBalance,
-        accountCurrency: bankAccount.accountCurrency,
+        accountCurrency: {
+          id: bankAccount.accountCurrency.id,
+          code: bankAccount.accountCurrency.code,
+          name: bankAccount.accountCurrency.name
+        },
         accountBankId: bankAccount.accountBankId
       });
     });
+
+  fastify.put(
+      '/:id', {
+        schema: {
+          params: {
+            id: {
+              type: 'string'
+            }
+          },
+          body: NewBankAccountBody,
+          response: {
+            200: BankAccount
+          },
+        },
+      },
+      async function (request: any, reply: any) {
+        const user: UserType = request.user;
+        const { id } = request.params;
+        const { accountName, accountBalance, accountNumber } = request.body;
+        const bankAccount = await BankAccountService.findOne(id, user);
+        if (!bankAccount) {
+          throw new errorCodes.FST_ERR_NOT_FOUND('Bank Account');
+        }
+        const editedBankAccount: any = await BankAccountService.update(id, user, {
+          accountName,
+          accountNumber,
+          accountBalance
+        })
+        reply.status(200).send({
+          id: editedBankAccount.id,
+          accountName: editedBankAccount.accountName,
+          accountNumber: editedBankAccount.accountNumber,
+          accountBalance: editedBankAccount.accountBalance,
+          accountCurrency: {
+            id: editedBankAccount.accountCurrency.id,
+            code: editedBankAccount.accountCurrency.code,
+            name: editedBankAccount.accountCurrency.name
+          },
+          accountBankId: editedBankAccount.accountBankId
+        });
+      });
+
+  fastify.delete(
+      '/:id', {
+        schema: {
+          params: {
+            id: {
+              type: 'string'
+            }
+          },
+          response: {
+            204: {}
+          },
+        },
+      },
+      async function (request: any, reply: any) {
+        const user: UserType = request.user;
+        const { id } = request.params;
+        const bankAccount = await BankAccountService.findOne(id, user);
+        if (!bankAccount) {
+          throw new errorCodes.FST_ERR_NOT_FOUND('Bank Account');
+        }
+
+        await BankAccountService.delete(id, user)
+        reply.status(204).send();
+      });
 }
 
 export default bankAccounts;

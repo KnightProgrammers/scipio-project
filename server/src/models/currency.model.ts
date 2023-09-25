@@ -9,6 +9,6 @@ export const CurrencySchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-});
+}, { timestamps: true, skipVersioning: { dontVersionMe: true } });
 
 export default mongoose.model('Currency', CurrencySchema);

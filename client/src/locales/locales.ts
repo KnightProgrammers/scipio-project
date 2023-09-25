@@ -19,7 +19,7 @@ i18n.use(initReactI18next).init({
     fallbackLng: appConfig.locale,
     lng: appConfig.locale,
     interpolation: {
-        escapeValue: false,
+        escapeValue: true,
     },
 })
 

@@ -1,7 +1,6 @@
 import BankAccountSchema from "@/models/bank-account.model";
 import { UserType } from "@/routes/users";
 import { BankAccountType } from "@/@types/bank-account.type";
-import {CurrencyType} from "@/@types/currency.type";
 import { BankType } from "@/@types/bank.type";
 
 class BankAccountService {
@@ -18,33 +17,42 @@ class BankAccountService {
         accountBalance: number
         accountBankId: string,
         accountUserId: string,
-        accountCurrency: CurrencyType,
+        accountCurrencyId: string,
     }) {
         const {
             accountName,
             accountNumber,
             accountBalance,
             accountBankId,
-            accountCurrency,
+            accountCurrencyId,
             accountUserId
         } = data;
-        return BankAccountSchema.create({
+
+        const newBankAccount = new BankAccountSchema({
             accountName,
             accountNumber,
             accountBalance,
             accountBankId,
             accountUserId,
-            accountCurrency,
+            accountCurrencyId,
             accountIsDeleted: false
         });
-    }
-    static async update(id: string, user: UserType, data: { accountNumber: string, accountBalance: number }) {
-        const { accountBalance, accountNumber } = data;
 
-        const bankAccount = await BankAccountSchema.findOne({_id: id, accountUser: user});
+        await newBankAccount.save()
+
+        return newBankAccount;
+    }
+    static async update(
+        id: string, user: UserType, data: {
+            accountName: string, accountNumber: string, accountBalance: number
+        }) {
+        const { accountName, accountBalance, accountNumber } = data;
+
+        const bankAccount = await this.findOne(id, user);
 
         if (!bankAccount) return null;
 
+        bankAccount.accountName = accountName;
         bankAccount.accountNumber = accountNumber;
         bankAccount.accountBalance = accountBalance;
 
@@ -53,7 +61,7 @@ class BankAccountService {
         return bankAccount;
     }
     static async delete(id: string, user: UserType) {
-        const bankAccount = await BankAccountSchema.findOne({_id: id, accountUser: user});
+        const bankAccount = await this.findOne(id, user);
 
         if (!bankAccount) return null;
 
@@ -61,6 +69,10 @@ class BankAccountService {
         await bankAccount.save()
 
         return bankAccount;
+    }
+
+    static async findOne(id: string, user: UserType) {
+        return BankAccountSchema.findOne({_id: id, accountUserId: user.id});
     }
 }
 

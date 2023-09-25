@@ -33,6 +33,6 @@ export const BankAccountSchema = new mongoose.Schema({
         type: CurrencySchema,
         required: true
     }
-});
+}, { timestamps: true, skipVersioning: { dontVersionMe: true } });
 
 export default mongoose.model('BankAccount', BankAccountSchema);

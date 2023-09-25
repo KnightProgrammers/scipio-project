@@ -14,7 +14,7 @@ export async function apiCreateBankAccount(body: {
     accountNumber: string
     accountBalance: number
     accountBankId: string
-    accountCurrency: CurrencyDataType
+    accountCurrencyId: string
 }): Promise<BankAccountDataType> {
     const { data } = await ApiService.fetchData<BankAccountDataType>({
         url: '/bank-accounts',
@@ -25,7 +25,14 @@ export async function apiCreateBankAccount(body: {
 }
 
 export async function apiUpdateBankAccount(
-    body: BankAccountDataType,
+    body: {
+        id: string
+        accountName: string
+        accountNumber: string
+        accountBalance: number
+        accountBankId: string
+        accountCurrencyId: string
+    }
 ): Promise<BankAccountDataType> {
     const { data } = await ApiService.fetchData<BankAccountDataType>({
         url: `/bank-accounts/${body.id}`,

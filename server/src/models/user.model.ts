@@ -21,6 +21,6 @@ const UserSchema = new mongoose.Schema({
   },
   country: CountrySchema,
   currencies: [CurrencySchema]
-});
+}, { timestamps: true, skipVersioning: { dontVersionMe: true } });
 
 export default mongoose.model('User', UserSchema);

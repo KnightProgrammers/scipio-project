@@ -52,6 +52,7 @@ export type BankAccountDataType = {
     accountName: string
     accountBalance: number
     accountCurrency: {
+        id: string
         code: string
     }
 }

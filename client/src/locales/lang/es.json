@@ -57,7 +57,12 @@
                 "editTitle": "Editar Cuenta de Banco"
             },
             "goToBanksSection": "Ir a la sección de Bancos",
-            "addAccountButton": "Agregar una cuenta"
+            "addAccountButton": "Agregar una cuenta",
+            "defaultLabel": "Cuenta",
+            "deleteConfirmation": {
+                "title": "Eliminar Cuenta de Banco",
+                "description": "Está seguro que desea eliminar la cuenta de banco \"{{accountNumber}}\"?"
+            }
         },
         "creditCards": {
             "header": "Tarjetas de Créditos"
@@ -153,7 +158,8 @@
         "confirmPassword": "Repetir Contraseña",
         "rememberMe": "Recordarme",
         "country": "Pais",
-        "currency": "Moneda"
+        "currency": "Moneda",
+        "label": "Etiqueta"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -169,7 +175,13 @@
         },
         "password": {
             "updated": "Contraseña Actualizada"
-        }
+        },
+        "bankAccount": {
+            "created": "Cuenta creada correctamente",
+            "edited": "Cuenta actualizada correctamente",
+            "deleted": "Cuenta \"{{accountNumber}}\" eliminada correctamente"
+        },
+        "textCopied": "Copiado!"
     },
     "error": {
         "generic": "Algo salió mal, Por favor intente nuevamente",

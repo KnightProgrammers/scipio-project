@@ -14,9 +14,11 @@ import type { CommonProps } from '../@types/common'
 import type { DropdownToggleSharedProps } from './DropdownToggle'
 import type { DropdownPlacement } from '../@types/placement'
 import type { SyntheticEvent, CSSProperties } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 export interface DropdownProps extends CommonProps, DropdownToggleSharedProps {
     title?: string
+    className?: string
     menuClass?: string
     menuStyle?: CSSProperties
     disabled?: boolean
@@ -192,7 +194,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>((props, ref) => {
                 {...dropdownProps}
                 ref={ref}
                 style={style}
-                className="dropdown"
+                className={`dropdown ${props.className}`}
             >
                 {toggleElement}
                 <DropdownMenuContext.Provider value={menuControl}>
