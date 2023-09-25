@@ -173,6 +173,7 @@ const SignInForm = (props: SignInFormProps) => {
                                         loading={isSubmitting}
                                         variant="solid"
                                         type="submit"
+                                        data-tn="sign-in"
                                     >
                                         {isSubmitting
                                             ? t('actions.signingIn')

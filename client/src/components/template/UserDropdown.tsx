@@ -49,6 +49,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 menuStyle={{ minWidth: 240 }}
                 renderTitle={UserAvatar}
                 placement="bottom-end"
+                data-tn="user-profile"
             >
                 <Dropdown.Item variant="header">
                     <div className="py-2 px-3 flex items-center gap-2">
