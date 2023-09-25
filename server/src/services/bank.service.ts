@@ -1,5 +1,6 @@
 import BankSchema from "@/models/bank.model";
 import { UserType } from "@/routes/users";
+import bankAccountService from "@/services/bank-account.service";
 
 class BankService {
     static async getAll(user: UserType) {
@@ -24,10 +25,17 @@ class BankService {
         return bank;
     }
     static async delete(id: string, user: UserType) {
-        return BankSchema.findOneAndDelete({
-            _id: id,
-            user
-        });
+        const bank = await this.findOne(id, user);
+        if (!bank) return null;
+        const bankAccounts = await bankAccountService.getAll(bank, user, true);
+        await bank.deleteOne()
+        for (const bankAccount of bankAccounts) {
+            await bankAccount.deleteOne();
+        }
+
+    }
+    static async findOne(id: string, user: UserType) {
+        return BankSchema.findOne({_id: id, user});
     }
 }
 

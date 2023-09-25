@@ -2,17 +2,8 @@ import { Static, Type } from '@sinclair/typebox';
 import firebaseApp from '@/services/firebase.service';
 import CountryModel from "@/models/country.model";
 import UserSchema from "@/models/user.model";
+import { User } from "@/@types/user.type";
 
-export const User = Type.Object({
-  id: Type.Readonly(Type.String()),
-  name: Type.Required(Type.String()),
-  email: Type.Required(Type.String({ format: 'email' })),
-  avatar: Type.Readonly(Type.Union([
-    Type.String(),
-    Type.Null()
-  ])),
-  country: Type.Required(Type.String()),
-})
 
 export const UserRegistration = Type.Object({
   name: Type.Required(Type.String()),
@@ -22,7 +13,6 @@ export const UserRegistration = Type.Object({
   lang: Type.Required(Type.String()),
 })
 
-export type UserType = Static<typeof User>
 export type UserRegistrationType = Static<typeof UserRegistration>
 
 const auth: any = async (fastify: any): Promise<void> => {

@@ -38,7 +38,31 @@
             "header": "Incomes"
         },
         "bankAccounts": {
-            "header": "Bank Accounts"
+            "header": "Bank Accounts",
+            "emptyState": {
+                "noBanks": {
+                    "title": "No banks yet",
+                    "description": "On the Bank section of your profile you can add banks so you'll associate accounts"
+                },
+                "noAccounts": {
+                    "description": "There is no bank accounts"
+                }
+            },
+            "fields": {
+                "accountBalance": "Balance",
+                "accountNumber": "Account Number"
+            },
+            "form": {
+                "newTitle": "New Bank Account",
+                "editTitle": "Edit Bank Account"
+            },
+            "goToBanksSection": "Go to the Banks section",
+            "addAccountButton": "Add an account",
+            "defaultLabel": "Account",
+            "deleteConfirmation": {
+                "title": "Delete Bank Account",
+                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}?\""
+            }
         },
         "creditCards": {
             "header": "Credit Cards"
@@ -88,10 +112,14 @@
                     },
                     "deleteConfirmation": {
                         "title": "Delete Bank",
-                        "description": "Are you sure you want to delete this bank?"
+                        "description": "Are you sure you want to delete the bank \"{{name}}?\""
                     },
                     "notifications": {
                         "confirmDelete": "Bank successfully deleted!"
+                    },
+                    "tooltips": {
+                        "accounts": "Bank accounts",
+                        "warnHasAccounts": "The bank has bank accounts associated, delete them first"
                     }
                 }
             }
@@ -133,7 +161,9 @@
         "currentPassword": "Current Password",
         "confirmPassword": "Confirm Password",
         "rememberMe": "Remember Me",
-        "country": "Country"
+        "country": "Country",
+        "currency": "Currency",
+        "label": "Label"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -149,7 +179,13 @@
         },
         "password": {
             "updated": "Password Updated"
-        }
+        },
+        "bankAccount": {
+            "created": "Bank account successfully created",
+            "edited": "Bank account successfully updated",
+            "deleted": "Bank account {{accountNumber}} successfully deleted"
+        },
+        "textCopied": "Copied!"
     },
     "error": {
         "generic": "Something went wrong, Please try again later",

@@ -8,8 +8,12 @@ interface SelectFieldItemProps extends SelectOption, FieldProps {}
 function SelectFieldItem(props: SelectFieldItemProps) {
     const fieldName = props.field.name
 
+    const defaultValue =
+        props.options.find((o: unknown) => o.value === props.field.value) ||
+        null
+
     const [value, setValue] = useState<SelectOption | SelectOption[] | null>(
-        null,
+        defaultValue,
     )
 
     return (

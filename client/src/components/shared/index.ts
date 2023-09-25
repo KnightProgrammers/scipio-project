@@ -6,6 +6,7 @@ export { default as CalendarView } from './CalendarView'
 export { default as Chart } from './Chart'
 export { default as ConfirmDialog } from './ConfirmDialog'
 export { default as Container } from './Container'
+export { default as CopyButton } from './CopyButton'
 export { default as CustomSelectOption } from './CustomSelectOption'
 export { default as CustomControl } from './CustomControl'
 export { default as DataTable } from './DataTable'
@@ -39,4 +40,3 @@ export type {
     Row,
     CellContext,
 } from './DataTable'
-export type { RichTextEditorRef } from './RichTextEditor'

@@ -38,7 +38,31 @@
             "header": "Ingresos"
         },
         "bankAccounts": {
-            "header": "Cuentas de Banco"
+            "header": "Cuentas de Banco",
+            "emptyState": {
+                "noBanks": {
+                    "title": "No hay bancos todavía",
+                    "description": "En la sección Banco de tu perfil podrás agregar bancos a los que luego asociarás cuentas"
+                },
+                "noAccounts": {
+                    "description": "Sin cuentas de bancos"
+                }
+            },
+            "fields": {
+                "accountBalance": "Saldo",
+                "accountNumber": "Numero de Cuenta"
+            },
+            "form": {
+                "newTitle": "Nueva Cuenta de Banco",
+                "editTitle": "Editar Cuenta de Banco"
+            },
+            "goToBanksSection": "Ir a la sección de Bancos",
+            "addAccountButton": "Agregar una cuenta",
+            "defaultLabel": "Cuenta",
+            "deleteConfirmation": {
+                "title": "Eliminar Cuenta de Banco",
+                "description": "Está seguro que desea eliminar la cuenta de banco \"{{accountNumber}}\"?"
+            }
         },
         "creditCards": {
             "header": "Tarjetas de Créditos"
@@ -88,10 +112,14 @@
                     },
                     "deleteConfirmation": {
                         "title": "Eliminar Banco",
-                        "description": "Está seguro que desea eliminar el banco?"
+                        "description": "Está seguro que desea eliminar el banco \"{{name}}\"?"
                     },
                     "notifications": {
                         "confirmDelete": "Banco eliminado exitosamente"
+                    },
+                    "tooltips": {
+                        "accounts": "Cuentas de Bancos",
+                        "warnHasAccounts": "El banco tiene cuentas asociadas, eliminelos antes de continuar"
                     }
                 }
             }
@@ -133,7 +161,9 @@
         "currentPassword": "Contraseña Actual",
         "confirmPassword": "Repetir Contraseña",
         "rememberMe": "Recordarme",
-        "country": "Pais"
+        "country": "Pais",
+        "currency": "Moneda",
+        "label": "Etiqueta"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -149,7 +179,13 @@
         },
         "password": {
             "updated": "Contraseña Actualizada"
-        }
+        },
+        "bankAccount": {
+            "created": "Cuenta creada correctamente",
+            "edited": "Cuenta actualizada correctamente",
+            "deleted": "Cuenta \"{{accountNumber}}\" eliminada correctamente"
+        },
+        "textCopied": "Copiado!"
     },
     "error": {
         "generic": "Algo salió mal, Por favor intente nuevamente",

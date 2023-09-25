@@ -37,6 +37,7 @@ module.exports = {
     "import/no-duplicates": "error",
     "import/no-named-as-default": 0,
     "react/prop-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-sort-props": [
       "warn",
       {

@@ -13,6 +13,6 @@ export const CountrySchema = new mongoose.Schema({
     type: Boolean,
     defaultValue: false
   }
-});
+}, { timestamps: true, skipVersioning: { dontVersionMe: true } });
 
 export default mongoose.model('Country', CountrySchema);

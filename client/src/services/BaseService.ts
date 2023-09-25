@@ -3,7 +3,8 @@ import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
-import store, { signOutSuccess } from '../store'
+import store, { signInSuccess } from '../store'
+import { auth } from '@/services/FirebaseService'
 
 const unauthorizedCode = [401, 403]
 
@@ -40,11 +41,26 @@ BaseService.interceptors.request.use(
 
 BaseService.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
         const { response } = error
 
+        const originalRequest = error.config
+        if (
+            error.response.status === 401 &&
+            !originalRequest._retry &&
+            auth.currentUser
+        ) {
+            originalRequest._retry = true
+            const authToken = await auth.currentUser.getIdToken(true)
+            console.log({ authToken })
+            store.dispatch(signInSuccess(authToken))
+            axios.defaults.headers.common['Authorization'] =
+                'Bearer ' + authToken
+            return BaseService(originalRequest)
+        }
+
         if (response && unauthorizedCode.includes(response.status)) {
-            store.dispatch(signOutSuccess())
+            // store.dispatch(signOutSuccess())
         }
 
         return Promise.reject(error)

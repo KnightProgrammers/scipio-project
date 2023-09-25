@@ -13,6 +13,6 @@ export const BankSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-});
+}, { timestamps: true, skipVersioning: { dontVersionMe: true } });
 
 export default mongoose.model('Bank', BankSchema);
