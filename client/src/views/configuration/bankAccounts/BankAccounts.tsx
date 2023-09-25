@@ -16,7 +16,7 @@ import {
     ModalForm,
 } from '@/components/ui'
 import currencyFormat from '@/utils/currencyFormat'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
     BankAccountDataType,
     BankDataType,
@@ -47,40 +47,6 @@ import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
-
-export type ListItemData = {
-    id: string
-    accountName: string
-    accountNumber: string
-    accountBalance: number
-    accountCurrency: {
-        name: string
-        code: string
-        symbol: string
-    }
-}
-
-type ListItemProps = {
-    data: ListItemData
-    cardBorder?: boolean
-}
-
-const ListItem = ({ data, cardBorder = false }: ListItemProps) => {
-    const { accountNumber, accountBalance, accountCurrency } = data
-
-    return (
-        <Card bordered={cardBorder} className="my-2">
-            <div className="flex grid grid-cols-2">
-                <div className="my-1">
-                    <span className="font-bold"> {accountNumber} </span>
-                </div>
-                <div className="my-1 text-right">
-                    {currencyFormat(accountBalance, accountCurrency.code)}
-                </div>
-            </div>
-        </Card>
-    )
-}
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -115,15 +81,18 @@ const BankAccounts = () => {
         accountCurrency: Yup.string().required(t('validations.required') || ''),
     })
 
-    const errorHandler = (e: unknown) => {
-        toast.push(
-            <Notification title={t('error.generic') || ''} type="danger" />,
-            {
-                placement: 'top-center',
-            },
-        )
-        console.error(e)
-    }
+    const errorHandler = useCallback(
+        (e: unknown) => {
+            toast.push(
+                <Notification title={t('error.generic') || ''} type="danger" />,
+                {
+                    placement: 'top-center',
+                },
+            )
+            console.error(e)
+        },
+        [t],
+    )
 
     const loadBankAccounts = () => {
         setIsLoadingBankAccounts(true)
@@ -166,7 +135,8 @@ const BankAccounts = () => {
                         accountNumber: data.accountNumber,
                         accountBalance: data.accountBalance,
                         accountBankId: selectedBank.id,
-                        accountCurrencyId: selectedBankAccount.accountCurrency.id,
+                        accountCurrencyId:
+                            selectedBankAccount.accountCurrency.id,
                     })
                 }
                 loadBankAccounts()
@@ -218,13 +188,13 @@ const BankAccounts = () => {
                 })
                 .catch(errorHandler)
         }
-    }, [setUserCurrencies])
+    }, [setUserCurrencies, userCurrencies, errorHandler])
 
     useEffect(() => {
         if (bankAccountList === undefined && !isLoadingBankAccounts) {
             loadBankAccounts()
         }
-    }, [bankAccountList])
+    }, [bankAccountList, isLoadingBankAccounts])
 
     if (bankAccountList === undefined) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
@@ -462,30 +432,32 @@ const BankAccounts = () => {
                             }
                             errorMessage={errors.accountCurrency?.toString()}
                         >
-                            {
-                                !selectedBankAccount
-                                    ? <Field
-                                        value
-                                        type="text"
-                                        autoComplete="off"
-                                        name="accountCurrency"
-                                        placeholder={t('fields.currency')}
-                                        options={userCurrencies?.map((c) => ({
-                                            value: c.id,
-                                            label: t(`currencies.${c.code}`),
-                                        }))}
-                                        isLoading={!userCurrencies}
-                                        component={SelectFieldItem}
-                                    />
-                                    : <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="accountCurrencyName"
-                                        disabled
-                                        value={t(`currencies.${selectedBankAccount.accountCurrency.code}`)}
-                                        component={Input}
-                                    />
-                            }
+                            {!selectedBankAccount ? (
+                                <Field
+                                    value
+                                    type="text"
+                                    autoComplete="off"
+                                    name="accountCurrency"
+                                    placeholder={t('fields.currency')}
+                                    options={userCurrencies?.map((c) => ({
+                                        value: c.id,
+                                        label: t(`currencies.${c.code}`),
+                                    }))}
+                                    isLoading={!userCurrencies}
+                                    component={SelectFieldItem}
+                                />
+                            ) : (
+                                <Field
+                                    disabled
+                                    type="text"
+                                    autoComplete="off"
+                                    name="accountCurrencyName"
+                                    value={t(
+                                        `currencies.${selectedBankAccount.accountCurrency.code}`,
+                                    )}
+                                    component={Input}
+                                />
+                            )}
                         </FormItem>
                     </>
                 )}

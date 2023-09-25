@@ -3,9 +3,8 @@ import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
-import store, { signInSuccess, signOutSuccess } from '../store'
+import store, { signInSuccess } from '../store'
 import { auth } from '@/services/FirebaseService'
-import { GoogleAuthProvider, reauthenticateWithPopup } from 'firebase/auth'
 
 const unauthorizedCode = [401, 403]
 

@@ -14,7 +14,6 @@ import type { CommonProps } from '../@types/common'
 import type { DropdownToggleSharedProps } from './DropdownToggle'
 import type { DropdownPlacement } from '../@types/placement'
 import type { SyntheticEvent, CSSProperties } from 'react'
-import ReactMarkdown from 'react-markdown'
 
 export interface DropdownProps extends CommonProps, DropdownToggleSharedProps {
     title?: string
