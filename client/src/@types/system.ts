@@ -44,6 +44,7 @@ export type BankDataType = {
     id: string
     name: string
     icon: string | undefined
+    accountsCount: number | undefined
 }
 
 export type BankAccountDataType = {

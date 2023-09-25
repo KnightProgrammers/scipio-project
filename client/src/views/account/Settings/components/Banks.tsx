@@ -7,11 +7,12 @@ import {
     FormContainer,
     FormItem,
     Input,
+    Tag,
+    Tooltip,
 } from '@/components/ui'
 import { useTranslation } from 'react-i18next'
 import {
     HiLibrary,
-    HiOutlineExclamation,
     HiOutlinePencilAlt,
     HiOutlineTrash,
     HiPlus,
@@ -20,7 +21,7 @@ import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { BankDataType } from '@/@types/system'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
-import { Loading } from '@/components/shared'
+import { ConfirmDialog, Loading } from '@/components/shared'
 import {
     apiCreateBank,
     apiDeleteBank,
@@ -33,87 +34,6 @@ import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 
 const { Tr, Td, TBody } = Table
-
-type BankDeleteConfirmationProps = {
-    isOpen: boolean
-    bank: BankDataType
-    onClose: (e: MouseEvent<HTMLSpanElement>) => void
-    onConfirmation: () => void
-}
-const BankDeleteConfirmation = (props: BankDeleteConfirmationProps) => {
-    const { isOpen, bank, onClose, onConfirmation } = props
-    const [isDeleting, setIsDeleting] = useState<boolean>(false)
-
-    const { t } = useTranslation()
-
-    const onDelete = async () => {
-        setIsDeleting(true)
-        await apiDeleteBank(bank.id)
-        setIsDeleting(false)
-        toast.push(
-            <Notification
-                title={
-                    t(
-                        'pages.settings.sections.banks.notifications.confirmDelete',
-                    ) || ''
-                }
-                type="success"
-            />,
-            {
-                placement: 'top-center',
-            },
-        )
-        onConfirmation()
-    }
-
-    return (
-        <Dialog
-            isOpen={isOpen}
-            contentClassName="pb-0 px-0"
-            onClose={onClose}
-            onRequestClose={onClose}
-        >
-            <div className="px-6 pb-6 pt-2 flex">
-                <div>
-                    <Avatar
-                        icon={<HiOutlineExclamation />}
-                        shape="circle"
-                        className="text-red-600 bg-red-100 dark:text-red-400"
-                    />
-                </div>
-                <div className="ml-4 rtl:mr-4">
-                    <h5 className="mb-2">
-                        {t(
-                            'pages.settings.sections.banks.deleteConfirmation.title',
-                        )}
-                    </h5>
-                    <p>
-                        {t(
-                            'pages.settings.sections.banks.deleteConfirmation.description',
-                        )}
-                    </p>
-                </div>
-            </div>
-            <div className="text-right px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg">
-                <Button
-                    className="ltr:mr-2 rtl:ml-2"
-                    disabled={isDeleting}
-                    onClick={onClose}
-                >
-                    {t('actions.cancel')}
-                </Button>
-                <Button
-                    variant="solid"
-                    color="red"
-                    disabled={isDeleting}
-                    onClick={onDelete}
-                >
-                    {t('actions.delete')}
-                </Button>
-            </div>
-        </Dialog>
-    )
-}
 
 type BankFormProps = {
     isOpen: boolean
@@ -245,6 +165,19 @@ const Banks = () => {
     const { t } = useTranslation()
     const { textTheme } = useThemeClass()
 
+    const errorHandler = useCallback(
+        (e: unknown) => {
+            toast.push(
+                <Notification title={t('error.generic') || ''} type="danger" />,
+                {
+                    placement: 'top-center',
+                },
+            )
+            console.error(e)
+        },
+        [t],
+    )
+
     const openDrawer = () => {
         setIsFormOpen(true)
     }
@@ -267,6 +200,33 @@ const Banks = () => {
     const onDelete = (bank: BankDataType) => {
         setSelectedBank(bank)
         setIsDeleteOpen(true)
+    }
+
+    const onDeleteConfirm = async () => {
+        if (selectedBank) {
+            setIsLoadingBanks(true)
+            try {
+                await apiDeleteBank(selectedBank.id)
+                toast.push(
+                    <Notification
+                        title={
+                            t(
+                                'pages.settings.sections.banks.notifications.confirmDelete',
+                            ) || ''
+                        }
+                        type="success"
+                    />,
+                    {
+                        placement: 'top-center',
+                    },
+                )
+                loadBanks()
+            } catch (e) {
+                errorHandler(e)
+                setIsLoadingBanks(false)
+            }
+            onBankDeleteConfirmClose()
+        }
     }
 
     const loadBanks = () => {
@@ -309,7 +269,7 @@ const Banks = () => {
                         <TBody>
                             {bankList?.map((bank, index) => (
                                 <Tr key={index}>
-                                    <Td>
+                                    <Td className="w-full">
                                         <div className="flex inline-flex items-center">
                                             <Avatar
                                                 src={bank.icon && bank.icon}
@@ -324,25 +284,51 @@ const Banks = () => {
                                             </span>
                                         </div>
                                     </Td>
-                                    <Td className="w-32 text-right">
-                                        <Button
-                                            size="sm"
-                                            shape="circle"
-                                            variant="plain"
-                                            title={t('actions.edit') || ''}
-                                            icon={<HiOutlinePencilAlt />}
-                                            onClick={() => onEdit(bank)}
-                                        />
-                                        <Button
-                                            className="ml-2 hover:text-red-600"
-                                            size="sm"
-                                            shape="circle"
-                                            variant="plain"
-                                            color="red"
-                                            title={t('actions.delete') || ''}
-                                            icon={<HiOutlineTrash />}
-                                            onClick={() => onDelete(bank)}
-                                        />
+                                    <Td
+                                        className="w-44 text-right grid grid-cols-3 justify-center items-center"
+                                        style={{ justifyItems: 'center' }}
+                                    >
+                                        <Tooltip
+                                            title={t(
+                                                'pages.settings.sections.banks.tooltips.accounts',
+                                            )}
+                                            placement="left"
+                                        >
+                                            <Tag>{bank.accountsCount}</Tag>
+                                        </Tooltip>
+                                        <Tooltip title={t('actions.edit')}>
+                                            <Button
+                                                size="sm"
+                                                shape="circle"
+                                                variant="plain"
+                                                icon={<HiOutlinePencilAlt />}
+                                                onClick={() => onEdit(bank)}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip
+                                            title={
+                                                !!bank.accountsCount &&
+                                                bank.accountsCount > 0
+                                                    ? t(
+                                                          'pages.settings.sections.banks.tooltips.warnHasAccounts',
+                                                      )
+                                                    : t('actions.delete')
+                                            }
+                                        >
+                                            <Button
+                                                className="hover:text-red-600"
+                                                size="sm"
+                                                shape="circle"
+                                                variant="plain"
+                                                color="red"
+                                                disabled={
+                                                    !!bank.accountsCount &&
+                                                    bank.accountsCount > 0
+                                                }
+                                                icon={<HiOutlineTrash />}
+                                                onClick={() => onDelete(bank)}
+                                            />
+                                        </Tooltip>
                                     </Td>
                                 </Tr>
                             ))}
@@ -368,17 +354,29 @@ const Banks = () => {
                     loadBanks()
                 }}
             />
-            {!!selectedBank && (
-                <BankDeleteConfirmation
-                    isOpen={isDeleteOpen}
-                    bank={selectedBank}
-                    onClose={onBankDeleteConfirmClose}
-                    onConfirmation={() => {
-                        onBankDeleteConfirmClose()
-                        loadBanks()
-                    }}
-                />
-            )}
+            <ConfirmDialog
+                isOpen={isDeleteOpen}
+                type="danger"
+                title={t(
+                    'pages.settings.sections.banks.deleteConfirmation.title',
+                )}
+                confirmButtonColor="red-600"
+                confirmText={t('actions.delete')}
+                cancelText={t('actions.cancel')}
+                onClose={onBankDeleteConfirmClose}
+                onRequestClose={onBankDeleteConfirmClose}
+                onCancel={onBankDeleteConfirmClose}
+                onConfirm={onDeleteConfirm}
+            >
+                <p>
+                    {t(
+                        'pages.settings.sections.banks.deleteConfirmation.description',
+                        {
+                            name: selectedBank?.name,
+                        },
+                    )}
+                </p>
+            </ConfirmDialog>
         </div>
     )
 }

@@ -38,7 +38,7 @@ const bankAccounts: any = async (fastify: any): Promise<void> => {
           id: bank.id,
           name: bank.name,
           icon: bank.icon,
-          accounts: bankAccounts.map(ba => ({
+          accounts: bankAccounts.map((ba: any) => ({
             id: ba.id,
             accountName: ba.accountName,
             accountNumber: ba.accountNumber,
@@ -78,7 +78,7 @@ const bankAccounts: any = async (fastify: any): Promise<void> => {
         accountNumber,
         accountBalance,
         accountBankId,
-        accountCurrencyId,
+        accountCurrency,
         accountUserId: user.id
       });
       reply.status(201).send({

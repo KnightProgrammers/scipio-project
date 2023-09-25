@@ -1,14 +1,13 @@
 import BankAccountSchema from "@/models/bank-account.model";
 import { UserType } from "@/routes/users";
-import { BankAccountType } from "@/@types/bank-account.type";
 import { BankType } from "@/@types/bank.type";
 
 class BankAccountService {
-    static async getAll(bank: BankType, user: UserType): Promise<BankAccountType[]> {
+    static async getAll(bank: BankType, user: UserType, accountIsDeleted: boolean = false): Promise<any> {
         return BankAccountSchema.find({
             accountUserId: user.id,
             accountBankId: bank.id,
-            accountIsDeleted: false
+            accountIsDeleted
         });
     }
     static async create(data: {
@@ -17,14 +16,14 @@ class BankAccountService {
         accountBalance: number
         accountBankId: string,
         accountUserId: string,
-        accountCurrencyId: string,
+        accountCurrency: any,
     }) {
         const {
             accountName,
             accountNumber,
             accountBalance,
             accountBankId,
-            accountCurrencyId,
+            accountCurrency,
             accountUserId
         } = data;
 
@@ -34,7 +33,7 @@ class BankAccountService {
             accountBalance,
             accountBankId,
             accountUserId,
-            accountCurrencyId,
+            accountCurrency,
             accountIsDeleted: false
         });
 

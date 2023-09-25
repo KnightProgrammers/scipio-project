@@ -118,7 +118,7 @@ const BankAccounts = () => {
         const currency = userCurrencies?.find(
             (c) => c.id === data.accountCurrency,
         )
-        if (!!selectedBank && !!currency && !!selectedBankAccount) {
+        if (!!selectedBank && !!currency) {
             try {
                 if (!data.id) {
                     await apiCreateBankAccount({
@@ -129,15 +129,17 @@ const BankAccounts = () => {
                         accountCurrencyId: currency.id,
                     })
                 } else {
-                    await apiUpdateBankAccount({
-                        id: data.id,
-                        accountName: data.accountName,
-                        accountNumber: data.accountNumber,
-                        accountBalance: data.accountBalance,
-                        accountBankId: selectedBank.id,
-                        accountCurrencyId:
-                            selectedBankAccount.accountCurrency.id,
-                    })
+                    if (selectedBankAccount) {
+                        await apiUpdateBankAccount({
+                            id: data.id,
+                            accountName: data.accountName,
+                            accountNumber: data.accountNumber,
+                            accountBalance: data.accountBalance,
+                            accountBankId: selectedBank.id,
+                            accountCurrencyId:
+                                selectedBankAccount.accountCurrency.id,
+                        })
+                    }
                 }
                 loadBankAccounts()
             } catch (e: unknown) {

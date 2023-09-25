@@ -112,10 +112,14 @@
                     },
                     "deleteConfirmation": {
                         "title": "Eliminar Banco",
-                        "description": "Está seguro que desea eliminar el banco?"
+                        "description": "Está seguro que desea eliminar el banco \"{{name}}\"?"
                     },
                     "notifications": {
                         "confirmDelete": "Banco eliminado exitosamente"
+                    },
+                    "tooltips": {
+                        "accounts": "Cuentas de Bancos",
+                        "warnHasAccounts": "El banco tiene cuentas asociadas, eliminelos antes de continuar"
                     }
                 }
             }
