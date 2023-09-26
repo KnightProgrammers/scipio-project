@@ -89,6 +89,9 @@ jobs:
     name: "Create Beta Environment"
     runs-on: ubuntu-latest
     needs: [ e2e-tests ]
+    concurrency:
+      group: ${{ github.repository }}-concurrency-create-beta-env
+      cancel-in-progress: false
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
       RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
