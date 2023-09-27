@@ -9,9 +9,21 @@ updates:
   - package-ecosystem: "npm"
     directory: "/server"
     schedule:
-      interval: "weekly"  
+      interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/client"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/infra"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/db-seed"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/tests/e2e-tests"
     schedule:
       interval: "weekly"
   # Maintain Server dependencies for Composer
