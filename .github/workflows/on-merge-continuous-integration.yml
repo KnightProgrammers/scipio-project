@@ -165,5 +165,5 @@ jobs:
       - name: Install railway cli
         run: npm i -g @railway/cli
       - name: Generate comment
-        run: scipio-infra generate-pr-comment -e "beta-${{ github.event.number }}"
+        run: scipio-infra generate-pr-comment -e "staging"
       # Send deployment status over Slack
