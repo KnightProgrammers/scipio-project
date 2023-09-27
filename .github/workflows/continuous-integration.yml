@@ -85,6 +85,26 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: tests/e2e-tests/node_modules
+          key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: e2e-tests-node_modules-
+      - name: Install Dependencies
+        run: |
+          cd tests/e2e-tests
+          npm ci
+      - name: Run Tests
+        run: |
+          cd tests/e2e-tests
+          npm run regression-test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e-report
+          path: tests/e2e-tests/playwright-report/
+          retention-days: 7
   create-beta-env:
     name: "Create Beta Environment"
     runs-on: ubuntu-latest
