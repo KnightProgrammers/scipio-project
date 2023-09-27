@@ -130,8 +130,7 @@ jobs:
         run: npm install -g ./infra
       - name: Create environment
         run: |
-        # Railway allows to create an environment every 30 seconds
-          sleep 30 
+          sleep 30 # Railway allows to create an environment every 30 seconds
           scipio-infra environment-create "beta-${{ github.event.number }}"
   deploy-services:
     name: "Deploy Services"
