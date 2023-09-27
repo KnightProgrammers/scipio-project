@@ -96,6 +96,8 @@ jobs:
           cd tests/e2e-tests
           npm ci
       - name: Run Tests
+        env:
+          BASE_URL: http://localhost:3000
         run: |
           cd tests/e2e-tests
           npm run regression-test
