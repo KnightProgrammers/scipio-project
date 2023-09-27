@@ -6,7 +6,7 @@ import {
 
 export interface CommonProps {
     className?: string
-    "data-tn"?: string
+    'data-tn'?: string
     children?: ReactNode
     style?: CSSProperties
 }
