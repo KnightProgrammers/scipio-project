@@ -68,6 +68,8 @@ jobs:
   e2e-tests:
     name: "E2E Tests"
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.38.0-jammy
     needs: [ server-build-check, client-build-check ]
     env:
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
