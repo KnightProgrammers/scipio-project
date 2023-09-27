@@ -1,18 +1,19 @@
-name: Continuous Integration
+name: Continuous Integration - On Merge to Main
 
 on:
-  pull_request:
+  push:
     branches: [ 'main' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   checks: write
   statuses: write
   contents: write
   pull-requests: write
+
 
 jobs:
   server-build-check:
@@ -85,35 +86,34 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-  create-beta-env:
-    name: "Create Beta Environment"
-    runs-on: ubuntu-latest
-    needs: [ e2e-tests ]
-    concurrency:
-      group: ${{ github.repository }}-concurrency-create-beta-env
-      cancel-in-progress: false
-    env:
-      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
-      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v3
+      - name: Cache node modules
+        uses: actions/cache@v3
         with:
-          node-version: 20
-      - name: Install infra dependencies
+          path: tests/e2e-tests/node_modules
+          key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: e2e-tests-node_modules-
+      - name: Install Dependencies
         run: |
-          cd infra
-          npm install
-      - name: Install scipio-infra globaly
-        run: npm install -g ./infra
-      - name: Create environment
-        run: scipio-infra environment-create "beta-${{ github.event.number }}"
+          cd tests/e2e-tests
+          npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Tests
+        env:
+          BASE_URL: http://localhost:3000
+        run: |
+          cd tests/e2e-tests
+          npm run regression-test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e-report
+          path: tests/e2e-tests/playwright-report/
+          retention-days: 7
   deploy-services:
     name: "Deploy Services"
     runs-on: ubuntu-latest
-    needs: [ create-beta-env ]
+    needs: [ e2e-tests ]
     strategy:
       matrix:
         service: [ "server", "client" ]
@@ -137,13 +137,15 @@ jobs:
       - name: Install railway cli
         run: npm i -g @railway/cli
       - name: Deploy ${{ matrix.service }} service
-        run: scipio-infra deploy -s ${{ matrix.service }} -e "beta-${{ github.event.number }}"
+        run: scipio-infra deploy -s ${{ matrix.service }} -e staging
   notify-deployment:
     name: "Notify Deployment"
     runs-on: ubuntu-latest
     needs: [ deploy-services ]
     if: always()
-    environment: Beta
+    environment:
+      name: Staging
+      url: https://staging.scipiofinances.com
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
       RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
@@ -164,9 +166,4 @@ jobs:
         run: npm i -g @railway/cli
       - name: Generate comment
         run: scipio-infra generate-pr-comment -e "beta-${{ github.event.number }}"
-      - name: "Set deploy status"
-        if: always()
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          filePath: "./pr-comment.md"
-          comment_tag: deploy-status
+      # Send deployment status over Slack

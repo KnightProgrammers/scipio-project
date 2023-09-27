@@ -36,6 +36,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
             <Avatar
                 size={32}
                 shape="circle"
+                data-tn="header-user-avatar"
                 src={
                     userState.avatar ?? './img/thumbs/generic-user-profile.png'
                 }
@@ -49,15 +50,28 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 menuStyle={{ minWidth: 240 }}
                 renderTitle={UserAvatar}
                 placement="bottom-end"
+                data-tn="user-profile"
             >
                 <Dropdown.Item variant="header">
                     <div className="py-2 px-3 flex items-center gap-2">
-                        <Avatar shape="circle" src={userState.avatar} />
+                        <Avatar
+                            shape="circle"
+                            src={userState.avatar}
+                            data-tn="profile-user-avatar"
+                        />
                         <div>
-                            <div className="font-bold text-gray-900 dark:text-gray-100">
+                            <div
+                                className="font-bold text-gray-900 dark:text-gray-100"
+                                data-tn="profile-user-name"
+                            >
                                 {userState.name}
                             </div>
-                            <div className="text-xs">{userState.email}</div>
+                            <div
+                                className="text-xs"
+                                data-tn="profile-user-email"
+                            >
+                                {userState.email}
+                            </div>
                         </div>
                     </div>
                 </Dropdown.Item>

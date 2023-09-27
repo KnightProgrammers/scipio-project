@@ -436,7 +436,6 @@ const BankAccounts = () => {
                         >
                             {!selectedBankAccount ? (
                                 <Field
-                                    value
                                     type="text"
                                     autoComplete="off"
                                     name="accountCurrency"
@@ -446,6 +445,7 @@ const BankAccounts = () => {
                                         label: t(`currencies.${c.code}`),
                                     }))}
                                     isLoading={!userCurrencies}
+                                    className="currency-select"
                                     component={SelectFieldItem}
                                 />
                             ) : (

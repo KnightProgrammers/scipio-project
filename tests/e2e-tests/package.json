@@ -1,0 +1,23 @@
+{
+  "name": "e2e-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "regression-test": "playwright test ./src/specs/regression",
+    "smoke-test": "playwright test ./src/specs/smoke",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "1.38.1",
+    "@types/node": "20.6.5",
+    "@types/uuid": "9.0.4",
+    "dotenv": "16.3.1",
+    "firebase-admin": "11.10.1",
+    "uuid": "9.0.1"
+  }
+}

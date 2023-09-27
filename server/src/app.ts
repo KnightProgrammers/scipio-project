@@ -24,6 +24,8 @@ const app: any = async (
   opts: any
 ): Promise<void> => {
 
+  fastify.log.info(`${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`)
+
   mongoose
     .connect(`${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params && config.db.params}`, {
       user: config.db.user,

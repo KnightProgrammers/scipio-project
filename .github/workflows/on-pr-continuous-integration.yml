@@ -1,0 +1,200 @@
+name: Continuous Integration - On Pull Request
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  checks: write
+  statuses: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  server-build-check:
+    name: "Server - Build Check"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: server/node_modules
+          key: server-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: server-node_modules-
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run build typescript
+        run: npm run build
+  client-build-check:
+    name: "Client - Build Check"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: client/node_modules
+          key: client-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: client-node_modules-
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run prettier
+        run: npm run prettier
+      - name: Run build typescript
+        run: npm run build
+  e2e-tests:
+    name: "E2E Tests"
+    runs-on: ubuntu-latest
+    needs: [ server-build-check, client-build-check ]
+    env:
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+      FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+      FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Run Dockers
+        run: docker compose up --detach --wait --build
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: tests/e2e-tests/node_modules
+          key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: e2e-tests-node_modules-
+      - name: Install Dependencies
+        run: |
+          cd tests/e2e-tests
+          npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Tests
+        env:
+          BASE_URL: http://localhost:3000
+        run: |
+          cd tests/e2e-tests
+          npm run regression-test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e-report
+          path: tests/e2e-tests/playwright-report/
+          retention-days: 7
+  create-beta-env:
+    name: "Create Beta Environment"
+    runs-on: ubuntu-latest
+    needs: [ e2e-tests ]
+    concurrency:
+      group: ${{ github.repository }}-concurrency-create-beta-env
+      cancel-in-progress: false
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install infra dependencies
+        run: |
+          cd infra
+          npm install
+      - name: Install scipio-infra globaly
+        run: npm install -g ./infra
+      - name: Create environment
+        run: |
+          sleep 30 # Railway allows to create an environment every 30 seconds
+          scipio-infra environment-create "beta-${{ github.event.number }}"
+  deploy-services:
+    name: "Deploy Services"
+    runs-on: ubuntu-latest
+    needs: [ create-beta-env ]
+    strategy:
+      matrix:
+        service: [ "server", "client" ]
+      fail-fast: false
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install infra dependencies
+        run: |
+          cd infra
+          npm install
+      - name: Install scipio-infra globaly
+        run: npm install -g ./infra
+      - name: Install railway cli
+        run: npm i -g @railway/cli
+      - name: Deploy ${{ matrix.service }} service
+        run: scipio-infra deploy -s ${{ matrix.service }} -e "beta-${{ github.event.number }}"
+  notify-deployment:
+    name: "Notify Deployment"
+    runs-on: ubuntu-latest
+    needs: [ deploy-services ]
+    if: always()
+    environment:
+      name: Beta
+      url: https://scipio-client-beta-${{ github.event.number }}.up.railway.app
+    env:
+      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install infra dependencies
+        run: |
+          cd infra
+          npm install
+      - name: Install scipio-infra globaly
+        run: npm install -g ./infra
+      - name: Install railway cli
+        run: npm i -g @railway/cli
+      - name: Generate comment
+        run: scipio-infra generate-pr-comment -e "beta-${{ github.event.number }}"
+      - name: "Set deploy status"
+        if: always()
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: "./pr-comment.md"
+          comment_tag: deploy-status

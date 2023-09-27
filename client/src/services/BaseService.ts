@@ -51,14 +51,16 @@ BaseService.interceptors.response.use(
             auth.currentUser
         ) {
             originalRequest._retry = true
-            const authToken = await auth.currentUser.getIdToken(true)
-            store.dispatch(signInSuccess(authToken))
-            axios.defaults.headers.common['Authorization'] =
-                'Bearer ' + authToken
-            return BaseService(originalRequest)
-        }
-
-        if (response && unauthorizedCode.includes(response.status)) {
+            try {
+                const authToken = await auth.currentUser.getIdToken(true)
+                store.dispatch(signInSuccess(authToken))
+                axios.defaults.headers.common['Authorization'] =
+                    'Bearer ' + authToken
+                return BaseService(originalRequest)
+            } catch {
+                store.dispatch(signOutSuccess())
+            }
+        } else if (response && unauthorizedCode.includes(response.status)) {
             store.dispatch(signOutSuccess())
         }
 

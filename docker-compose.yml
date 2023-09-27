@@ -9,6 +9,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - dbdata:/data/db
+    ports:
+      - '27017:27017'
     healthcheck:
       test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
       interval: 10s
@@ -55,6 +57,21 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+  scipio-db-seed:
+    build:
+      context: .
+      dockerfile: ./db-seed/Dockerfile
+    environment:
+      MONGO_DB_PROTOCOL: 'mongodb'
+      MONGO_DB_HOST: 'scipio-db'
+      MONGO_DB_PORT: '27017'
+      MONGO_DB_NAME: 'scipio-test'
+      MONGO_DB_USER: 'root'
+      MONGO_DB_PASSWORD: 'password'
+      MONGO_DB_PARAMS: 'authSource=admin'
+    depends_on:
+      scipio-db:
+        condition: service_healthy
 volumes:
   dbdata:
 networks:
