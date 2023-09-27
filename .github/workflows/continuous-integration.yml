@@ -85,6 +85,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - name: DB Seed
+        env:
+          MONGO_DB_PROTOCOL: 'mongodb'
+          MONGO_DB_HOST: 'scipio-db'
+          MONGO_DB_PORT: '27017'
+          MONGO_DB_NAME: 'scipio-test'
+          MONGO_DB_USER: 'root'
+          MONGO_DB_PASSWORD: 'password'
+        run: |
+          cd db-seed
+          npm i
+          npm run build
+          npm run start
       - name: Cache node modules
         uses: actions/cache@v3
         with:
