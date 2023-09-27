@@ -88,7 +88,7 @@ jobs:
       - name: DB Seed
         env:
           MONGO_DB_PROTOCOL: 'mongodb'
-          MONGO_DB_HOST: 'scipio-db'
+          MONGO_DB_HOST: 'localhost'
           MONGO_DB_PORT: '27017'
           MONGO_DB_NAME: 'scipio-test'
           MONGO_DB_USER: 'root'
