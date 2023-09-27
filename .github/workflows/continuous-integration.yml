@@ -129,7 +129,10 @@ jobs:
       - name: Install scipio-infra globaly
         run: npm install -g ./infra
       - name: Create environment
-        run: scipio-infra environment-create "beta-${{ github.event.number }}"
+        run: |
+        # Railway allows to create an environment every 30 seconds
+          sleep 30 
+          scipio-infra environment-create "beta-${{ github.event.number }}"
   deploy-services:
     name: "Deploy Services"
     runs-on: ubuntu-latest
