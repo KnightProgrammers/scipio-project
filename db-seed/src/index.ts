@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-
+import dotenv from "dotenv";
 import logger from "./helpers/logger";
 import countrySeed from "./seeds/country";
 import currencySeed from "./seeds/currency";
 
+dotenv.config();
 
 const config = {
   db: {
@@ -19,7 +20,7 @@ const config = {
 
 (async function main() {
   logger.info("Connecting to DB")
-  logger.debug(`  ${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params ? `?${config.db.params}` : ''}`)
+  logger.info(`  ${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params ? `?${config.db.params}` : ''}`)
 
   const dbConnection = await mongoose.connect(
     `${config.db.protocol}://${config.db.host}${config.db.port ? `:${config.db.port}` : ''}/${!!config.db.name && config.db.name}${!!config.db.params ? `?${config.db.params}` : ''}`,
