@@ -38,6 +38,7 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
     await page.locator('input[name="password"]').click();
     await page.locator('input[name="password"]').fill(password);
     await page.getByLabel('Remember Me').check();
+    await page.getByRole('button', { name: 'Sign In', exact: true }).waitFor({state: 'visible', timeout: 30000});
     await page.getByRole('button', { name: 'Sign In', exact: true }).click();
     await page.getByRole('button', { name: 'Sign In', exact: true }).waitFor({state: 'detached', timeout: 30000});
     await page.waitForRequest(request =>
