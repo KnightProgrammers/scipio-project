@@ -176,6 +176,7 @@ jobs:
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
       RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+      TEST: ${{ toJSON(jobs) }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -200,6 +201,4 @@ jobs:
           filePath: "./pr-comment.md"
           comment_tag: deploy-status
       - name: Set deployment status
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(job) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: echo "$TEST"
