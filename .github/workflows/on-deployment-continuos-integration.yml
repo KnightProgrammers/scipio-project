@@ -2,16 +2,16 @@ name: Continuous Integration - On Deployment
 
 on:
   deployment_status:
-    state: ['success']
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   e2e-tests:
     name: "E2E Tests"
     runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
     container:
       image: mcr.microsoft.com/playwright:v1.38.0-jammy
     env:
@@ -28,6 +28,20 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Set url variables
+        id: set-url-variables
+        run: |
+          if [ ${{ github.event.deployment.environment }} != 'Staging' ]; then
+            echo "Environment Beta"
+            echo "BASE_URL=https://scipio-client-beta-${{ github.event.workflow_run.run_number }}.up.railway.app/" >> $GITHUB_ENV
+            echo "API_BASE_URL=https://scipio-server-beta-${{ github.event.workflow_run.run_number }}.up.railway.app/" >> $GITHUB_ENV
+            echo "{environment_variable_name}={value}" >> $GITHUB_ENV
+          else
+            echo "Environment Staging"
+            echo "BASE_URL=https://staging.scipiofinances.com" >> $GITHUB_ENV
+            echo "API_BASE_URL=https://staging-api.scipiofinances.com" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Install Node
         uses: actions/setup-node@v3
         with:
@@ -44,8 +58,8 @@ jobs:
           npm ci
       - name: Run Tests
         env:
-          API_BASE_URL:  http://localhost:8080
-          BASE_URL: http://localhost:3000
+          API_BASE_URL: ${{ env.API_BASE_URL }}
+          BASE_URL: ${{ env.API_BASE_URL }}
           TEST_USER_EMAIL:  ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASS: ${{ secrets.TEST_USER_PASS }}
           TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
