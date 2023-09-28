@@ -76,7 +76,11 @@ const Settings = () => {
                 <Tabs value={currentTab} onChange={(val) => onTabChange(val)}>
                     <TabList>
                         {Object.keys(settingsMenu).map((key) => (
-                            <TabNav key={key} value={key} data-tn={`profile-tab-${key}`}>
+                            <TabNav
+                                key={key}
+                                value={key}
+                                data-tn={`profile-tab-${key}`}
+                            >
                                 {t(settingsMenu[key].label)}
                             </TabNav>
                         ))}

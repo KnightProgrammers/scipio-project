@@ -112,8 +112,8 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 <Dropdown.Item
                     eventKey="Sign Out"
                     className="gap-2"
-                    onClick={signOut}
                     data-tn="sign-out"
+                    onClick={signOut}
                 >
                     <span className="text-xl opacity-50">
                         <HiOutlineLogout />
