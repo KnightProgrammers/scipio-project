@@ -21,7 +21,7 @@ const auth: any = async (fastify: any): Promise<void> => {
       schema: {
         body: UserRegistration,
         response: {
-          200: User
+          201: User
         },
       },
     },
@@ -41,7 +41,7 @@ const auth: any = async (fastify: any): Promise<void> => {
         country,
         lang
       });
-      reply.status(200).send({
+      reply.status(201).send({
         id: user.id,
         name: user.name || '',
         email: user.email || '',
