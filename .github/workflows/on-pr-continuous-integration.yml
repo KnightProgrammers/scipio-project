@@ -200,6 +200,6 @@ jobs:
           filePath: "./pr-comment.md"
           comment_tag: deploy-status
       - name: Set deployment status
-        if: (!success())
+        if: failure()
         run: |
           exit 1;
