@@ -71,12 +71,12 @@ const Settings = () => {
     }, [setCurrentTab, data, fetchData, path])
 
     return (
-        <Container>
+        <Container data-tn="account-settings-page">
             <AdaptableCard>
                 <Tabs value={currentTab} onChange={(val) => onTabChange(val)}>
                     <TabList>
                         {Object.keys(settingsMenu).map((key) => (
-                            <TabNav key={key} value={key}>
+                            <TabNav key={key} value={key} data-tn={`profile-tab-${key}`}>
                                 {t(settingsMenu[key].label)}
                             </TabNav>
                         ))}
