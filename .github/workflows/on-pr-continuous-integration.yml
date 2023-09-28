@@ -100,6 +100,7 @@ jobs:
       - name: Run Tests
         env:
           BASE_URL: http://localhost:3000
+          API_BASE_URL: http://localhost:8080
         run: |
           cd tests/e2e-tests
           npm run regression-test

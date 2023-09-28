@@ -45,6 +45,9 @@ jobs:
         env:
           API_BASE_URL:  http://localhost:8080
           BASE_URL: http://localhost:3000
+          TEST_USER_EMAIL:  ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASS: ${{ secrets.TEST_USER_PASS }}
+          TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
         run: |
           cd tests/e2e-tests
           npm run smoke-test
