@@ -2,6 +2,7 @@ name: Continuous Integration - On Deployment
 
 on:
   deployment_status:
+    state: ['success']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
