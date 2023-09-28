@@ -201,5 +201,5 @@ jobs:
           comment_tag: deploy-status
       - name: Set deployment status
         env:
-          GITHUB_CONTEXT: ${{ toJSON(jobs || '') }}
+          GITHUB_CONTEXT: ${{ toJSON(job) }}
         run: echo "$GITHUB_CONTEXT"
