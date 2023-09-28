@@ -46,6 +46,5 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
     const response = await page.waitForResponse(response =>
         response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
     );
-    const userDataBuffer = await response.body();
-    return JSON.parse(userDataBuffer.toString('utf-8'));
+    return response.json();
 }
