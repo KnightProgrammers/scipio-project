@@ -56,8 +56,8 @@ jobs:
         run: npx playwright install chrome
       - name: Run Tests
         env:
+          BASE_URL: ${{ env.BASE_URL }}
           API_BASE_URL: ${{ env.API_BASE_URL }}
-          BASE_URL: ${{ env.API_BASE_URL }}
           TEST_USER_EMAIL:  ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASS: ${{ secrets.TEST_USER_PASS }}
           TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
