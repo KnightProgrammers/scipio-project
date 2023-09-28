@@ -1,17 +1,8 @@
-<h1 align="center">
-    <a>
-        <img src="./.github/documentation/logo.png">
-    </a>
-</h1>
-
-<p align="center">
+<div align="center"><a><img src="./.github/documentation/logo.png"></a></div>
+<div align="center">
     <a href="https://github.com/jayc13/scipio-project/actions/workflows/on-merge-continuous-integration.yml"><img src="https://github.com/jayc13/scipio-project/actions/workflows/on-merge-continuous-integration.yml/badge.svg?branch=main" alt="Continuous Integration"></a>
     <a href="https://opensource.org/licenses/GPL-3.0"><img src="https://img.shields.io/badge/License-GPL-blue.svg" alt="License: GPL-3.0"></a>
-</p>
-
-<p align="center">
-  <i align="center"></i>
-</p>
+</div>
 
 ------
 
