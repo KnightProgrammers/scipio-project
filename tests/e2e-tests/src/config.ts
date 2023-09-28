@@ -8,3 +8,5 @@ export const getDefaultUserData = (): {email: string, password: string, name: st
         name: process.env.TEST_USER_NAME,
     }
 }
+
+export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8080'

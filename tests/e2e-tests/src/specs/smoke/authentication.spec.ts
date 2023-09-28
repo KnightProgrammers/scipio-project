@@ -23,19 +23,18 @@ test.beforeAll(async ({ browser }) => {
 });
 
 test.afterAll(async () => {
-    try {
-        const user = await  firebaseService.auth().getUserByEmail(email);
-        await firebaseService.auth().deleteUser(user.uid)
-        console.log(`Deleted User "${email}"`)
-    } catch {
-        console.log('No user to be deleted')
-    } finally {
-        await page.close();
-    }
+    await page.close();
 });
 
 test('Successful sign-in', async () => {
-    await signInUser(page);
+    const {email, password, name } = getDefaultUserData();
+    const userData = await signInUser(page, {email, password});
+    expect(userData.id).toBeTruthy();
+    expect(userData.name).toBe(name);
+    expect(userData.email).toBe(email);
+    expect(userData.avatar).toBeTruthy();
+    expect(userData.lang).toBeTruthy();
+    expect(userData.country).toBeTruthy();
     await page.locator('div[data-tn="user-profile"]').click();
     await page.locator('div[data-tn="user-profile"]').click();
     await expect(page.locator('div[data-tn="profile-user-name"]'))

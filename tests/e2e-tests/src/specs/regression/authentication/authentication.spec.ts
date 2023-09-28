@@ -34,6 +34,7 @@ test.afterAll(async () => {
 });
 
 test('Successful sign-up', async () => {
+    console.log(`Creating account for user with email: "${email}"`)
     await signUpUser(page, { email, password, name });
     const user = await  firebaseService.auth().getUserByEmail(email)
     expect(user).not.toBeNull();
@@ -41,9 +42,14 @@ test('Successful sign-up', async () => {
 });
 
 test('Successful sign-in', async () => {
-    await signInUser(page, { email, password });
+    const userData = await signInUser(page, { email, password });
+    expect(userData.id).toBeTruthy();
+    expect(userData.name).toBe(name);
+    expect(userData.email).toBe(email);
+    expect(userData.avatar).toBeTruthy();
+    expect(userData.lang).toBeTruthy();
+    expect(userData.country).toBeTruthy();
     await page.locator('div[data-tn="user-profile"]').click();
-    await page.pause();
     await expect(page.locator('div[data-tn="profile-user-name"]'))
         .toHaveText(name);
     await expect(page.locator('div[data-tn="profile-user-email"]'))
