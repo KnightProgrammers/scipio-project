@@ -82,7 +82,7 @@ const users: any = async (fastify: any): Promise<void> => {
       schema: {
         body: User,
         response: {
-          201: User
+          200: User
         },
       },
     },
@@ -92,7 +92,7 @@ const users: any = async (fastify: any): Promise<void> => {
       user.name =  newData.name;
       user.lang = newData.lang;
       user.save();
-      reply.status(201).send({
+      reply.status(200).send({
         id: user.id,
         name: user.name,
         email: user.email,

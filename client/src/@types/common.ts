@@ -2,7 +2,7 @@ import { ReactNode, CSSProperties } from 'react'
 
 export interface CommonProps {
     className?: string
-    dataTn?: string
+    'data-tn'?: string
     children?: ReactNode
     style?: CSSProperties
 }

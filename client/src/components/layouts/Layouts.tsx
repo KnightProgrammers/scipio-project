@@ -51,6 +51,16 @@ const Layout = () => {
                 })
                 .catch(() => {
                     dispatch(signOutSuccess())
+                    dispatch(
+                        setUser({
+                            id: '',
+                            avatar: '',
+                            name: '',
+                            email: '',
+                            lang: '',
+                            country: null,
+                        }),
+                    )
                 })
         }
     }, [authenticated, dispatch, user, isLoading])
