@@ -13,6 +13,7 @@ import ModeSwitcher from '@/components/template/ThemeConfigurator/ModeSwitcher'
 type DropdownList = {
     labelPath: string
     path: string
+    dataTn: string
     icon: JSX.Element
 }
 
@@ -20,6 +21,7 @@ const dropdownItemList: DropdownList[] = [
     {
         labelPath: 'nav.profile',
         path: '/account/settings/profile',
+        dataTn: 'profile-settings',
         icon: <HiOutlineUser />,
     },
 ]
@@ -91,6 +93,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
                         key={t(item.labelPath)}
                         eventKey={item.labelPath}
                         className="mb-1 px-0"
+                        data-tn={item.dataTn}
                     >
                         <Link
                             className="flex h-full w-full px-2"
@@ -109,6 +112,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 <Dropdown.Item
                     eventKey="Sign Out"
                     className="gap-2"
+                    data-tn="sign-out"
                     onClick={signOut}
                 >
                     <span className="text-xl opacity-50">
