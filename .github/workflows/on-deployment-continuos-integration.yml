@@ -51,7 +51,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd tests/e2e-tests
-          npm ci
+          npm install
       - name: Install Chrome Browser
         run: npx playwright install chrome
       - name: Run Tests
