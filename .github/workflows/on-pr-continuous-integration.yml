@@ -201,10 +201,5 @@ jobs:
           comment_tag: deploy-status
       - name: Set deployment status
         env:
-          FAILURE: ${{failure()}}
-          SUCCESS: ${{success()}}
-          CANCELLED: ${{cancelled()}}
-        run: |
-          echo $FAILURE
-          echo $SUCCESS
-          echo $CANCELLED
+          GITHUB_CONTEXT: ${{ toJson(jobs) }}
+        run: echo "$GITHUB_CONTEXT"
