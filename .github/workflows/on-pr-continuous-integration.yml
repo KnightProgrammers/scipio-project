@@ -193,13 +193,14 @@ jobs:
         run: npm i -g @railway/cli
       - name: Generate comment
         run: scipio-infra generate-pr-comment -e "beta-${{ github.event.number }}"
-      - name: "Set deploy status"
+      - name: Publish Pull Request comment
         if: success() || failure()
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: "./pr-comment.md"
           comment_tag: deploy-status
       - name: Set deployment status
-        if: failure()
         run: |
-          exit 1;
+          echo ${{failure()}}
+          echo ${{success()}}
+          echo ${{cancelled()}}
