@@ -200,7 +200,11 @@ jobs:
           filePath: "./pr-comment.md"
           comment_tag: deploy-status
       - name: Set deployment status
+        env:
+          FAILURE: ${{failure()}}
+          SUCCESS: ${{success()}}
+          CANCELLED: ${{cancelled()}}
         run: |
-          echo ${{failure()}}
-          echo ${{success()}}
-          echo ${{cancelled()}}
+          echo $FAILURE
+          echo $SUCCESS
+          echo $CANCELLED
