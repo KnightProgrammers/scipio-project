@@ -176,7 +176,6 @@ jobs:
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
       RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-      TEST: ${{ toJSON(needs.*.result) }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -201,4 +200,5 @@ jobs:
           filePath: "./pr-comment.md"
           comment_tag: deploy-status
       - name: Set deployment status
-        run: echo "$TEST"
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'skipped')
+        run: exit 1;
