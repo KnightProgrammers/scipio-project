@@ -96,7 +96,9 @@ jobs:
           cd tests/e2e-tests
           npm install
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: |
+          cd tests/e2e-tests
+          npx playwright install --with-deps
       - name: Run Tests
         env:
           BASE_URL: http://localhost:3000
