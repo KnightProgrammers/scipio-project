@@ -103,10 +103,16 @@ const Currency = () => {
                                     name="currencies"
                                     value={selectedCurrencies}
                                     className="max-h-[550px] w-full overflow-y-auto"
-                                    onChange={(value: any) => setSelectedCurrencies(value)}
+                                    onChange={(value: any) =>
+                                        setSelectedCurrencies(value)
+                                    }
                                 >
                                     {currencies?.map((c) => (
-                                        <Checkbox key={c.id} value={c.id} data-tn={c.code}>
+                                        <Checkbox
+                                            key={c.id}
+                                            value={c.id}
+                                            data-tn={c.code}
+                                        >
                                             {c.code} (
                                             {t(`currencies.${c.code}`)})
                                         </Checkbox>
