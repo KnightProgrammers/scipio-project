@@ -1,7 +1,7 @@
 import { test, Page, expect } from "@playwright/test";
-import { signInUser } from "../../helpers/auth.helper";
-import { goToUserProfile } from "../../helpers/profile.helper";
-import { API_BASE_URL, getDefaultUserData } from "../../config";
+import { signInUser } from "../../../helpers/auth.helper";
+import { goToUserProfile } from "../../../helpers/profile.helper";
+import { API_BASE_URL, getDefaultUserData } from "../../../config";
 
 
 let email: string;
