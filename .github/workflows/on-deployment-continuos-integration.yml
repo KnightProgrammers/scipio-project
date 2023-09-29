@@ -52,8 +52,8 @@ jobs:
         run: |
           cd tests/e2e-tests
           npm install
-      - name: Install Chrome Browser
-        run: npx playwright install chrome
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: Run Tests
         env:
           BASE_URL: ${{ env.BASE_URL }}
