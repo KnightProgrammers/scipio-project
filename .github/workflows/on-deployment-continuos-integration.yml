@@ -56,6 +56,7 @@ jobs:
         run: |
           cd tests/e2e-tests
           npx playwright install --with-deps
+          npx playwright install chrome
       - name: Run Tests
         env:
           BASE_URL: ${{ env.BASE_URL }}
