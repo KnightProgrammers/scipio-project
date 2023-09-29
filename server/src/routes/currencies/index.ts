@@ -18,7 +18,7 @@ const currencies: any = async (fastify: any): Promise<void> => {
             },
         },
         async function (request: any, reply: any) {
-            const currencies = await CurrencyModel.find();
+            const currencies = await CurrencyModel.find().sort({code:1});
             reply.status(200).send(currencies.map(c => ({
                 id: c.id,
                 name: c.name,

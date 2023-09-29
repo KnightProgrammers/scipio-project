@@ -42,111 +42,111 @@ const users: any = async (fastify: any): Promise<void> => {
   fastify.addHook('onRequest', AuthMiddleware);
 
   fastify.get(
-    '/me', {
-      schema: {
-        response: {
-          200: User
+      '/me', {
+        schema: {
+          response: {
+            200: User
+          },
         },
       },
-    },
-    async function (request: any, reply: any) {
-      let user = request.user;
-      if (!user) {
-        const authToken: string = (request.headers.authorization || '').split('Bearer ')[1];
-        const decodedIdToken = await firebaseApp.auth().verifyIdToken(authToken);
-        user = await UserSchema.create({
-          name: decodedIdToken.name,
-          email: decodedIdToken.email,
-          firebaseId: decodedIdToken.uid,
-          avatar: decodedIdToken.picture
+      async function (request: any, reply: any) {
+        let user = request.user;
+        if (!user) {
+          const authToken: string = (request.headers.authorization || '').split('Bearer ')[1];
+          const decodedIdToken = await firebaseApp.auth().verifyIdToken(authToken);
+          user = await UserSchema.create({
+            name: decodedIdToken.name,
+            email: decodedIdToken.email,
+            firebaseId: decodedIdToken.uid,
+            avatar: decodedIdToken.picture
+          });
+        }
+        if (!user.avatar) {
+          user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});
+          await user.save();
+        }
+        reply.status(200).send({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || null,
+          lang: user.lang || null,
+          country: !!user.country ? {
+            name: user.country.name,
+            code: user.country.code
+          } : null
+        })
+      });
+  fastify.post(
+      '/me', {
+        schema: {
+          body: User,
+          response: {
+            200: User
+          },
+        },
+      },
+      async function (request: any, reply: any) {
+        let newData: UserType = request.body;
+        const user = request.user;
+        user.name =  newData.name;
+        user.lang = newData.lang;
+        user.save();
+        reply.status(200).send({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || null,
+          lang: user.lang || null,
+          country: {
+            name: user.country.name,
+            code: user.country.code
+          }
         });
       }
-      if (!user.avatar) {
-        user.avatar = gavatar.url(user.email, {protocol: 'https', s: '100'});
-        await user.save();
-      }
-      reply.status(200).send({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar || null,
-        lang: user.lang || null,
-        country: !!user.country ? {
-          name: user.country.name,
-          code: user.country.code
-        } : null
-      })
-    });
-  fastify.post(
-    '/me', {
-      schema: {
-        body: User,
-        response: {
-          200: User
-        },
-      },
-    },
-    async function (request: any, reply: any) {
-      let newData: UserType = request.body;
-      const user = request.user;
-      user.name =  newData.name;
-      user.lang = newData.lang;
-      user.save();
-      reply.status(200).send({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar || null,
-        lang: user.lang || null,
-        country: {
-          name: user.country.name,
-          code: user.country.code
-        }
-      });
-    }
   );
   fastify.patch(
-    '/me', {
-      schema: {
-        body: {
-          type: 'object',
-          properties: {
-            country: {
-              type: 'string'
+      '/me', {
+        schema: {
+          body: {
+            type: 'object',
+            properties: {
+              country: {
+                type: 'string'
+              },
+              lang: {
+                type: 'string'
+              }
             },
-            lang: {
-              type: 'string'
-            }
+            additionalProperties: false
           },
-          additionalProperties: false
-        },
-        response: {
-          200: User
+          response: {
+            200: User
+          },
         },
       },
-    },
-    async function (request: any, reply: any) {
-      const { country: countryName, lang } = request.body;
-      const country = await CountryModel.findOne({name: countryName, isSupported: true});
-      if (!country) {
-        throw new errorCodes.FST_ERR_NOT_FOUND('Country');
-      }
-      const user = request.user;
-      user.country = country;
-      user.lang = lang;
-      user.save();
-      reply.status(200).send({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar || null,
-        lang: user.lang || null,
-        country: {
-          name: country.name,
-          code: country.code
+      async function (request: any, reply: any) {
+        const { country: countryName, lang } = request.body;
+        const country = await CountryModel.findOne({name: countryName, isSupported: true});
+        if (!country) {
+          throw new errorCodes.FST_ERR_NOT_FOUND('Country');
         }
-      });
-    }
+        const user = request.user;
+        user.country = country;
+        user.lang = lang;
+        user.save();
+        reply.status(200).send({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || null,
+          lang: user.lang || null,
+          country: {
+            name: country.name,
+            code: country.code
+          }
+        });
+      }
   );
 
   fastify.get(
@@ -161,11 +161,21 @@ const users: any = async (fastify: any): Promise<void> => {
         },
       },
       async function (request: any, reply: any) {
-        reply.status(200).send(request.user.currencies.map((c: any) => ({
-          id: c.id,
-          name: c.name,
-          code: c.code
-        })));
+        reply.status(200).send(request.user.currencies
+            .sort((a: CurrencyType, b: CurrencyType) =>  {
+              if (a.code < b.code) {
+                return -1;
+              }
+              if (a.code > b.code) {
+                return 1;
+              }
+              return 0;
+            })
+            .map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              code: c.code
+            })));
       });
 
   fastify.post(
