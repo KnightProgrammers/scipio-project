@@ -28,9 +28,9 @@ jobs:
         id: set-url-variables
         run: |
           if [ ${{ github.event.deployment.environment }} != 'Staging' ]; then
-            echo "Environment Beta"
-            echo "BASE_URL=https://scipio-client-beta-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
-            echo "API_BASE_URL=https://scipio-server-beta-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
+            echo "Environment Test"
+            echo "BASE_URL=https://scipio-client-test-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
+            echo "API_BASE_URL=https://scipio-server-test-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
             echo "{environment_variable_name}={value}" >> $GITHUB_ENV
           else
             echo "Environment Staging"
