@@ -29,7 +29,7 @@ const Currency = () => {
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
     const errorHandler = useCallback(
-        (e: object) => {
+        (e: unknown) => {
             toast.push(
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
@@ -100,13 +100,19 @@ const Currency = () => {
                             <FormItem className="py-8">
                                 <Checkbox.Group
                                     vertical
-                                    name="countries"
+                                    name="currencies"
                                     value={selectedCurrencies}
                                     className="max-h-[550px] w-full overflow-y-auto"
-                                    onChange={setSelectedCurrencies}
+                                    onChange={(value: any) =>
+                                        setSelectedCurrencies(value)
+                                    }
                                 >
                                     {currencies?.map((c) => (
-                                        <Checkbox key={c.id} value={c.id}>
+                                        <Checkbox
+                                            key={c.id}
+                                            value={c.id}
+                                            data-tn={c.code}
+                                        >
                                             {c.code} (
                                             {t(`currencies.${c.code}`)})
                                         </Checkbox>

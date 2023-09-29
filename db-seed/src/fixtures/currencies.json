@@ -14,5 +14,9 @@
   {
     "code": "EUR",
     "name": "Euro"
+  },
+  {
+    "code": "ARS",
+    "name": "Argentine peso"
   }
 ]

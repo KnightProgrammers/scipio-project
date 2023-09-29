@@ -5,8 +5,8 @@ on:
     types: [closed]
 
 jobs:
-  delete-beta-env:
-    name: "Delete Beta Environment"
+  delete-test-env:
+    name: "Delete Test Environment"
     runs-on: ubuntu-latest
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
@@ -23,6 +23,6 @@ jobs:
           cd infra
           npm install
       - name: Install scipio-infra globaly
-        run: npm install -g ./infra      
+        run: npm install -g ./infra
       - name: Delete environment
-        run: scipio-infra environment-delete "beta-${{ github.event.number }}"
+        run: scipio-infra environment-delete "test-${{ github.event.number }}"
