@@ -33,8 +33,12 @@ test('Default list of currencies', async () => {
     const waitForResponse = page.waitForResponse((response) =>
         response.url() === `${API_BASE_URL}/users/me/currencies` && response.status() === 200,
     )
+    const systemCurrenciesResponse = page.waitForResponse((response) =>
+        response.url() === `${API_BASE_URL}/currencies` && response.status() === 200,
+    )
     await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
     const response = await waitForResponse;
+    await systemCurrenciesResponse;
     const userCurrencies = await response.json();
     expect(userCurrencies.map(c => c.code)).toStrictEqual(USER_SELECTED_CURRENCIES);
     const currencyInputs = await page.locator('input[name="currencies"]').all();
