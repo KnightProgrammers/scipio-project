@@ -223,6 +223,7 @@
         "USD": "Dolar - US",
         "UYU": "Peso - Uruguay",
         "UYI": "Unidades Indexadas - Uruguay",
-        "EUR": "Euro"
+        "EUR": "Euro",
+        "ARS": "Peso - Argentina"
     }
 }

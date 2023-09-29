@@ -1,6 +1,5 @@
 import { test, Page, expect } from "@playwright/test";
-import firebaseService from "../../services/firebase.service";
-import { signInUser, signUpUser } from "../../helpers/auth.helper";
+import { signInUser } from "../../helpers/auth.helper";
 import { goToUserProfile } from "../../helpers/profile.helper";
 import { API_BASE_URL, getDefaultUserData } from "../../config";
 
