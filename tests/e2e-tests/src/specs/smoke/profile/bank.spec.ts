@@ -37,6 +37,18 @@ test.afterAll(async () => {
     await page.close();
 });
 
+test('load bank tab', async () => {
+    const waitForBanks = page.waitForResponse((response) =>
+        response.url() === `${API_BASE_URL}/banks` && response.status() === 200,
+    )
+    await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-banks"]').click();
+    await waitForBanks;
+    const pageContainer = page.locator('div[data-tn="account-banks-page"]');
+    await expect(pageContainer).toBeVisible();
+    const addBankButton = page.locator('button[data-tn="add-bank-btn"]')
+    await expect(addBankButton).toBeVisible();
+})
+
 test('create a bank', async () => {
     const bank = await createBank(page, {
         name: bankName
