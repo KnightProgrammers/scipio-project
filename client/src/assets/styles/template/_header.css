@@ -23,6 +23,15 @@
   }
 }
 
+.header, .drawer-header {
+  & .logo {
+    & img {
+      height: 45px;
+      width: auto;
+    }
+  }
+}
+
 .header-action-item-hoverable {
   @apply hover:bg-black
   hover:bg-opacity-5

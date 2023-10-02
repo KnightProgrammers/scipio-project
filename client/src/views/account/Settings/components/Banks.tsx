@@ -77,7 +77,12 @@ const BankForm = (props: BankFormProps) => {
     )
 
     return (
-        <Dialog isOpen={isOpen} onClose={onClose} onRequestClose={onClose}>
+        <Dialog
+            isOpen={isOpen}
+            data-tn="bank-form"
+            onClose={onClose}
+            onRequestClose={onClose}
+        >
             <BankFormTitle />
             {isSaving ? (
                 <div className="py-8">
@@ -138,6 +143,7 @@ const BankForm = (props: BankFormProps) => {
                                 <Button
                                     variant="solid"
                                     type="submit"
+                                    data-tn="save-bank-btn"
                                     disabled={isSubmitting}
                                 >
                                     {t('actions.save')}
@@ -252,7 +258,7 @@ const Banks = () => {
     }
 
     return (
-        <div>
+        <div data-tn="account-banks-page">
             <h5>{t('pages.settings.sections.banks.title')}</h5>
             <p>{t('pages.settings.sections.banks.desc')}</p>
             {bankList?.length === 0 ? (
@@ -278,8 +284,12 @@ const Banks = () => {
                                                 }
                                                 className="mr-2"
                                                 size={32}
+                                                data-tn={`icon-bank-lbl-${bank.id}`}
                                             />
-                                            <span className="font-bold text-lg">
+                                            <span
+                                                className="font-bold text-lg"
+                                                data-tn={`name-bank-lbl-${bank.id}`}
+                                            >
                                                 {bank.name}
                                             </span>
                                         </div>
@@ -301,6 +311,7 @@ const Banks = () => {
                                                 size="sm"
                                                 shape="circle"
                                                 variant="plain"
+                                                data-tn={`edit-bank-btn-${bank.id}`}
                                                 icon={<HiOutlinePencilAlt />}
                                                 onClick={() => onEdit(bank)}
                                             />
@@ -321,6 +332,7 @@ const Banks = () => {
                                                 shape="circle"
                                                 variant="plain"
                                                 color="red"
+                                                data-tn={`delete-bank-btn-${bank.id}`}
                                                 disabled={
                                                     !!bank.accountsCount &&
                                                     bank.accountsCount > 0
@@ -341,6 +353,7 @@ const Banks = () => {
                 size="sm"
                 variant="plain"
                 icon={<HiPlus />}
+                data-tn="add-bank-btn"
                 onClick={openDrawer}
             >
                 {t('pages.settings.sections.banks.newBankAction')}
