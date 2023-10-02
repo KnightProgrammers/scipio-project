@@ -77,7 +77,12 @@ const BankForm = (props: BankFormProps) => {
     )
 
     return (
-        <Dialog isOpen={isOpen} onClose={onClose} onRequestClose={onClose} data-tn="bank-form">
+        <Dialog
+            isOpen={isOpen}
+            data-tn="bank-form"
+            onClose={onClose}
+            onRequestClose={onClose}
+        >
             <BankFormTitle />
             {isSaving ? (
                 <div className="py-8">
@@ -316,8 +321,8 @@ const Banks = () => {
                                                 !!bank.accountsCount &&
                                                 bank.accountsCount > 0
                                                     ? t(
-                                                        'pages.settings.sections.banks.tooltips.warnHasAccounts',
-                                                    )
+                                                          'pages.settings.sections.banks.tooltips.warnHasAccounts',
+                                                      )
                                                     : t('actions.delete')
                                             }
                                         >
