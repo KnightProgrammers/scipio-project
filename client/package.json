@@ -27,7 +27,7 @@
     "d3-dsv": "3.0.1",
     "d3-fetch": "3.0.1",
     "d3-scale": "4.0.2",
-    "dayjs": "1.11.7",
+    "dayjs": "1.11.10",
     "firebase": "10.4.0",
     "formik": "2.4.5",
     "framer-motion": "10.16.4",
