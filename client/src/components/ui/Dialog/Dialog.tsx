@@ -13,6 +13,7 @@ export interface DialogProps extends ReactModal.Props {
     height?: string | number
     onClose?: (e: MouseEvent<HTMLSpanElement>) => void
     width?: string | number
+    'data-tn'?: string
 }
 
 const Dialog = (props: DialogProps) => {
@@ -95,6 +96,7 @@ const Dialog = (props: DialogProps) => {
         >
             <motion.div
                 className={dialogClass}
+                data-tn={props['data-tn']}
                 initial={{ transform: 'scale(0.9)' }}
                 animate={{
                     transform: isOpen ? 'scale(1)' : 'scale(0.9)',

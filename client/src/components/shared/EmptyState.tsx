@@ -24,6 +24,7 @@ const EmptyState = (props: EmptyStateProps) => {
             bordered
             className={`text-center border-dashed ${className}`}
             bodyClass="flex flex-col items-center"
+            data-tn="empty-state"
         >
             {iconSize > 0 && (
                 <HiOutlineExclamationCircle

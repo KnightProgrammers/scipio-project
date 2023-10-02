@@ -72,7 +72,7 @@ const Currency = () => {
     ])
 
     return (
-        <div>
+        <div data-tn="account-currencies-page">
             <h5>{t('pages.settings.sections.currency.title')}</h5>
             <p>{t('pages.settings.sections.currency.desc')}</p>
             {isLoading && (
