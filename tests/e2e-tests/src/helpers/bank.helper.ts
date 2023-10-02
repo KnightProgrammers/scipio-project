@@ -80,10 +80,8 @@ export const openDeleteBankDialog = async (page: Page, bankId: string) => {
 }
 
 export const confirmDeleteBank = async (page: Page, bankId: string) => {
-    const saveBankWaitForRequest = page.waitForRequest((request) => {
-            console.log(request.url(), request.method())
-            return request.url() === `${API_BASE_URL}/banks/${bankId}` && request.method() === "DELETE";
-        }
+    const saveBankWaitForRequest = page.waitForRequest((request) =>
+        request.url() === `${API_BASE_URL}/banks/${bankId}` && request.method() === "DELETE"
     );
     const getBankListWaitForRequest = page.waitForRequest((request) =>
         request.url() === `${API_BASE_URL}/banks` && request.method() === 'GET'
