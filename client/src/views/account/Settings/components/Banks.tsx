@@ -376,11 +376,11 @@ const Banks = () => {
                 confirmButtonColor="red-600"
                 confirmText={t('actions.delete')}
                 cancelText={t('actions.cancel')}
+                data-tn="confirm-delete-dialog"
                 onClose={onBankDeleteConfirmClose}
                 onRequestClose={onBankDeleteConfirmClose}
                 onCancel={onBankDeleteConfirmClose}
                 onConfirm={onDeleteConfirm}
-                data-tn="confirm-delete-dialog"
             >
                 <p>
                     {t(
