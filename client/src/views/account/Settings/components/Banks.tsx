@@ -380,6 +380,7 @@ const Banks = () => {
                 onRequestClose={onBankDeleteConfirmClose}
                 onCancel={onBankDeleteConfirmClose}
                 onConfirm={onDeleteConfirm}
+                data-tn="confirm-delete-dialog"
             >
                 <p>
                     {t(
