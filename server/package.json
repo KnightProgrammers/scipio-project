@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/gravatar": "1.8.4",
-    "@types/node": "20.7.1",
+    "@types/node": "20.8.1",
     "@types/tap": "15.0.9",
     "concurrently": "8.2.1",
     "fastify-tsconfig": "2.0.0",
