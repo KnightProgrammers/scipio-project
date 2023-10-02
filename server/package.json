@@ -24,18 +24,18 @@
     "fastify": "4.23.2",
     "fastify-cli": "5.8.0",
     "fastify-plugin": "4.5.1",
-    "firebase-admin": "11.10.1",
+    "firebase-admin": "11.11.0",
     "gravatar": "1.8.2",
     "module-alias": "2.2.3",
     "mongoose": "7.5.3"
   },
   "devDependencies": {
     "@types/gravatar": "1.8.4",
-    "@types/node": "20.7.1",
+    "@types/node": "20.8.2",
     "@types/tap": "15.0.9",
     "concurrently": "8.2.1",
     "fastify-tsconfig": "2.0.0",
-    "tap": "18.1.5",
+    "tap": "18.4.2",
     "ts-node": "10.9.1",
     "typescript": "5.2.2"
   },
