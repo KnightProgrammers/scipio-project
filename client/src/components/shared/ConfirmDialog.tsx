@@ -110,6 +110,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                 <Button
                     size="sm"
                     className="ltr:mr-2 rtl:ml-2"
+                    data-tn="confirm-dialog-cancel-btn"
                     onClick={handleCancel}
                 >
                     {cancelText}
@@ -118,6 +119,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                     size="sm"
                     variant="solid"
                     color={confirmButtonColor}
+                    data-tn="confirm-dialog-confirm-btn"
                     onClick={handleConfirm}
                 >
                     {confirmText}
