@@ -13,7 +13,7 @@ test.describe.configure({ mode: 'serial' });
 let page: Page;
 
 test.beforeAll(async ({ browser }) => {
-    email = `test-${(new Date()).getTime()}@automation.com`;
+    email = `test-${uuidv4()}@automation.com`;
     password = `password-${uuidv4()}`;
     name = 'Automation User';
     page = await browser.newPage();
