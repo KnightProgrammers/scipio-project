@@ -8,8 +8,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  e2e-tests:
-    name: "E2E Tests"
+  e2e-tests-smoke:
+    name: "E2E Tests - Smoke"
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
     container:
