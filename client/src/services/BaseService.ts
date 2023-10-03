@@ -1,12 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from "axios";
 import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
 import store, { setUser, signInSuccess, signOutSuccess } from '../store'
 import { auth } from '@/services/FirebaseService'
-
-const unauthorizedCode = [401, 403]
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 const BaseService = axios.create({
     timeout: 60000,
@@ -34,58 +33,22 @@ BaseService.interceptors.request.use(
 
         return config
     },
-    (error) => {
-        return Promise.reject(error)
-    },
+    null,
+    { synchronous: true }
 )
 
-BaseService.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const { response } = error
-
-        const originalRequest = error.config
-        if (
-            error.response.status === 401 &&
-            !originalRequest._retry &&
-            auth.currentUser
-        ) {
-            originalRequest._retry = true
-            try {
-                const authToken = await auth.currentUser.getIdToken(true)
-                store.dispatch(signInSuccess(authToken))
-                axios.defaults.headers.common['Authorization'] =
-                    'Bearer ' + authToken
-                return BaseService(originalRequest)
-            } catch {
-                store.dispatch(signOutSuccess())
-                store.dispatch(
-                    setUser({
-                        id: '',
-                        avatar: '',
-                        name: '',
-                        email: '',
-                        lang: '',
-                        country: null,
-                    }),
-                )
-            }
-        } else if (response && unauthorizedCode.includes(response.status)) {
-            store.dispatch(signOutSuccess())
-            store.dispatch(
-                setUser({
-                    id: '',
-                    avatar: '',
-                    name: '',
-                    email: '',
-                    lang: '',
-                    country: null,
-                }),
-            )
-        }
-
-        return Promise.reject(error)
-    },
-)
-
+// Set up an interceptor for responses to catch when the auth token expires
+// and automatically refresh.
+const refreshAuth = async (failed: any) => {
+    if (!auth.currentUser) {
+        throw new Error('There is no current user');
+    }
+    const authToken = await auth.currentUser.getIdToken(true)
+    store.dispatch(signInSuccess(authToken))
+    // eslint-disable-next-line no-param-reassign
+    failed.response.config.headers[
+        REQUEST_HEADER_AUTH_KEY
+        ] = `${TOKEN_TYPE}${authToken}`
+};
+createAuthRefreshInterceptor(BaseService, refreshAuth);
 export default BaseService
