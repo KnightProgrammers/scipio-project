@@ -3,12 +3,8 @@ export type Mode = 'light' | 'dark'
 export type NavMode = 'transparent' | 'light' | 'dark' | 'themed'
 export type ControlSize = 'lg' | 'md' | 'sm'
 export type LayoutType =
-    | 'blank'
-    | 'classic'
-    | 'modern'
     | 'simple'
     | 'decked'
-    | 'stackedSide'
 export type ColorLevel =
     | 50
     | 100
