@@ -65,6 +65,7 @@ const ModalForm = (props: ModalFormProps) => {
                                     className="w-full justify-center "
                                     variant="default"
                                     type="button"
+                                    data-tn="modal-form-cancel-btn"
                                     disabled={isSaving}
                                     onClick={onClose}
                                 >
@@ -74,6 +75,7 @@ const ModalForm = (props: ModalFormProps) => {
                                     variant="solid"
                                     type="submit"
                                     className="w-full justify-center "
+                                    data-tn="modal-form-save-btn"
                                     disabled={isSaving}
                                     loading={isSaving}
                                     onClick={submitForm}

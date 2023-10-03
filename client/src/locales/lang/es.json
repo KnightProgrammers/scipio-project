@@ -200,7 +200,8 @@
         "country": "Selecciona un pais"
     },
     "messages": {
-        "backTo": "Volver a "
+        "backTo": "Volver a ",
+        "selectNoOptions": "Sin Opciones"
     },
     "nav": {
         "home": "Inicio",

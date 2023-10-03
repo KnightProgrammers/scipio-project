@@ -8,6 +8,7 @@ type EmptyStateProps = {
     description?: string | null
     iconSize?: number
     children?: ReactNode
+    'data-tn'?: string
 }
 
 const EmptyState = (props: EmptyStateProps) => {
@@ -24,7 +25,7 @@ const EmptyState = (props: EmptyStateProps) => {
             bordered
             className={`text-center border-dashed ${className}`}
             bodyClass="flex flex-col items-center"
-            data-tn="empty-state"
+            data-tn={props['data-tn'] || 'empty-state'}
         >
             {iconSize > 0 && (
                 <HiOutlineExclamationCircle

@@ -210,6 +210,7 @@ const BankAccounts = () => {
                 description={
                     t('pages.bankAccounts.emptyState.noBanks.description') || ''
                 }
+                data-tn="empty-state-no-banks"
             >
                 <Button
                     variant="plain"
@@ -224,12 +225,16 @@ const BankAccounts = () => {
     }
 
     return (
-        <Container className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Container
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            data-tn="bank-accounts-page"
+        >
             {bankAccountList.map((bank) => {
                 return (
                     <Card
                         key={bank.name}
                         headerBorder={false}
+                        data-tn={`bank-${bank.id}-card`}
                         headerClass={`${bgTheme} rounded-lg rounded-br-none rounded-bl-none`}
                         header={
                             <div
@@ -254,6 +259,7 @@ const BankAccounts = () => {
                                 variant="twoTone"
                                 block={true}
                                 icon={<HiPlus />}
+                                data-tn="add-bank-account-btn"
                                 color={`${themeColor}`}
                                 onClick={() => {
                                     setSelectedBank(bank)
@@ -277,15 +283,19 @@ const BankAccounts = () => {
                                     <Card
                                         key={a.id}
                                         bordered
+                                        data-tn={`bank-account-${a.id}`}
                                         className="my-2 w-full relative"
                                     >
                                         <Dropdown
                                             className="absolute right-4 top-2"
                                             placement="middle-end-top"
-                                            renderTitle={<EllipsisButton />}
+                                            renderTitle={
+                                                <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                            }
                                         >
                                             <Dropdown.Item
                                                 eventKey="edit"
+                                                data-tn="edit-bank-account-btn"
                                                 onClick={() => {
                                                     setSelectedBank(bank)
                                                     setSelectedBankAccount(a)
@@ -303,6 +313,7 @@ const BankAccounts = () => {
                                             </Dropdown.Item>
                                             <Dropdown.Item
                                                 eventKey="delete"
+                                                data-tn="delete-bank-account-btn"
                                                 onClick={() => {
                                                     setSelectedBank(bank)
                                                     setSelectedBankAccount(a)
@@ -318,7 +329,10 @@ const BankAccounts = () => {
                                             </Dropdown.Item>
                                         </Dropdown>
                                         <div className="w-full flex items-center">
-                                            <div className="font-light italic text-xs w-full">
+                                            <div
+                                                className="font-light italic text-xs w-full"
+                                                data-tn="bank-account-name"
+                                            >
                                                 {a.accountName ||
                                                     t(
                                                         'pages.bankAccounts.defaultLabel',
@@ -329,11 +343,15 @@ const BankAccounts = () => {
                                             <div className="my-1">
                                                 <span className="font-bold">
                                                     <CopyButton
+                                                        data-tn="bank-account-number"
                                                         text={a.accountNumber}
                                                     />
                                                 </span>
                                             </div>
-                                            <div className="my-1 text-right">
+                                            <div
+                                                className="my-1 text-right"
+                                                data-tn="bank-account-balance"
+                                            >
                                                 {currencyFormat(
                                                     a.accountBalance,
                                                     a.accountCurrency.code,
@@ -442,10 +460,13 @@ const BankAccounts = () => {
                                     placeholder={t('fields.currency')}
                                     options={userCurrencies?.map((c) => ({
                                         value: c.id,
-                                        label: t(`currencies.${c.code}`),
+                                        label: `${c.code} - ${t(
+                                            `currencies.${c.code}`,
+                                        )}`,
                                     }))}
                                     isLoading={!userCurrencies}
                                     className="currency-select"
+                                    id="currency-select"
                                     component={SelectFieldItem}
                                 />
                             ) : (
