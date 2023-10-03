@@ -19,11 +19,7 @@ export type HorizontalMenuItemProps = {
 }
 
 const HorizontalMenuItem = (props: HorizontalMenuItemProps) => {
-    const {
-        nav,
-        isLink,
-        manuVariant,
-    } = props;
+    const { nav, isLink, manuVariant } = props
     const { key, title, translateKey, icon, path, isExternalLink } = nav
 
     const { t } = useTranslation()

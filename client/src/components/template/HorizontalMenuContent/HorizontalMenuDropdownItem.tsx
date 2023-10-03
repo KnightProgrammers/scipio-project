@@ -12,12 +12,12 @@ export type HorizontalMenuItemProps = {
         icon: string
         path: string
         isExternalLink?: boolean
-    },
+    }
     'data-tn'?: string
 }
 
 const HorizontalMenuDropdownItem = (props: HorizontalMenuItemProps) => {
-    const { nav } = props;
+    const { nav } = props
     const { title, icon, translateKey, path, key, isExternalLink } = nav
 
     const { t } = useTranslation()
@@ -29,7 +29,11 @@ const HorizontalMenuDropdownItem = (props: HorizontalMenuItemProps) => {
     )
 
     return (
-        <Dropdown.Item eventKey={key} className={classNames(path && 'px-0')} data-tn={props["data-tn"]}>
+        <Dropdown.Item
+            eventKey={key}
+            className={classNames(path && 'px-0')}
+            data-tn={props['data-tn']}
+        >
             {path ? (
                 <HorizontalMenuNavLink
                     path={path}

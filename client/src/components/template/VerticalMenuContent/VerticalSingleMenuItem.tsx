@@ -74,13 +74,10 @@ const DefaultItem = (props: DefaultItemProps) => {
     )
 }
 
-const VerticalSingleMenuItem = (props: Omit<VerticalMenuItemProps, 'title' | 'translateKey'>) => {
-    const {
-        nav,
-        onLinkClick,
-        sideCollapsed,
-        direction,
-    } = props;
+const VerticalSingleMenuItem = (
+    props: Omit<VerticalMenuItemProps, 'title' | 'translateKey'>,
+) => {
+    const { nav, onLinkClick, sideCollapsed, direction } = props
     return sideCollapsed ? (
         <CollapsedItem
             title={nav.title}
@@ -98,8 +95,8 @@ const VerticalSingleMenuItem = (props: Omit<VerticalMenuItemProps, 'title' | 'tr
         <DefaultItem
             nav={nav}
             sideCollapsed={sideCollapsed}
-            onLinkClick={onLinkClick}
             data-tn={props['data-tn']}
+            onLinkClick={onLinkClick}
         />
     )
 }

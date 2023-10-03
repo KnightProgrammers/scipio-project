@@ -89,7 +89,7 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
 }
 
 const CollapsedItem = (props: CollapsedItemProps) => {
-    const { nav, onLinkClick, direction } = props;
+    const { nav, onLinkClick, direction } = props
     const menuItem = (
         <MenuItem key={nav.key} eventKey={nav.key} className="mb-2">
             <VerticalMenuIcon icon={nav.icon} withMargin={false} />
@@ -103,7 +103,7 @@ const CollapsedItem = (props: CollapsedItemProps) => {
             placement={
                 direction === 'rtl' ? 'middle-end-top' : 'middle-start-top'
             }
-            data-tn={props["data-tn"]}
+            data-tn={props['data-tn']}
         >
             {nav.subMenu.map((subNav) => (
                 <Dropdown.Item key={subNav.key} eventKey={subNav.key}>

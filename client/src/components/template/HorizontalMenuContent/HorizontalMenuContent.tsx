@@ -69,8 +69,8 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                     return (
                         <HorizontalMenuItem
                             key={nav.key}
-                            data-tn={`nav-menu-item-${nav.key}`}
                             isLink
+                            data-tn={`nav-menu-item-${nav.key}`}
                             nav={nav}
                             manuVariant={manuVariant}
                         />

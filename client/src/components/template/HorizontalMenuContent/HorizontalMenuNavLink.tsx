@@ -10,12 +10,7 @@ export type HorizontalMenuNavLinkProps = PropsWithChildren<{
 }>
 
 const HorizontalMenuNavLink = (props: HorizontalMenuNavLinkProps) => {
-    const {
-        path,
-        children,
-        isExternalLink,
-        className,
-    } = props;
+    const { path, children, isExternalLink, className } = props
     return (
         <Link
             className={classNames('h-full w-full flex items-center', className)}
