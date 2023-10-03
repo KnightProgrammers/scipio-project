@@ -1,6 +1,6 @@
 import { test, Page, expect } from "@playwright/test";
 import { signInUser } from "../../../helpers/auth.helper";
-import { goToUserProfile } from "../../../helpers/profile.helper";
+import { DEFAULT_CURRENCIES, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL, getDefaultUserData } from "../../../config";
 
 
@@ -11,7 +11,6 @@ test.describe.configure({ mode: 'serial' });
 
 let page: Page;
 
-const DEFAULT_CURRENCIES: string[] = [ 'ARS', 'EUR', 'USD', 'UYI', 'UYU' ];
 const USER_SELECTED_CURRENCIES: string[] = [ 'USD', 'UYU' ];
 
 test.beforeAll(async ({ browser }) => {

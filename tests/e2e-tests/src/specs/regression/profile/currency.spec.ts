@@ -2,15 +2,13 @@ import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
 import { signInUser, signUpUser } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { goToUserProfile } from '../../../helpers/profile.helper';
+import { DEFAULT_CURRENCIES, goToUserProfile, selectRandomCurrencies } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
 
 
 let email: string;
 let password: string;
 let name: string;
-
-const DEFAULT_CURRENCIES: string[] = [ 'ARS', 'EUR', 'USD', 'UYI', 'UYU' ];
 
 let userSelectedCurrencies: string[] = [];
 
@@ -70,24 +68,7 @@ test('Default list of currencies', async () => {
 });
 
 test('Save user currencies', async () => {
-    userSelectedCurrencies = DEFAULT_CURRENCIES
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 2)
-        .sort();
-
-    for(const userSelectedCurrency of userSelectedCurrencies) {
-        await page.locator(`input[name="currencies"][data-tn="${userSelectedCurrency}"]`).click()
-    }
-    const submitButton = page.locator('button[type="submit"]');
-    await expect(submitButton).not.toHaveClass(/cursor-not-allowed/)
-    const userCurrenciesRequest = page.waitForRequest((request) =>
-        request.url() === `${API_BASE_URL}/users/me/currencies` && request.method() === 'POST',
-    )
-    await submitButton.click();
-    const userCurrencies = await userCurrenciesRequest
-    const userCurrenciesResponse = await userCurrencies.response();
-    const savedCurrencies = (await userCurrenciesResponse.json()).map(c => c.code)
-    expect(savedCurrencies.sort()).toStrictEqual(userSelectedCurrencies);
+    userSelectedCurrencies = await selectRandomCurrencies(page);
 });
 
 

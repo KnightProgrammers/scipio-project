@@ -74,6 +74,11 @@ export const editBank = async (page: Page, bankId: string, data: {name: string})
     return updated;
 }
 
+export const deleteBank = async (page: Page, bankId: string) => {
+    await openDeleteBankDialog(page, bankId);
+    await confirmDeleteBank(page, bankId);
+}
+
 export const openDeleteBankDialog = async (page: Page, bankId: string) => {
     await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
     await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).toBeVisible();

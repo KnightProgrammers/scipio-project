@@ -2,7 +2,7 @@ import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
 import { signInUser, signUpUser } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { goToUserProfile } from '../../../helpers/profile.helper';
+import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
 import {
     confirmDeleteBank,
@@ -11,7 +11,6 @@ import {
     openDeleteBankDialog,
     openEditBankForm
 } from "../../../helpers/bank.helper";
-import { config } from "dotenv";
 
 
 let email: string;
@@ -54,7 +53,7 @@ test('empty state', async () => {
     const waitForBanks = page.waitForResponse((response) =>
         response.url() === `${API_BASE_URL}/banks` && response.status() === 200,
     )
-    await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-banks"]').click();
+    await goToProfileTab(page, 'banks');
     const banksResponse = await waitForBanks;
     expect(await banksResponse.json()).toEqual([]);
 
