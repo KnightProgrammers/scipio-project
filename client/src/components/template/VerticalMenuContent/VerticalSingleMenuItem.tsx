@@ -19,6 +19,7 @@ interface DefaultItemProps {
     nav: NavigationTree
     onLinkClick?: (link: { key: string; title: string; path: string }) => void
     sideCollapsed?: boolean
+    'data-tn'?: string
 }
 
 interface VerticalMenuItemProps extends CollapsedItemProps, DefaultItemProps {}
@@ -48,6 +49,7 @@ const DefaultItem = (props: DefaultItemProps) => {
         <MenuItem key={nav.key} eventKey={nav.key} className="mb-2">
             <Link
                 to={nav.path}
+                data-tn={props['data-tn']}
                 className="flex items-center h-full w-full"
                 target={nav.isExternalLink ? '_blank' : ''}
                 onClick={() =>
@@ -72,17 +74,19 @@ const DefaultItem = (props: DefaultItemProps) => {
     )
 }
 
-const VerticalSingleMenuItem = ({
-    nav,
-    onLinkClick,
-    sideCollapsed,
-    direction,
-}: Omit<VerticalMenuItemProps, 'title' | 'translateKey'>) => {
+const VerticalSingleMenuItem = (props: Omit<VerticalMenuItemProps, 'title' | 'translateKey'>) => {
+    const {
+        nav,
+        onLinkClick,
+        sideCollapsed,
+        direction,
+    } = props;
     return sideCollapsed ? (
         <CollapsedItem
             title={nav.title}
             translateKey={nav.translateKey}
             direction={direction}
+            data-tn={props['data-tn']}
         >
             <DefaultItem
                 nav={nav}
@@ -95,6 +99,7 @@ const VerticalSingleMenuItem = ({
             nav={nav}
             sideCollapsed={sideCollapsed}
             onLinkClick={onLinkClick}
+            data-tn={props['data-tn']}
         />
     )
 }

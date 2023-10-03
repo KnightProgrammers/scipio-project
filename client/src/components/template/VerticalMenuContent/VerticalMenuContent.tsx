@@ -52,10 +52,12 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
     }
 
     const getNavItem = (nav: NavigationTree) => {
+        console.log(nav)
         if (nav.subMenu.length === 0 && nav.type === NAV_ITEM_TYPE_ITEM) {
             return (
                 <VerticalSingleMenuItem
                     key={nav.key}
+                    data-tn={`nav-menu-item-${nav.key}`}
                     nav={nav}
                     sideCollapsed={collapsed}
                     direction={direction}
@@ -68,6 +70,7 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
             return (
                 <VerticalCollapsedMenuItem
                     key={nav.key}
+                    data-tn={`nav-menu-collapsed-${nav.key}`}
                     nav={nav}
                     sideCollapsed={collapsed}
                     direction={direction}
@@ -84,6 +87,7 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
                             subNav.subMenu.length > 0 ? (
                                 <VerticalCollapsedMenuItem
                                     key={subNav.key}
+                                    data-tn={`nav-menu-collapsed-${nav.key}`}
                                     nav={subNav}
                                     sideCollapsed={collapsed}
                                     direction={direction}
@@ -92,6 +96,7 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
                             ) : (
                                 <VerticalSingleMenuItem
                                     key={subNav.key}
+                                    data-tn={`nav-menu-item-${nav.key}`}
                                     nav={subNav}
                                     sideCollapsed={collapsed}
                                     direction={direction}
@@ -111,6 +116,7 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
         <Menu
             className="px-4 pb-4"
             variant={mode}
+            data-tn="mobile-nav-menu"
             sideCollapsed={collapsed}
             defaultActiveKeys={activedRoute?.key ? [activedRoute.key] : []}
             defaultExpandedKeys={defaulExpandKey}
