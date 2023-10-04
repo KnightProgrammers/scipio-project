@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.prettierrc.js
-.eslintrc.js
-env.d.ts
-test
+.prettierrc
+.eslintrc.json
+.env
