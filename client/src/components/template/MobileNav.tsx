@@ -47,7 +47,11 @@ const MobileNav = () => {
         <>
             {smaller.md && (
                 <>
-                    <div className="text-2xl" onClick={openDrawer} data-tn="mobile-nav-toggle">
+                    <div
+                        className="text-2xl"
+                        onClick={openDrawer}
+                        data-tn="mobile-nav-toggle"
+                    >
                         <MobileNavToggle toggled={isOpen} />
                     </div>
                     <Drawer
