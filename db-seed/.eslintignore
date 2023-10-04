@@ -1,5 +1,4 @@
 node_modules/
 dist/
-.prettierrc
 .eslintrc.js
 .env
