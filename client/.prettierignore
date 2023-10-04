@@ -6,5 +6,10 @@
 /public
 /src/assets/styles
 /src/index.css
+Dockerfile
 package.json
 package.lock.json
+railway.toml
+README.md
+.dockerignore
+.gitignore

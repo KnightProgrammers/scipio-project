@@ -5,8 +5,7 @@
     "noEmit": true
   },
   "include": [
-    "src",
-    "vite.config.ts"
+    "src"
   ],
-  "exclude": ["node_modules", "build", "docker", "public"]
+  "exclude": ["node_modules", "dist"]
 }
