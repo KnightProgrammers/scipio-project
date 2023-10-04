@@ -1,6 +1,6 @@
 node_modules/
-dist/
-.prettierrc.js
-.eslintrc.js
-env.d.ts
+build/
+.prettierrc
+.eslintrc.cjs
+.env
 
