@@ -121,7 +121,6 @@ jobs:
         run: npm run lint
       - name: Run prettier
         run: npm run prettier
-      - name: Run build typescript
   e2e-tests:
     name: "E2E Tests"
     runs-on: ubuntu-latest
