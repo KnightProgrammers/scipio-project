@@ -15,7 +15,7 @@ export const goToProfileTab = async (page: Page, tabName: ProfileTab) => {
 }
 
 export const selectRandomCurrencies = async (page: Page) => {
-    const userSelectedCurrencies =[..DEFAULT_CURRENCIES]
+    const userSelectedCurrencies =[...DEFAULT_CURRENCIES]
         .sort(() => 0.5 - Math.random())
         .slice(0, 2)
         .sort();
