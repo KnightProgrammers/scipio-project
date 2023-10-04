@@ -49,8 +49,8 @@ const MobileNav = () => {
                 <>
                     <div
                         className="text-2xl"
-                        onClick={openDrawer}
                         data-tn="mobile-nav-toggle"
+                        onClick={openDrawer}
                     >
                         <MobileNavToggle toggled={isOpen} />
                     </div>
