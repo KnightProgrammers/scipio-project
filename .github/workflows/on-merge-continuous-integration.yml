@@ -70,10 +70,63 @@ jobs:
         run: npm run prettier
       - name: Run build typescript
         run: npm run build
+  db-seed-build-check:
+    name: "DB-Seed - Build Check"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: db-seed
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: db-seed/node_modules
+          key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: db-seed-node_modules-
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run prettier
+        run: npm run prettier
+      - name: Run build typescript
+        run: npm run build
+  infra-build-check:
+    name: "Infra - Build Check"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: infra/node_modules
+          key: infra-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: infra-node_modules-
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run prettier
+        run: npm run prettier
+      - name: Run build typescript
   e2e-tests:
     name: "E2E Tests"
     runs-on: ubuntu-latest
-    needs: [ server-build-check, client-build-check ]
+    needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check ]
     env:
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
