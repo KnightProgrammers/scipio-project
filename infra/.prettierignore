@@ -1,0 +1,8 @@
+# Ignore artifacts: 
+/node_modules
+
+# Ignore files: 
+package.json
+package.lock.json
+README.md
+.gitignore
