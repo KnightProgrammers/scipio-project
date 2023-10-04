@@ -1,0 +1,12 @@
+# Ignore artifacts: 
+/dist
+/node_modules
+
+# Ignore files: 
+package.json
+package.lock.json
+Dockerfile
+railway.toml
+README.md
+.dockerignore
+.gitignore
