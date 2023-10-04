@@ -1,9 +1,9 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Static, Type } from '@sinclair/typebox';
 
 export const Bank = Type.Object({
-    id: Type.Optional(Type.String()),
-    name: Type.Required(Type.String()),
-    icon: Type.Optional(Type.String()),
-})
+	id: Type.Optional(Type.String()),
+	name: Type.Required(Type.String()),
+	icon: Type.Optional(Type.String()),
+});
 
 export type BankType = Static<typeof Bank>
