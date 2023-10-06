@@ -492,6 +492,7 @@ const BankAccounts = () => {
                 isOpen={isConfirmDeleteOpen}
                 type="danger"
                 title={t('pages.bankAccounts.deleteConfirmation.title')}
+                data-tn="confirm-delete-bank-account-dialog"
                 confirmButtonColor="red-600"
                 confirmText={t('actions.delete')}
                 cancelText={t('actions.cancel')}
