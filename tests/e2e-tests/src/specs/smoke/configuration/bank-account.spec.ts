@@ -57,6 +57,7 @@ test('add bank-account to the bank', async () => {
     });
 })
 test('edit bank account', async () => {
+    await openEditBankAccountForm(page, bankAccount.id);
     await editBankAccount(page, bankAccount.id, {
         accountName: 'Cuenta Corriente',
         accountNumber: '87654321',
@@ -64,7 +65,6 @@ test('edit bank account', async () => {
     });
 })
 test('delete bank account', async () => {
-    await openEditBankAccountForm(page, bankAccount.id);
     await deleteBankAccount(page, bankId, bankAccount.id);
 })
 test('delete bank', async () => {
