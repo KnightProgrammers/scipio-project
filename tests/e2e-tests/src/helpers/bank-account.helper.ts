@@ -23,7 +23,6 @@ export const createBankAccount = async (
     await page.locator(`button[data-tn="modal-form-save-btn"]`).click();
     const saveBankAccountRequest = await saveBankAccountWaitForRequest;
     const getBankAccountListRequest = await getBankAccountListWaitForRequest;
-
     const bodyRequest: any = await saveBankAccountRequest.postDataJSON()
     const saveBankResponse = await saveBankAccountRequest.response();
     const newBankAccount = await saveBankResponse.json();
@@ -121,7 +120,6 @@ export const confirmDeleteBankAccount = async (page: Page, bankId: string, bankA
     expect(foundBank).toBeTruthy();
     const foundNewBankAccount = foundBank.accounts.find(ba => ba.id === bankAccountId);
     expect(foundNewBankAccount).toBeFalsy();
-
     await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
 }
 

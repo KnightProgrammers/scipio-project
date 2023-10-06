@@ -4,7 +4,12 @@ import { getDefaultUserData } from "../../../config";
 import { createBank, deleteBank } from "../../../helpers/bank.helper";
 import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { v4 as uuidv4 } from 'uuid';
-import { createBankAccount, deleteBankAccount, editBankAccount } from "../../../helpers/bank-account.helper";
+import {
+    createBankAccount,
+    deleteBankAccount,
+    editBankAccount,
+    openEditBankAccountForm
+} from "../../../helpers/bank-account.helper";
 import { NAV_MENU, navigateMenu } from "../../../helpers/nav-menu.helper";
 
 
@@ -59,6 +64,7 @@ test('edit bank account', async () => {
     });
 })
 test('delete bank account', async () => {
+    await openEditBankAccountForm(page, bankAccount.id);
     await deleteBankAccount(page, bankId, bankAccount.id);
 })
 test('delete bank', async () => {
