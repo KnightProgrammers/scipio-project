@@ -27,6 +27,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                     return (
                         <Dropdown
                             key={nav.key}
+                            data-tn={`nav-menu-collapse-${nav.key}`}
                             trigger="click"
                             renderTitle={
                                 <HorizontalMenuItem
@@ -57,6 +58,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                                     <HorizontalMenuDropdownItem
                                         key={secondarySubNav.key}
                                         nav={secondarySubNav}
+                                        data-tn={`nav-menu-item-${secondarySubNav.key}`}
                                     />
                                 ),
                             )}
@@ -68,6 +70,7 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
                         <HorizontalMenuItem
                             key={nav.key}
                             isLink
+                            data-tn={`nav-menu-item-${nav.key}`}
                             nav={nav}
                             manuVariant={manuVariant}
                         />

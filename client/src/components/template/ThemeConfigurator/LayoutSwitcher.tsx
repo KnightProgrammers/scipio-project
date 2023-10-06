@@ -6,33 +6,12 @@ import { HiCheckCircle } from 'react-icons/hi'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 import { setLayout, useAppSelector, useAppDispatch } from '@/store'
 import {
-    LAYOUT_TYPE_CLASSIC,
-    LAYOUT_TYPE_MODERN,
-    LAYOUT_TYPE_STACKED_SIDE,
     LAYOUT_TYPE_SIMPLE,
     LAYOUT_TYPE_DECKED,
 } from '@/constants/theme.constant'
 import type { LayoutType } from '@/@types/theme'
 
 const layouts = [
-    {
-        value: LAYOUT_TYPE_CLASSIC,
-        label: 'Classic',
-        src: '/img/thumbs/layouts/classic.jpg',
-        srcDark: '/img/thumbs/layouts/classic-dark.jpg',
-    },
-    {
-        value: LAYOUT_TYPE_MODERN,
-        label: 'Mordern',
-        src: '/img/thumbs/layouts/modern.jpg',
-        srcDark: '/img/thumbs/layouts/modern-dark.jpg',
-    },
-    {
-        value: LAYOUT_TYPE_STACKED_SIDE,
-        label: 'Stacked Side',
-        src: '/img/thumbs/layouts/stackedSide.jpg',
-        srcDark: '/img/thumbs/layouts/stackedSide-dark.jpg',
-    },
     {
         value: LAYOUT_TYPE_SIMPLE,
         label: 'Simple',

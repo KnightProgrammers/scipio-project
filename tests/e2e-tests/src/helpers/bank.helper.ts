@@ -74,16 +74,19 @@ export const editBank = async (page: Page, bankId: string, data: {name: string})
     return updated;
 }
 
+export const deleteBank = async (page: Page, bankId: string) => {
+    await openDeleteBankDialog(page, bankId);
+    await confirmDeleteBank(page, bankId);
+}
+
 export const openDeleteBankDialog = async (page: Page, bankId: string) => {
     await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
     await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).toBeVisible();
 }
 
 export const confirmDeleteBank = async (page: Page, bankId: string) => {
-    const saveBankWaitForRequest = page.waitForRequest((request) => {
-            console.log(request.url(), request.method())
-            return request.url() === `${API_BASE_URL}/banks/${bankId}` && request.method() === "DELETE";
-        }
+    const saveBankWaitForRequest = page.waitForRequest((request) =>
+        request.url() === `${API_BASE_URL}/banks/${bankId}` && request.method() === "DELETE"
     );
     const getBankListWaitForRequest = page.waitForRequest((request) =>
         request.url() === `${API_BASE_URL}/banks` && request.method() === 'GET'

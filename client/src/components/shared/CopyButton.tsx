@@ -4,7 +4,7 @@ import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useTranslation } from 'react-i18next'
 
-const CopyButton = (props: { text: string }) => {
+const CopyButton = (props: { text: string; 'data-tn'?: string }) => {
     const { text } = props
     const { t } = useTranslation()
 
@@ -22,7 +22,10 @@ const CopyButton = (props: { text: string }) => {
     }
 
     return (
-        <IconText icon={<BiCopy className="cursor-pointer" onClick={onCopy} />}>
+        <IconText
+            icon={<BiCopy className="cursor-pointer" onClick={onCopy} />}
+            data-tn={props['data-tn']}
+        >
             {text}
         </IconText>
     )

@@ -2,16 +2,13 @@ import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
 import { signInUser, signUpUser } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { goToUserProfile } from '../../../helpers/profile.helper';
+import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
 import {
-    confirmDeleteBank,
-    createBank,
+    createBank, deleteBank,
     editBank,
-    openDeleteBankDialog,
     openEditBankForm
 } from "../../../helpers/bank.helper";
-import { config } from "dotenv";
 
 
 let email: string;
@@ -54,7 +51,7 @@ test('empty state', async () => {
     const waitForBanks = page.waitForResponse((response) =>
         response.url() === `${API_BASE_URL}/banks` && response.status() === 200,
     )
-    await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-banks"]').click();
+    await goToProfileTab(page, 'banks');
     const banksResponse = await waitForBanks;
     expect(await banksResponse.json()).toEqual([]);
 
@@ -92,8 +89,7 @@ test('edit a bank', async () => {
 })
 
 test('delete a bank - last bank', async () => {
-    await openDeleteBankDialog(page, bankId);
-    await confirmDeleteBank(page, bankId);
+    await deleteBank(page, bankId);
     // Validates that the empty state is displayed
     const emptyStateContainer = page.locator('div[data-tn="empty-state"]')
     await expect(emptyStateContainer).toBeVisible();
@@ -108,8 +104,7 @@ test('delete a bank - there are more banks listed', async () => {
     })
     bankId = bank2.id;
     // Delete Bank #2
-    await openDeleteBankDialog(page, bankId);
-    await confirmDeleteBank(page, bankId);
+    await deleteBank(page, bankId);
     // Validates that Bank #1 still listed
     const emptyStateContainer = page.locator('div[data-tn="empty-state"]')
     await expect(emptyStateContainer).not.toBeVisible();

@@ -184,6 +184,7 @@ const Input = forwardRef<ElementType | HTMLInputElement, InputProps>(
             <Component
                 style={{ ...affixGutterStyle(), ...style }}
                 {...inputProps}
+                data-tn={props['data-tn']}
             />
         )
 

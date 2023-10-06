@@ -18,6 +18,7 @@ interface CollapsedItemProps extends DefaultItemProps {
 
 interface VerticalCollapsedMenuItemProps extends CollapsedItemProps {
     sideCollapsed?: boolean
+    'data-tn': string
 }
 
 const { MenuItem, MenuCollapse } = Menu
@@ -26,6 +27,7 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
     return (
         <MenuCollapse
             key={nav.key}
+            data-tn={`nav-menu-collapse-${nav.key}`}
             label={
                 <>
                     <VerticalMenuIcon icon={nav.icon} withMargin={true} />
@@ -47,6 +49,7 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
                         <Link
                             key={subNav.key}
                             className="h-full w-full flex items-center"
+                            data-tn={`nav-menu-item-${subNav.key}`}
                             to={subNav.path}
                             target={subNav.isExternalLink ? '_blank' : ''}
                             onClick={() =>
@@ -72,6 +75,7 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
                     ) : (
                         <span>
                             key={subNav.key}
+                            data-tn={`nav-menu-item-${subNav.key}`}
                             <Trans
                                 i18nKey={subNav.translateKey}
                                 defaults={subNav.title}
@@ -84,7 +88,8 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
     )
 }
 
-const CollapsedItem = ({ nav, onLinkClick, direction }: CollapsedItemProps) => {
+const CollapsedItem = (props: CollapsedItemProps) => {
+    const { nav, onLinkClick, direction } = props
     const menuItem = (
         <MenuItem key={nav.key} eventKey={nav.key} className="mb-2">
             <VerticalMenuIcon icon={nav.icon} withMargin={false} />
@@ -98,12 +103,14 @@ const CollapsedItem = ({ nav, onLinkClick, direction }: CollapsedItemProps) => {
             placement={
                 direction === 'rtl' ? 'middle-end-top' : 'middle-start-top'
             }
+            data-tn={props['data-tn']}
         >
             {nav.subMenu.map((subNav) => (
                 <Dropdown.Item key={subNav.key} eventKey={subNav.key}>
                     {subNav.path ? (
                         <Link
                             className="h-full w-full flex items-center"
+                            data-tn={`collapsed-${nav.key}-item-${subNav.key}`}
                             to={subNav.path}
                             target={subNav.isExternalLink ? '_blank' : ''}
                             onClick={() =>

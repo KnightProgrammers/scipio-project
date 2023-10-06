@@ -21,6 +21,7 @@ import type {
 import type { AsyncProps } from 'react-select/async'
 import type { CreatableProps } from 'react-select/creatable'
 import type { ForwardedRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface DefaultOptionProps {
     innerProps: JSX.IntrinsicElements['div']
@@ -133,6 +134,8 @@ function _Select<
         ...rest
     } = props
 
+    const { t } = useTranslation()
+
     const { themeColor, controlSize, primaryColorLevel, mode } = useConfig()
     const formControlSize = useForm()?.size
     const inputGroupSize = useInputGroup()?.size
@@ -235,6 +238,7 @@ function _Select<
                 ClearIndicator: DefaultClearIndicator,
                 ...components,
             }}
+            noOptionsMessage={() => t('messages.selectNoOptions')}
             {...field}
             {...rest}
         />

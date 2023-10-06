@@ -60,6 +60,7 @@ const MenuCollapse = (props: MenuCollapseProps) => {
             <div
                 className={menuCollapseItemClass}
                 role="presentation"
+                data-tn={props['data-tn']}
                 onClick={toggleCollapse}
             >
                 <span className="flex items-center">{label}</span>

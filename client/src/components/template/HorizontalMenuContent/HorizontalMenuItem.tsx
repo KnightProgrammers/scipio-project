@@ -14,14 +14,12 @@ export type HorizontalMenuItemProps = {
         isExternalLink?: boolean
     }
     isLink?: boolean
+    'data-tn'?: string
     manuVariant: NavMode
 }
 
-const HorizontalMenuItem = ({
-    nav,
-    isLink,
-    manuVariant,
-}: HorizontalMenuItemProps) => {
+const HorizontalMenuItem = (props: HorizontalMenuItemProps) => {
+    const { nav, isLink, manuVariant } = props
     const { key, title, translateKey, icon, path, isExternalLink } = nav
 
     const { t } = useTranslation()
@@ -38,6 +36,7 @@ const HorizontalMenuItem = ({
                 <HorizontalMenuNavLink
                     path={path}
                     isExternalLink={isExternalLink}
+                    data-tn={props['data-tn']}
                 >
                     <MenuItem key={key} variant={manuVariant}>
                         {renderIcon}
