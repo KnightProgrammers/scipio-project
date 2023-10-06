@@ -27,7 +27,6 @@ export const createBankAccount = async (
     const bodyRequest: any = await saveBankAccountRequest.postDataJSON()
     const saveBankResponse = await saveBankAccountRequest.response();
     const newBankAccount = await saveBankResponse.json();
-    console.log({newBankAccount})
     expect(bodyRequest.accountName).toEqual(accountName);
     expect(bodyRequest.accountNumber).toEqual(accountNumber);
     expect(bodyRequest.accountBalance).toEqual(accountBalance);
