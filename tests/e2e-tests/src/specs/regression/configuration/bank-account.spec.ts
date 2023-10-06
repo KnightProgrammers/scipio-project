@@ -5,10 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { goToProfileTab, goToUserProfile, selectRandomCurrencies } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
 import {
-    createBank
+    createBank, deleteBank
 } from "../../../helpers/bank.helper";
 import { NAV_MENU, navigateMenu } from "../../../helpers/nav-menu.helper";
-import { createBankAccount, openEditBankAccountForm } from "../../../helpers/bank-account.helper";
+import {
+    createBankAccount,
+    deleteBankAccount,
+    editBankAccount,
+    openEditBankAccountForm
+} from "../../../helpers/bank-account.helper";
 
 
 let email: string;
@@ -144,8 +149,27 @@ test('validate editable fields', async () => {
     await expect(currencyInput).toHaveAttribute('disabled', '');
 })
 test('edit bank account', async () => {
+    await editBankAccount(page, bankAccount.id, {
+        accountName: 'Cuenta Corriente',
+        accountNumber: '87654321',
+        accountBalance: 876.3
+    });
 
+    await expect(page.locator(`div[data-tn="bank-account-${bankAccount.id}"]`)).toBeVisible();
+    await expect(page.locator(
+        `div[data-tn="bank-account-${bankAccount.id}"] div[data-tn="bank-account-name"]`
+    )).toHaveText('Cuenta Corriente')
+    await expect(page.locator(
+        `div[data-tn="bank-account-${bankAccount.id}"] span[data-tn="bank-account-number"]`
+    )).toHaveText('87654321')
 })
 test('delete bank account', async () => {
+    await deleteBankAccount(page, bankId, bankAccount.id);
+    await expect(page.locator(`div[data-tn="bank-account-${bankAccount.id}"]`)).not.toBeVisible();
+})
 
+test('delete bank without bank accounts', async () => {
+    await goToUserProfile(page);
+    await goToProfileTab(page, 'banks');
+    await deleteBank(page, bankId);
 })

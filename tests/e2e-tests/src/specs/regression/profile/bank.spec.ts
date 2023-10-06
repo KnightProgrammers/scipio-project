@@ -5,10 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
 import {
-    confirmDeleteBank,
-    createBank,
+    createBank, deleteBank,
     editBank,
-    openDeleteBankDialog,
     openEditBankForm
 } from "../../../helpers/bank.helper";
 
@@ -91,8 +89,7 @@ test('edit a bank', async () => {
 })
 
 test('delete a bank - last bank', async () => {
-    await openDeleteBankDialog(page, bankId);
-    await confirmDeleteBank(page, bankId);
+    await deleteBank(page, bankId);
     // Validates that the empty state is displayed
     const emptyStateContainer = page.locator('div[data-tn="empty-state"]')
     await expect(emptyStateContainer).toBeVisible();
@@ -107,8 +104,7 @@ test('delete a bank - there are more banks listed', async () => {
     })
     bankId = bank2.id;
     // Delete Bank #2
-    await openDeleteBankDialog(page, bankId);
-    await confirmDeleteBank(page, bankId);
+    await deleteBank(page, bankId);
     // Validates that Bank #1 still listed
     const emptyStateContainer = page.locator('div[data-tn="empty-state"]')
     await expect(emptyStateContainer).not.toBeVisible();
