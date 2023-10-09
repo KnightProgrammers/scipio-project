@@ -1,38 +1,75 @@
-import { Alert, Avatar, Button, Card, Dropdown, Progress } from "@/components/ui";
+import {
+    Alert,
+    Avatar, Badge,
+    Button,
+    Card,
+    Dropdown,
+    Progress
+} from "@/components/ui";
 import { BsCreditCard2Front } from 'react-icons/bs'
-import { EllipsisButton, IconText } from "@/components/shared";
-import { HiOutlinePencilAlt, HiOutlineTrash } from "react-icons/hi";
-import { useTranslation } from "react-i18next";
-import { HiEye, HiFire } from "react-icons/hi2";
+import { EllipsisButton, IconText } from '@/components/shared'
+import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
+import { useTranslation } from 'react-i18next'
+import { HiEye, HiFire } from 'react-icons/hi2'
+import currencyFormat from '@/utils/currencyFormat'
 
 type CreditCardType = {
     id: string
-    provider: string
-    type: string
+    label: string
     cardHolder: string
     lastFourDigits: string
     expiration: string
+    billingCycle: string
+    creditLimit: {
+        amount: number,
+        currencyCode: string
+    }
     issuer: 'mastercard' | 'visa' | 'other'
+    creditUsage?: {
+        usageAmount: number
+        usagePercentage: number
+    }
 }
 
 const DATA: CreditCardType[] = [
     {
         id: '1',
-        provider: 'BBVA',
-        type: 'Platinum',
+        label: 'BBVA Platinum',
         cardHolder: 'Javier Caballero',
         lastFourDigits: '1234',
         expiration: '12/2024',
         issuer: 'mastercard',
+        billingCycle: '29/10',
+        creditLimit: {
+            amount: 210000,
+            currencyCode: 'UYU'
+        }
     },
     {
         id: '1',
-        provider: 'ITAU',
-        type: 'Gold',
+        label: 'ITAU Gold',
         cardHolder: 'Javier Caballero',
         lastFourDigits: '6523',
         expiration: '12/2025',
         issuer: 'visa',
+        billingCycle: '10/10',
+        creditLimit: {
+            amount: 78000,
+            currencyCode: 'UYU'
+        }
+    },
+    {
+        id: '3',
+        label: 'OCA',
+        cardHolder: 'Javier Caballero',
+        lastFourDigits: '1776',
+        expiration: '08/2027',
+        issuer: 'mastercard',
+        billingCycle: '20/10',
+        creditLimit: {
+            amount: 16000,
+            currencyCode: 'UYU'
+        }
     },
 ]
 
@@ -61,20 +98,35 @@ const CardIcon = (props: { cardIssuer: string }) => {
 
 const CreditCards = () => {
     const { t, i18n } = useTranslation()
+
+    const progressColor = (actualUsage: number): string => {
+        if(actualUsage < 50 ) {
+            return 'green-500'
+        }
+        if(actualUsage < 75 ) {
+            return 'yellow-500'
+        }
+        return 'red-500'
+    }
+
     return (
-        <div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {DATA.map((c, index) => (
                 <Card
                     className="my-4"
                     header={
                         <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
                             <CardIcon cardIssuer={c.issuer} />
-                            <span className="pl-2 text-xl inline-flex">
-                                 <span className="hidden md:block mr-1">{c.issuer.toLocaleUpperCase()} -</span>****{' '}
-                                {c.lastFourDigits}
-                            </span>
+                            <div className="grid ">
+                                <span className="pl-2 text-xs font-light inline-flex">
+                                    {c.label.toLocaleUpperCase()}
+                                </span>
+                                <span className="pl-2 text-lg inline-flex">
+                                    **** {c.lastFourDigits}
+                                </span>
+                            </div>
                             <Dropdown
-                                className="absolute right-2 top-1"
+                                className="absolute right-0 top-0"
                                 placement="middle-end-top"
                                 renderTitle={
                                     <EllipsisButton data-tn="dropdown-bank-account-btn" />
@@ -87,9 +139,7 @@ const CreditCards = () => {
                                 >
                                     <IconText
                                         className="text-sm font-semibold w-full"
-                                        icon={
-                                            <HiOutlinePencilAlt />
-                                        }
+                                        icon={<HiOutlinePencilAlt />}
                                     >
                                         {t('actions.edit')}
                                     </IconText>
@@ -110,21 +160,47 @@ const CreditCards = () => {
                         </div>
                     }
                 >
-                <div className="grid md:grid-cols-2 md:divide-x">
-                    <div className="px-2">
-                        <div className="block mb-2">
-                            <p className="text-gray-500 font-light">Limite de crédito:</p>
-                            <span className="text-4xl font-bold"><small>$</small> 78.000</span>
+                    <div className="divide-y">
+                        <div className="grid grid-cols-2 pb-4 items-center">
+                            <div className="flex flex-col">
+                                <small className="font-light">Cierre</small>
+                                <span className="font-semibold">{c.billingCycle}</span>
+                            </div>
+                            <div className=" text-right">
+                                <Badge content={'Active'} innerClass="bg-emerald-500" className="text-sm"/>
+                            </div>
                         </div>
-                        <Alert showIcon className="mb-4" type="info" customIcon={<HiFire />}>
-                            Usaste el 40% de tu límite
-                        </Alert>
-                        <Progress percent={40} size="md"/>
+                        <div className="py-4">
+                            <div className="block mb-2">
+                                <p className="text-gray-500 font-light">
+                                    Limite de crédito
+                                </p>
+                                <p className="text-4xl font-semibold text-center">
+                                    {currencyFormat(c.creditLimit.amount, c.creditLimit.currencyCode)}
+                                </p>
+                            </div>
+                            <p className="text-gray-500 font-light hidden">
+                                Crédito Usado
+                            </p>
+                            <div className="hidden">
+                                <Progress
+                                    percent={c.creditUsage?.usagePercentage}
+                                    size="md"
+                                    color={progressColor(c.creditUsage?.usagePercentage || 0)}
+                                />
+                            </div>
+                        </div>
+                        <div className="py-4 hidden">
+                            <Button
+                                variant="twoTone"
+                                size="sm"
+                                block
+                                icon={<HiEye />}
+                            >
+                                Ver Movimientos
+                            </Button>
+                        </div>
                     </div>
-                    <div className="px-2">
-                        <Button variant="twoTone" size="sm" block className="w-full md:w-auto" icon={<HiEye/>}>Ver Movimientos</Button>
-                    </div>
-                </div>
                 </Card>
             ))}
         </div>
