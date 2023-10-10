@@ -20,7 +20,7 @@ import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import i18n from 'i18next'
 import { LuCoins } from 'react-icons/lu'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { apiGetCurrencies } from '@/services/CurrencyServices'
 
 const STEPS = {
@@ -35,7 +35,7 @@ const WelcomeWizard = () => {
     const [step, setStep] = useState(0)
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [loadingCountries, setLoadingCountries] = useState(false)
-    const [selectedCountry, setSelectedCountry] = useState<object>({})
+    const [selectedCountry, setSelectedCountry] = useState<any>({})
     const [countries, setCountries] = useState<CountryDataType[]>([])
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
@@ -49,7 +49,7 @@ const WelcomeWizard = () => {
     })
 
     const errorHandler = useCallback(
-        (e: object) => {
+        (e: any) => {
             toast.push(
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
@@ -105,7 +105,10 @@ const WelcomeWizard = () => {
     }
 
     return (
-        <Container className="flex flex-auto flex-col h-[100vh] justify-center items-center">
+        <Container
+            className="flex flex-auto flex-col h-[100vh] justify-center items-center"
+            data-tn="welcome-wizard-page"
+        >
             <Card className="p-4 min-w-[280px]">
                 <Steps current={step} className="w-full">
                     <Steps.Item customIcon={<AiOutlineStar />} />
@@ -126,7 +129,11 @@ const WelcomeWizard = () => {
                     {step === STEPS.START && (
                         <div className="text-center">
                             <h1>{t('pages.welcome.headers.start')}</h1>
-                            <img src="/img/others/welcome.png" alt="welcome" />
+                            <img
+                                src="/img/others/welcome.png"
+                                alt="welcome"
+                                data-tn="welcome-img"
+                            />
                         </div>
                     )}
                     {step === STEPS.LANG && (
@@ -136,6 +143,7 @@ const WelcomeWizard = () => {
                             </h2>
                             <Select<LanguageOption>
                                 options={langOptions}
+                                id="lang-select"
                                 components={{
                                     Option: CustomSelectOption,
                                     Control: CustomControl,
@@ -157,6 +165,7 @@ const WelcomeWizard = () => {
                             </h2>
                             <Select
                                 placeholder={t('placeholders.country')}
+                                id="country-select"
                                 isDisabled={loadingCountries}
                                 isLoading={loadingCountries}
                                 defaultInputValue=""
@@ -170,28 +179,26 @@ const WelcomeWizard = () => {
                     )}
                     {step === STEPS.CURRENCY &&
                         (!isFetchingCurrencies ? (
-                            <div>
-                                <Checkbox.Group
-                                    vertical
-                                    name="currencies"
-                                    value={selectedCurrencies}
-                                    className="max-h-[550px] w-full overflow-y-auto"
-                                    onChange={(value: any) =>
-                                        setSelectedCurrencies(value)
-                                    }
-                                >
-                                    {currencies?.map((c) => (
-                                        <Checkbox
-                                            key={c.id}
-                                            value={c.id}
-                                            data-tn={c.code}
-                                        >
-                                            {c.code} (
-                                            {t(`currencies.${c.code}`)})
-                                        </Checkbox>
-                                    ))}
-                                </Checkbox.Group>
-                            </div>
+                            <Checkbox.Group
+                                vertical
+                                name="currencies"
+                                data-tn="currency-ckb"
+                                value={selectedCurrencies}
+                                className="max-h-[550px] w-full overflow-y-auto"
+                                onChange={(value: any) =>
+                                    setSelectedCurrencies(value)
+                                }
+                            >
+                                {currencies?.map((c) => (
+                                    <Checkbox
+                                        key={c.id}
+                                        value={c.id}
+                                        data-tn={c.code}
+                                    >
+                                        {c.code} ({t(`currencies.${c.code}`)})
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
                         ) : (
                             <Loading loading />
                         ))}
@@ -214,6 +221,7 @@ const WelcomeWizard = () => {
                                 }
                                 variant="solid"
                                 className="w-full"
+                                data-tn="next-btn"
                                 onClick={onNext}
                             >
                                 {t('actions.next')}
