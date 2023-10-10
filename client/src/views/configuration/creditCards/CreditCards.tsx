@@ -1,5 +1,4 @@
 import {
-    Alert,
     Avatar,
     Badge,
     Button,
@@ -8,19 +7,22 @@ import {
     FormItem,
     Input,
     ModalForm,
-    Progress, Select
-} from "@/components/ui";
+    Progress,
+    Select,
+} from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
-import { EllipsisButton, FormCustomFormatInput, IconText } from "@/components/shared";
+import {
+    EllipsisButton,
+    FormCustomFormatInput,
+    IconText,
+} from '@/components/shared'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { useTranslation } from 'react-i18next'
-import { HiEye, HiFire } from 'react-icons/hi2'
+import { HiEye } from 'react-icons/hi2'
 import currencyFormat from '@/utils/currencyFormat'
 import EmptyState from '@/components/shared/EmptyState'
-import { Field, FieldProps, FormikErrors, FormikTouched } from "formik";
-import { SelectFieldItem } from '@/components/ui/Form'
+import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
-import { boolean } from 'yup'
 import { useState } from 'react'
 
 type CreditCardType = {
@@ -135,12 +137,12 @@ const CreditCards = () => {
     const [selectedCreditCard, setSelectedCreditCard] = useState<
         any | undefined
     >(undefined)
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
 
     const ISSUERS = [
         { label: 'Visa', value: 'visa' },
         { label: 'Mastercard', value: 'mastercard' },
-        { label: t('placeholders.other'), value: 'other' }
+        { label: t('placeholders.other'), value: 'other' },
     ]
 
     const progressColor = (actualUsage: number): string => {
@@ -165,6 +167,7 @@ const CreditCards = () => {
     }
     const onFormSubmit = () => {
         onFormClose()
+        setIsSaving(true)
     }
 
     const CreditCardForm = () => (
@@ -198,10 +201,10 @@ const CreditCards = () => {
                         />
                     </FormItem>
                     <FormItem
+                        asterisk
                         label={t(`fields.cardHolder`) || ''}
                         invalid={!!errors.cardHolder || !!touched.cardHolder}
                         errorMessage={errors.cardHolder?.toString()}
-                        asterisk
                     >
                         <Field
                             type="text"
@@ -213,7 +216,9 @@ const CreditCards = () => {
                     </FormItem>
                     <FormItem
                         label={t(`fields.lastFourDigits`) || ''}
-                        invalid={!!errors.lastFourDigits || !!touched.lastFourDigits}
+                        invalid={
+                            !!errors.lastFourDigits || !!touched.lastFourDigits
+                        }
                         errorMessage={errors.lastFourDigits?.toString()}
                     >
                         <Field
@@ -225,12 +230,9 @@ const CreditCards = () => {
                         />
                     </FormItem>
                     <FormItem
-                        label={t(`fields.expiration`) || ''}
-                        invalid={
-                            !! errors.expiration ||
-                            !! touched.expiration
-                        }
                         asterisk
+                        label={t(`fields.expiration`) || ''}
+                        invalid={!!errors.expiration || !!touched.expiration}
                         errorMessage={errors.expiration?.toString()}
                     >
                         <Field name="expiration">
@@ -242,7 +244,12 @@ const CreditCards = () => {
                                         placeholder="••/••"
                                         format={cardExpiryFormat}
                                         defaultValue={form.values.expiration}
-                                        onValueChange={(e) => form.setFieldValue(field.name,e.value)}
+                                        onValueChange={(e) =>
+                                            form.setFieldValue(
+                                                field.name,
+                                                e.value,
+                                            )
+                                        }
                                     />
                                 )
                             }}
@@ -262,20 +269,26 @@ const CreditCards = () => {
                                     options={ISSUERS}
                                     value={ISSUERS.filter(
                                         (issuer) =>
-                                            issuer.value === field.value
+                                            issuer.value === field.value,
                                     )}
                                     onChange={(option) =>
-                                        form.setFieldValue(field.name, option?.value)
+                                        form.setFieldValue(
+                                            field.name,
+                                            option?.value,
+                                        )
                                     }
                                 />
                             )}
                         </Field>
                     </FormItem>
                     <FormItem
-                        label={t(`fields.creditLimitAmount`) || ''}
-                        invalid={!!errors.creditLimitAmount || !!touched.creditLimitAmount}
-                        errorMessage={errors.creditLimitAmount?.toString()}
                         asterisk
+                        label={t(`fields.creditLimitAmount`) || ''}
+                        invalid={
+                            !!errors.creditLimitAmount ||
+                            !!touched.creditLimitAmount
+                        }
+                        errorMessage={errors.creditLimitAmount?.toString()}
                     >
                         <Field
                             type="number"
@@ -317,6 +330,7 @@ const CreditCards = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {DATA.map((c, index) => (
                 <Card
+                    key={index}
                     className="my-4"
                     header={
                         <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
@@ -407,9 +421,9 @@ const CreditCards = () => {
                         </div>
                         <div className="py-4 hidden">
                             <Button
+                                block
                                 variant="twoTone"
                                 size="sm"
-                                block
                                 icon={<HiEye />}
                             >
                                 Ver Movimientos
