@@ -1,6 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
-import { fullSignUpUser, signInUser, signUpUser } from "../../../helpers/auth.helper";
+import { fullSignUpUser, signInUser } from "../../../helpers/auth.helper";
 import { v4 as uuidv4 } from 'uuid';
 import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';

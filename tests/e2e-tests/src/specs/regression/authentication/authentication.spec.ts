@@ -8,7 +8,6 @@ import {
     welcomeUSer
 } from "../../../helpers/auth.helper";
 import { v4 as uuidv4 } from "uuid";
-import { DEFAULT_CURRENCIES } from "../../../helpers/profile.helper";
 
 
 let email: string;
