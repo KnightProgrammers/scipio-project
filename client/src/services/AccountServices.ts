@@ -21,6 +21,7 @@ export async function apiUpdateUserProfile(
 export async function apiPathUserProfile(
     country: string,
     lang: string,
+    currencies: string[],
 ): Promise<UserDataType> {
     return BaseService.request({
         url: '/users/me',
@@ -28,6 +29,7 @@ export async function apiPathUserProfile(
         data: {
             country,
             lang,
+            currencies
         },
     })
 }
