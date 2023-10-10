@@ -6,6 +6,7 @@ import UserSchema from '@/models/user.model';
 import AuthMiddleware from '@/middlewares/auth.middleware';
 import CountryModel from '@/models/country.model';
 import CurrencyModel from '@/models/currency.model';
+import * as console from "console";
 
 const UserCountry = Type.Object({
 	code: Type.Readonly(Type.String()),
@@ -123,6 +124,9 @@ const users: any = async (fastify: any): Promise<void> => {
 						lang: {
 							type: 'string',
 						},
+						currencies: {
+							type: 'array'
+						},
 					},
 					additionalProperties: false,
 				},
@@ -132,7 +136,7 @@ const users: any = async (fastify: any): Promise<void> => {
 			},
 		},
 		async function (request: any, reply: any) {
-			const { country: countryName, lang } = request.body;
+			const { country: countryName, lang, currencies: currencyIds } = request.body;
 			const country = await CountryModel.findOne({
 				name: countryName,
 				isSupported: true,
@@ -140,9 +144,14 @@ const users: any = async (fastify: any): Promise<void> => {
 			if (!country) {
 				throw new errorCodes.FST_ERR_NOT_FOUND('Country');
 			}
+			const currencies = await CurrencyModel.find({_id: currencyIds})
+			if (!currencies) {
+				throw new errorCodes.FST_ERR_NOT_FOUND('Currencies');
+			}
 			const user = request.user;
 			user.country = country;
 			user.lang = lang;
+			user.currencies = currencies;
 			user.save();
 			reply.status(200).send({
 				id: user.id,
