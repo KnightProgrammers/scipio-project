@@ -6,7 +6,6 @@ import UserSchema from '@/models/user.model';
 import AuthMiddleware from '@/middlewares/auth.middleware';
 import CountryModel from '@/models/country.model';
 import CurrencyModel from '@/models/currency.model';
-import * as console from "console";
 
 const UserCountry = Type.Object({
 	code: Type.Readonly(Type.String()),
@@ -144,7 +143,7 @@ const users: any = async (fastify: any): Promise<void> => {
 			if (!country) {
 				throw new errorCodes.FST_ERR_NOT_FOUND('Country');
 			}
-			const currencies = await CurrencyModel.find({_id: currencyIds})
+			const currencies = await CurrencyModel.find({_id: currencyIds});
 			if (!currencies) {
 				throw new errorCodes.FST_ERR_NOT_FOUND('Currencies');
 			}
