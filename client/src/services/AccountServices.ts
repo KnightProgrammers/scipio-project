@@ -29,7 +29,7 @@ export async function apiPathUserProfile(
         data: {
             country,
             lang,
-            currencies
+            currencies,
         },
     })
 }

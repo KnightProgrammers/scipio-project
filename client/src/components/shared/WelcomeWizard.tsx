@@ -204,7 +204,8 @@ const WelcomeWizard = () => {
                 </div>
                 <div className="mt-4 text-center">
                     {(step != STEPS.COUNTRY || !!selectedCountry.value) &&
-                        (step != STEPS.CURRENCY || !!selectedCurrencies.length) &&
+                        (step != STEPS.CURRENCY ||
+                            !!selectedCurrencies.length) &&
                         step != STEPS.SAVING && (
                             <Button
                                 disabled={

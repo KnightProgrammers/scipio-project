@@ -6,10 +6,7 @@ import Theme from '@/components/template/Theme'
 import Layout from '@/components/layouts'
 import mockServer from './mock'
 import appConfig from '@/configs/app.config'
-import {
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './locales'
 
 const environment = process.env.NODE_ENV
@@ -28,15 +25,15 @@ const queryClient = new QueryClient()
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <BrowserRouter>
-                    <Theme>
-                        <Layout />
-                    </Theme>
-                </BrowserRouter>
-            </PersistGate>
-        </Provider>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <BrowserRouter>
+                        <Theme>
+                            <Layout />
+                        </Theme>
+                    </BrowserRouter>
+                </PersistGate>
+            </Provider>
         </QueryClientProvider>
     )
 }
