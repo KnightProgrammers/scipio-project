@@ -65,7 +65,10 @@
             }
         },
         "creditCards": {
-            "header": "Tarjetas de Créditos"
+            "header": "Tarjetas de Créditos",
+            "form": {
+                "newTitle": "Nueva Tarjeta de Crédito"
+            }
         },
         "categories": {
             "header": "Caategorías"
@@ -163,7 +166,11 @@
         "rememberMe": "Recordarme",
         "country": "Pais",
         "currency": "Moneda",
-        "label": "Etiqueta"
+        "label": "Etiqueta",
+        "lastFourDigits": "Últimos 4 dígitos",
+        "expiration": "Fecha de Caducidad",
+        "cardHolder": "Titular de la Tarjeta",
+        "creditLimitAmount": "Limite de Crédito"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -197,7 +204,8 @@
         }
     },
     "placeholders": {
-        "country": "Selecciona un pais"
+        "country": "Selecciona un pais",
+        "other": "Otro"
     },
     "messages": {
         "backTo": "Volver a ",

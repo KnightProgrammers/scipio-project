@@ -65,7 +65,10 @@
             }
         },
         "creditCards": {
-            "header": "Credit Cards"
+            "header": "Credit Cards",
+            "form": {
+                "newTitle": "New Credit Card"
+            }
         },
         "categories": {
             "header": "Categories"
@@ -163,7 +166,11 @@
         "rememberMe": "Remember Me",
         "country": "Country",
         "currency": "Currency",
-        "label": "Label"
+        "label": "Label",
+        "lastFourDigits": "Last 4 digits",
+        "expiration": "Expiration Month",
+        "cardHolder": "Card Holder",
+        "creditLimitAmount": "Credit Limit"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -197,7 +204,8 @@
         }
     },
     "placeholders": {
-        "country": "Select a country"
+        "country": "Select a country",
+        "other": "Other"
     },
     "messages": {
         "backTo": "Back to ",
