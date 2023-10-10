@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { CurrencySchema } from "@/models/currency.model";
+import { CurrencySchema } from '@/models/currency.model';
 
 export const BankSchema = new mongoose.Schema(
 	{
