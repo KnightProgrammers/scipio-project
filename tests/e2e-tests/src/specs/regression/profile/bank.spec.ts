@@ -1,6 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
-import { signInUser, signUpUser } from '../../../helpers/auth.helper';
+import { fullSignUpUser, signInUser, signUpUser } from "../../../helpers/auth.helper";
 import { v4 as uuidv4 } from 'uuid';
 import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
@@ -30,7 +30,7 @@ test.beforeAll(async ({ browser }) => {
     await page.goto('/');
     await page.waitForLoadState('load');
     console.log(`Creating account for user with email: "${email}"`)
-    await signUpUser(page, { email, password, name });
+    await fullSignUpUser(page, { email, password, name });
     await signInUser(page, { email, password });
     await goToUserProfile(page);
 });
