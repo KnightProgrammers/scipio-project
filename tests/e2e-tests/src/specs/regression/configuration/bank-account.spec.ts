@@ -91,25 +91,8 @@ test('bank account list with banks', async () => {
     const noAccountBarCardLocator = page.locator(`div[data-tn="bank-${bankId}-card"] div[data-tn="empty-state"]`)
     await expect(noAccountBarCardLocator).toBeVisible();
 })
-test('no user favorite currencies', async () => {
+test('the user has currencies selected by default', async () => {
     const addBankAccountBtnLocator = page.locator(`div[data-tn="bank-${bankId}-card"] button[data-tn="add-bank-account-btn"]`)
-    await expect(addBankAccountBtnLocator).toBeVisible();
-    await addBankAccountBtnLocator.click();
-    await page.locator('#currency-select').click();
-    await expect(page.locator('#currency-select div.select__menu-notice--no-options')).toBeVisible();
-    await page.locator('#currency-select').click();
-    await page.locator('button[data-tn="modal-form-cancel-btn"]').click();
-})
-test('with favorite currencies', async () => {
-    await goToUserProfile(page);
-    await goToProfileTab(page, 'currency');
-    userSelectedCurrencies = await selectRandomCurrencies(page);
-    const addBankAccountBtnLocator = page.locator(`div[data-tn="bank-${bankId}-card"] button[data-tn="add-bank-account-btn"]`)
-    const waitForBankAccounts = page.waitForResponse((response) =>
-        response.url() === `${API_BASE_URL}/bank-accounts` && response.status() === 200,
-    )
-    await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
-    await waitForBankAccounts;
     await expect(addBankAccountBtnLocator).toBeVisible();
     await addBankAccountBtnLocator.click();
     await page.locator('#currency-select').click();
