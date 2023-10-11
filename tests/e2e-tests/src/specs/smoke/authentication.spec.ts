@@ -28,7 +28,7 @@ test.afterAll(async () => {
 
 test('Successful sign-in', async () => {
     const {email, password, name } = getDefaultUserData();
-    const userData = await signInUser(page, {email, password});
+    const userData = await signInUser(page, {email, password}, false);
     expect(userData.id).toBeTruthy();
     expect(userData.name).toBe(name);
     expect(userData.email).toBe(email);

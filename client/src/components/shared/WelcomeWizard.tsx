@@ -1,6 +1,6 @@
 import Steps from '@/components/ui/Steps'
 import { useCallback, useEffect, useState } from 'react'
-import { Button, Card, Select, Spinner } from '@/components/ui'
+import { Button, Card, Checkbox, Select, Spinner } from '@/components/ui'
 import {
     Container,
     CustomControl,
@@ -19,26 +19,37 @@ import { setUser, useAppDispatch } from '@/store'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import i18n from 'i18next'
+import { LuCoins } from 'react-icons/lu'
+import { useQuery } from '@tanstack/react-query'
+import { apiGetCurrencies } from '@/services/CurrencyServices'
 
 const STEPS = {
     START: 0,
     LANG: 1,
     COUNTRY: 2,
-    SAVING: 3,
+    CURRENCY: 3,
+    SAVING: 4,
 }
 
 const WelcomeWizard = () => {
     const [step, setStep] = useState(0)
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [loadingCountries, setLoadingCountries] = useState(false)
-    const [selectedCountry, setSelectedCountry] = useState<object>({})
+    const [selectedCountry, setSelectedCountry] = useState<any>({})
     const [countries, setCountries] = useState<CountryDataType[]>([])
+    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
 
+    // Queries
+    const { data: currencies, isFetching: isFetchingCurrencies } = useQuery({
+        queryKey: ['user-currencies'],
+        queryFn: apiGetCurrencies,
+    })
+
     const errorHandler = useCallback(
-        (e: object) => {
+        (e: any) => {
             toast.push(
                 <Notification title={t('error.generic') || ''} type="danger" />,
                 {
@@ -65,20 +76,25 @@ const WelcomeWizard = () => {
     const onChange = (nextStep: number) => {
         if (nextStep < 0) {
             setStep(0)
-        } else if (nextStep > 3) {
-            setStep(3)
+        } else if (nextStep > STEPS.SAVING) {
+            setStep(STEPS.SAVING)
         } else {
             setStep(nextStep)
         }
     }
 
     const onNext = async () => {
-        if (step === STEPS.COUNTRY && selectedCountry) {
+        if (
+            step === STEPS.CURRENCY &&
+            selectedCountry &&
+            selectedCurrencies.length
+        ) {
             setIsSaving(true)
             try {
                 const user = await apiPathUserProfile(
                     selectedCountry.value,
                     i18n.language,
+                    selectedCurrencies,
                 )
                 dispatch(setUser(user))
             } catch (e) {
@@ -89,12 +105,16 @@ const WelcomeWizard = () => {
     }
 
     return (
-        <Container className="flex flex-auto flex-col h-[100vh] justify-center items-center">
+        <Container
+            className="flex flex-auto flex-col h-[100vh] justify-center items-center"
+            data-tn="welcome-wizard-page"
+        >
             <Card className="p-4 min-w-[280px]">
                 <Steps current={step} className="w-full">
                     <Steps.Item customIcon={<AiOutlineStar />} />
                     <Steps.Item customIcon={<HiOutlineLanguage />} />
                     <Steps.Item customIcon={<BiWorld />} />
+                    <Steps.Item customIcon={<LuCoins />} />
                     <Steps.Item
                         customIcon={
                             step === STEPS.SAVING ? (
@@ -109,7 +129,11 @@ const WelcomeWizard = () => {
                     {step === STEPS.START && (
                         <div className="text-center">
                             <h1>{t('pages.welcome.headers.start')}</h1>
-                            <img src="/img/others/welcome.png" alt="welcome" />
+                            <img
+                                src="/img/others/welcome.png"
+                                alt="welcome"
+                                data-tn="welcome-img"
+                            />
                         </div>
                     )}
                     {step === STEPS.LANG && (
@@ -119,6 +143,7 @@ const WelcomeWizard = () => {
                             </h2>
                             <Select<LanguageOption>
                                 options={langOptions}
+                                id="lang-select"
                                 components={{
                                     Option: CustomSelectOption,
                                     Control: CustomControl,
@@ -140,7 +165,7 @@ const WelcomeWizard = () => {
                             </h2>
                             <Select
                                 placeholder={t('placeholders.country')}
-                                classNames="text-left"
+                                id="country-select"
                                 isDisabled={loadingCountries}
                                 isLoading={loadingCountries}
                                 defaultInputValue=""
@@ -152,6 +177,31 @@ const WelcomeWizard = () => {
                             />
                         </div>
                     )}
+                    {step === STEPS.CURRENCY &&
+                        (!isFetchingCurrencies ? (
+                            <Checkbox.Group
+                                vertical
+                                name="currencies"
+                                data-tn="currency-ckb"
+                                value={selectedCurrencies}
+                                className="max-h-[550px] w-full overflow-y-auto"
+                                onChange={(value: any) =>
+                                    setSelectedCurrencies(value)
+                                }
+                            >
+                                {currencies?.map((c) => (
+                                    <Checkbox
+                                        key={c.id}
+                                        value={c.id}
+                                        data-tn={c.code}
+                                    >
+                                        {c.code} ({t(`currencies.${c.code}`)})
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
+                        ) : (
+                            <Loading loading />
+                        ))}
                     {step === STEPS.SAVING && isSaving && (
                         <div>
                             <Loading loading />
@@ -161,6 +211,8 @@ const WelcomeWizard = () => {
                 </div>
                 <div className="mt-4 text-center">
                     {(step != STEPS.COUNTRY || !!selectedCountry.value) &&
+                        (step != STEPS.CURRENCY ||
+                            !!selectedCurrencies.length) &&
                         step != STEPS.SAVING && (
                             <Button
                                 disabled={
@@ -169,6 +221,7 @@ const WelcomeWizard = () => {
                                 }
                                 variant="solid"
                                 className="w-full"
+                                data-tn="next-btn"
                                 onClick={onNext}
                             >
                                 {t('actions.next')}
