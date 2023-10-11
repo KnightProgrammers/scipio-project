@@ -5,7 +5,7 @@ import {
     DEFAULT_USER_LANG,
     signInUser,
     signUpUser,
-    welcomeUSer
+    welcomeUser
 } from "../../../helpers/auth.helper";
 import { v4 as uuidv4 } from "uuid";
 
@@ -48,7 +48,7 @@ test('Successful sign-up', async () => {
 });
 
 test('Successful sign-in - first time', async () => {
-    const userData = await signInUser(page, { email, password });
+    const userData = await signInUser(page, { email, password }, false);
     expect(userData.id).toBeTruthy();
     expect(userData.name).toBe(name);
     expect(userData.email).toBe(email);
@@ -57,7 +57,7 @@ test('Successful sign-in - first time', async () => {
     expect(userData.country).toBeNull();
     // Validate welcome screen being present
     await expect(page.locator('div[data-tn="welcome-wizard-page"]')).toBeVisible();
-    await welcomeUSer(page, {
+    await welcomeUser(page, {
         lang: DEFAULT_USER_LANG,
         country: DEFAULT_USER_COUNTRY,
         currencies: DEFAULT_USER_CURRENCIES
@@ -68,7 +68,7 @@ test('Successful sign-in - first time', async () => {
 test('Successful sign-in - all the data', async ({page}) => {
     await page.goto('/');
     await page.waitForLoadState('load');
-    const userData = await signInUser(page, { email, password });
+    const userData = await signInUser(page, { email, password }, false);
     expect(userData.id).toBeTruthy();
     expect(userData.name).toBe(name);
     expect(userData.email).toBe(email);

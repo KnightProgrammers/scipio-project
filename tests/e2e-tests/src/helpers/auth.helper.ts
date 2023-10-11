@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { expect, Page } from "@playwright/test";
-import { API_BASE_URL, getDefaultUserData } from "../config";
+import { API_BASE_URL } from "../config";
 
 export const DEFAULT_USER_LANG: string = 'Español (Latinoamérica)';
 export const DEFAULT_USER_COUNTRY: string = 'Uruguay';
@@ -32,7 +32,7 @@ export const signUpUser = async (page: Page, data: {email:string, password: stri
     await page.locator('button[data-tn="sign-in"]').waitFor({state: 'visible'});
 }
 
-export const signInUser = async (page: Page, data: {email:string, password: string}): Promise<any> => {
+export const signInUser = async (page: Page, data: {email:string, password: string}, withWelcome: boolean = true): Promise<any> => {
     const { email, password } = data;
     await page.locator('button[data-tn="sign-in"]').waitFor({state: 'visible'});
     await page.locator('input[name="email"]').click();
@@ -49,10 +49,17 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
     const response = await page.waitForResponse(response =>
         response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
     );
+    if (withWelcome) {
+        await welcomeUser(page, {
+            lang: DEFAULT_USER_LANG,
+            country: DEFAULT_USER_COUNTRY,
+            currencies: DEFAULT_USER_CURRENCIES
+        })
+    }
     return response.json();
 }
 
-export const welcomeUSer = async (page: Page, data: {lang: string, country: string, currencies: string[]}) => {
+export const welcomeUser = async (page: Page, data: {lang: string, country: string, currencies: string[]}) => {
     const {
         lang,
         country,
@@ -92,13 +99,4 @@ export const welcomeUSer = async (page: Page, data: {lang: string, country: stri
     await nextBtn.click();
     await patchUserDataRequest;
     await getUserDataResponse;
-}
-
-export const fullSignUpUser = async (page: Page, data: {email:string, password: string, name: string}) => {
-    await signInUser(page, data);
-    await welcomeUSer(page, {
-        lang: DEFAULT_USER_LANG,
-        country: DEFAULT_USER_COUNTRY,
-        currencies: DEFAULT_USER_CURRENCIES
-    })
 }

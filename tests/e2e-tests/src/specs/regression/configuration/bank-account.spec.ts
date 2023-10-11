@@ -1,6 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
 import firebaseService from '../../../services/firebase.service';
-import { fullSignUpUser, signInUser } from "../../../helpers/auth.helper";
+import { signUpUser, signInUser } from "../../../helpers/auth.helper";
 import { v4 as uuidv4 } from 'uuid';
 import { goToProfileTab, goToUserProfile } from "../../../helpers/profile.helper";
 import { API_BASE_URL } from '../../../config';
@@ -38,7 +38,7 @@ test.beforeAll(async ({ browser }) => {
     await page.goto('/');
     await page.waitForLoadState('load');
     console.log(`Creating account for user with email: "${email}"`)
-    await fullSignUpUser(page, { email, password, name });
+    await signUpUser(page, { email, password, name });
     await signInUser(page, { email, password });
 });
 
@@ -105,7 +105,7 @@ test('create bank account', async () => {
         accountName: 'Caja de Ahorros',
         accountNumber: '12345678',
         accountBalance: 123.56,
-        currency: userSelectedCurrencies[0]
+        currency: 'USD'
     })
     await expect(page.locator(`div[data-tn="bank-account-${bankAccount.id}"]`)).toBeVisible();
     await expect(page.locator(

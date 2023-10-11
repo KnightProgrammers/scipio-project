@@ -32,7 +32,7 @@ test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await page.goto('/');
     await page.waitForLoadState('load');
-    await signInUser(page, {email, password});
+    await signInUser(page, {email, password}, false);
 });
 
 test.afterAll(async () => {
