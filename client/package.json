@@ -17,7 +17,7 @@
     "@fullcalendar/interaction": "6.1.9",
     "@fullcalendar/react": "6.1.9",
     "@fullcalendar/timegrid": "6.1.9",
-    "@reduxjs/toolkit": "1.9.6",
+    "@reduxjs/toolkit": "1.9.7",
     "@tanstack/match-sorter-utils": "8.8.4",
     "@tanstack/react-table": "8.10.6",
     "@visx/pattern": "3.3.0",
