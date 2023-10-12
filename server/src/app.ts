@@ -8,7 +8,6 @@ import mercuriusAuth from 'mercurius-auth';
 import { config } from './config';
 import schema from './graphql/schema';
 import resolvers from './graphql/resolvers';
-import * as console from 'console';
 import { authenticateUser } from '@/middlewares/auth.middleware';
 
 const options: any = {
@@ -79,7 +78,6 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 			return (await authenticateUser(context.reply.request.headers['authorization'])).toObject();
 		},
 		async applyPolicy (uthDirectiveAST: any, parent: any, args: any, context: any) {
-			console.log(context.auth);
 			if (!context.auth._id) {
 				throw new Error('No authenticated');
 			}
