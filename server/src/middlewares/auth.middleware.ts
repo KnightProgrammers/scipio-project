@@ -1,5 +1,5 @@
-import firebaseApp from "@/services/firebase.service";
-import UserSchema from "@/models/user.model";
+import firebaseApp from '@/services/firebase.service';
+import UserSchema from '@/models/user.model';
 
 export default async (request: any, reply: any) => {
 	const { authorization } = request.headers;
@@ -24,8 +24,8 @@ export const authenticateUser = async (authorization: string) => {
 				.verifyIdToken(authToken);
 
 			let user = await UserSchema.findOne({
-					firebaseId: decodedIdToken.uid,
-				});
+				firebaseId: decodedIdToken.uid,
+			});
 			if (!user) {
 				user = await UserSchema.create({
 					name: decodedIdToken.name,
@@ -46,4 +46,4 @@ export const authenticateUser = async (authorization: string) => {
 	error.status = 403;
 	error.code = 'accessDenied';
 	throw error;
-}
+};
