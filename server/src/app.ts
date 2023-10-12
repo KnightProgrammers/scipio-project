@@ -3,9 +3,14 @@ import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
 import mongoose from 'mongoose';
+import mercurius from 'mercurius';
+import mercuriusAuth from 'mercurius-auth';
 import { config } from './config';
+import schema from './graphql/schema';
+import resolvers from './graphql/resolvers';
+import * as console from "console";
+import { authenticateUser } from "@/middlewares/auth.middleware";
 
-// Pass --options via CLI arguments in command to enable these options.
 const options: any = {
 	logger: {
 		transport: {
@@ -58,10 +63,30 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 		callback(null, corsOptions);
 	});
 
-	void fastify.register(AutoLoad, {
+	fastify.register(mercurius, {
+		schema,
+		resolvers,
+		graphiql: true
+	});
+
+	fastify.register(AutoLoad, {
 		dir: join(__dirname, 'routes'),
 		options: opts,
 	});
+
+	fastify.register(mercuriusAuth, {
+		async authContext (context: any) {
+			return (await authenticateUser(context.reply.request.headers['authorization'])).toObject();
+		},
+		async applyPolicy (uthDirectiveAST: any, parent: any, args: any, context: any) {
+			console.log(context.auth)
+			if (!context.auth._id) {
+				throw new Error('No authenticated')
+			}
+			return true;
+		},
+		authDirective: 'auth'
+	})
 };
 
 export default app;

@@ -5,7 +5,7 @@ import { BankType } from '@/@types/bank.type';
 class BankAccountService {
 	static async getAll(
 		bank: BankType,
-		user: UserType,
+		user: UserType | {id: string},
 		accountIsDeleted: boolean = false,
 	): Promise<any> {
 		return BankAccountSchema.find({

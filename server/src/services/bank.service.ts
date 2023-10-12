@@ -13,7 +13,7 @@ class BankService {
 	static async update(
 		id: string,
 		user: UserType,
-		data: { name: string; icon: string },
+		data: { name: string; icon?: string },
 	) {
 		const { name, icon } = data;
 
