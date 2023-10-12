@@ -1,6 +1,5 @@
-import { Static, Type } from '@sinclair/typebox';
+import { Type } from '@sinclair/typebox';
 import firebaseApp from '@/services/firebase.service';
-import CountryModel from '@/models/country.model';
 import UserSchema from '@/models/user.model';
 import { User } from '@/@types/user.type';
 
@@ -8,11 +7,7 @@ export const UserRegistration = Type.Object({
 	name: Type.Required(Type.String()),
 	email: Type.Required(Type.String({ format: 'email' })),
 	password: Type.Required(Type.String()),
-	country: Type.Required(Type.String()),
-	lang: Type.Required(Type.String()),
 });
-
-export type UserRegistrationType = Static<typeof UserRegistration>
 
 const auth: any = async (fastify: any): Promise<void> => {
 	fastify.post(
@@ -30,10 +25,7 @@ const auth: any = async (fastify: any): Promise<void> => {
 				email,
 				name,
 				password,
-				country: countryName,
-				lang,
 			} = request.body;
-			const country = await CountryModel.findOne({ name: countryName });
 			const firebaseUser = await firebaseApp.auth().createUser({
 				email,
 				displayName: name,
@@ -43,17 +35,15 @@ const auth: any = async (fastify: any): Promise<void> => {
 				name,
 				email,
 				firebaseId: firebaseUser.uid,
-				avatar: firebaseUser.photoURL || null,
-				country,
-				lang,
+				avatar: firebaseUser.photoURL || null
 			});
 			reply.status(201).send({
 				id: user.id,
 				name: user.name || '',
 				email: user.email || '',
 				avatar: user.avatar || null,
-				lang: user.lang,
-				country: user.country ? user.country.name : null,
+				lang: null,
+				country: null,
 			});
 		},
 	);

@@ -2,8 +2,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Page } from "@playwright/test";
-import { API_BASE_URL, getDefaultUserData } from "../config";
+import { expect, Page } from "@playwright/test";
+import { API_BASE_URL } from "../config";
+
+export const DEFAULT_USER_LANG: string = 'Español (Latinoamérica)';
+export const DEFAULT_USER_COUNTRY: string = 'Uruguay';
+export const DEFAULT_USER_CURRENCIES: string[] = ['USD', 'UYU'];
 
 export const signUpUser = async (page: Page, data: {email:string, password: string, name: string}) => {
     const {email, password, name} = data;
@@ -17,8 +21,6 @@ export const signUpUser = async (page: Page, data: {email:string, password: stri
     await page.locator('input[name="password"]').fill(password);
     await page.locator('input[name="confirmPassword"]').click();
     await page.locator('input[name="confirmPassword"]').fill(password);
-    await page.locator('.select__input-container').click();
-    await page.locator('#react-select-2-option-0').click();
     const signUpRequest = page.waitForRequest(request =>
         request.url() === `${API_BASE_URL}/auth/sign-up` && request.method() === 'POST',
     );
@@ -30,7 +32,7 @@ export const signUpUser = async (page: Page, data: {email:string, password: stri
     await page.locator('button[data-tn="sign-in"]').waitFor({state: 'visible'});
 }
 
-export const signInUser = async (page: Page, data: {email:string, password: string}): Promise<any> => {
+export const signInUser = async (page: Page, data: {email:string, password: string}, withWelcome: boolean = true): Promise<any> => {
     const { email, password } = data;
     await page.locator('button[data-tn="sign-in"]').waitFor({state: 'visible'});
     await page.locator('input[name="email"]').click();
@@ -47,5 +49,54 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
     const response = await page.waitForResponse(response =>
         response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
     );
+    if (withWelcome) {
+        await welcomeUser(page, {
+            lang: DEFAULT_USER_LANG,
+            country: DEFAULT_USER_COUNTRY,
+            currencies: DEFAULT_USER_CURRENCIES
+        })
+    }
     return response.json();
+}
+
+export const welcomeUser = async (page: Page, data: {lang: string, country: string, currencies: string[]}) => {
+    const {
+        lang,
+        country,
+        currencies
+    } = data;
+    const nextBtn = page.locator('button[data-tn="next-btn"]');
+
+    // start step
+    await nextBtn.click();
+
+    // lang step
+    const langSelect = page.locator('div#lang-select');
+    await expect(langSelect).toBeVisible();
+    await page.locator('#lang-select input.select__input').fill(lang);
+    await page.keyboard.press('Enter')
+    await nextBtn.click();
+
+    // country step
+    const countrySelect = page.locator('div#country-select');
+    await expect(countrySelect).toBeVisible();
+    await page.locator('#country-select input.select__input').fill(country);
+    await page.keyboard.press('Enter')
+    await nextBtn.click();
+
+    // currencies step
+    await expect(page.locator('div[data-tn="currency-ckb"]')).toBeVisible();
+    for (const currency of currencies) {
+        const currencyCheckbox = page.locator(`input[data-tn="${currency}"]`);
+        await currencyCheckbox.setChecked(true);
+    }
+    const patchUserDataRequest = page.waitForRequest(request =>
+        request.url() === `${API_BASE_URL}/users/me` && request.method() === 'PATCH',
+    );
+    const getUserDataResponse = page.waitForResponse(response =>
+        response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
+    );
+    await nextBtn.click();
+    await patchUserDataRequest;
+    await getUserDataResponse;
 }
