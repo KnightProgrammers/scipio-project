@@ -4,10 +4,11 @@ import {
     Button,
     Card,
     FormItem,
-    Input, ModalForm,
+    Input,
+    ModalForm,
     Tag,
-    Tooltip
-} from "@/components/ui";
+    Tooltip,
+} from '@/components/ui'
 import { useTranslation } from 'react-i18next'
 import {
     HiLibrary,
@@ -18,7 +19,7 @@ import {
 import { useState } from 'react'
 import { BankDataType } from '@/@types/system'
 import * as Yup from 'yup'
-import { Field, FormikErrors, FormikTouched } from "formik";
+import { Field, FormikErrors, FormikTouched } from 'formik'
 import { ConfirmDialog, Loading } from '@/components/shared'
 import {
     apiCreateBank,
@@ -30,7 +31,7 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const { Tr, Td, TBody } = Table
 
@@ -90,31 +91,25 @@ const Banks = () => {
     const createBankMutation = useMutation({
         mutationFn: apiCreateBank,
         onSuccess: async () => {
-            await onMutationSuccess(
-                t('notifications.bank.created') || '',
-            )
+            await onMutationSuccess(t('notifications.bank.created') || '')
         },
-        onSettled: onBankFormClose
+        onSettled: onBankFormClose,
     })
 
     const updateBankMutation = useMutation({
         mutationFn: apiUpdateBank,
         onSuccess: async () => {
-            await onMutationSuccess(
-                t('notifications.bank.updated') || '',
-            )
+            await onMutationSuccess(t('notifications.bank.updated') || '')
         },
-        onSettled: onBankFormClose
+        onSettled: onBankFormClose,
     })
 
     const deleteBankMutation = useMutation({
         mutationFn: apiDeleteBank,
         onSuccess: async () => {
-            await onMutationSuccess(
-                t('notifications.bank.deleted') || '',
-            )
+            await onMutationSuccess(t('notifications.bank.deleted') || '')
         },
-        onSettled: onBankDeleteConfirmClose
+        onSettled: onBankDeleteConfirmClose,
     })
 
     const onDeleteConfirm = async () => {
@@ -249,14 +244,16 @@ const Banks = () => {
             </Button>
             <ModalForm
                 isOpen={isFormOpen}
-                entity={selectedBank || {
-                    name: '',
-                }}
-                title={`${selectedBank?.name} - ${
+                entity={
+                    selectedBank || {
+                        name: '',
+                    }
+                }
+                title={
                     selectedBank
                         ? t('pages.settings.sections.banks.form.editTitle')
                         : t('pages.settings.sections.banks.form.newTitle')
-                }`}
+                }
                 validationSchema={validationSchema}
                 fields={(
                     errors: FormikErrors<any>,
