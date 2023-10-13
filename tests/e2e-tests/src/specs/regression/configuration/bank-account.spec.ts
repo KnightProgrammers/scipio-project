@@ -76,12 +76,13 @@ test('bank account list with banks', async () => {
     await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
     const bankAccountsRequest = await waitForBankAccounts;
     const bankAccountsResponse = await bankAccountsRequest.response();
-    const bankAccounts = await bankAccountsResponse.json();
-    expect(bankAccounts).toHaveLength(1);
-    expect(bankAccounts[0]).toEqual({
-        accounts: [],
+    const { data: { me: { banks } } } = await bankAccountsResponse.json();
+    expect(banks).toHaveLength(1);
+    expect(banks[0]).toEqual({
+        bankAccounts: [],
         id: bankId,
-        name: bankName
+        name: bankName,
+        icon: null
     });
     const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]')
     await expect(emptyStateContainer).not.toBeVisible();
@@ -129,7 +130,7 @@ test('validate editable fields', async () => {
     await expect(currencyInput).toHaveAttribute('disabled', '');
 })
 test('edit bank account', async () => {
-    await editBankAccount(page, bankAccount.id, {
+    await editBankAccount(page, bankId, bankAccount.id, {
         accountName: 'Cuenta Corriente',
         accountNumber: '87654321',
         accountBalance: 876.3
