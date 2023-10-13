@@ -1,78 +1,88 @@
-import { gql } from 'mercurius-codegen';
+import { gql } from "mercurius-codegen";
 
 const schema = gql`
-directive @auth on OBJECT | FIELD_DEFINITION
+  directive @auth on OBJECT | FIELD_DEFINITION
+  
+  enum Lang {
+    es
+    en
+  }
 
-type Country {
+  type Country {
     id: String!
     name: String!
-}
+  }
 
-type Currency {
+  type Currency {
     id: String!
     code: String!
-}
+  }
 
-type Bank {
+  type Bank {
     id: String!
     name: String!
     bankAccounts: [BankAccount]!
-}
+  }
 
-type BankAccount {
+  type BankAccount {
     id: String!
     balance: Float!
     bank: Bank!
     accountNumber: String!
     label: String
     currency: Currency!
-}
+  }
 
-type User {
+  type User {
     id: String!
     name: String!
     email: String!
     avatar: String!
-    lang: String
+    lang: Lang
     country: Country
     currencies: [Currency]!
     banks: [Bank]!
-}
+  }
 
-type Query {
+  type Query {
     me: User
     currencies: [Currency!]!
-}
+  }
 
-type Mutation {
-  createBank(input: NewBankInput!): Bank!
-  updateBank(id: String!, input: EditBankInput!): Bank!
-  deleteBank(id: String!): Boolean!
-  createBankAccount(input: NewBankAccountInput!): BankAccount!
-  updateBankAccount(id: String!, input: EditBankAccountInput!): BankAccount!
-  deleteBankAccount(id: String!): Boolean!
-}
+  type Mutation {
+  
+    updateProfile(name: String!, lang: Lang!, countryName: String!): User
+    setUserCurrencies(currencyIds: [String!]!): [Currency!]!
+    
+    createBank(input: NewBankInput!): Bank!
+    updateBank(id: String!, input: EditBankInput!): Bank!
+    deleteBank(id: String!): Boolean!
+    
+    createBankAccount(input: NewBankAccountInput!): BankAccount!
+    updateBankAccount(id: String!, input: EditBankAccountInput!): BankAccount!
+    deleteBankAccount(id: String!): Boolean!
+  }
 
-input NewBankInput {
+  input NewBankInput {
     name: String!
-}
+  }
 
-input EditBankInput {
+  input EditBankInput {
     name: String!
-}
+  }
 
-input NewBankAccountInput {
+  input NewBankAccountInput {
     label: String
     accountNumber: String!
     balance: Float!
     bankId: String!
     currencyId: String!
-}
+  }
 
-input EditBankAccountInput {
+  input EditBankAccountInput {
     label: String
     accountNumber: String!
     balance: Float!
-}
+  }
 `;
 export default schema;
