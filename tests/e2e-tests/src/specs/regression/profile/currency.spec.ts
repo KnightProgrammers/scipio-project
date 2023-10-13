@@ -45,10 +45,11 @@ test('Default list of currencies', async () => {
     const waitForCurrenciesRequest = waitForRequest(page, 'currencies')
     await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
     const userCurrenciesRequest = await waitForUserCurrenciesRequest;
+    const currenciesRequest = await waitForCurrenciesRequest;
+
     const userCurrenciesResponse = await userCurrenciesRequest.response();
     const {data: {me: { currencies: userCurrencies }}} = await userCurrenciesResponse.json()
 
-    const currenciesRequest = await waitForCurrenciesRequest;
     const currenciesResponse = await currenciesRequest.response();
     const {data: { currencies }} = await currenciesResponse.json();
 
