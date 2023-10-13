@@ -1,4 +1,4 @@
-import { gql } from "mercurius-codegen";
+import { gql } from 'mercurius-codegen';
 
 const schema = gql`
   directive @auth on OBJECT | FIELD_DEFINITION

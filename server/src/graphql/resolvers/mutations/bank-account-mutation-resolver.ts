@@ -1,7 +1,7 @@
 import BankAccountService from '@/services/bank-account.service';
-import BankService from "@/services/bank.service";
-import { errorCodes } from "fastify";
-import CurrencyService from "@/services/currency.service";
+import BankService from '@/services/bank.service';
+import { errorCodes } from 'fastify';
+import CurrencyService from '@/services/currency.service';
 
 type BankAccountInput = {
 	label: string
