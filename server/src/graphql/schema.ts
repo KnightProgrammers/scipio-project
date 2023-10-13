@@ -22,6 +22,7 @@ const schema = gql`
   type Bank {
     id: String!
     name: String!
+    icon: String
     bankAccounts: [BankAccount]!
   }
 
