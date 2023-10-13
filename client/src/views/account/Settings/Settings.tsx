@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { apiGetUserProfile } from '@/services/AccountServices'
 import { Loading } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from "@tanstack/react-query";
 
 type AccountSetting = {
     id: string
@@ -41,7 +42,6 @@ const settingsMenu: Record<
 
 const Settings = () => {
     const [currentTab, setCurrentTab] = useState('profile')
-    const [data, setData] = useState<AccountSetting>()
 
     const navigate = useNavigate()
 
@@ -58,17 +58,16 @@ const Settings = () => {
         navigate(`/account/settings/${val}`)
     }
 
-    const fetchData = useCallback(async () => {
-        const response = await apiGetUserProfile()
-        setData(response.data)
-    }, [setData])
+    // Queries
+    const { data, isFetching: isFetchingProfile} = useQuery({
+        queryKey: ['user-profile'],
+        queryFn: apiGetUserProfile,
+        suspense: true
+    })
 
     useEffect(() => {
         setCurrentTab(path)
-        if (!data) {
-            fetchData().catch(console.error)
-        }
-    }, [setCurrentTab, data, fetchData, path])
+    }, [setCurrentTab, path])
 
     return (
         <Container data-tn="account-settings-page">

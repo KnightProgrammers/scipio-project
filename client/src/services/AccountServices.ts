@@ -2,10 +2,16 @@ import BaseService from '@/services/BaseService'
 import { CurrencyDataType, UserDataType } from '@/@types/system'
 
 export async function apiGetUserProfile(): Promise<UserDataType> {
-    return BaseService.request({
-        url: '/users/me',
-        method: 'get',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            "operationName": "currentUserInfo",
+            "query": `query currentUserInfo { me { id name email avatar lang country { id code name } } }`,
+            "variables": {}
+        }
     })
+    return response.data.data.me;
 }
 
 export async function apiUpdateUserProfile(
