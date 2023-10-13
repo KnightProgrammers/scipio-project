@@ -28,9 +28,7 @@ export const createBankAccount = async (
     expect(banks.length).toBeGreaterThanOrEqual(1);
     const foundBank = banks.find(b => b.id === bankId);
     expect(foundBank).toBeTruthy();
-    console.log(foundBank.bankAccounts)
     const foundNewBankAccount = foundBank.bankAccounts.find(ba => ba.id === newBankAccount.id);
-    console.log({foundNewBankAccount})
     expect(foundNewBankAccount).toBeTruthy();
     await expect(formLocator).not.toBeVisible();
     return foundNewBankAccount;
