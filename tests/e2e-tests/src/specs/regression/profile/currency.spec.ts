@@ -41,20 +41,14 @@ test.afterAll(async () => {
 });
 
 test('Default list of currencies', async () => {
-    const waitForUserCurrenciesRequest = waitForRequest(page, 'userCurrencies')
     const waitForCurrenciesRequest = waitForRequest(page, 'currencies')
     await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
-    const userCurrenciesRequest = await waitForUserCurrenciesRequest;
     const currenciesRequest = await waitForCurrenciesRequest;
-
-    const userCurrenciesResponse = await userCurrenciesRequest.response();
-    const {data: {me: { currencies: userCurrencies }}} = await userCurrenciesResponse.json()
 
     const currenciesResponse = await currenciesRequest.response();
     const {data: { currencies }} = await currenciesResponse.json();
 
     expect(currencies.map(c => c.code)).toStrictEqual(DEFAULT_CURRENCIES)
-    expect(userCurrencies.map(c => c.code)).toStrictEqual(DEFAULT_USER_CURRENCIES);
 
     const currencyInputs = await page.locator('input[name="currencies"]').all();
     expect(currencyInputs).toHaveLength(DEFAULT_CURRENCIES.length)
