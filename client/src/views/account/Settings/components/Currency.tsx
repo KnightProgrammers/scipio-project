@@ -8,25 +8,40 @@ import {
 } from '@/components/ui'
 import { Divider } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect, useState } from 'react'
-import { CurrencyDataType } from '@/@types/system'
+import { useCallback, useEffect, useState } from "react";
 import {
     apiGetUserCurrencies,
-    apiSetUserCurrencies,
-} from '@/services/AccountServices'
+    apiSetUserCurrencies
+} from "@/services/AccountServices";
 import { apiGetCurrencies } from '@/services/CurrencyServices'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
+import { useQuery } from "@tanstack/react-query";
 
 const Currency = () => {
     const { t } = useTranslation()
-    const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(false)
-    const [isLoadingUserCurrencies, setIsLoadingUserCurrencies] =
-        useState(false)
+
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [currencies, setCurrencies] = useState<CurrencyDataType[]>()
-    const [userCurrencies, setUserCurrencies] = useState<CurrencyDataType[]>()
+
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
+
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } = useQuery({
+        queryKey: ['user-currencies'],
+        queryFn: apiGetUserCurrencies,
+        suspense: true,
+    })
+
+    const { data: currencies, isFetching: isFetchingCurrencies } = useQuery({
+        queryKey: ['currencies'],
+        queryFn: apiGetCurrencies,
+        suspense: true,
+    })
+
+    useEffect(() => {
+        if (!!userCurrencies) {
+            setSelectedCurrencies(userCurrencies.map(({id}) => id));
+        }
+    }, [userCurrencies]);
 
     const errorHandler = useCallback(
         (e: unknown) => {
@@ -41,35 +56,7 @@ const Currency = () => {
         [t],
     )
 
-    const isLoading = !userCurrencies && !currencies
-
-    useEffect(() => {
-        setIsLoadingUserCurrencies(true)
-        if (!userCurrencies && !isLoadingUserCurrencies) {
-            apiGetUserCurrencies()
-                .then((data) => {
-                    setUserCurrencies(data)
-                    setSelectedCurrencies(data.map(({ id }) => id))
-                    setIsLoadingUserCurrencies(false)
-                })
-                .catch(errorHandler)
-        }
-        setIsLoadingCurrencies(true)
-        if (!currencies && !isLoadingCurrencies) {
-            apiGetCurrencies()
-                .then((data) => {
-                    setCurrencies(data)
-                    setIsLoadingCurrencies(false)
-                })
-                .catch(errorHandler)
-        }
-    }, [
-        errorHandler,
-        isLoadingUserCurrencies,
-        isLoadingCurrencies,
-        currencies,
-        userCurrencies,
-    ])
+    const isLoading = isFetchingUserCurrencies || isFetchingCurrencies;
 
     return (
         <div data-tn="account-currencies-page">

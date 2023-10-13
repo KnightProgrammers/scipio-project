@@ -183,8 +183,8 @@
         },
         "bankAccount": {
             "created": "Cuenta creada correctamente",
-            "edited": "Cuenta actualizada correctamente",
-            "deleted": "Cuenta \"{{accountNumber}}\" eliminada correctamente"
+            "updated": "Cuenta actualizada correctamente",
+            "deleted": "Cuenta eliminada correctamente"
         },
         "textCopied": "Copiado!"
     },

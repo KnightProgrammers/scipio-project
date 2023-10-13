@@ -15,6 +15,8 @@ import { Button } from '@/components/ui'
 import { Container } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
 import useDarkMode from '@/utils/hooks/useDarkMode'
+import toast from "@/components/ui/toast";
+import Notification from "@/components/ui/Notification";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -22,6 +24,9 @@ const queryClient = new QueryClient({
         queries: {
             suspense: true,
         },
+        mutations: {
+            useErrorBoundary: false,
+        }
     },
 })
 
@@ -29,6 +34,21 @@ const Wrapper = () => {
     const { t } = useTranslation()
     const [darkModeOn] = useDarkMode()
     const { reset } = useQueryErrorResetBoundary()
+
+    queryClient.setDefaultOptions({
+        mutations: {
+            onError: (e: unknown) => {
+                toast.push(
+                    <Notification title={t('error.generic') || ''} type="danger" />,
+                    {
+                        placement: 'top-center',
+                    },
+                )
+                console.error(e)
+            }
+        }
+    })
+
     return (
         <ErrorBoundary
             fallbackRender={({ resetErrorBoundary }) => (

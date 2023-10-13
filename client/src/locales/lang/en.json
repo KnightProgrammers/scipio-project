@@ -183,8 +183,8 @@
         },
         "bankAccount": {
             "created": "Bank account successfully created",
-            "edited": "Bank account successfully updated",
-            "deleted": "Bank account {{accountNumber}} successfully deleted"
+            "updated": "Bank account successfully updated",
+            "deleted": "Bank account successfully deleted"
         },
         "textCopied": "Copied!"
     },

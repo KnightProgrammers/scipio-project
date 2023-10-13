@@ -32,6 +32,8 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
+import { useQuery } from "@tanstack/react-query";
+import { apiGetUserProfile } from "@/services/AccountServices";
 
 const { Tr, Td, TBody } = Table
 
@@ -163,10 +165,6 @@ const Banks = () => {
     const [selectedBank, setSelectedBank] = useState<BankDataType | undefined>(
         undefined,
     )
-    const [isLoadingBanks, setIsLoadingBanks] = useState<boolean>(false)
-    const [bankList, setBankList] = useState<BankDataType[] | undefined>(
-        undefined,
-    )
 
     const { t } = useTranslation()
     const { textTheme } = useThemeClass()
@@ -208,9 +206,14 @@ const Banks = () => {
         setIsDeleteOpen(true)
     }
 
+    const { data: bankList, isFetching: isLoadingBanks } = useQuery({
+        queryKey: ['user-banks'],
+        queryFn: apiGetBankList,
+        suspense: true,
+    })
+
     const onDeleteConfirm = async () => {
         if (selectedBank) {
-            setIsLoadingBanks(true)
             try {
                 await apiDeleteBank(selectedBank.id)
                 toast.push(
@@ -226,32 +229,12 @@ const Banks = () => {
                         placement: 'top-center',
                     },
                 )
-                loadBanks()
             } catch (e) {
                 errorHandler(e)
-                setIsLoadingBanks(false)
             }
             onBankDeleteConfirmClose()
         }
     }
-
-    const loadBanks = () => {
-        setIsLoadingBanks(true)
-        apiGetBankList()
-            .then((data) => {
-                setIsLoadingBanks(false)
-                setBankList(data)
-            })
-            .catch(() => {
-                setIsLoadingBanks(false)
-            })
-    }
-
-    useEffect(() => {
-        if (bankList === undefined) {
-            loadBanks()
-        }
-    }, [bankList])
 
     if (isLoadingBanks) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
@@ -367,7 +350,6 @@ const Banks = () => {
                 onClose={onBankFormClose}
                 onSave={() => {
                     onBankFormClose()
-                    loadBanks()
                 }}
             />
             <ConfirmDialog
