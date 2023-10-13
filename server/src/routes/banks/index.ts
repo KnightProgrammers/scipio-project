@@ -4,48 +4,10 @@ import BankService from '@/services/bank.service';
 import { Bank } from '@/@types/bank.type';
 import { errorCodes } from 'fastify';
 import BankAccountService from '@/services/bank-account.service';
-import { Type } from '@sinclair/typebox';
 
 const banks: any = async (fastify: any): Promise<void> => {
 	fastify.decorateRequest('user', null);
 	fastify.addHook('onRequest', AuthMiddleware);
-
-	fastify.get(
-		'/',
-		{
-			schema: {
-				response: {
-					200: {
-						type: 'array',
-						items: Type.Object({
-							id: Type.Optional(Type.String()),
-							name: Type.Required(Type.String()),
-							icon: Type.Optional(Type.String()),
-							accountsCount: Type.Required(Type.Number()),
-						}),
-					},
-				},
-			},
-		},
-		async function (request: any, reply: any) {
-			const user: UserType = request.user;
-			const banks = await BankService.getAll(user);
-
-			const response = await Promise.all(
-				banks.map(async (b) => {
-					const accounts = await BankAccountService.getAll(b, user);
-					const accountsCount: number = accounts.length;
-					return {
-						id: b.id,
-						name: b.name,
-						icon: b.icon,
-						accountsCount,
-					};
-				}),
-			);
-			reply.status(200).send(response);
-		},
-	);
 
 	fastify.post(
 		'/',

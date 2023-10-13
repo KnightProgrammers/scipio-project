@@ -1,8 +1,5 @@
 import { errorCodes } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
-import * as gavatar from 'gravatar';
-import firebaseApp from '@/services/firebase.service';
-import UserSchema from '@/models/user.model';
 import AuthMiddleware from '@/middlewares/auth.middleware';
 import CountryModel from '@/models/country.model';
 import CurrencyModel from '@/models/currency.model';
@@ -34,53 +31,6 @@ const users: any = async (fastify: any): Promise<void> => {
 	fastify.decorateRequest('user', null);
 	fastify.addHook('onRequest', AuthMiddleware);
 
-	fastify.get(
-		'/me',
-		{
-			schema: {
-				response: {
-					200: User,
-				},
-			},
-		},
-		async function (request: any, reply: any) {
-			let user = request.user;
-			if (!user) {
-				const authToken: string = (
-					request.headers.authorization || ''
-				).split('Bearer ')[1];
-				const decodedIdToken = await firebaseApp
-					.auth()
-					.verifyIdToken(authToken);
-				user = await UserSchema.create({
-					name: decodedIdToken.name,
-					email: decodedIdToken.email,
-					firebaseId: decodedIdToken.uid,
-					avatar: decodedIdToken.picture,
-				});
-			}
-			if (!user.avatar) {
-				user.avatar = gavatar.url(user.email, {
-					protocol: 'https',
-					s: '100',
-				});
-				await user.save();
-			}
-			reply.status(200).send({
-				id: user.id,
-				name: user.name,
-				email: user.email,
-				avatar: user.avatar || null,
-				lang: user.lang || null,
-				country: user.country
-					? {
-						name: user.country.name,
-						code: user.country.code,
-					}
-					: null,
-			});
-		},
-	);
 	fastify.post(
 		'/me',
 		{
@@ -163,39 +113,6 @@ const users: any = async (fastify: any): Promise<void> => {
 					code: country.code,
 				},
 			});
-		},
-	);
-
-	fastify.get(
-		'/me/currencies',
-		{
-			schema: {
-				response: {
-					200: {
-						type: 'array',
-						items: Currency,
-					},
-				},
-			},
-		},
-		async function (request: any, reply: any) {
-			reply.status(200).send(
-				request.user.currencies
-					.sort((a: CurrencyType, b: CurrencyType) => {
-						if (a.code < b.code) {
-							return -1;
-						}
-						if (a.code > b.code) {
-							return 1;
-						}
-						return 0;
-					})
-					.map((c: any) => ({
-						id: c.id,
-						name: c.name,
-						code: c.code,
-					})),
-			);
 		},
 	);
 
