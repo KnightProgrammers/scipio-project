@@ -304,7 +304,7 @@ const Banks = () => {
                                             )}
                                             placement="left"
                                         >
-                                            <Tag>{bank.accountsCount}</Tag>
+                                            <Tag>{bank.bankAccounts.length}</Tag>
                                         </Tooltip>
                                         <Tooltip title={t('actions.edit')}>
                                             <Button
@@ -318,8 +318,8 @@ const Banks = () => {
                                         </Tooltip>
                                         <Tooltip
                                             title={
-                                                !!bank.accountsCount &&
-                                                bank.accountsCount > 0
+                                                !!bank.bankAccounts.length &&
+                                                bank.bankAccounts.length > 0
                                                     ? t(
                                                           'pages.settings.sections.banks.tooltips.warnHasAccounts',
                                                       )
@@ -334,8 +334,8 @@ const Banks = () => {
                                                 color="red"
                                                 data-tn={`delete-bank-btn-${bank.id}`}
                                                 disabled={
-                                                    !!bank.accountsCount &&
-                                                    bank.accountsCount > 0
+                                                    !!bank.bankAccounts.length &&
+                                                    bank.bankAccounts.length > 0
                                                 }
                                                 icon={<HiOutlineTrash />}
                                                 onClick={() => onDelete(bank)}

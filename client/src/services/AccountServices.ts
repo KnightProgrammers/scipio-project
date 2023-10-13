@@ -41,11 +41,16 @@ export async function apiPathUserProfile(
 }
 
 export async function apiGetUserCurrencies(): Promise<CurrencyDataType[]> {
-    const { data } = await BaseService.request({
-        url: '/users/me/currencies',
-        method: 'get',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            "operationName": "userCurrencies",
+            "query": `query userCurrencies { me { id currencies { id code } } }`,
+            "variables": {}
+        }
     })
-    return data
+    return response.data.data.me.currencies;
 }
 
 export async function apiSetUserCurrencies(

@@ -2,9 +2,14 @@ import { CurrencyDataType } from '@/@types/system'
 import BaseService from '@/services/BaseService'
 
 export async function apiGetCurrencies(): Promise<CurrencyDataType[]> {
-    const { data } = await BaseService.request({
-        url: '/currencies',
-        method: 'get',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            "operationName": "currencies",
+            "query": `query currencies { currencies { id code } }`,
+            "variables": {}
+        }
     })
-    return data
+    return response.data.data.currencies;
 }

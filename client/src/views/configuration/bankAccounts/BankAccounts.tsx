@@ -270,7 +270,7 @@ const BankAccounts = () => {
                             </Button>
                         }
                     >
-                        {bank.accounts.length === 0 ? (
+                        {bank.bankAccounts.length === 0 ? (
                             <EmptyState
                                 description={t(
                                     'pages.bankAccounts.emptyState.noAccounts.description',
@@ -279,7 +279,7 @@ const BankAccounts = () => {
                             />
                         ) : (
                             <>
-                                {bank.accounts.map((a: BankAccountDataType) => (
+                                {bank.bankAccounts.map((a: BankAccountDataType) => (
                                     <Card
                                         key={a.id}
                                         bordered
