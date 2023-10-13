@@ -14,6 +14,7 @@ import {
     editBankAccount,
     openEditBankAccountForm
 } from "../../../helpers/bank-account.helper";
+import { waitForRequest } from "../../../helpers/generic.helper";
 
 
 let email: string;
@@ -23,7 +24,6 @@ let name: string;
 let bankName: string;
 let bankId: string;
 let bankAccount: any;
-let userSelectedCurrencies: string[];
 
 test.describe.configure({ mode: 'serial' });
 
@@ -55,12 +55,12 @@ test.afterAll(async () => {
 });
 
 test('bank account list without banks', async () => {
-    const waitForBankAccounts = page.waitForResponse((response) =>
-        response.url() === `${API_BASE_URL}/bank-accounts` && response.status() === 200,
-    )
+    const waitForBankAccounts = waitForRequest(page, 'userBankAccounts')
     await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
-    const bankAccountsResponse = await waitForBankAccounts;
-    expect(await bankAccountsResponse.json()).toEqual([]);
+    const bankAccountsRequest = await waitForBankAccounts;
+    const bankAccountsResponse = await bankAccountsRequest.response();
+    const {data} = await bankAccountsResponse.json();
+    expect(data.me.banks).toEqual([]);
 
     const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]')
     await expect(emptyStateContainer).toBeVisible();
@@ -72,11 +72,10 @@ test('bank account list with banks', async () => {
         name: bankName
     })
     bankId = bank.id;
-    const waitForBankAccounts = page.waitForResponse((response) =>
-        response.url() === `${API_BASE_URL}/bank-accounts` && response.status() === 200,
-    )
+    const waitForBankAccounts = waitForRequest(page, 'userBankAccounts');
     await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
-    const bankAccountsResponse = await waitForBankAccounts;
+    const bankAccountsRequest = await waitForBankAccounts;
+    const bankAccountsResponse = await bankAccountsRequest.response();
     const bankAccounts = await bankAccountsResponse.json();
     expect(bankAccounts).toHaveLength(1);
     expect(bankAccounts[0]).toEqual({
@@ -122,9 +121,7 @@ test('cannot delete a bank with at least one account', async () => {
     await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
 })
 test('validate editable fields', async () => {
-    const waitForBankAccounts = page.waitForResponse((response) =>
-        response.url() === `${API_BASE_URL}/bank-accounts` && response.status() === 200,
-    )
+    const waitForBankAccounts = waitForRequest(page, 'userBankAccounts');
     await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
     await waitForBankAccounts;
     await openEditBankAccountForm(page, bankAccount.id);

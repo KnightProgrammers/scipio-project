@@ -4,6 +4,7 @@ dotenv.config();
 
 import { expect, Page } from "@playwright/test";
 import { API_BASE_URL } from "../config";
+import { waitForRequest } from "./generic.helper";
 
 export const DEFAULT_USER_LANG: string = 'Español (Latinoamérica)';
 export const DEFAULT_USER_COUNTRY: string = 'Uruguay';
@@ -41,14 +42,10 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
     await page.locator('input[name="password"]').fill(password);
     await page.getByLabel('Remember Me').check();
     await page.getByRole('button', { name: 'Sign In', exact: true }).waitFor({state: 'visible', timeout: 30000});
+    const waitForUserProfileRequest = waitForRequest(page, 'currentUserInfo')
     await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-    await page.getByRole('button', { name: 'Sign In', exact: true }).waitFor({state: 'detached', timeout: 30000});
-    await page.waitForRequest(request =>
-        request.url() === `${API_BASE_URL}/users/me` && request.method() === 'GET',
-    );
-    const response = await page.waitForResponse(response =>
-        response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
-    );
+    const userProfileRequest = await waitForUserProfileRequest;
+    const userProfileResponse = await userProfileRequest.response();
     if (withWelcome) {
         await welcomeUser(page, {
             lang: DEFAULT_USER_LANG,
@@ -56,7 +53,7 @@ export const signInUser = async (page: Page, data: {email:string, password: stri
             currencies: DEFAULT_USER_CURRENCIES
         })
     }
-    return response.json();
+    return userProfileResponse.json();
 }
 
 export const welcomeUser = async (page: Page, data: {lang: string, country: string, currencies: string[]}) => {

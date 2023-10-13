@@ -48,12 +48,12 @@ test('Successful sign-up', async () => {
 });
 
 test('Successful sign-in - first time', async () => {
-    const userData = await signInUser(page, { email, password }, false);
+    const {data: {me: userData}} = await signInUser(page, { email, password }, false);
     expect(userData.id).toBeTruthy();
     expect(userData.name).toBe(name);
     expect(userData.email).toBe(email);
     expect(userData.avatar).toBeTruthy();
-    expect(userData.lang).toBe("");
+    expect(userData.lang).toBeNull();
     expect(userData.country).toBeNull();
     // Validate welcome screen being present
     await expect(page.locator('div[data-tn="welcome-wizard-page"]')).toBeVisible();
@@ -68,7 +68,7 @@ test('Successful sign-in - first time', async () => {
 test('Successful sign-in - all the data', async ({page}) => {
     await page.goto('/');
     await page.waitForLoadState('load');
-    const userData = await signInUser(page, { email, password }, false);
+    const {data: {me: userData}} = await signInUser(page, { email, password }, false);
     expect(userData.id).toBeTruthy();
     expect(userData.name).toBe(name);
     expect(userData.email).toBe(email);
