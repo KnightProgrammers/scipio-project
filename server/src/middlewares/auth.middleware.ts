@@ -1,6 +1,6 @@
 import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
-import mercurius from "mercurius";
+import mercurius from 'mercurius';
 
 export default async (request: any, reply: any) => {
 	const { authorization } = request.headers;

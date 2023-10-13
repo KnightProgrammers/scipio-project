@@ -37,7 +37,7 @@ const Layout = () => {
         if (authenticated && !user.id && !isLoading) {
             setIsLoading(true)
             apiGetUserProfile()
-                .then(( data ) => {
+                .then((data) => {
                     dispatch(setUser(data))
                     setIsLoading(false)
                 })

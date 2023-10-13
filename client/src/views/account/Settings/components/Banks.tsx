@@ -304,7 +304,9 @@ const Banks = () => {
                                             )}
                                             placement="left"
                                         >
-                                            <Tag>{bank.bankAccounts.length}</Tag>
+                                            <Tag>
+                                                {bank.bankAccounts.length}
+                                            </Tag>
                                         </Tooltip>
                                         <Tooltip title={t('actions.edit')}>
                                             <Button
@@ -334,7 +336,8 @@ const Banks = () => {
                                                 color="red"
                                                 data-tn={`delete-bank-btn-${bank.id}`}
                                                 disabled={
-                                                    !!bank.bankAccounts.length &&
+                                                    !!bank.bankAccounts
+                                                        .length &&
                                                     bank.bankAccounts.length > 0
                                                 }
                                                 icon={<HiOutlineTrash />}

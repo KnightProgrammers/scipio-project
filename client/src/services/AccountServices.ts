@@ -6,12 +6,12 @@ export async function apiGetUserProfile(): Promise<UserDataType> {
         url: '/graphql',
         method: 'POST',
         data: {
-            "operationName": "currentUserInfo",
-            "query": `query currentUserInfo { me { id name email avatar lang country { id code name } } }`,
-            "variables": {}
-        }
+            operationName: 'currentUserInfo',
+            query: `query currentUserInfo { me { id name email avatar lang country { id code name } } }`,
+            variables: {},
+        },
     })
-    return response.data.data.me;
+    return response.data.data.me
 }
 
 export async function apiUpdateUserProfile(
@@ -45,12 +45,12 @@ export async function apiGetUserCurrencies(): Promise<CurrencyDataType[]> {
         url: '/graphql',
         method: 'POST',
         data: {
-            "operationName": "userCurrencies",
-            "query": `query userCurrencies { me { id currencies { id code } } }`,
-            "variables": {}
-        }
+            operationName: 'userCurrencies',
+            query: `query userCurrencies { me { id currencies { id code } } }`,
+            variables: {},
+        },
     })
-    return response.data.data.me.currencies;
+    return response.data.data.me.currencies
 }
 
 export async function apiSetUserCurrencies(

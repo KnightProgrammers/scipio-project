@@ -6,10 +6,10 @@ export async function apiGetCurrencies(): Promise<CurrencyDataType[]> {
         url: '/graphql',
         method: 'POST',
         data: {
-            "operationName": "currencies",
-            "query": `query currencies { currencies { id code } }`,
-            "variables": {}
-        }
+            operationName: 'currencies',
+            query: `query currencies { currencies { id code } }`,
+            variables: {},
+        },
     })
-    return response.data.data.currencies;
+    return response.data.data.currencies
 }

@@ -1,18 +1,18 @@
 import ApiService from './ApiService'
 import { BankAccountDataType } from '@/@types/system'
-import BaseService from "@/services/BaseService";
+import BaseService from '@/services/BaseService'
 
 export async function apiGetBankAccountList(): Promise<unknown[]> {
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
         data: {
-            "operationName": "userBankAccounts",
-            "query": `query userBankAccounts { me { id banks { id name icon bankAccounts { id accountName: label accountNumber accountBalance: balance accountCurrency: currency { id code } } } } }`,
-            "variables": {}
-        }
+            operationName: 'userBankAccounts',
+            query: `query userBankAccounts { me { id banks { id name icon bankAccounts { id accountName: label accountNumber accountBalance: balance accountCurrency: currency { id code } } } } }`,
+            variables: {},
+        },
     })
-    return response.data.data.me.banks;
+    return response.data.data.me.banks
 }
 
 export async function apiCreateBankAccount(body: {
