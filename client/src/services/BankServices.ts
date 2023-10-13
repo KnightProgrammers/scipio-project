@@ -18,27 +18,72 @@ export async function apiGetBankList(): Promise<BankDataType[]> {
 export async function apiCreateBank(body: {
     name: string
 }): Promise<BankDataType> {
-    const { data } = await ApiService.fetchData<BankDataType>({
-        url: '/banks',
-        method: 'post',
-        data: body,
+    const {name} = body;
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'createBank',
+            query: `
+                mutation createBank(
+                    $name: String!
+                ) {
+                  createBank(input: {
+                    name: $name
+                  }) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                name
+            },
+        },
     })
-    return data
+    return response.data
 }
 
 export async function apiUpdateBank(body: BankDataType): Promise<BankDataType> {
-    const { data } = await ApiService.fetchData<BankDataType>({
-        url: `/banks/${body.id}`,
-        method: 'put',
-        data: body,
+    const {id, name} = body;
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'updateBank',
+            query: `
+                mutation updateBank(
+                    $id: String!
+                    $name: String!
+                ) {
+                  updateBank(id: $id, input: {
+                    name: $name
+                  }) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                id,
+                name
+            },
+        },
     })
-    return data
+    return response.data
 }
 
 export async function apiDeleteBank(bankId: string): Promise<BankDataType> {
-    const { data } = await ApiService.fetchData<BankDataType>({
-        url: `/banks/${bankId}`,
-        method: 'delete',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'deleteBank',
+            query: `mutation deleteBank($id: String!) {
+              deleteBank(id: $id)
+            }`,
+            variables: {
+                id: bankId,
+            },
+        },
     })
-    return data
+    return response.data
 }

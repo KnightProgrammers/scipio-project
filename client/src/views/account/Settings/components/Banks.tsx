@@ -3,13 +3,11 @@ import {
     Avatar,
     Button,
     Card,
-    Dialog,
-    FormContainer,
     FormItem,
-    Input,
+    Input, ModalForm,
     Tag,
-    Tooltip,
-} from '@/components/ui'
+    Tooltip
+} from "@/components/ui";
 import { useTranslation } from 'react-i18next'
 import {
     HiLibrary,
@@ -17,10 +15,10 @@ import {
     HiOutlineTrash,
     HiPlus,
 } from 'react-icons/hi'
-import { MouseEvent, useCallback, useState } from 'react'
+import { useState } from 'react'
 import { BankDataType } from '@/@types/system'
 import * as Yup from 'yup'
-import { Field, Form, Formik } from 'formik'
+import { Field, FormikErrors, FormikTouched } from "formik";
 import { ConfirmDialog, Loading } from '@/components/shared'
 import {
     apiCreateBank,
@@ -32,134 +30,13 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const { Tr, Td, TBody } = Table
 
-type BankFormProps = {
-    isOpen: boolean
-    bank: BankDataType | undefined
-    onClose: (e: MouseEvent<HTMLSpanElement>) => void
-    onSave: () => void
-}
-
-const BankForm = (props: BankFormProps) => {
-    const { isOpen, bank, onClose, onSave } = props
-    const [isSaving, setIsSaving] = useState(false)
-
-    const { t } = useTranslation()
-
-    const BankFormTitle = () => {
-        let title: string = t('pages.settings.sections.banks.form.newTitle')
-        if (bank) {
-            title = `${t('pages.settings.sections.banks.form.editTitle')} - ${
-                bank.name
-            }`
-        }
-
-        return <h5 className="mb-4">{title}</h5>
-    }
-
-    const validationSchema = Yup.object().shape({
-        name: Yup.string().required(t('validations.required') || ''),
-    })
-
-    const errorHandler = useCallback(
-        (e: unknown) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
-        },
-        [t],
-    )
-
-    return (
-        <Dialog
-            isOpen={isOpen}
-            data-tn="bank-form"
-            onClose={onClose}
-            onRequestClose={onClose}
-        >
-            <BankFormTitle />
-            {isSaving ? (
-                <div className="py-8">
-                    <Loading loading={true} type="cover" />
-                </div>
-            ) : (
-                <Formik
-                    initialValues={
-                        bank || {
-                            name: '',
-                        }
-                    }
-                    validationSchema={validationSchema}
-                    onSubmit={async (values) => {
-                        setIsSaving(true)
-                        try {
-                            if (!bank?.id) {
-                                await apiCreateBank(values)
-                            } else {
-                                await apiUpdateBank({
-                                    ...bank,
-                                    ...values,
-                                })
-                            }
-                        } catch (e: unknown) {
-                            errorHandler(e)
-                        }
-                        onSave()
-                    }}
-                >
-                    {({ touched, errors, isSubmitting }) => (
-                        <Form>
-                            <FormContainer>
-                                <FormItem
-                                    label={t('fields.name') || 'Name'}
-                                    invalid={errors.name && touched.name}
-                                    errorMessage={errors.name}
-                                >
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="name"
-                                        placeholder={t('fields.name')}
-                                        component={Input}
-                                    />
-                                </FormItem>
-                            </FormContainer>
-                            <div className="text-right mt-6">
-                                <Button
-                                    className="ltr:mr-2 rtl:ml-2"
-                                    variant="plain"
-                                    type="button"
-                                    disabled={isSubmitting}
-                                    onClick={onClose}
-                                >
-                                    {t('actions.cancel')}
-                                </Button>
-                                <Button
-                                    variant="solid"
-                                    type="submit"
-                                    data-tn="save-bank-btn"
-                                    disabled={isSubmitting}
-                                >
-                                    {t('actions.save')}
-                                </Button>
-                            </div>
-                        </Form>
-                    )}
-                </Formik>
-            )}
-        </Dialog>
-    )
-}
-
 const Banks = () => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false)
     const [selectedBank, setSelectedBank] = useState<BankDataType | undefined>(
         undefined,
@@ -168,18 +45,22 @@ const Banks = () => {
     const { t } = useTranslation()
     const { textTheme } = useThemeClass()
 
-    const errorHandler = useCallback(
-        (e: unknown) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
-        },
-        [t],
-    )
+    const queryClient = useQueryClient()
+
+    const { data: bankList, isFetching: isLoadingBanks } = useQuery({
+        queryKey: ['user-banks'],
+        queryFn: apiGetBankList,
+        suspense: true,
+    })
+
+    const onMutationSuccess = async (title: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: ['user-banks'],
+        })
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+    }
 
     const openDrawer = () => {
         setIsFormOpen(true)
@@ -188,6 +69,7 @@ const Banks = () => {
     const onBankFormClose = () => {
         setSelectedBank(undefined)
         setIsFormOpen(false)
+        setIsSaving(false)
     }
 
     const onBankDeleteConfirmClose = () => {
@@ -205,33 +87,55 @@ const Banks = () => {
         setIsDeleteOpen(true)
     }
 
-    const { data: bankList, isFetching: isLoadingBanks } = useQuery({
-        queryKey: ['user-banks'],
-        queryFn: apiGetBankList,
-        suspense: true,
+    const createBankMutation = useMutation({
+        mutationFn: apiCreateBank,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bank.created') || '',
+            )
+        },
+        onSettled: onBankFormClose
+    })
+
+    const updateBankMutation = useMutation({
+        mutationFn: apiUpdateBank,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bank.updated') || '',
+            )
+        },
+        onSettled: onBankFormClose
+    })
+
+    const deleteBankMutation = useMutation({
+        mutationFn: apiDeleteBank,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bank.deleted') || '',
+            )
+        },
+        onSettled: onBankDeleteConfirmClose
     })
 
     const onDeleteConfirm = async () => {
         if (selectedBank) {
-            try {
-                await apiDeleteBank(selectedBank.id)
-                toast.push(
-                    <Notification
-                        title={
-                            t(
-                                'pages.settings.sections.banks.notifications.confirmDelete',
-                            ) || ''
-                        }
-                        type="success"
-                    />,
-                    {
-                        placement: 'top-center',
-                    },
-                )
-            } catch (e) {
-                errorHandler(e)
-            }
-            onBankDeleteConfirmClose()
+            deleteBankMutation.mutate(selectedBank.id)
+        }
+    }
+
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required(t('validations.required') || ''),
+    })
+
+    const onBankFormSubmit = (values: any) => {
+        setIsSaving(true)
+        if (!selectedBank?.id) {
+            createBankMutation.mutate(values)
+        } else {
+            updateBankMutation.mutate({
+                ...selectedBank,
+                ...values,
+            })
         }
     }
 
@@ -343,13 +247,40 @@ const Banks = () => {
             >
                 {t('pages.settings.sections.banks.newBankAction')}
             </Button>
-            <BankForm
+            <ModalForm
                 isOpen={isFormOpen}
-                bank={selectedBank}
-                onClose={onBankFormClose}
-                onSave={() => {
-                    onBankFormClose()
+                entity={selectedBank || {
+                    name: '',
                 }}
+                title={`${selectedBank?.name} - ${
+                    selectedBank
+                        ? t('pages.settings.sections.banks.form.editTitle')
+                        : t('pages.settings.sections.banks.form.newTitle')
+                }`}
+                validationSchema={validationSchema}
+                fields={(
+                    errors: FormikErrors<any>,
+                    touched: FormikTouched<any>,
+                ) => (
+                    <>
+                        <FormItem
+                            label={t('fields.name') || 'Name'}
+                            invalid={(errors.name && touched.name) as boolean}
+                            errorMessage={errors.name?.toString()}
+                        >
+                            <Field
+                                type="text"
+                                autoComplete="off"
+                                name="name"
+                                placeholder={t('fields.name')}
+                                component={Input}
+                            />
+                        </FormItem>
+                    </>
+                )}
+                isSaving={isSaving}
+                onClose={onBankFormClose}
+                onSubmit={onBankFormSubmit}
             />
             <ConfirmDialog
                 isOpen={isDeleteOpen}

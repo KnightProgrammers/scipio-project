@@ -181,6 +181,11 @@
         "password": {
             "updated": "Password Updated"
         },
+        "bank": {
+            "created": "Bank successfully created",
+            "updated": "Bank successfully updated",
+            "deleted": "Bank successfully deleted"
+        },
         "bankAccount": {
             "created": "Bank account successfully created",
             "updated": "Bank account successfully updated",

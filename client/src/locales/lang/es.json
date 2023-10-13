@@ -181,6 +181,11 @@
         "password": {
             "updated": "Contraseña Actualizada"
         },
+        "bank": {
+            "created": "Banco creado correctamente",
+            "updated": "Banco actualizado correctamente",
+            "deleted": "Banco eliminado correctamente"
+        },
         "bankAccount": {
             "created": "Cuenta creada correctamente",
             "updated": "Cuenta actualizada correctamente",
