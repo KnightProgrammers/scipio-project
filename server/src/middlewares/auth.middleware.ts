@@ -1,5 +1,6 @@
 import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
+import mercurius from "mercurius";
 
 export default async (request: any, reply: any) => {
 	const { authorization } = request.headers;
@@ -7,9 +8,8 @@ export default async (request: any, reply: any) => {
 		request.user = await authenticateUser(authorization);
 		return;
 	} catch (e: any) {
-		reply.status(e.status || 403).send({
-			error: e.status,
-			code: e.code,
+		reply.status(e.statusCode || 403).send({
+			error: e.statusCode,
 			message: e.message
 		});
 	}
@@ -36,14 +36,12 @@ export const authenticateUser = async (authorization: string) => {
 			}
 			return user;
 		} catch (e) {
-			const error: any = new Error('Token Expired');
-			error.status = 401;
-			error.code = 'tokenExpired';
+			const error = new mercurius.ErrorWithProps('Token Expired');
+			error.statusCode = 401;
 			throw error;
 		}
 	}
-	const error: any = new Error('Access Denied');
-	error.status = 403;
-	error.code = 'accessDenied';
+	const error = new mercurius.ErrorWithProps('Access Denied');
+	error.statusCode = 403;
 	throw error;
 };

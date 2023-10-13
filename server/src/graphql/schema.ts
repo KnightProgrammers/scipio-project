@@ -10,6 +10,7 @@ const schema = gql`
 
   type Country {
     id: String!
+    code: String!
     name: String!
   }
 

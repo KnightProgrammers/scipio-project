@@ -79,7 +79,9 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 		},
 		async applyPolicy (uthDirectiveAST: any, parent: any, args: any, context: any) {
 			if (!context.auth._id) {
-				throw new Error('No authenticated');
+				const err = new mercurius.ErrorWithProps('No authenticated');
+				err.statusCode = 401;
+				throw err;
 			}
 			return true;
 		},

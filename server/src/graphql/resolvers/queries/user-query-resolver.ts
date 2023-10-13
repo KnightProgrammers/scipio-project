@@ -13,6 +13,7 @@ export const UserQueryResolver = {
 	country: (user: any) => {
 		return {
 			id: user.country._id,
+			code: user.country.code,
 			name: user.country.name
 		};
 	},
