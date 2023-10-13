@@ -16,11 +16,8 @@ import {
     ModalForm,
 } from '@/components/ui'
 import currencyFormat from '@/utils/currencyFormat'
-import { useCallback, useState } from 'react'
-import {
-    BankAccountDataType,
-    BankDataType,
-} from '@/@types/system'
+import { useState } from 'react'
+import { BankAccountDataType, BankDataType } from '@/@types/system'
 import {
     apiGetBankAccountList,
     apiCreateBankAccount,
@@ -46,7 +43,7 @@ import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -64,50 +61,54 @@ const BankAccounts = () => {
 
     const queryClient = useQueryClient()
 
-    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } = useQuery({
-        queryKey: ['user-currencies'],
-        queryFn: apiGetUserCurrencies,
-        suspense: true,
-    })
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+        useQuery({
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
+            suspense: true,
+        })
 
-    const { data: bankAccountList, isFetching: isFetchingBankAccounts } = useQuery({
-        queryKey: ['user-bank-accounts'],
-        queryFn: apiGetBankAccountList,
-        suspense: true,
-    })
+    const { data: bankAccountList, isFetching: isFetchingBankAccounts } =
+        useQuery({
+            queryKey: ['user-bank-accounts'],
+            queryFn: apiGetBankAccountList,
+            suspense: true,
+        })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({ queryKey: ['user-bank-accounts'] })
-        toast.push(
-            <Notification
-                title={title}
-                type="success"
-            />,
-            {
-                placement: 'top-center',
-            },
-        )
+        await queryClient.invalidateQueries({
+            queryKey: ['user-bank-accounts'],
+        })
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
     }
 
     const createBankAccountMutation = useMutation({
         mutationFn: apiCreateBankAccount,
         onSuccess: async () => {
-            await onMutationSuccess(t('notifications.bankAccount.created') || '');
-        }
+            await onMutationSuccess(
+                t('notifications.bankAccount.created') || '',
+            )
+        },
     })
 
     const updateBankAccountMutation = useMutation({
         mutationFn: apiUpdateBankAccount,
         onSuccess: async () => {
-            await onMutationSuccess(t('notifications.bankAccount.updated') || '');
-        }
+            await onMutationSuccess(
+                t('notifications.bankAccount.updated') || '',
+            )
+        },
     })
 
     const deleteBankAccountMutation = useMutation({
         mutationFn: apiDeleteBankAccount,
         onSuccess: async () => {
-            await onMutationSuccess(t('notifications.bankAccount.deleted') || '');
-        }
+            await onMutationSuccess(
+                t('notifications.bankAccount.deleted') || '',
+            )
+        },
     })
 
     const { t, i18n } = useTranslation()
@@ -120,19 +121,6 @@ const BankAccounts = () => {
         accountBalance: Yup.string().required(t('validations.required') || ''),
         accountCurrency: Yup.string().required(t('validations.required') || ''),
     })
-
-    const errorHandler = useCallback(
-        (e: unknown) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
-        },
-        [t],
-    )
 
     const onFormClose = () => {
         setIsFormOpen(false)
@@ -164,7 +152,7 @@ const BankAccounts = () => {
                         accountBalance: data.accountBalance,
                         accountBankId: selectedBank.id,
                         accountCurrencyId:
-                        selectedBankAccount.accountCurrency.id,
+                            selectedBankAccount.accountCurrency.id,
                     })
                 }
             }
@@ -185,7 +173,11 @@ const BankAccounts = () => {
         onDeleteConfirmClose()
     }
 
-    if (!bankAccountList || isFetchingUserCurrencies) {
+    if (
+        !bankAccountList ||
+        isFetchingUserCurrencies ||
+        isFetchingBankAccounts
+    ) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
     }
 

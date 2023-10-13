@@ -17,7 +17,7 @@ import {
     HiOutlineTrash,
     HiPlus,
 } from 'react-icons/hi'
-import { MouseEvent, useCallback, useEffect, useState } from 'react'
+import { MouseEvent, useCallback, useState } from 'react'
 import { BankDataType } from '@/@types/system'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
@@ -32,8 +32,7 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import { useQuery } from "@tanstack/react-query";
-import { apiGetUserProfile } from "@/services/AccountServices";
+import { useQuery } from '@tanstack/react-query'
 
 const { Tr, Td, TBody } = Table
 

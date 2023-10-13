@@ -26,7 +26,7 @@ export async function apiCreateBankAccount(body: {
         accountNumber,
         accountBalance,
         accountBankId,
-        accountCurrencyId
+        accountCurrencyId,
     } = body
     const response = await BaseService.request({
         url: '/graphql',
@@ -57,7 +57,7 @@ export async function apiCreateBankAccount(body: {
                 accountNumber,
                 balance: accountBalance,
                 bankId: accountBankId,
-                currencyId: accountCurrencyId
+                currencyId: accountCurrencyId,
             },
         },
     })
@@ -72,12 +72,7 @@ export async function apiUpdateBankAccount(body: {
     accountBankId: string
     accountCurrencyId: string
 }): Promise<BankAccountDataType> {
-    const {
-        id,
-        accountName,
-        accountNumber,
-        accountBalance,
-    } = body
+    const { id, accountName, accountNumber, accountBalance } = body
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
@@ -103,7 +98,7 @@ export async function apiUpdateBankAccount(body: {
                 id,
                 label: accountName,
                 accountNumber,
-                balance: accountBalance
+                balance: accountBalance,
             },
         },
     })

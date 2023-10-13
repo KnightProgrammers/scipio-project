@@ -8,15 +8,15 @@ import {
 } from '@/components/ui'
 import { Divider } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react'
 import {
     apiGetUserCurrencies,
-    apiSetUserCurrencies
-} from "@/services/AccountServices";
+    apiSetUserCurrencies,
+} from '@/services/AccountServices'
 import { apiGetCurrencies } from '@/services/CurrencyServices'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
 
 const Currency = () => {
     const { t } = useTranslation()
@@ -25,11 +25,12 @@ const Currency = () => {
 
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
 
-    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } = useQuery({
-        queryKey: ['user-currencies'],
-        queryFn: apiGetUserCurrencies,
-        suspense: true,
-    })
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+        useQuery({
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
+            suspense: true,
+        })
 
     const { data: currencies, isFetching: isFetchingCurrencies } = useQuery({
         queryKey: ['currencies'],
@@ -38,10 +39,10 @@ const Currency = () => {
     })
 
     useEffect(() => {
-        if (!!userCurrencies) {
-            setSelectedCurrencies(userCurrencies.map(({id}) => id));
+        if (userCurrencies) {
+            setSelectedCurrencies(userCurrencies.map(({ id }) => id))
         }
-    }, [userCurrencies]);
+    }, [userCurrencies])
 
     const errorHandler = useCallback(
         (e: unknown) => {
@@ -56,7 +57,7 @@ const Currency = () => {
         [t],
     )
 
-    const isLoading = isFetchingUserCurrencies || isFetchingCurrencies;
+    const isLoading = isFetchingUserCurrencies || isFetchingCurrencies
 
     return (
         <div data-tn="account-currencies-page">
