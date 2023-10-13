@@ -11,6 +11,7 @@ export const UserQueryResolver = {
 		});
 	},
 	country: (user: any) => {
+		if (!user.country) return null;
 		return {
 			id: user.country._id,
 			code: user.country.code,
