@@ -150,7 +150,8 @@
         "delete": "Eliminar",
         "deleting": "Eliminando",
         "edit": "Editar",
-        "next": "Siguiente"
+        "next": "Siguiente",
+        "tryAgain": "Volver a intentar"
     },
     "fields": {
         "email": "Email",

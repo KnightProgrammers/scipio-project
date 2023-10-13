@@ -32,7 +32,7 @@ const Wrapper = () => {
             <Container className="flex flex-col h-full h-screen w-screen justify-center items-center">
                 <img src={darkModeOn ? `/img/others/img-2-dark.png` : `/img/others/img-2.png`} alt="sorry"/>
                 <p className="font-light text-xl m-4">{t('error.generic')}</p>
-                <Button variant="twoTone" onClick={() => resetErrorBoundary()}>Try again</Button>
+                <Button variant="twoTone" onClick={() => resetErrorBoundary()}>{t('actions.tryAgain')}</Button>
             </Container>
         )}
     >
