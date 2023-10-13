@@ -48,6 +48,9 @@ type Mutation {
   createBank(input: NewBankInput!): Bank!
   updateBank(id: String!, input: EditBankInput!): Bank!
   deleteBank(id: String!): Boolean!
+  createBankAccount(input: NewBankAccountInput!): BankAccount!
+  updateBankAccount(id: String!, input: EditBankAccountInput!): BankAccount!
+  deleteBankAccount(id: String!): Boolean!
 }
 
 input NewBankInput {
@@ -56,6 +59,20 @@ input NewBankInput {
 
 input EditBankInput {
     name: String!
+}
+
+input NewBankAccountInput {
+    label: String
+    accountNumber: String!
+    balance: Float!
+    bankId: String!
+    currencyId: String!
+}
+
+input EditBankAccountInput {
+    label: String
+    accountNumber: String!
+    balance: Float!
 }
 `;
 export default schema;
