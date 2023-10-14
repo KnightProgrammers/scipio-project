@@ -83,21 +83,16 @@ export const welcomeUser = async (page: Page, data: { lang: string, country: str
 	await expect(countrySelect).toBeVisible();
 	await page.locator('#country-select input.select__input').fill(country);
 	await page.keyboard.press('Enter');
+	const waitForUpdateUserProfileRequest = waitForRequest(page, 'updateUserProfile');
 	await nextBtn.click();
-
+	await waitForUpdateUserProfileRequest;
 	// currencies step
 	await expect(page.locator('div[data-tn="currency-ckb"]')).toBeVisible();
 	for (const currency of currencies) {
 		const currencyCheckbox = page.locator(`input[data-tn="${currency}"]`);
-		await currencyCheckbox.setChecked(true);
+		await currencyCheckbox.setChecked(DEFAULT_USER_CURRENCIES.includes(currency));
 	}
-	const patchUserDataRequest = page.waitForRequest(request =>
-		request.url() === `${API_BASE_URL}/users/me` && request.method() === 'PATCH'
-	);
-	const getUserDataResponse = page.waitForResponse(response =>
-		response.url() === `${API_BASE_URL}/users/me` && response.status() === 200
-	);
+	const waitForSetUserCurrenciesRequest = waitForRequest(page, 'setUserCurrencies');
 	await nextBtn.click();
-	await patchUserDataRequest;
-	await getUserDataResponse;
+	await waitForSetUserCurrenciesRequest;
 };

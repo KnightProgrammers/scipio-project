@@ -3,7 +3,6 @@ import firebaseService from '../../../services/firebase.service';
 import { signUpUser, signInUser, DEFAULT_USER_CURRENCIES } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_CURRENCIES, goToUserProfile } from '../../../helpers/profile.helper';
-import { API_BASE_URL } from '../../../config';
 import { waitForRequest } from '../../../helpers/generic.helper';
 
 
@@ -44,19 +43,16 @@ test('Default list of currencies', async () => {
 	const waitForCurrenciesRequest = waitForRequest(page, 'currencies');
 	await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
 	const currenciesRequest = await waitForCurrenciesRequest;
-
 	const currenciesResponse = await currenciesRequest.response();
 	const {data: { currencies }} = await currenciesResponse.json();
-
 	expect(currencies.map(c => c.code)).toStrictEqual(DEFAULT_CURRENCIES);
 
+	await page.locator('div[data-tn="account-currencies-page"] form').waitFor({ state: 'visible' });
 	const currencyInputs = await page.locator('input[name="currencies"]').all();
 	expect(currencyInputs).toHaveLength(DEFAULT_CURRENCIES.length);
-	for (const i in currencyInputs) {
-		const currencyInput = currencyInputs[i];
-		await expect(currencyInput).toHaveAttribute('data-tn', DEFAULT_CURRENCIES[i]);
-		const currency = await currencyInput.getAttribute('data-tn');
-		if (currency && DEFAULT_USER_CURRENCIES.includes(currency)) {
+	for (const currency of  DEFAULT_CURRENCIES) {
+		const currencyInput = page.locator(`input[name="currencies"][data-tn="${currency}"]`);
+		if (DEFAULT_USER_CURRENCIES.includes(currency)) {
 			await expect(currencyInput).toBeChecked();
 		} else {
 			await expect(currencyInput).not.toBeChecked();
@@ -77,13 +73,14 @@ test('Update user currencies', async () => {
 		const currencyInput = page.locator(`input[data-tn="${currency}"]`);
 		await currencyInput.setChecked(newUserCurrencies.includes(currency));
 	}
-	const userCurrenciesWaitForRequest = page.waitForRequest((request) =>
-		request.url() === `${API_BASE_URL}/users/me/currencies` && request.method() === 'POST',
-	);
+	const waitForSetUserCurrenciesRequest = waitForRequest(page, 'setUserCurrencies');
 	await page.locator('button[type="submit"]').click();
-	const userCurrenciesRequest = await userCurrenciesWaitForRequest;
+	const userCurrenciesRequest = await waitForSetUserCurrenciesRequest;
 	const userCurrenciesResponse = await userCurrenciesRequest.response();
-	const userCurrencies = await userCurrenciesResponse.json();
+	const {
+		data: { setUserCurrencies: userCurrencies },
+	} = await userCurrenciesResponse.json();
+	console.log({userCurrencies});
 	const savedCurrencies = userCurrencies.map(c => c.code);
 	expect(savedCurrencies.sort()).toStrictEqual(newUserCurrencies);
 });

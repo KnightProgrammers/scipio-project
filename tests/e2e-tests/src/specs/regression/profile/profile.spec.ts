@@ -3,7 +3,7 @@ import firebaseService from '../../../services/firebase.service';
 import { signUpUser, signInUser } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { goToUserProfile } from '../../../helpers/profile.helper';
-import { API_BASE_URL } from '../../../config';
+import { waitForRequest } from '../../../helpers/generic.helper';
 
 
 let email: string;
@@ -73,13 +73,13 @@ async function validateProfileUpdate(page: Page, name: string) {
 	const nameInput = page.locator('input[name="name"]');
 	const submitButton = page.locator('button[type="submit"]');
 	await nameInput.fill(name);
-	const updateProfileResponse = page.waitForResponse(response =>
-		response.url() === `${API_BASE_URL}/users/me` && response.status() === 200,
-	);
+	const waitForUpdateUserProfileRequest = waitForRequest(page, 'updateUserProfile');
 	await submitButton.click();
-	const response = await updateProfileResponse;
-	const userData = await response.json();
-	const requestMethod = response.request().method();
-	expect(requestMethod).toBe('POST');
+	const updateUserProfileRequest = await waitForUpdateUserProfileRequest;
+	const updateUserProfileResponse = await updateUserProfileRequest.response();
+	const {
+		data: { updateProfile: userData },
+	} = await updateUserProfileResponse.json();
+	console.log({userData});
 	expect(userData.name).toBe(name);
 }
