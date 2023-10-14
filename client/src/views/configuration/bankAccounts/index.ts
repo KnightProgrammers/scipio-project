@@ -1,5 +1,3 @@
-import { lazy } from 'react'
-
-const BankAccounts = lazy(() => import('./BankAccounts'))
+import BankAccounts from './BankAccounts'
 
 export default BankAccounts
