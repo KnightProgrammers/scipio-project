@@ -16,12 +16,8 @@ import {
     ModalForm,
 } from '@/components/ui'
 import currencyFormat from '@/utils/currencyFormat'
-import { useCallback, useEffect, useState } from 'react'
-import {
-    BankAccountDataType,
-    BankDataType,
-    CurrencyDataType,
-} from '@/@types/system'
+import { useState } from 'react'
+import { BankAccountDataType, BankDataType } from '@/@types/system'
 import {
     apiGetBankAccountList,
     apiCreateBankAccount,
@@ -47,6 +43,7 @@ import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -59,16 +56,60 @@ const BankAccounts = () => {
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
         useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
-    const [isLoadingBankAccounts, setIsLoadingBankAccounts] =
-        useState<boolean>(false)
-    const [bankAccountList, setBankAccountList] = useState<any[] | undefined>(
-        undefined,
-    )
-    const [userCurrencies, setUserCurrencies] = useState<
-        CurrencyDataType[] | undefined
-    >(undefined)
 
     const userState = useAppSelector((state) => state.auth.user)
+
+    const queryClient = useQueryClient()
+
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+        useQuery({
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
+            suspense: true,
+        })
+
+    const { data: bankAccountList, isFetching: isFetchingBankAccounts } =
+        useQuery({
+            queryKey: ['user-bank-accounts'],
+            queryFn: apiGetBankAccountList,
+            suspense: true,
+        })
+
+    const onMutationSuccess = async (title: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: ['user-bank-accounts'],
+        })
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+    }
+
+    const createBankAccountMutation = useMutation({
+        mutationFn: apiCreateBankAccount,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bankAccount.created') || '',
+            )
+        },
+    })
+
+    const updateBankAccountMutation = useMutation({
+        mutationFn: apiUpdateBankAccount,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bankAccount.updated') || '',
+            )
+        },
+    })
+
+    const deleteBankAccountMutation = useMutation({
+        mutationFn: apiDeleteBankAccount,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bankAccount.deleted') || '',
+            )
+        },
+    })
 
     const { t, i18n } = useTranslation()
     const { themeColor } = useConfig()
@@ -80,31 +121,6 @@ const BankAccounts = () => {
         accountBalance: Yup.string().required(t('validations.required') || ''),
         accountCurrency: Yup.string().required(t('validations.required') || ''),
     })
-
-    const errorHandler = useCallback(
-        (e: unknown) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
-        },
-        [t],
-    )
-
-    const loadBankAccounts = () => {
-        setIsLoadingBankAccounts(true)
-        apiGetBankAccountList()
-            .then((data) => {
-                setIsLoadingBankAccounts(false)
-                setBankAccountList(data)
-            })
-            .catch(() => {
-                setIsLoadingBankAccounts(false)
-            })
-    }
 
     const onFormClose = () => {
         setIsFormOpen(false)
@@ -119,31 +135,26 @@ const BankAccounts = () => {
             (c) => c.id === data.accountCurrency,
         )
         if (!!selectedBank && !!currency) {
-            try {
-                if (!data.id) {
-                    await apiCreateBankAccount({
+            if (!data.id) {
+                createBankAccountMutation.mutate({
+                    accountName: data.accountName,
+                    accountNumber: data.accountNumber,
+                    accountBalance: data.accountBalance,
+                    accountBankId: selectedBank.id,
+                    accountCurrencyId: currency.id,
+                })
+            } else {
+                if (selectedBankAccount) {
+                    updateBankAccountMutation.mutate({
+                        id: data.id,
                         accountName: data.accountName,
                         accountNumber: data.accountNumber,
                         accountBalance: data.accountBalance,
                         accountBankId: selectedBank.id,
-                        accountCurrencyId: currency.id,
+                        accountCurrencyId:
+                            selectedBankAccount.accountCurrency.id,
                     })
-                } else {
-                    if (selectedBankAccount) {
-                        await apiUpdateBankAccount({
-                            id: data.id,
-                            accountName: data.accountName,
-                            accountNumber: data.accountNumber,
-                            accountBalance: data.accountBalance,
-                            accountBankId: selectedBank.id,
-                            accountCurrencyId:
-                                selectedBankAccount.accountCurrency.id,
-                        })
-                    }
                 }
-                loadBankAccounts()
-            } catch (e: unknown) {
-                errorHandler(e)
             }
         }
         onFormClose()
@@ -156,49 +167,17 @@ const BankAccounts = () => {
     }
 
     const onDelete = async () => {
-        setIsConfirmDeleteOpen(false)
-        setIsLoadingBankAccounts(true)
-        try {
-            if (selectedBankAccount) {
-                await apiDeleteBankAccount(selectedBankAccount.id)
-            }
-            toast.push(
-                <Notification
-                    title={
-                        t('notifications.bankAccount.deleted', {
-                            accountNumber: selectedBankAccount?.accountNumber,
-                        }) || ''
-                    }
-                    type="success"
-                />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            loadBankAccounts()
-        } catch (e) {
-            errorHandler(e)
+        if (selectedBankAccount) {
+            deleteBankAccountMutation.mutate(selectedBankAccount.id)
         }
         onDeleteConfirmClose()
     }
 
-    useEffect(() => {
-        if (userCurrencies === undefined) {
-            apiGetUserCurrencies()
-                .then((data) => {
-                    setUserCurrencies(data)
-                })
-                .catch(errorHandler)
-        }
-    }, [setUserCurrencies, userCurrencies, errorHandler])
-
-    useEffect(() => {
-        if (bankAccountList === undefined && !isLoadingBankAccounts) {
-            loadBankAccounts()
-        }
-    }, [bankAccountList, isLoadingBankAccounts])
-
-    if (bankAccountList === undefined || userCurrencies === undefined) {
+    if (
+        !bankAccountList ||
+        isFetchingUserCurrencies ||
+        isFetchingBankAccounts
+    ) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
     }
 
@@ -229,7 +208,7 @@ const BankAccounts = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             data-tn="bank-accounts-page"
         >
-            {bankAccountList.map((bank) => {
+            {bankAccountList.map((bank: any) => {
                 return (
                     <Card
                         key={bank.name}
@@ -270,7 +249,7 @@ const BankAccounts = () => {
                             </Button>
                         }
                     >
-                        {bank.accounts.length === 0 ? (
+                        {bank.bankAccounts.length === 0 ? (
                             <EmptyState
                                 description={t(
                                     'pages.bankAccounts.emptyState.noAccounts.description',
@@ -279,89 +258,101 @@ const BankAccounts = () => {
                             />
                         ) : (
                             <>
-                                {bank.accounts.map((a: BankAccountDataType) => (
-                                    <Card
-                                        key={a.id}
-                                        bordered
-                                        data-tn={`bank-account-${a.id}`}
-                                        className="my-2 w-full relative"
-                                    >
-                                        <Dropdown
-                                            className="absolute right-4 top-2"
-                                            placement="middle-end-top"
-                                            renderTitle={
-                                                <EllipsisButton data-tn="dropdown-bank-account-btn" />
-                                            }
+                                {bank.bankAccounts.map(
+                                    (a: BankAccountDataType) => (
+                                        <Card
+                                            key={a.id}
+                                            bordered
+                                            data-tn={`bank-account-${a.id}`}
+                                            className="my-2 w-full relative"
                                         >
-                                            <Dropdown.Item
-                                                eventKey="edit"
-                                                data-tn="edit-bank-account-btn"
-                                                onClick={() => {
-                                                    setSelectedBank(bank)
-                                                    setSelectedBankAccount(a)
-                                                    setIsFormOpen(true)
-                                                }}
+                                            <Dropdown
+                                                className="absolute right-4 top-2"
+                                                placement="middle-end-top"
+                                                renderTitle={
+                                                    <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                                }
                                             >
-                                                <IconText
-                                                    className="text-sm font-semibold w-full"
-                                                    icon={
-                                                        <HiOutlinePencilAlt />
-                                                    }
+                                                <Dropdown.Item
+                                                    eventKey="edit"
+                                                    data-tn="edit-bank-account-btn"
+                                                    onClick={() => {
+                                                        setSelectedBank(bank)
+                                                        setSelectedBankAccount(
+                                                            a,
+                                                        )
+                                                        setIsFormOpen(true)
+                                                    }}
                                                 >
-                                                    {t('actions.edit')}
-                                                </IconText>
-                                            </Dropdown.Item>
-                                            <Dropdown.Item
-                                                eventKey="delete"
-                                                data-tn="delete-bank-account-btn"
-                                                onClick={() => {
-                                                    setSelectedBank(bank)
-                                                    setSelectedBankAccount(a)
-                                                    setIsConfirmDeleteOpen(true)
-                                                }}
-                                            >
-                                                <IconText
-                                                    className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                    icon={<HiOutlineTrash />}
+                                                    <IconText
+                                                        className="text-sm font-semibold w-full"
+                                                        icon={
+                                                            <HiOutlinePencilAlt />
+                                                        }
+                                                    >
+                                                        {t('actions.edit')}
+                                                    </IconText>
+                                                </Dropdown.Item>
+                                                <Dropdown.Item
+                                                    eventKey="delete"
+                                                    data-tn="delete-bank-account-btn"
+                                                    onClick={() => {
+                                                        setSelectedBank(bank)
+                                                        setSelectedBankAccount(
+                                                            a,
+                                                        )
+                                                        setIsConfirmDeleteOpen(
+                                                            true,
+                                                        )
+                                                    }}
                                                 >
-                                                    {t('actions.delete')}
-                                                </IconText>
-                                            </Dropdown.Item>
-                                        </Dropdown>
-                                        <div className="w-full flex items-center">
-                                            <div
-                                                className="font-light italic text-xs w-full"
-                                                data-tn="bank-account-name"
-                                            >
-                                                {a.accountName ||
-                                                    t(
-                                                        'pages.bankAccounts.defaultLabel',
+                                                    <IconText
+                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                        icon={
+                                                            <HiOutlineTrash />
+                                                        }
+                                                    >
+                                                        {t('actions.delete')}
+                                                    </IconText>
+                                                </Dropdown.Item>
+                                            </Dropdown>
+                                            <div className="w-full flex items-center">
+                                                <div
+                                                    className="font-light italic text-xs w-full"
+                                                    data-tn="bank-account-name"
+                                                >
+                                                    {a.accountName ||
+                                                        t(
+                                                            'pages.bankAccounts.defaultLabel',
+                                                        )}
+                                                </div>
+                                            </div>
+                                            <div className="flex grid grid-cols-2">
+                                                <div className="my-1">
+                                                    <span className="font-bold">
+                                                        <CopyButton
+                                                            data-tn="bank-account-number"
+                                                            text={
+                                                                a.accountNumber
+                                                            }
+                                                        />
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    className="my-1 text-right"
+                                                    data-tn="bank-account-balance"
+                                                >
+                                                    {currencyFormat(
+                                                        a.accountBalance,
+                                                        a.accountCurrency.code,
+                                                        i18n.language,
+                                                        userState.country?.code,
                                                     )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex grid grid-cols-2">
-                                            <div className="my-1">
-                                                <span className="font-bold">
-                                                    <CopyButton
-                                                        data-tn="bank-account-number"
-                                                        text={a.accountNumber}
-                                                    />
-                                                </span>
-                                            </div>
-                                            <div
-                                                className="my-1 text-right"
-                                                data-tn="bank-account-balance"
-                                            >
-                                                {currencyFormat(
-                                                    a.accountBalance,
-                                                    a.accountCurrency.code,
-                                                    i18n.language,
-                                                    userState.country?.code,
-                                                )}
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))}
+                                        </Card>
+                                    ),
+                                )}
                             </>
                         )}
                     </Card>
