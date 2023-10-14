@@ -8,22 +8,22 @@ import {
 } from '@/components/ui'
 import { Divider } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     apiGetUserCurrencies,
     apiSetUserCurrencies,
 } from '@/services/AccountServices'
 import { apiGetCurrencies } from '@/services/CurrencyServices'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import { useQuery } from '@tanstack/react-query'
 
 const Currency = () => {
+    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
+
     const { t } = useTranslation()
 
-    const [isSubmitting, setIsSubmitting] = useState(false)
-
-    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
+    const queryClient = useQueryClient()
 
     const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
@@ -38,24 +38,29 @@ const Currency = () => {
         suspense: true,
     })
 
+    const setUserCurrenciesMutation = useMutation({
+        mutationFn: apiSetUserCurrencies,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ['user-currencies'],
+            })
+            toast.push(
+                <Notification
+                    title={t('notifications.profile.updated') || ''}
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
+                },
+            )
+        },
+    })
+
     useEffect(() => {
         if (userCurrencies) {
             setSelectedCurrencies(userCurrencies.map(({ id }) => id))
         }
     }, [userCurrencies])
-
-    const errorHandler = useCallback(
-        (e: unknown) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
-        },
-        [t],
-    )
 
     const isLoading = isFetchingUserCurrencies || isFetchingCurrencies
 
@@ -73,14 +78,8 @@ const Currency = () => {
             {!isLoading && (
                 <Formik
                     initialValues={{}}
-                    onSubmit={async () => {
-                        setIsSubmitting(true)
-                        try {
-                            await apiSetUserCurrencies(selectedCurrencies)
-                        } catch (e) {
-                            errorHandler(e)
-                        }
-                        setIsSubmitting(false)
+                    onSubmit={() => {
+                        setUserCurrenciesMutation.mutate(selectedCurrencies)
                     }}
                 >
                     <Form>
@@ -111,11 +110,13 @@ const Currency = () => {
                             <FormItem className="mt-4 ltr:text-right">
                                 <Button
                                     variant="solid"
-                                    loading={isSubmitting}
+                                    loading={
+                                        setUserCurrenciesMutation.isLoading
+                                    }
                                     type="submit"
                                     disabled={selectedCurrencies.length === 0}
                                 >
-                                    {isSubmitting
+                                    {setUserCurrenciesMutation.isLoading
                                         ? t('actions.saving')
                                         : t('actions.save')}
                                 </Button>
