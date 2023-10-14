@@ -1,11 +1,9 @@
 import BankAccountSchema from '@/models/bank-account.model';
-import { UserType } from '@/routes/users';
-import { BankType } from '@/@types/bank.type';
 
 class BankAccountService {
 	static async getAll(
-		bank: BankType,
-		user: UserType,
+		bank: any,
+		user: any,
 		accountIsDeleted: boolean = false,
 	): Promise<any> {
 		return BankAccountSchema.find({
@@ -47,7 +45,7 @@ class BankAccountService {
 	}
 	static async update(
 		id: string,
-		user: UserType,
+		user: any,
 		data: {
             accountName: string
             accountNumber: string
@@ -68,7 +66,7 @@ class BankAccountService {
 
 		return bankAccount;
 	}
-	static async delete(id: string, user: UserType) {
+	static async delete(id: string, user: any) {
 		const bankAccount = await this.findOne(id, user);
 
 		if (!bankAccount) return null;
@@ -79,8 +77,10 @@ class BankAccountService {
 		return bankAccount;
 	}
 
-	static async findOne(id: string, user: UserType) {
-		return BankAccountSchema.findOne({ _id: id, accountUserId: user.id });
+	static async findOne(id: string, user: any) {
+		const bankAccount = await BankAccountSchema.findOne({ _id: id, accountUserId: user });
+		if (!bankAccount) return null;
+		return bankAccount;
 	}
 }
 

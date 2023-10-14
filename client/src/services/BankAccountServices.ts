@@ -1,12 +1,17 @@
-import ApiService from './ApiService'
 import { BankAccountDataType } from '@/@types/system'
+import BaseService from '@/services/BaseService'
 
 export async function apiGetBankAccountList(): Promise<unknown[]> {
-    const { data } = await ApiService.fetchData<unknown[]>({
-        url: '/bank-accounts',
-        method: 'get',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'userBankAccounts',
+            query: `query userBankAccounts { me { id banks { id name icon bankAccounts { id accountName: label accountNumber accountBalance: balance accountCurrency: currency { id code } } } } }`,
+            variables: {},
+        },
     })
-    return data
+    return response.data.data.me.banks
 }
 
 export async function apiCreateBankAccount(body: {
@@ -16,12 +21,47 @@ export async function apiCreateBankAccount(body: {
     accountBankId: string
     accountCurrencyId: string
 }): Promise<BankAccountDataType> {
-    const { data } = await ApiService.fetchData<BankAccountDataType>({
-        url: '/bank-accounts',
-        method: 'post',
-        data: body,
+    const {
+        accountName,
+        accountNumber,
+        accountBalance,
+        accountBankId,
+        accountCurrencyId,
+    } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'createBankAccount',
+            query: `
+                mutation createBankAccount(
+                    $label: String
+                    $accountNumber: String!
+                    $balance: Float!
+                    $bankId: String!
+                    $currencyId: String!
+                ) {
+                  createBankAccount(input: {
+                    label: $label
+                    accountNumber: $accountNumber
+                    balance: $balance
+                    bankId: $bankId
+                    currencyId: $currencyId
+                  }) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                label: accountName,
+                accountNumber,
+                balance: accountBalance,
+                bankId: accountBankId,
+                currencyId: accountCurrencyId,
+            },
+        },
     })
-    return data
+    return response.data
 }
 
 export async function apiUpdateBankAccount(body: {
@@ -32,20 +72,54 @@ export async function apiUpdateBankAccount(body: {
     accountBankId: string
     accountCurrencyId: string
 }): Promise<BankAccountDataType> {
-    const { data } = await ApiService.fetchData<BankAccountDataType>({
-        url: `/bank-accounts/${body.id}`,
-        method: 'put',
-        data: body,
+    const { id, accountName, accountNumber, accountBalance } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'updateBankAccount',
+            query: `
+                mutation updateBankAccount(
+                    $id: String!
+                    $label: String
+                    $accountNumber: String!
+                    $balance: Float!
+                ) {
+                  updateBankAccount(id: $id, input: {
+                    label: $label
+                    accountNumber: $accountNumber
+                    balance: $balance
+                  }) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                id,
+                label: accountName,
+                accountNumber,
+                balance: accountBalance,
+            },
+        },
     })
-    return data
+    return response.data
 }
 
 export async function apiDeleteBankAccount(
     bankAccountId: string,
-): Promise<BankAccountDataType> {
-    const { data } = await ApiService.fetchData<BankAccountDataType>({
-        url: `/bank-accounts/${bankAccountId}`,
-        method: 'delete',
+): Promise<boolean> {
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'deleteBankAccount',
+            query: `mutation deleteBankAccount($id: String!) {
+              deleteBankAccount(id: $id)
+            }`,
+            variables: {
+                id: bankAccountId,
+            },
+        },
     })
-    return data
+    return response.data
 }

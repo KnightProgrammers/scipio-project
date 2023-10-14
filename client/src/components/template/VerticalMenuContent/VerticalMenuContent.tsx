@@ -52,7 +52,6 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
     }
 
     const getNavItem = (nav: NavigationTree) => {
-        console.log(nav)
         if (nav.subMenu.length === 0 && nav.type === NAV_ITEM_TYPE_ITEM) {
             return (
                 <VerticalSingleMenuItem

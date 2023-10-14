@@ -1,9 +1,14 @@
-import ApiService from './ApiService'
-import { CountryDataType } from '@/@types/system'
+import BaseService from '@/services/BaseService'
 
 export async function apiGetCountryList() {
-    return ApiService.fetchData<CountryDataType[]>({
-        url: '/countries',
-        method: 'get',
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'countries',
+            query: `query countries { countries { id code name } }`,
+            variables: {},
+        },
     })
+    return response.data.data.countries
 }

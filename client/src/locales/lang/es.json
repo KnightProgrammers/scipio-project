@@ -150,7 +150,8 @@
         "delete": "Eliminar",
         "deleting": "Eliminando",
         "edit": "Editar",
-        "next": "Siguiente"
+        "next": "Siguiente",
+        "tryAgain": "Volver a intentar"
     },
     "fields": {
         "email": "Email",
@@ -180,10 +181,15 @@
         "password": {
             "updated": "Contraseña Actualizada"
         },
+        "bank": {
+            "created": "Banco creado correctamente",
+            "updated": "Banco actualizado correctamente",
+            "deleted": "Banco eliminado correctamente"
+        },
         "bankAccount": {
             "created": "Cuenta creada correctamente",
-            "edited": "Cuenta actualizada correctamente",
-            "deleted": "Cuenta \"{{accountNumber}}\" eliminada correctamente"
+            "updated": "Cuenta actualizada correctamente",
+            "deleted": "Cuenta eliminada correctamente"
         },
         "textCopied": "Copiado!"
     },

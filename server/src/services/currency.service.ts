@@ -1,8 +1,10 @@
-import { CurrencyType } from '@/@types/currency.type';
 import CurrencySchema from '@/models/currency.model';
 
 class CurrencyService {
-	static async findOne(id: string): Promise<CurrencyType | null> {
+	static async findAll() {
+		return CurrencySchema.find().sort({ code: 1 });
+	}
+	static async findOne(id: string) {
 		return CurrencySchema.findById(id);
 	}
 }

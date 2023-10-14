@@ -17,6 +17,7 @@ import { setLang, setUser, useAppDispatch } from '@/store'
 import { apiUpdateUserProfile } from '@/services/AccountServices'
 import { CustomControl, CustomSelectOption } from '@/components/shared'
 import { langOptions, LanguageOption } from '@/@types/system'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export type ProfileFormModel = {
     id: string
@@ -44,27 +45,13 @@ const Profile = ({
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .min(3, `${t('validations.minString')} 3)`)
-            .max(100, `${t('validations.maxString')} 100)`)
-            .required(t('validations.required') || 'Required'),
-        email: Yup.string()
-            .email(t('validations.email') || 'Invalid Email')
-            .required(t('validations.required') || 'Required'),
-        lang: Yup.string(),
-    })
-    const onFormSubmit = async (
-        values: ProfileFormModel,
-        setSubmitting: (isSubmitting: boolean) => void,
-    ) => {
-        try {
-            const { data: user } = await apiUpdateUserProfile({
-                id: values.id,
-                name: values.name,
-                email: values.email,
-                avatar: values.avatar,
-                lang: values.lang,
+    const queryClient = useQueryClient()
+
+    const updateUserProfileMutation = useMutation({
+        mutationFn: apiUpdateUserProfile,
+        onSuccess: async (userData) => {
+            await queryClient.invalidateQueries({
+                queryKey: ['user-profile'],
             })
             toast.push(
                 <Notification
@@ -75,21 +62,23 @@ const Profile = ({
                     placement: 'top-center',
                 },
             )
-            const lang = values.lang || 'en'
+            const lang = userData.lang || 'en'
             await i18n.changeLanguage(lang)
             dispatch(setLang(lang))
-            dispatch(setUser(user))
-        } catch {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-        }
+            dispatch(setUser(userData))
+        },
+    })
 
-        setSubmitting(false)
-    }
+    const validationSchema = Yup.object().shape({
+        name: Yup.string()
+            .min(3, `${t('validations.minString')} 3)`)
+            .max(100, `${t('validations.maxString')} 100)`)
+            .required(t('validations.required') || 'Required'),
+        email: Yup.string()
+            .email(t('validations.email') || 'Invalid Email')
+            .required(t('validations.required') || 'Required'),
+        lang: Yup.string(),
+    })
 
     return (
         <Formik
@@ -101,16 +90,13 @@ const Profile = ({
                 lang: i18n.language,
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true)
-                onFormSubmit(
-                    {
-                        ...data,
-                        ...values,
-                    },
-                    setSubmitting,
-                )
-            }}
+            onSubmit={(values) =>
+                updateUserProfileMutation.mutate({
+                    name: values.name,
+                    lang: values.lang,
+                    countryName: data.country,
+                })
+            }
         >
             {({ values, touched, errors, isSubmitting }) => {
                 const validatorProps = { touched, errors }

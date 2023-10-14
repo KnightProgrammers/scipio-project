@@ -1,31 +1,47 @@
 import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
+import mercurius from 'mercurius';
 
 export default async (request: any, reply: any) => {
 	const { authorization } = request.headers;
+	try {
+		request.user = await authenticateUser(authorization);
+		return;
+	} catch (e: any) {
+		reply.status(e.statusCode || 403).send({
+			error: e.statusCode,
+			message: e.message
+		});
+	}
+};
+
+export const authenticateUser = async (authorization: string) => {
 	if (!!authorization && authorization.startsWith('Bearer ')) {
 		const authToken: string = authorization.split('Bearer ')[1];
 		try {
 			const decodedIdToken = await firebaseApp
 				.auth()
 				.verifyIdToken(authToken);
-			request.user = await UserSchema.findOne({
+
+			let user = await UserSchema.findOne({
 				firebaseId: decodedIdToken.uid,
 			});
-			return;
+			if (!user) {
+				user = await UserSchema.create({
+					name: decodedIdToken.name,
+					email: decodedIdToken.email,
+					firebaseId: decodedIdToken.uid,
+					avatar: decodedIdToken.picture,
+				});
+			}
+			return user;
 		} catch (e) {
-			reply.status(401).send({
-				error: 401,
-				code: 'tokenExpired',
-				message: 'Token Expired',
-				e,
-			});
+			const error = new mercurius.ErrorWithProps('Token Expired');
+			error.statusCode = 401;
+			throw error;
 		}
 	}
-	reply.status(403).send({
-		error: 403,
-		code: 'accessDenied',
-		message: 'Access Denied',
-		headers: request.headers.authorization,
-	});
+	const error = new mercurius.ErrorWithProps('Access Denied');
+	error.statusCode = 403;
+	throw error;
 };
