@@ -1,18 +1,17 @@
 import BankSchema from '@/models/bank.model';
-import { UserType } from '@/routes/users';
 import bankAccountService from '@/services/bank-account.service';
 
 class BankService {
-	static async getAll(user: UserType) {
+	static async getAll(user: any) {
 		return BankSchema.find({ user }).sort({ name: 1 });
 	}
-	static async create(data: { name: string; user: UserType }) {
+	static async create(data: { name: string; user: any }) {
 		const { name, user } = data;
 		return BankSchema.create({ name, user });
 	}
 	static async update(
 		id: string,
-		user: UserType,
+		user: any,
 		data: { name: string; icon?: string },
 	) {
 		const { name, icon } = data;
@@ -28,7 +27,7 @@ class BankService {
 
 		return bank;
 	}
-	static async delete(id: string, user: UserType) {
+	static async delete(id: string, user: any) {
 		const bank = await this.findOne(id, user);
 		if (!bank) return null;
 		const bankAccounts = await bankAccountService.getAll(bank, user, true);
@@ -37,7 +36,7 @@ class BankService {
 			await bankAccount.deleteOne();
 		}
 	}
-	static async findOne(id: string, user: UserType) {
+	static async findOne(id: string, user: any) {
 		return BankSchema.findOne({ _id: id, user });
 	}
 }
