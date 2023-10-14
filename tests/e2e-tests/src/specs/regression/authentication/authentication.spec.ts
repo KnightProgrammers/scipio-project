@@ -48,7 +48,7 @@ test('Successful sign-up', async () => {
 });
 
 test('Successful sign-in - first time', async () => {
-	const {data: {me: userData}} = await signInUser(page, { email, password }, false);
+	const userData = await signInUser(page, { email, password }, false);
 	expect(userData.id).toBeTruthy();
 	expect(userData.name).toBe(name);
 	expect(userData.email).toBe(email);
@@ -68,7 +68,7 @@ test('Successful sign-in - first time', async () => {
 test('Successful sign-in - all the data', async ({page}) => {
 	await page.goto('/');
 	await page.waitForLoadState('load');
-	const {data: {me: userData}} = await signInUser(page, { email, password }, false);
+	const userData = await signInUser(page, { email, password }, false);
 	expect(userData.id).toBeTruthy();
 	expect(userData.name).toBe(name);
 	expect(userData.email).toBe(email);
