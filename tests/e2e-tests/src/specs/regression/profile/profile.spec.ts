@@ -80,6 +80,5 @@ async function validateProfileUpdate(page: Page, name: string) {
 	const {
 		data: { updateProfile: userData },
 	} = await updateUserProfileResponse.json();
-	console.log({userData});
 	expect(userData.name).toBe(name);
 }

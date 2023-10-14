@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { expect, Page } from '@playwright/test';
 import { API_BASE_URL } from '../config';
 import { waitForRequest } from './generic.helper';
+import { DEFAULT_CURRENCIES } from "./profile.helper";
 
 dotenv.config();
 
@@ -88,9 +89,11 @@ export const welcomeUser = async (page: Page, data: { lang: string, country: str
 	await waitForUpdateUserProfileRequest;
 	// currencies step
 	await expect(page.locator('div[data-tn="currency-ckb"]')).toBeVisible();
-	for (const currency of currencies) {
+	for (const currency of DEFAULT_CURRENCIES) {
 		const currencyCheckbox = page.locator(`input[data-tn="${currency}"]`);
-		await currencyCheckbox.setChecked(DEFAULT_USER_CURRENCIES.includes(currency));
+		if (currencies.includes(currency)) {
+			await currencyCheckbox.setChecked(true);
+		}
 	}
 	const waitForSetUserCurrenciesRequest = waitForRequest(page, 'setUserCurrencies');
 	await nextBtn.click();

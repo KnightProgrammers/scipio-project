@@ -4,6 +4,7 @@ import { signUpUser, signInUser, DEFAULT_USER_CURRENCIES } from '../../../helper
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_CURRENCIES, goToUserProfile } from '../../../helpers/profile.helper';
 import { waitForRequest } from '../../../helpers/generic.helper';
+import { API_BASE_URL } from "../../../config";
 
 
 let email: string;
@@ -41,8 +42,10 @@ test.afterAll(async () => {
 
 test('Default list of currencies', async () => {
 	const waitForCurrenciesRequest = waitForRequest(page, 'currencies');
+	const waitForUserCurrenciesRequest = waitForRequest(page, 'userCurrencies');
 	await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
 	const currenciesRequest = await waitForCurrenciesRequest;
+	await waitForUserCurrenciesRequest;
 	const currenciesResponse = await currenciesRequest.response();
 	const {data: { currencies }} = await currenciesResponse.json();
 	expect(currencies.map(c => c.code)).toStrictEqual(DEFAULT_CURRENCIES);
@@ -58,7 +61,6 @@ test('Default list of currencies', async () => {
 			await expect(currencyInput).not.toBeChecked();
 		}
 	}
-
 	const submitButton = page.locator('button[type="submit"]');
 	await expect(submitButton).not.toHaveClass(/cursor-not-allowed/);
 });
