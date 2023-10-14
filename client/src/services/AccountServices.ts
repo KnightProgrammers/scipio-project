@@ -88,6 +88,7 @@ export async function apiSetUserCurrencies(
                     currencyIds: $currencyIds
                   ) {
                     id
+                    code
                   }
                 }
             `,
