@@ -49,10 +49,10 @@ const schema = gql`
   type Query {
     me: User
     currencies: [Currency!]!
+    countries: [Country!]!
   }
 
   type Mutation {
-  
     updateProfile(name: String!, lang: Lang!, countryName: String!): User
     setUserCurrencies(currencyIds: [String!]!): [Currency!]!
     
