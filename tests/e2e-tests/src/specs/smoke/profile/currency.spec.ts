@@ -31,8 +31,10 @@ test.afterAll(async () => {
 
 test('Default list of currencies', async () => {
 	const waitForCurrenciesRequest = waitForRequest(page, 'currencies');
+	const waitForUserCurrenciesRequest = waitForRequest(page, 'userCurrencies');
 	await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-currency"]').click();
 	const currenciesRequest = await waitForCurrenciesRequest;
+	await waitForUserCurrenciesRequest;
 	const currenciesResponse = await currenciesRequest.response();
 	const {data: { currencies }} = await currenciesResponse.json();
 

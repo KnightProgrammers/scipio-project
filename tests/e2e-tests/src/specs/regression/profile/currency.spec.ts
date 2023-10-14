@@ -81,7 +81,6 @@ test('Update user currencies', async () => {
 	const {
 		data: { setUserCurrencies: userCurrencies },
 	} = await userCurrenciesResponse.json();
-	console.log({userCurrencies});
 	const savedCurrencies = userCurrencies.map(c => c.code);
 	expect(savedCurrencies.sort()).toStrictEqual(newUserCurrencies);
 });
