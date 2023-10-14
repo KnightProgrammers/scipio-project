@@ -1,5 +1,5 @@
 import Steps from '@/components/ui/Steps'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, Card, Checkbox, Select, Spinner } from '@/components/ui'
 import {
     Container,
@@ -9,18 +9,19 @@ import {
 } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
 import { apiGetCountryList } from '@/services/CountryServices'
-import { CountryDataType, langOptions, LanguageOption } from '@/@types/system'
+import { langOptions, LanguageOption } from '@/@types/system'
 import { AiOutlineStar } from 'react-icons/ai'
 import { BiWorld } from 'react-icons/bi'
 import { HiOutlineLanguage } from 'react-icons/hi2'
 import { MdOutlineRocketLaunch } from 'react-icons/md'
-import { apiPathUserProfile } from '@/services/AccountServices'
-import { setUser, useAppDispatch } from '@/store'
-import toast from '@/components/ui/toast'
-import Notification from '@/components/ui/Notification'
+import {
+    apiSetUserCurrencies,
+    apiUpdateUserProfile,
+} from '@/services/AccountServices'
+import { setUser, useAppDispatch, useAppSelector } from '@/store'
 import i18n from 'i18next'
 import { LuCoins } from 'react-icons/lu'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiGetCurrencies } from '@/services/CurrencyServices'
 
 const STEPS = {
@@ -34,10 +35,11 @@ const STEPS = {
 const WelcomeWizard = () => {
     const [step, setStep] = useState(0)
     const [isSaving, setIsSaving] = useState<boolean>(false)
-    const [loadingCountries, setLoadingCountries] = useState(false)
     const [selectedCountry, setSelectedCountry] = useState<any>({})
-    const [countries, setCountries] = useState<CountryDataType[]>([])
+    const [newUserData, setNewUserData] = useState<any>(null)
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
+
+    const user = useAppSelector((state) => state.auth.user)
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
@@ -47,31 +49,26 @@ const WelcomeWizard = () => {
         queryKey: ['user-currencies'],
         queryFn: apiGetCurrencies,
     })
+    const { data: countries, isFetching: isFetchingCountries } = useQuery({
+        queryKey: ['countries'],
+        queryFn: apiGetCountryList,
+    })
 
-    const errorHandler = useCallback(
-        (e: any) => {
-            toast.push(
-                <Notification title={t('error.generic') || ''} type="danger" />,
-                {
-                    placement: 'top-center',
-                },
-            )
-            console.error(e)
+    const updateUserProfileMutation = useMutation({
+        mutationFn: apiUpdateUserProfile,
+        onSuccess: (userData) => {
+            setIsSaving(false)
+            setNewUserData(userData)
         },
-        [t],
-    )
+    })
 
-    useEffect(() => {
-        if (!countries.length && !loadingCountries) {
-            setLoadingCountries(true)
-            apiGetCountryList()
-                .then(({ data }) => {
-                    setCountries(data)
-                    setLoadingCountries(false)
-                })
-                .catch(errorHandler)
-        }
-    }, [countries.length, loadingCountries, errorHandler])
+    const updateUserCurrenciesMutation = useMutation({
+        mutationFn: apiSetUserCurrencies,
+        onSuccess: () => {
+            setIsSaving(false)
+            dispatch(setUser(newUserData))
+        },
+    })
 
     const onChange = (nextStep: number) => {
         if (nextStep < 0) {
@@ -84,22 +81,17 @@ const WelcomeWizard = () => {
     }
 
     const onNext = async () => {
-        if (
-            step === STEPS.CURRENCY &&
-            selectedCountry &&
-            selectedCurrencies.length
-        ) {
+        if (step === STEPS.COUNTRY && selectedCountry) {
             setIsSaving(true)
-            try {
-                const user = await apiPathUserProfile(
-                    selectedCountry.value,
-                    i18n.language,
-                    selectedCurrencies,
-                )
-                dispatch(setUser(user))
-            } catch (e) {
-                errorHandler(e)
-            }
+            updateUserProfileMutation.mutate({
+                name: user.name || '',
+                countryName: selectedCountry.value,
+                lang: i18n.language,
+            })
+        }
+        if (step === STEPS.CURRENCY && selectedCurrencies.length) {
+            setIsSaving(true)
+            updateUserCurrenciesMutation.mutate(selectedCurrencies)
         }
         onChange(step + 1)
     }
@@ -166,13 +158,15 @@ const WelcomeWizard = () => {
                             <Select
                                 placeholder={t('placeholders.country')}
                                 id="country-select"
-                                isDisabled={loadingCountries}
-                                isLoading={loadingCountries}
+                                isDisabled={isFetchingCountries}
+                                isLoading={isFetchingCountries}
                                 defaultInputValue=""
-                                options={countries.map(({ name }) => ({
-                                    label: name,
-                                    value: name,
-                                }))}
+                                options={countries.map(
+                                    (c: { name: string }) => ({
+                                        label: c.name,
+                                        value: c.name,
+                                    }),
+                                )}
                                 onChange={setSelectedCountry}
                             />
                         </div>

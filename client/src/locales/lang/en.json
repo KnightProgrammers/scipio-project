@@ -153,7 +153,8 @@
         "delete": "Delete",
         "deleting": "Deleting",
         "edit": "Edit",
-        "next": "Next"
+        "next": "Next",
+        "tryAgain": "Try again"
     },
     "fields": {
         "email": "Email",
@@ -187,10 +188,15 @@
         "password": {
             "updated": "Password Updated"
         },
+        "bank": {
+            "created": "Bank successfully created",
+            "updated": "Bank successfully updated",
+            "deleted": "Bank successfully deleted"
+        },
         "bankAccount": {
             "created": "Bank account successfully created",
-            "edited": "Bank account successfully updated",
-            "deleted": "Bank account {{accountNumber}} successfully deleted"
+            "updated": "Bank account successfully updated",
+            "deleted": "Bank account successfully deleted"
         },
         "textCopied": "Copied!"
     },

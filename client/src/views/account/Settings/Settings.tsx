@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy, useCallback } from 'react'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import Tabs from '@/components/ui/Tabs'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import Container from '@/components/shared/Container'
@@ -6,18 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { apiGetUserProfile } from '@/services/AccountServices'
 import { Loading } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
-
-type AccountSetting = {
-    id: string
-    name: string
-    email: string
-    avatar: string
-    lang: string
-    country: {
-        name: string
-        code: string
-    }
-}
+import { useQuery } from '@tanstack/react-query'
 
 const Profile = lazy(() => import('./components/Profile'))
 const Password = lazy(() => import('./components/Password'))
@@ -41,7 +30,6 @@ const settingsMenu: Record<
 
 const Settings = () => {
     const [currentTab, setCurrentTab] = useState('profile')
-    const [data, setData] = useState<AccountSetting>()
 
     const navigate = useNavigate()
 
@@ -58,17 +46,16 @@ const Settings = () => {
         navigate(`/account/settings/${val}`)
     }
 
-    const fetchData = useCallback(async () => {
-        const response = await apiGetUserProfile()
-        setData(response.data)
-    }, [setData])
+    // Queries
+    const { data, isFetching: isFetchingProfile } = useQuery({
+        queryKey: ['user-profile'],
+        queryFn: apiGetUserProfile,
+        suspense: true,
+    })
 
     useEffect(() => {
         setCurrentTab(path)
-        if (!data) {
-            fetchData().catch(console.error)
-        }
-    }, [setCurrentTab, data, fetchData, path])
+    }, [setCurrentTab, path])
 
     return (
         <Container data-tn="account-settings-page">
@@ -89,7 +76,7 @@ const Settings = () => {
                 <div className="px-4 py-6">
                     <Suspense fallback={<></>}>
                         {currentTab === 'profile' &&
-                            (data !== undefined ? (
+                            (!isFetchingProfile && !!data ? (
                                 <Profile
                                     data={{
                                         ...data,
