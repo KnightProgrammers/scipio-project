@@ -28,12 +28,12 @@ const Currency = () => {
     const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
             queryKey: ['user-currencies'],
-            queryFn: apiGetUserCurrencies
+            queryFn: apiGetUserCurrencies,
         })
 
     const { data: currencies, isFetching: isFetchingCurrencies } = useQuery({
         queryKey: ['currencies'],
-        queryFn: apiGetCurrencies
+        queryFn: apiGetCurrencies,
     })
 
     const setUserCurrenciesMutation = useMutation({

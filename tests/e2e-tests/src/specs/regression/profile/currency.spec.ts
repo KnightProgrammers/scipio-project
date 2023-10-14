@@ -4,7 +4,6 @@ import { signUpUser, signInUser, DEFAULT_USER_CURRENCIES } from '../../../helper
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_CURRENCIES, goToUserProfile } from '../../../helpers/profile.helper';
 import { waitForRequest } from '../../../helpers/generic.helper';
-import { API_BASE_URL } from "../../../config";
 
 
 let email: string;
