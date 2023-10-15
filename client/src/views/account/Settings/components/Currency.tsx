@@ -12,8 +12,8 @@ import { useEffect, useState } from 'react'
 import {
     apiGetUserCurrencies,
     apiSetUserCurrencies,
-} from '@/services/AccountServices'
-import { apiGetCurrencies } from '@/services/CurrencyServices'
+} from '@/services/AccountService'
+import { apiGetCurrencies } from '@/services/CurrencyService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'

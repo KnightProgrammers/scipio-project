@@ -24,14 +24,16 @@
     "fastify-plugin": "4.5.1",
     "firebase-admin": "11.11.0",
     "gravatar": "1.8.2",
+    "luxon": "3.4.3",
     "mercurius": "12.2.0",
-    "mercurius-codegen": "5.0.3",
     "mercurius-auth": "4.0.0",
+    "mercurius-codegen": "5.0.3",
     "module-alias": "2.2.3",
     "mongoose": "7.6.1"
   },
   "devDependencies": {
     "@types/gravatar": "1.8.4",
+    "@types/luxon": "3.3.2",
     "@types/node": "20.8.4",
     "@types/tap": "15.0.9",
     "@typescript-eslint/eslint-plugin": "6.7.5",
