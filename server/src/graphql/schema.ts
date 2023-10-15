@@ -122,7 +122,7 @@ const schema = gql`
     cardHolder: String!
     expiration: String!
     issuer: CreditCardIssuer!
-    status: CreditCardStatus = ACTIVE
+    status: CreditCardStatus! = ACTIVE
     creditLimitAmount: Float!
     creditLimitCurrencyId: String!
   }
