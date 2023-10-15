@@ -1,5 +1,5 @@
-import CreditCardService from "@/services/credit-card-service";
-import CurrencyService from "@/services/currency.service";
+import CreditCardService from '@/services/credit-card-service';
+import CurrencyService from '@/services/currency.service';
 
 type CreditCardInput = {
 	label?: string;
