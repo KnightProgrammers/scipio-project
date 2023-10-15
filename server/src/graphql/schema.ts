@@ -34,6 +34,30 @@ const schema = gql`
     label: String
     currency: Currency!
   }
+  
+  enum CreditCardIssuer {
+    visa
+    mastercard
+    other
+  }
+  
+  enum CreditCardStatus {
+    ACTIVE
+    EXPIRED
+    BLOCKED
+  }
+  
+  type CreditCard {
+    id: String!
+    label: String
+    cardHolder: String!
+    lastFourDigits: String!
+    expiration: String!
+    issuer: CreditCardIssuer!
+    status: CreditCardStatus!
+    creditLimitAmount: Float!
+    creditLimitCurrency: Currency!
+  }
 
   type User {
     id: String!
@@ -44,6 +68,7 @@ const schema = gql`
     country: Country
     currencies: [Currency]!
     banks: [Bank]!
+    creditCards: [CreditCard]!
   }
 
   type Query {
