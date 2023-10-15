@@ -1,6 +1,6 @@
 import * as gavatar from 'gravatar';
 import BankService from '@/services/bank.service';
-import CreditCardService from "@/services/credit-card-service";
+import CreditCardService from '@/services/credit-card-service';
 
 export const UserQueryResolver = {
 	id: (user: any) => user._id,
@@ -26,5 +26,5 @@ export const UserQueryResolver = {
 		}));
 	},
 	banks: async (user: any) => BankService.getAll(user),
-	creditCards: async (user: any) => CreditCardService.getAll(user.id)
+	creditCards: async (user: any) => CreditCardService.getAll(user._id)
 };
