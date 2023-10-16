@@ -37,10 +37,8 @@ test.afterAll(async () => {
 
 test('Load credit card page', async () => {
 	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	const waitForUserCurrencies = waitForRequest(page, 'userCurrencies');
 	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
 	await waitForCreditCards;
-	await waitForUserCurrencies;
 });
 
 test('Add a credit card', async () => {
