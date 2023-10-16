@@ -56,7 +56,7 @@ const ModalForm = (props: ModalFormProps) => {
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
-                    {({ touched, errors, submitForm, isSubmitting }) => (
+                    {({ touched, errors, submitForm }) => (
                         <Form className="mt-4 px-4">
                             <FormContainer className=" max-h-96 overflow-y-auto">
                                 {fields(errors, touched)}
@@ -67,7 +67,7 @@ const ModalForm = (props: ModalFormProps) => {
                                     variant="default"
                                     type="button"
                                     data-tn="modal-form-cancel-btn"
-                                    disabled={isSubmitting}
+                                    disabled={isSaving}
                                     onClick={onClose}
                                 >
                                     {t('actions.cancel')}
@@ -77,8 +77,8 @@ const ModalForm = (props: ModalFormProps) => {
                                     type="submit"
                                     className="w-full justify-center "
                                     data-tn="modal-form-save-btn"
-                                    disabled={isSubmitting}
-                                    loading={isSubmitting}
+                                    disabled={isSaving}
+                                    loading={isSaving}
                                     onClick={submitForm}
                                 >
                                     {isSaving
