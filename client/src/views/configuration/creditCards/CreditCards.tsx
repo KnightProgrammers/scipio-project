@@ -167,7 +167,11 @@ const CreditCards = () => {
         cardHolder: Yup.string().required(t('validations.required') || ''),
         expiration: Yup.string().required(t('validations.required') || ''),
         issuer: Yup.string().required(t('validations.required') || ''),
+        status: Yup.string().required(t('validations.required') || ''),
         creditLimitAmount: Yup.string().required(
+            t('validations.required') || '',
+        ),
+        creditLimitCurrencyId: Yup.string().required(
             t('validations.required') || '',
         ),
     })
@@ -301,7 +305,7 @@ const CreditCards = () => {
                     <FormItem
                         asterisk
                         label={t(`fields.issuer`) || ''}
-                        invalid={(errors.issuer && touched.issuer) as boolean}
+                        invalid={(errors.issuer || touched.issuer) as boolean}
                         errorMessage={errors.issuer?.toString()}
                     >
                         <Field name="issuer">
@@ -311,6 +315,7 @@ const CreditCards = () => {
                                     form={form}
                                     placeholder={t(`fields.issuer`) || ''}
                                     options={ISSUERS}
+                                    id="issuer-select"
                                     value={ISSUERS.filter(
                                         (issuer) =>
                                             issuer.value === field.value,
@@ -328,7 +333,7 @@ const CreditCards = () => {
                     <FormItem
                         asterisk
                         label={t(`fields.status`) || ''}
-                        invalid={(errors.status && touched.status) as boolean}
+                        invalid={(errors.status || touched.status) as boolean}
                         errorMessage={errors.status?.toString()}
                     >
                         <Field name="status">
@@ -338,6 +343,7 @@ const CreditCards = () => {
                                     form={form}
                                     placeholder={t(`fields.status`) || ''}
                                     options={CREDIT_CARD_STATUS}
+                                    id="status-select"
                                     value={CREDIT_CARD_STATUS.filter(
                                         (status: any) =>
                                             status.value === field.value,
@@ -434,6 +440,7 @@ const CreditCards = () => {
                         variant="solid"
                         className="mt-4"
                         icon={<HiPlus />}
+                        data-tn="add-credit-card-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.creditCards.addCreditCardButton')}
@@ -463,6 +470,7 @@ const CreditCards = () => {
                         key={c.id}
                         className="my-4"
                         bodyClass="p-0"
+                        data-tn={`credit-card-${c.id}`}
                         header={
                             <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
                                 <CardIcon cardIssuer={c.issuer} />
@@ -472,20 +480,21 @@ const CreditCards = () => {
                                     </span>
                                     {!!c.lastFourDigits && (
                                         <span className="pl-2 text-lg inline-flex">
-                                            **** {c.lastFourDigits}
+                                            •••• {c.lastFourDigits}
                                         </span>
                                     )}
                                 </div>
                                 <Dropdown
                                     className="absolute right-0 top-0"
                                     placement="middle-end-top"
+                                    data-tn="dropdown-credit-card-btn"
                                     renderTitle={
                                         <EllipsisButton data-tn="dropdown-bank-account-btn" />
                                     }
                                 >
                                     <Dropdown.Item
                                         eventKey="edit"
-                                        data-tn="edit-bank-account-btn"
+                                        data-tn={`edit-credit-card-btn-${c.id}`}
                                         onClick={() => {
                                             setSelectedCreditCard(c)
                                             setIsFormOpen(true)
@@ -500,7 +509,7 @@ const CreditCards = () => {
                                     </Dropdown.Item>
                                     <Dropdown.Item
                                         eventKey="delete"
-                                        data-tn="delete-bank-account-btn"
+                                        data-tn={`delete-credit-card-btn-${c.id}`}
                                         onClick={() => {
                                             setSelectedCreditCard(c)
                                             setIsConfirmDeleteOpen(true)
@@ -579,6 +588,7 @@ const CreditCards = () => {
                     bordered
                     className="my-4 bg-transparent dark:bg-transparent cursor-pointer"
                     bodyClass="flex flex-col justify-center items-center h-full"
+                    data-tn="add-credit-card-btn"
                     onClick={() => setIsFormOpen(true)}
                 >
                     <HiPlus size={50} color="888888" />
