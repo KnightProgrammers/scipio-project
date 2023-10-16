@@ -487,9 +487,8 @@ const CreditCards = () => {
                                 <Dropdown
                                     className="absolute right-0 top-0"
                                     placement="middle-end-top"
-                                    data-tn="dropdown-credit-card-btn"
                                     renderTitle={
-                                        <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                        <EllipsisButton data-tn="dropdown-credit-card-btn" />
                                     }
                                 >
                                     <Dropdown.Item

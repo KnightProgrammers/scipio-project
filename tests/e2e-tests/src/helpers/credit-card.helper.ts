@@ -65,7 +65,7 @@ export const createCreditCard = async (page: Page, data: {
 
 export const openEditCreditCardForm = async (page: Page, creditCardId: string) => {
 	await page.locator(`div[data-tn="credit-card-${creditCardId}"] button[data-tn="dropdown-credit-card-btn"]`).click();
-	await page.locator(`button[data-tn="edit-credit-card-btn-${creditCardId}"]`).click();
+	await page.locator(`div[data-tn="credit-card-${creditCardId}"] li[data-tn="edit-credit-card-btn-${creditCardId}"]`).click();
 	const bankFormContainer = page.locator('div[role="dialog"]');
 	await expect(bankFormContainer).toBeVisible();
 };
@@ -140,7 +140,7 @@ export const deleteCreditCard = async (page: Page, creditCardId: string) => {
 
 export const openDeleteCreditCardDialog = async (page: Page, creditCardId: string) => {
 	await page.locator(`div[data-tn="credit-card-${creditCardId}"] button[data-tn="dropdown-credit-card-btn"]`).click();
-	await page.locator(`button[data-tn="delete-credit-card-btn-${creditCardId}"]`).click();
+	await page.locator(`div[data-tn="credit-card-${creditCardId}"] li[data-tn="delete-credit-card-btn-${creditCardId}"]`).click();
 };
 
 export const confirmDeleteCreditCard = async (page: Page, creditCardId: string) => {
