@@ -399,7 +399,7 @@ const CreditCards = () => {
                     </FormItem>
                 </>
             )}
-            isSaving={false}
+            isSaving={createCreditCardMutation.isLoading || updateCreditCardMutation.isLoading}
             onClose={onFormClose}
             onSubmit={onFormSubmit}
         />
