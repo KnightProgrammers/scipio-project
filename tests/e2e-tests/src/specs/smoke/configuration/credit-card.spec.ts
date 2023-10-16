@@ -8,6 +8,8 @@ import {
 	editCreditCard,
 	openEditCreditCardForm
 } from '../../../helpers/credit-card.helper';
+import { waitForRequest } from "../../../helpers/generic.helper";
+import { NAV_MENU, navigateMenu } from "../../../helpers/nav-menu.helper";
 
 
 let email: string;
@@ -31,6 +33,14 @@ test.beforeAll(async ({ browser }) => {
 
 test.afterAll(async () => {
 	await page.close();
+});
+
+test('Load credit card page', async () => {
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	const waitForUserCurrencies = waitForRequest(page, 'userCurrencies');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	await waitForCreditCards;
+	await waitForUserCurrencies;
 });
 
 test('Add a credit card', async () => {
