@@ -434,6 +434,18 @@ const CreditCards = () => {
         )
     }
 
+    const getBadgedColor = (status: string) => {
+        switch (status) {
+            case 'ACTIVE':
+                return 'emerald'
+            case 'BLOCKED':
+                return 'yellow'
+            case 'EXPIRED':
+                return 'red'
+            default:
+                return 'gray'
+        }
+    }
     return (
         <div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -441,6 +453,7 @@ const CreditCards = () => {
                     <Card
                         key={c.id}
                         className="my-4"
+                        bodyClass="p-0"
                         header={
                             <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
                                 <CardIcon cardIssuer={c.issuer} />
@@ -495,8 +508,8 @@ const CreditCards = () => {
                             </div>
                         }
                     >
-                        <div className="">
-                            <div className="grid grid-cols-2 pb-4 items-center">
+                        <div className="divide-y">
+                            <div className="grid grid-cols-2 pb-4 items-center p-4">
                                 <div className="flex flex-col">
                                     <small className="font-light">
                                         {t(`fields.expiration`)}
@@ -509,13 +522,15 @@ const CreditCards = () => {
                                     <Badge
                                         content={t(
                                             `creditCardStatus.${c.status}`,
-                                        )}
-                                        innerClass="bg-emerald-500"
+                                        ).toUpperCase()}
+                                        innerClass={`bg-${getBadgedColor(
+                                            c.status,
+                                        )}-500`}
                                         className="text-sm"
                                     />
                                 </div>
                             </div>
-                            <div className="py-4">
+                            <div className="p-4">
                                 <div className="block mb-2">
                                     <p className="text-gray-500 font-light">
                                         {t(`fields.creditLimitAmount`)}

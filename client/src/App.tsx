@@ -19,7 +19,7 @@ import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 const Wrapper = () => {
     const { t } = useTranslation()
@@ -29,6 +29,8 @@ const Wrapper = () => {
     queryClient.setDefaultOptions({
         queries: {
             refetchOnWindowFocus: (query) => query.state.status !== 'error',
+            staleTime: Infinity,
+            networkMode: "always"
         },
         mutations: {
             useErrorBoundary: false,
