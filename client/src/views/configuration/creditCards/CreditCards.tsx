@@ -12,36 +12,32 @@ import {
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
 import {
+    ConfirmDialog,
     EllipsisButton,
     FormCustomFormatInput,
     IconText,
+    Loading,
 } from '@/components/shared'
-import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
+import { HiOutlinePencilAlt, HiOutlineTrash, HiPlus } from 'react-icons/hi'
 import { useTranslation } from 'react-i18next'
 import { HiEye } from 'react-icons/hi2'
 import currencyFormat from '@/utils/currencyFormat'
 import EmptyState from '@/components/shared/EmptyState'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
-import { useState } from 'react'
-
-type CreditCardType = {
-    id: string
-    label: string
-    cardHolder: string
-    lastFourDigits: string
-    expiration: string
-    billingCycle: string
-    creditLimit: {
-        amount: number
-        currencyCode: string
-    }
-    issuer: 'mastercard' | 'visa' | 'other'
-    creditUsage?: {
-        usageAmount: number
-        usagePercentage: number
-    }
-}
+import { useMemo, useState } from 'react'
+import { MdOutlineAttachMoney } from 'react-icons/md'
+import { SelectFieldItem } from '@/components/ui/Form'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiGetUserCurrencies } from '@/services/AccountService'
+import toast from '@/components/ui/toast'
+import Notification from '@/components/ui/Notification'
+import {
+    apiGetCreditCardList,
+    apiCreateCreditCard,
+    apiUpdateCreditCard,
+    apiDeleteCreditCard,
+} from '@/services/CreditCardService'
 
 function limit(val: string, max: string) {
     if (val.length === 1 && val[0] > max[0]) {
@@ -65,48 +61,6 @@ function cardExpiryFormat(val: string) {
 
     return month + (date.length ? '/' + date : '')
 }
-
-const DATA: CreditCardType[] = [] /*[
-    {
-        id: '1',
-        label: 'BBVA Platinum',
-        cardHolder: 'Javier Caballero',
-        lastFourDigits: '1234',
-        expiration: '12/2024',
-        issuer: 'mastercard',
-        billingCycle: '29/10',
-        creditLimit: {
-            amount: 210000,
-            currencyCode: 'UYU'
-        }
-    },
-    {
-        id: '1',
-        label: 'ITAU Gold',
-        cardHolder: 'Javier Caballero',
-        lastFourDigits: '6523',
-        expiration: '12/2025',
-        issuer: 'visa',
-        billingCycle: '10/10',
-        creditLimit: {
-            amount: 78000,
-            currencyCode: 'UYU'
-        }
-    },
-    {
-        id: '3',
-        label: 'OCA',
-        cardHolder: 'Javier Caballero',
-        lastFourDigits: '1776',
-        expiration: '08/2027',
-        issuer: 'mastercard',
-        billingCycle: '20/10',
-        creditLimit: {
-            amount: 16000,
-            currencyCode: 'UYU'
-        }
-    },
-]*/
 
 const CardIcon = (props: { cardIssuer: string }) => {
     switch (props.cardIssuer) {
@@ -133,16 +87,69 @@ const CardIcon = (props: { cardIssuer: string }) => {
 
 const CreditCards = () => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
-    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [selectedCreditCard, setSelectedCreditCard] = useState<
         any | undefined
     >(undefined)
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
+        useState<boolean>(false)
+
     const { t } = useTranslation()
+
+    const queryClient = useQueryClient()
+
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+        useQuery({
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
+            suspense: true,
+        })
+
+    const { data: creditCardList, isFetching: isFetchingCreditCards } =
+        useQuery({
+            queryKey: ['user-credit-cards'],
+            queryFn: apiGetCreditCardList,
+            suspense: true,
+        })
+
+    const onMutationSuccess = async (title: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: ['user-credit-cards'],
+        })
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+    }
+
+    const createCreditCardMutation = useMutation({
+        mutationFn: apiCreateCreditCard,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.creditCard.created') || '')
+        },
+    })
+
+    const updateCreditCardMutation = useMutation({
+        mutationFn: apiUpdateCreditCard,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.creditCard.updated') || '')
+        },
+    })
+
+    const deleteCreditCardMutation = useMutation({
+        mutationFn: apiDeleteCreditCard,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.creditCard.deleted') || '')
+        },
+    })
 
     const ISSUERS = [
         { label: 'Visa', value: 'visa' },
         { label: 'Mastercard', value: 'mastercard' },
         { label: t('placeholders.other'), value: 'other' },
+    ]
+
+    const CREDIT_CARD_STATUS = [
+        { label: t('creditCardStatus.ACTIVE'), value: 'ACTIVE' },
+        { label: t('creditCardStatus.BLOCKED'), value: 'BLOCKED' },
     ]
 
     const progressColor = (actualUsage: number): string => {
@@ -157,25 +164,60 @@ const CreditCards = () => {
 
     const validationSchema = Yup.object().shape({
         cardHolder: Yup.string().required(t('validations.required') || ''),
-        lastFourDigits: Yup.string().required(t('validations.required') || ''),
         expiration: Yup.string().required(t('validations.required') || ''),
+        issuer: Yup.string().required(t('validations.required') || ''),
+        creditLimitAmount: Yup.string().required(
+            t('validations.required') || '',
+        ),
     })
 
     const onFormClose = () => {
         setIsFormOpen(false)
         setSelectedCreditCard(undefined)
     }
-    const onFormSubmit = () => {
+    const onFormSubmit = (data: any) => {
+        if (selectedCreditCard) {
+            const expiration = data.expiration.replace('/', '')
+            updateCreditCardMutation.mutate({
+                ...data,
+                id: selectedCreditCard.id,
+                expiration,
+            })
+        } else {
+            createCreditCardMutation.mutate(data)
+        }
         onFormClose()
-        setIsSaving(true)
     }
+
+    const onDeleteConfirmClose = () => {
+        setIsConfirmDeleteOpen(false)
+        setSelectedCreditCard(undefined)
+    }
+
+    const onDelete = async () => {
+        if (selectedCreditCard) {
+            deleteCreditCardMutation.mutate(selectedCreditCard.id)
+        }
+        onDeleteConfirmClose()
+    }
+
+    const defaultValue = useMemo(() => {
+        if (selectedCreditCard) {
+            return {
+                ...selectedCreditCard,
+                creditLimitCurrencyId:
+                    selectedCreditCard.creditLimitCurrency.id,
+            }
+        }
+        return {
+            status: 'ACTIVE',
+        }
+    }, [selectedCreditCard])
 
     const CreditCardForm = () => (
         <ModalForm
             isOpen={isFormOpen}
-            entity={{
-                label: '',
-            }}
+            entity={defaultValue}
             title={
                 selectedCreditCard
                     ? t('pages.creditCards.form.editTitle')
@@ -256,6 +298,7 @@ const CreditCards = () => {
                         </Field>
                     </FormItem>
                     <FormItem
+                        asterisk
                         label={t(`fields.issuer`) || ''}
                         invalid={(errors.issuer && touched.issuer) as boolean}
                         errorMessage={errors.issuer?.toString()}
@@ -283,6 +326,33 @@ const CreditCards = () => {
                     </FormItem>
                     <FormItem
                         asterisk
+                        label={t(`fields.status`) || ''}
+                        invalid={(errors.status && touched.status) as boolean}
+                        errorMessage={errors.status?.toString()}
+                    >
+                        <Field name="status">
+                            {({ field, form }: FieldProps) => (
+                                <Select
+                                    field={field}
+                                    form={form}
+                                    placeholder={t(`fields.status`) || ''}
+                                    options={CREDIT_CARD_STATUS}
+                                    value={CREDIT_CARD_STATUS.filter(
+                                        (status: any) =>
+                                            status.value === field.value,
+                                    )}
+                                    onChange={(option) =>
+                                        form.setFieldValue(
+                                            field.name,
+                                            option?.value,
+                                        )
+                                    }
+                                />
+                            )}
+                        </Field>
+                    </FormItem>
+                    <FormItem
+                        asterisk
                         label={t(`fields.creditLimitAmount`) || ''}
                         invalid={
                             !!errors.creditLimitAmount ||
@@ -296,30 +366,65 @@ const CreditCards = () => {
                             name="creditLimitAmount"
                             placeholder={t(`fields.creditLimitAmount`)}
                             component={Input}
+                            prefix={
+                                <MdOutlineAttachMoney className="text-xl" />
+                            }
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t('fields.currency') || ''}
+                        invalid={
+                            !!errors.creditLimitCurrencyId ||
+                            !!touched.creditLimitCurrencyId
+                        }
+                        errorMessage={errors.creditLimitCurrencyId?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="creditLimitCurrencyId"
+                            placeholder={t('fields.currency')}
+                            options={userCurrencies?.map((c) => ({
+                                value: c.id,
+                                label: `${c.code} - ${t(
+                                    `currencies.${c.code}`,
+                                )}`,
+                            }))}
+                            isLoading={isFetchingUserCurrencies}
+                            className="currency-select"
+                            id="currency-select"
+                            component={SelectFieldItem}
                         />
                     </FormItem>
                 </>
             )}
-            isSaving={isSaving}
+            isSaving={false}
             onClose={onFormClose}
             onSubmit={onFormSubmit}
         />
     )
 
-    if (DATA.length === 0) {
+    if (!creditCardList || isFetchingCreditCards) {
+        return <Loading loading type="cover" />
+    }
+
+    if (creditCardList.length === 0) {
         return (
             <div>
                 <CreditCardForm />
                 <EmptyState
-                    title="Sin Tarjetas de Crédito"
-                    description="Prueba agregando tarjetas de crédito para asociar controlar mejor tus consumos"
+                    title={t('pages.creditCards.emptyState.title')}
+                    description={t('pages.creditCards.emptyState.description')}
+                    className="bg-transparent dark:bg-transparent"
                 >
                     <Button
                         variant="solid"
                         className="mt-4"
+                        icon={<HiPlus />}
                         onClick={() => setIsFormOpen(true)}
                     >
-                        Agregar Tarjeta de Crédito
+                        {t('pages.creditCards.addCreditCardButton')}
                     </Button>
                 </EmptyState>
             </div>
@@ -327,112 +432,148 @@ const CreditCards = () => {
     }
 
     return (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {DATA.map((c, index) => (
+        <div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {creditCardList.map((c) => (
+                    <Card
+                        key={c.id}
+                        className="my-4"
+                        header={
+                            <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
+                                <CardIcon cardIssuer={c.issuer} />
+                                <div className="grid ">
+                                    <span className="pl-2 text-xs font-light inline-flex">
+                                        {c.label.toLocaleUpperCase()}
+                                    </span>
+                                    {!!c.lastFourDigits && (
+                                        <span className="pl-2 text-lg inline-flex">
+                                            **** {c.lastFourDigits}
+                                        </span>
+                                    )}
+                                </div>
+                                <Dropdown
+                                    className="absolute right-0 top-0"
+                                    placement="middle-end-top"
+                                    renderTitle={
+                                        <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                    }
+                                >
+                                    <Dropdown.Item
+                                        eventKey="edit"
+                                        data-tn="edit-bank-account-btn"
+                                        onClick={() => {
+                                            setSelectedCreditCard(c)
+                                            setIsFormOpen(true)
+                                        }}
+                                    >
+                                        <IconText
+                                            className="text-sm font-semibold w-full"
+                                            icon={<HiOutlinePencilAlt />}
+                                        >
+                                            {t('actions.edit')}
+                                        </IconText>
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        eventKey="delete"
+                                        data-tn="delete-bank-account-btn"
+                                        onClick={() => {
+                                            setSelectedCreditCard(c)
+                                            setIsConfirmDeleteOpen(true)
+                                        }}
+                                    >
+                                        <IconText
+                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                            icon={<HiOutlineTrash />}
+                                        >
+                                            {t('actions.delete')}
+                                        </IconText>
+                                    </Dropdown.Item>
+                                </Dropdown>
+                            </div>
+                        }
+                    >
+                        <div className="">
+                            <div className="grid grid-cols-2 pb-4 items-center">
+                                <div className="flex flex-col">
+                                    <small className="font-light">
+                                        {t(`fields.expiration`)}
+                                    </small>
+                                    <span className="font-semibold">
+                                        {c.expiration}
+                                    </span>
+                                </div>
+                                <div className="text-right w-full">
+                                    <Badge
+                                        content={t(
+                                            `creditCardStatus.${c.status}`,
+                                        )}
+                                        innerClass="bg-emerald-500"
+                                        className="text-sm"
+                                    />
+                                </div>
+                            </div>
+                            <div className="py-4">
+                                <div className="block mb-2">
+                                    <p className="text-gray-500 font-light">
+                                        {t(`fields.creditLimitAmount`)}
+                                    </p>
+                                    <p className="text-4xl font-semibold text-center">
+                                        {currencyFormat(
+                                            c.creditLimitAmount,
+                                            c.creditLimitCurrency.code,
+                                        )}
+                                    </p>
+                                </div>
+                                <p className="text-gray-500 font-light hidden">
+                                    Crédito Usado
+                                </p>
+                                <div className="hidden">
+                                    <Progress
+                                        percent={0}
+                                        size="md"
+                                        color={progressColor(0)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="py-4 hidden">
+                                <Button
+                                    block
+                                    variant="twoTone"
+                                    size="sm"
+                                    icon={<HiEye />}
+                                >
+                                    Ver Movimientos
+                                </Button>
+                            </div>
+                        </div>
+                    </Card>
+                ))}
                 <Card
-                    key={index}
-                    className="my-4"
-                    header={
-                        <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
-                            <CardIcon cardIssuer={c.issuer} />
-                            <div className="grid ">
-                                <span className="pl-2 text-xs font-light inline-flex">
-                                    {c.label.toLocaleUpperCase()}
-                                </span>
-                                <span className="pl-2 text-lg inline-flex">
-                                    **** {c.lastFourDigits}
-                                </span>
-                            </div>
-                            <Dropdown
-                                className="absolute right-0 top-0"
-                                placement="middle-end-top"
-                                renderTitle={
-                                    <EllipsisButton data-tn="dropdown-bank-account-btn" />
-                                }
-                            >
-                                <Dropdown.Item
-                                    eventKey="edit"
-                                    data-tn="edit-bank-account-btn"
-                                    onClick={() => {}}
-                                >
-                                    <IconText
-                                        className="text-sm font-semibold w-full"
-                                        icon={<HiOutlinePencilAlt />}
-                                    >
-                                        {t('actions.edit')}
-                                    </IconText>
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="delete"
-                                    data-tn="delete-bank-account-btn"
-                                    onClick={() => {}}
-                                >
-                                    <IconText
-                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                        icon={<HiOutlineTrash />}
-                                    >
-                                        {t('actions.delete')}
-                                    </IconText>
-                                </Dropdown.Item>
-                            </Dropdown>
-                        </div>
-                    }
+                    bordered
+                    className="my-4 bg-transparent dark:bg-transparent cursor-pointer"
+                    bodyClass="flex flex-col justify-center items-center h-full"
+                    onClick={() => setIsFormOpen(true)}
                 >
-                    <div className="divide-y">
-                        <div className="grid grid-cols-2 pb-4 items-center">
-                            <div className="flex flex-col">
-                                <small className="font-light">Cierre</small>
-                                <span className="font-semibold">
-                                    {c.billingCycle}
-                                </span>
-                            </div>
-                            <div className=" text-right">
-                                <Badge
-                                    content={'Active'}
-                                    innerClass="bg-emerald-500"
-                                    className="text-sm"
-                                />
-                            </div>
-                        </div>
-                        <div className="py-4">
-                            <div className="block mb-2">
-                                <p className="text-gray-500 font-light">
-                                    Limite de crédito
-                                </p>
-                                <p className="text-4xl font-semibold text-center">
-                                    {currencyFormat(
-                                        c.creditLimit.amount,
-                                        c.creditLimit.currencyCode,
-                                    )}
-                                </p>
-                            </div>
-                            <p className="text-gray-500 font-light hidden">
-                                Crédito Usado
-                            </p>
-                            <div className="hidden">
-                                <Progress
-                                    percent={c.creditUsage?.usagePercentage}
-                                    size="md"
-                                    color={progressColor(
-                                        c.creditUsage?.usagePercentage || 0,
-                                    )}
-                                />
-                            </div>
-                        </div>
-                        <div className="py-4 hidden">
-                            <Button
-                                block
-                                variant="twoTone"
-                                size="sm"
-                                icon={<HiEye />}
-                            >
-                                Ver Movimientos
-                            </Button>
-                        </div>
-                    </div>
+                    <HiPlus size={50} color="888888" />
+                    <p>{t('pages.creditCards.addCreditCardButton')}</p>
                 </Card>
-            ))}
+            </div>
             <CreditCardForm />
+            <ConfirmDialog
+                isOpen={isConfirmDeleteOpen}
+                type="danger"
+                title={t('pages.creditCards.deleteConfirmation.title')}
+                data-tn="confirm-delete-credit-card-dialog"
+                confirmButtonColor="red-600"
+                confirmText={t('actions.delete')}
+                cancelText={t('actions.cancel')}
+                onClose={onDeleteConfirmClose}
+                onRequestClose={onDeleteConfirmClose}
+                onCancel={onDeleteConfirmClose}
+                onConfirm={onDelete}
+            >
+                <p>{t('pages.creditCards.deleteConfirmation.description')}</p>
+            </ConfirmDialog>
         </div>
     )
 }

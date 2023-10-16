@@ -67,8 +67,18 @@
         "creditCards": {
             "header": "Tarjetas de Créditos",
             "form": {
-                "newTitle": "Nueva Tarjeta de Crédito"
-            }
+                "newTitle": "Nueva Tarjeta de Crédito",
+                "editTitle": "Editar Tarjeta de Crédito"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar Tarjeta de Crédito",
+                "description": "Está seguro que desea eliminar la tarjeta de crédito?"
+            },
+            "emptyState": {
+                "title": "Sin Tarjetas de crédito",
+                "description": "Prueba agregando tarjetas de crédito para controlar mejor tus consumos"
+            },
+            "addCreditCardButton": "Agregar Tarjeta de Crédito"
         },
         "categories": {
             "header": "Caategorías"
@@ -171,7 +181,9 @@
         "lastFourDigits": "Últimos 4 dígitos",
         "expiration": "Fecha de Caducidad",
         "cardHolder": "Titular de la Tarjeta",
-        "creditLimitAmount": "Limite de Crédito"
+        "creditLimitAmount": "Limite de Crédito",
+        "issuer": "Emisor",
+        "status": "Estado"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -197,6 +209,11 @@
             "created": "Cuenta creada correctamente",
             "updated": "Cuenta actualizada correctamente",
             "deleted": "Cuenta eliminada correctamente"
+        },
+        "creditCard": {
+            "created": "Tarjeta de crédito creada correctamente",
+            "updated": "Tarjeta de crédito actualizada correctamente",
+            "deleted": "Tarjeta de crédito eliminada correctamente"
         },
         "textCopied": "Copiado!"
     },
@@ -240,5 +257,10 @@
         "UYI": "Unidades Indexadas - Uruguay",
         "EUR": "Euro",
         "ARS": "Peso - Argentina"
+    },
+    "creditCardStatus": {
+        "ACTIVE": "Activa",
+        "BLOCKED": "Bloqueada",
+        "EXPIRED": "Expirada"
     }
 }

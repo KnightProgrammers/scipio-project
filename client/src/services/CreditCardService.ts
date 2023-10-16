@@ -1,6 +1,7 @@
 import BaseService from '@/services/BaseService'
 
 type CreditCardInput = {
+    id?: string
     label?: string
     lastFourDigits?: string
     cardHolder: string
@@ -59,7 +60,7 @@ export async function apiCreateCreditCard(body: CreditCardInput): Promise<any> {
         url: '/graphql',
         method: 'POST',
         data: {
-            operationName: 'createBank',
+            operationName: 'createCreditCard',
             query: `
                 mutation createCreditCard(
                     $label: String
@@ -111,11 +112,9 @@ export async function apiCreateCreditCard(body: CreditCardInput): Promise<any> {
     return response.data
 }
 
-export async function apiUpdateBank(
-    creditCardId: string,
-    body: CreditCardInput,
-): Promise<any> {
+export async function apiUpdateCreditCard(body: CreditCardInput): Promise<any> {
     const {
+        id,
         label,
         lastFourDigits,
         cardHolder,
@@ -168,7 +167,7 @@ export async function apiUpdateBank(
                 }
             `,
             variables: {
-                id: creditCardId,
+                id,
                 label,
                 lastFourDigits,
                 cardHolder,

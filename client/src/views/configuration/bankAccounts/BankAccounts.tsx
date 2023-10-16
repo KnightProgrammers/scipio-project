@@ -44,6 +44,7 @@ import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { MdOutlineAttachMoney } from 'react-icons/md'
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -432,6 +433,9 @@ const BankAccounts = () => {
                                     `pages.bankAccounts.fields.accountBalance`,
                                 )}
                                 component={Input}
+                                prefix={
+                                    <MdOutlineAttachMoney className="text-xl" />
+                                }
                             />
                         </FormItem>
                         <FormItem

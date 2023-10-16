@@ -37,6 +37,7 @@ const ModalForm = (props: ModalFormProps) => {
         <Dialog
             isOpen={isOpen}
             contentClassName="pb-0 px-0"
+            preventScroll={false}
             onClose={onClose}
             onRequestClose={onClose}
         >
@@ -55,9 +56,9 @@ const ModalForm = (props: ModalFormProps) => {
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
-                    {({ touched, errors, submitForm }) => (
+                    {({ touched, errors, submitForm, isSubmitting }) => (
                         <Form className="mt-4 px-4">
-                            <FormContainer>
+                            <FormContainer className=" max-h-96 overflow-y-auto">
                                 {fields(errors, touched)}
                             </FormContainer>
                             <div className="mt-6 sm:flex gap-2 pb-4">
@@ -66,7 +67,7 @@ const ModalForm = (props: ModalFormProps) => {
                                     variant="default"
                                     type="button"
                                     data-tn="modal-form-cancel-btn"
-                                    disabled={isSaving}
+                                    disabled={isSubmitting}
                                     onClick={onClose}
                                 >
                                     {t('actions.cancel')}
@@ -76,8 +77,8 @@ const ModalForm = (props: ModalFormProps) => {
                                     type="submit"
                                     className="w-full justify-center "
                                     data-tn="modal-form-save-btn"
-                                    disabled={isSaving}
-                                    loading={isSaving}
+                                    disabled={isSubmitting}
+                                    loading={isSubmitting}
                                     onClick={submitForm}
                                 >
                                     {isSaving
