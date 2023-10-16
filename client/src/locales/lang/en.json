@@ -61,11 +61,24 @@
             "defaultLabel": "Account",
             "deleteConfirmation": {
                 "title": "Delete Bank Account",
-                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}?\""
+                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}?\"?"
             }
         },
         "creditCards": {
-            "header": "Credit Cards"
+            "header": "Credit Cards",
+            "form": {
+                "newTitle": "New Credit Card",
+                "editTitle": "Edit Credit Card"
+            },
+            "deleteConfirmation": {
+                "title": "Delete Credit Card",
+                "description": "Are you sure you want to delete the credit card?"
+            },
+            "emptyState": {
+                "title": "No Credit cards",
+                "description": "Try adding credit cards to better control your expenses"
+            },
+            "addCreditCardButton": "Add a Credit card"
         },
         "categories": {
             "header": "Categories"
@@ -164,7 +177,13 @@
         "rememberMe": "Remember Me",
         "country": "Country",
         "currency": "Currency",
-        "label": "Label"
+        "label": "Label",
+        "lastFourDigits": "Last 4 digits",
+        "expiration": "Expiration Month",
+        "cardHolder": "Card Holder",
+        "creditLimitAmount": "Credit Limit",
+        "issuer": "Issuer",
+        "status": "Status"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -191,6 +210,11 @@
             "updated": "Bank account successfully updated",
             "deleted": "Bank account successfully deleted"
         },
+        "creditCard": {
+            "created": "Credit card successfully created",
+            "updated": "Credit card successfully updated",
+            "deleted": "Credit card successfully deleted"
+        },
         "textCopied": "Copied!"
     },
     "error": {
@@ -203,7 +227,8 @@
         }
     },
     "placeholders": {
-        "country": "Select a country"
+        "country": "Select a country",
+        "other": "Other"
     },
     "messages": {
         "backTo": "Back to ",
@@ -232,5 +257,10 @@
         "UYI": "Index Unit - Uruguay",
         "EUR": "Euro",
         "ARS": "Peso - Argentina"
+    },
+    "creditCardStatus": {
+        "ACTIVE": "Active",
+        "BLOCKED": "Blocked",
+        "EXPIRED": "Expired"
     }
 }

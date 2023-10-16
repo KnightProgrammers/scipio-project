@@ -37,6 +37,7 @@ const ModalForm = (props: ModalFormProps) => {
         <Dialog
             isOpen={isOpen}
             contentClassName="pb-0 px-0"
+            preventScroll={false}
             onClose={onClose}
             onRequestClose={onClose}
         >
@@ -57,7 +58,7 @@ const ModalForm = (props: ModalFormProps) => {
                 >
                     {({ touched, errors, submitForm }) => (
                         <Form className="mt-4 px-4">
-                            <FormContainer>
+                            <FormContainer className=" max-h-96 overflow-y-auto">
                                 {fields(errors, touched)}
                             </FormContainer>
                             <div className="mt-6 sm:flex gap-2 pb-4">

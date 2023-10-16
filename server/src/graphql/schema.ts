@@ -117,8 +117,8 @@ const schema = gql`
   }
 
   input CreditCardInput {
-    label: String
-    lastFourDigits: String
+    label: String = ""
+    lastFourDigits: String = ""
     cardHolder: String!
     expiration: String!
     issuer: CreditCardIssuer!

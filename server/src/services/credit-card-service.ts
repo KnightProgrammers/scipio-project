@@ -16,7 +16,7 @@ class CreditCardService {
 		creditLimitAmount: number
 		creditLimitCurrency: any
 	}) {
-		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MM/yy');
+		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MMyy');
 
 		return CreditCardModel.create({
 			...data,
@@ -36,7 +36,7 @@ class CreditCardService {
 	}) {
 		const creditCard = await this.findOne(id, userId);
 		if (!creditCard) return null;
-		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MM/yy');
+		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MMyy');
 		return CreditCardModel.findOneAndUpdate({ _id: id, userId }, {
 			...data,
 			expiration: parsedExpiration.toJSDate(),

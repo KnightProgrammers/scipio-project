@@ -5,15 +5,13 @@ export const BankSchema = new mongoose.Schema(
 	{
 		label: {
 			type: String,
-			required: true,
 		},
 		cardHolder: {
 			type: String,
-			required: false,
+			required: true,
 		},
 		lastFourDigits: {
 			type: String,
-			required: true,
 		},
 		expiration: {
 			type: Date,

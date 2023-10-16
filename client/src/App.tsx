@@ -19,16 +19,7 @@ import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 
 // Create a client
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            suspense: true,
-        },
-        mutations: {
-            useErrorBoundary: false,
-        },
-    },
-})
+const queryClient = new QueryClient()
 
 const Wrapper = () => {
     const { t } = useTranslation()
@@ -36,7 +27,11 @@ const Wrapper = () => {
     const { reset } = useQueryErrorResetBoundary()
 
     queryClient.setDefaultOptions({
+        queries: {
+            refetchOnWindowFocus: (query) => query.state.status !== 'error',
+        },
         mutations: {
+            useErrorBoundary: false,
             onError: (e: unknown) => {
                 toast.push(
                     <Notification
