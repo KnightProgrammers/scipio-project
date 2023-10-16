@@ -23,8 +23,8 @@ const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             suspense: true,
-            networkMode: 'always',
             refetchOnWindowFocus: false,
+            refetchOnReconnect: false
         },
         mutations: {
             useErrorBoundary: false,
