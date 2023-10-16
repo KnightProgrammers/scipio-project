@@ -41,8 +41,8 @@ test('Empty state', async () => {
     const waitForCreditCards = waitForRequest(page, 'userCreditCards');
     const waitForUserCurrencies = waitForRequest(page, 'userCurrencies');
     await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-    const creditCardsRequest = await waitForCreditCards;
     await waitForUserCurrencies;
+    const creditCardsRequest = await waitForCreditCards;
     const creditCardsResponse = await creditCardsRequest.response();
     const {data} = await creditCardsResponse.json();
     expect(data.me.creditCards).toEqual([]);

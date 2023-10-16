@@ -6,9 +6,9 @@ export const NAV_MENU = {
 	SAVINGS: ['nav-menu-item-savings'],
 	INCOMES: ['nav-menu-item-incomes'],
 	BANK_ACCOUNTS: ['nav-menu-collapse-configuration', 'nav-menu-item-bank-accounts'],
-	CREDIT_CARDS: ['nav-menu-collapse-configuration', 'nav-menu-item-bank-credit-cards'],
-	CATEGORIES: ['nav-menu-collapse-configuration', 'nav-menu-item-bank-categories'],
-	JOBS: ['nav-menu-collapse-configuration', 'nav-menu-item-bank-jobs']
+	CREDIT_CARDS: ['nav-menu-collapse-configuration', 'nav-menu-item-credit-cards'],
+	CATEGORIES: ['nav-menu-collapse-configuration', 'nav-menu-item-categories'],
+	JOBS: ['nav-menu-collapse-configuration', 'nav-menu-item-jobs']
 };
 
 export const navigateMenu = async (page:Page, menu: string[]): Promise<void> =>  {
