@@ -1,6 +1,7 @@
 import {
 	BankAccountQueryResolver,
 	BankQueryResolver,
+	CreditCardQueryResolver,
 	UserQueryResolver
 } from '@/graphql/resolvers/queries';
 
@@ -17,6 +18,7 @@ const resolvers = {
 	User: UserQueryResolver,
 	Bank: BankQueryResolver,
 	BankAccount: BankAccountQueryResolver,
+	CreditCard: CreditCardQueryResolver,
 	Mutation
 };
 export default resolvers;

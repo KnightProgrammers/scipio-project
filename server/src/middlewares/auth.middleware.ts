@@ -2,18 +2,6 @@ import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
 import mercurius from 'mercurius';
 
-export default async (request: any, reply: any) => {
-	const { authorization } = request.headers;
-	try {
-		request.user = await authenticateUser(authorization);
-		return;
-	} catch (e: any) {
-		reply.status(e.statusCode || 403).send({
-			error: e.statusCode,
-			message: e.message
-		});
-	}
-};
 
 export const authenticateUser = async (authorization: string) => {
 	if (!!authorization && authorization.startsWith('Bearer ')) {
@@ -34,7 +22,7 @@ export const authenticateUser = async (authorization: string) => {
 					avatar: decodedIdToken.picture,
 				});
 			}
-			return user;
+			return user.toObject();
 		} catch (e) {
 			const error = new mercurius.ErrorWithProps('Token Expired');
 			error.statusCode = 401;

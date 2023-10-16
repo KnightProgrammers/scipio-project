@@ -26,7 +26,7 @@ import {
     apiDeleteBank,
     apiGetBankList,
     apiUpdateBank,
-} from '@/services/BankServices'
+} from '@/services/BankService'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'

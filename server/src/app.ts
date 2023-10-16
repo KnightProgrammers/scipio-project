@@ -75,7 +75,7 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 
 	fastify.register(mercuriusAuth, {
 		async authContext (context: any) {
-			return (await authenticateUser(context.reply.request.headers['authorization'])).toObject();
+			return authenticateUser(context.reply.request.headers['authorization']);
 		},
 		async applyPolicy (uthDirectiveAST: any, parent: any, args: any, context: any) {
 			if (!context.auth._id) {
