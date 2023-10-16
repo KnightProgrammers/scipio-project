@@ -30,7 +30,7 @@ const Wrapper = () => {
         queries: {
             refetchOnWindowFocus: (query) => query.state.status !== 'error',
             staleTime: Infinity,
-            networkMode: "always"
+            networkMode: 'always',
         },
         mutations: {
             useErrorBoundary: false,

@@ -13,6 +13,7 @@ import {
 import { BsCreditCard2Front } from 'react-icons/bs'
 import {
     ConfirmDialog,
+    Container,
     EllipsisButton,
     FormCustomFormatInput,
     IconText,
@@ -409,17 +410,25 @@ const CreditCards = () => {
     )
 
     if (!creditCardList || isFetchingCreditCards) {
-        return <Loading loading type="cover" />
+        return (
+            <div
+                className="flex h-full mx-auto w-0"
+                data-tn="credit-cards-page"
+            >
+                <Loading loading />
+            </div>
+        )
     }
 
     if (creditCardList.length === 0) {
         return (
-            <div>
+            <Container data-tn="credit-cards-page">
                 <CreditCardForm />
                 <EmptyState
                     title={t('pages.creditCards.emptyState.title')}
                     description={t('pages.creditCards.emptyState.description')}
                     className="bg-transparent dark:bg-transparent"
+                    data-tn="empty-state-no-credit-cards"
                 >
                     <Button
                         variant="solid"
@@ -430,7 +439,7 @@ const CreditCards = () => {
                         {t('pages.creditCards.addCreditCardButton')}
                     </Button>
                 </EmptyState>
-            </div>
+            </Container>
         )
     }
 
@@ -447,7 +456,7 @@ const CreditCards = () => {
         }
     }
     return (
-        <div>
+        <Container data-tn="credit-cards-page">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {creditCardList.map((c) => (
                     <Card
@@ -592,7 +601,7 @@ const CreditCards = () => {
             >
                 <p>{t('pages.creditCards.deleteConfirmation.description')}</p>
             </ConfirmDialog>
-        </div>
+        </Container>
     )
 }
 
