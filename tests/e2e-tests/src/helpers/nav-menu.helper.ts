@@ -13,7 +13,7 @@ export const NAV_MENU = {
 
 export const navigateMenu = async (page:Page, menu: string[]): Promise<void> =>  {
 	const context = page.context();
-	const isMobile = !!context._options.isMobile;
+	const isMobile = !!context['_options'].isMobile;
 	if(isMobile) {
 		await page.locator('div[data-tn="mobile-nav-toggle"]').click();
 	}
