@@ -23,7 +23,7 @@ import {
     apiCreateBankAccount,
     apiUpdateBankAccount,
     apiDeleteBankAccount,
-} from '@/services/BankAccountServices'
+} from '@/services/BankAccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import { useTranslation } from 'react-i18next'
 import useThemeClass from '@/utils/hooks/useThemeClass'
@@ -37,7 +37,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useConfig } from '@/components/ui/ConfigProvider'
 import { Field, FormikErrors, FormikTouched } from 'formik'
-import { apiGetUserCurrencies } from '@/services/AccountServices'
+import { apiGetUserCurrencies } from '@/services/AccountService'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'

@@ -19,10 +19,6 @@ export const BankSchema = new mongoose.Schema(
 			type: Date,
 			required: true,
 		},
-		billingCycle: {
-			type: String,
-			required: true,
-		},
 		issuer: {
 			type: String,
 			required: true,
@@ -42,7 +38,7 @@ export const BankSchema = new mongoose.Schema(
 		creditLimitCurrency: {
 			type: CurrencySchema,
 		},
-		user: {
+		userId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
 		}

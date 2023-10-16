@@ -8,7 +8,7 @@ import {
     Loading,
 } from '@/components/shared'
 import { useTranslation } from 'react-i18next'
-import { apiGetCountryList } from '@/services/CountryServices'
+import { apiGetCountryList } from '@/services/CountryService'
 import { langOptions, LanguageOption } from '@/@types/system'
 import { AiOutlineStar } from 'react-icons/ai'
 import { BiWorld } from 'react-icons/bi'
@@ -17,12 +17,12 @@ import { MdOutlineRocketLaunch } from 'react-icons/md'
 import {
     apiSetUserCurrencies,
     apiUpdateUserProfile,
-} from '@/services/AccountServices'
+} from '@/services/AccountService'
 import { setUser, useAppDispatch, useAppSelector } from '@/store'
 import i18n from 'i18next'
 import { LuCoins } from 'react-icons/lu'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { apiGetCurrencies } from '@/services/CurrencyServices'
+import { apiGetCurrencies } from '@/services/CurrencyService'
 
 const STEPS = {
     START: 0,
