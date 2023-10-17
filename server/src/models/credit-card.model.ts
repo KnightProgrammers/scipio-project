@@ -21,13 +21,13 @@ export const BankSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			enum : ['visa', 'mastercard', 'other'],
-			default: 'other'
+			defaultValue: 'other'
 		},
 		status: {
 			type: String,
 			required: true,
 			enum : ['ACTIVE', 'EXPIRED', 'BLOCKED'],
-			default: 'ACTIVE'
+			defaultValue: 'ACTIVE'
 		},
 		creditLimitAmount: {
 			type: Number,

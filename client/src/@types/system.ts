@@ -57,3 +57,10 @@ export type BankAccountDataType = {
         code: string
     }
 }
+
+export type CategoryDataType = {
+    id: string
+    name: string
+    type: 'NEED' | 'WANT' | 'SAVE'
+    isFixedPayment: boolean
+}
