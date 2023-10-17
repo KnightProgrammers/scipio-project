@@ -81,7 +81,20 @@
             "addCreditCardButton": "Agregar Tarjeta de Crédito"
         },
         "categories": {
-            "header": "Caategorías"
+            "header": "Caategorías",
+            "form": {
+                "newTitle": "Nueva Categoría",
+                "editTitle": "Editar Categoría"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar Categoría",
+                "description": "Está seguro que desea eliminar la categoría \"{{name}}?\"?"
+            },
+            "emptyState": {
+                "title": "Sin Categorías",
+                "description": "Intenta agregar categorías para organizar tus gastos"
+            },
+            "addCategoryButton": "Agregar Categoría"
         },
         "jobs": {
             "header": "Trabajos"

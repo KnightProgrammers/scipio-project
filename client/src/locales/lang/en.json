@@ -81,7 +81,20 @@
             "addCreditCardButton": "Add a Credit card"
         },
         "categories": {
-            "header": "Categories"
+            "header": "Categories",
+            "form": {
+                "newTitle": "New Category",
+                "editTitle": "Edit Category"
+            },
+            "deleteConfirmation": {
+                "title": "Delete Category",
+                "description": "Are you sure you want to delete the category \"{{name}}?\"?"
+            },
+            "emptyState": {
+                "title": "No Categories",
+                "description": "Try adding categories to organize your expenses"
+            },
+            "addCategoryButton": "Add a Category"
         },
         "jobs": {
             "header": "Jobs"
