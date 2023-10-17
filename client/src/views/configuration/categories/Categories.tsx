@@ -18,6 +18,15 @@ import * as Yup from 'yup'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import { TbCategory2 } from 'react-icons/tb'
 import Checkbox from '@/components/ui/Checkbox'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import toast from '@/components/ui/toast'
+import Notification from '@/components/ui/Notification'
+import {
+    apiCreateCategory,
+    apiDeleteCategory,
+    apiGetCategoryList,
+    apiUpdateCategory,
+} from '@/services/CategoryService'
 
 const { Tr, Td, Th, TBody, THead } = Table
 
@@ -31,23 +40,56 @@ const Categories = () => {
 
     const { t } = useTranslation()
 
-    const categories: any[] = [
-        {
-            name: 'Groceries',
-            isFixedPayment: false,
-            type: 'NEED',
+    const queryClient = useQueryClient()
+
+    const { data: categories, isFetching: isLoadingCategories } = useQuery({
+        queryKey: ['user-categories'],
+        queryFn: apiGetCategoryList,
+        suspense: true,
+    })
+
+    const onMutationSuccess = async (title: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: ['user-categories'],
+        })
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+    }
+
+    const onFormClose = () => {
+        setIsFormOpen(false)
+        setSelectedCategory(undefined)
+    }
+
+    const onDeleteConfirmClose = () => {
+        setIsConfirmDeleteOpen(false)
+        setSelectedCategory(undefined)
+    }
+
+    const createCategoryMutation = useMutation({
+        mutationFn: apiCreateCategory,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.category.created') || '')
         },
-        {
-            name: 'Rent',
-            isFixedPayment: true,
-            type: 'SAVE',
+        onSettled: onFormClose,
+    })
+
+    const updateCategoryMutation = useMutation({
+        mutationFn: apiUpdateCategory,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.category.updated') || '')
         },
-        {
-            name: 'Transportation',
-            isFixedPayment: false,
-            type: 'WANT',
+        onSettled: onFormClose,
+    })
+
+    const deleteCategoryMutation = useMutation({
+        mutationFn: apiDeleteCategory,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.category.deleted') || '')
         },
-    ]
+        onSettled: onDeleteConfirmClose,
+    })
 
     const CATEGORY_TYPES: any[] = [
         { label: t('categoryTypes.NEED'), value: 'NEED' },
@@ -60,26 +102,18 @@ const Categories = () => {
         type: Yup.string().required(t('validations.required') || ''),
     })
 
-    const onFormClose = () => {
-        setIsFormOpen(false)
-        setSelectedCategory(undefined)
-    }
-
-    const onDeleteConfirmClose = () => {
-        setIsConfirmDeleteOpen(false)
-        setSelectedCategory(undefined)
-    }
-
     const onDelete = async () => {
         if (selectedCategory) {
-            // deleteCreditCardMutation.mutate(selectedCreditCard.id)
+            deleteCategoryMutation.mutate(selectedCategory.id)
         }
         onDeleteConfirmClose()
     }
 
-    const onFormSubmit = () => {
+    const onFormSubmit = (data: any) => {
         if (selectedCategory) {
+            updateCategoryMutation.mutate(data)
         } else {
+            createCategoryMutation.mutate(data)
         }
         onFormClose()
     }
@@ -98,7 +132,11 @@ const Categories = () => {
     const CategoryForm = () => (
         <ModalForm
             isOpen={isFormOpen}
-            entity={selectedCategory || {}}
+            entity={
+                selectedCategory || {
+                    isFixedPayment: false,
+                }
+            }
             title={
                 selectedCategory
                     ? t('pages.categories.form.editTitle')
@@ -156,7 +194,7 @@ const Categories = () => {
                         <Field name="isFixedPayment">
                             {({ field, form }: FieldProps) => (
                                 <Checkbox
-                                    defaultChecked
+                                    defaultChecked={field.value}
                                     onChange={(value) => {
                                         form.setFieldValue(field.name, value)
                                     }}
@@ -168,13 +206,16 @@ const Categories = () => {
                     </FormItem>
                 </>
             )}
-            isSaving={false}
+            isSaving={
+                createCategoryMutation.isLoading ||
+                updateCategoryMutation.isLoading
+            }
             onClose={onFormClose}
             onSubmit={onFormSubmit}
         />
     )
 
-    if (!categories) {
+    if (!categories || isLoadingCategories) {
         return (
             <div className="flex h-full mx-auto w-0" data-tn="categories-page">
                 <Loading loading />
