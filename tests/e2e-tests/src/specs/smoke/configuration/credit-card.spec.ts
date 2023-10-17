@@ -8,8 +8,8 @@ import {
 	editCreditCard,
 	openEditCreditCardForm
 } from '../../../helpers/credit-card.helper';
-import { waitForRequest } from "../../../helpers/generic.helper";
-import { NAV_MENU, navigateMenu } from "../../../helpers/nav-menu.helper";
+import { waitForRequest } from '../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 
 
 let email: string;

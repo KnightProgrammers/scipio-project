@@ -9,7 +9,7 @@ import {
 	deleteCategory,
 	editCategory,
 	openEditCategoryForm
-} from "../../../helpers/category.helper";
+} from '../../../helpers/category.helper';
 
 let email: string;
 let password: string;
@@ -60,23 +60,25 @@ test('Empty state', async () => {
 test('Add a category', async () => {
 	const category = await createCategory(page, {
 		name: 'Clothes',
-		type: "WANT",
+		type: 'WANT',
 		isFixedPayment: false
 	});
 	categoryId = category.id;
 	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-categories"]');
 	await expect(emptyStateContainer).not.toBeVisible();
-	await expect(page.locator(`div[data-tn="category-${categoryId}"]`)).toBeVisible();
+	await expect(page.locator(`span[data-tn="name-category-lbl-${categoryId}"]`)).toBeVisible();
+	await expect(page.locator(`span[data-tn="name-category-lbl-${categoryId}"]`)).toHaveText('Clothes');
 });
 
 test('Edit a category', async () => {
 	await openEditCategoryForm(page, categoryId);
 	await editCategory(page, categoryId, {
 		name: 'Rent',
-		type: "NEED",
+		type: 'NEED',
 		isFixedPayment: true
 	});
-	await expect(page.locator(`div[data-tn="category-${categoryId}"]`)).toBeVisible();
+	await expect(page.locator(`span[data-tn="name-category-lbl-${categoryId}"]`)).toBeVisible();
+	await expect(page.locator(`span[data-tn="name-category-lbl-${categoryId}"]`)).toHaveText('Rent');
 });
 
 test('delete a category', async () => {

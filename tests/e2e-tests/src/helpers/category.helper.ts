@@ -11,7 +11,12 @@ export const createCategory = async (page: Page, data: {
 	const categoryFormContainer = page.locator('div[role="dialog"]');
 	await expect(categoryFormContainer).toBeVisible();
 	await page.locator('input[name="name"]').fill(name);
-	const saveCategoryWaitForRequest = waitForRequest(page, 'createCategories');
+	await page.locator('#type-select input.select__input').fill(type);
+	await page.keyboard.press('Enter');
+	if (isFixedPayment) {
+		await page.locator('input[name="isFixedPayment"]').check();
+	}
+	const saveCategoryWaitForRequest = waitForRequest(page, 'createCategory');
 	const getCategoryListWaitForRequest = waitForRequest(page, 'userCategories');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
 	const saveCategoryRequest = await saveCategoryWaitForRequest;
@@ -45,6 +50,13 @@ export const editCategory = async (page: Page, categoryId: string, data: {
 	const { name , type, isFixedPayment} = data;
 	await page.locator('input[name="name"]').clear();
 	await page.locator('input[name="name"]').fill(name);
+	await page.locator('#type-select input.select__input').fill(type);
+	await page.keyboard.press('Enter');
+	if (isFixedPayment) {
+		await page.locator('input[name="isFixedPayment"]').check();
+	} else {
+		await page.locator('input[name="isFixedPayment"]').uncheck();
+	}
 	const saveCategoryWaitForRequest = waitForRequest(page, 'updateCategory');
 	const getCategoryListWaitForRequest = waitForRequest(page, 'userCategories');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
