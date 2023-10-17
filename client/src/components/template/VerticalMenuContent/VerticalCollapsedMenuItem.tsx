@@ -43,47 +43,49 @@ const DefaultItem = ({ nav, onLinkClick }: DefaultItemProps) => {
             expanded={false}
             className="mb-2"
         >
-            {nav.subMenu.map((subNav) => (
-                <MenuItem key={subNav.key} eventKey={subNav.key}>
-                    {subNav.path ? (
-                        <Link
-                            key={subNav.key}
-                            className="h-full w-full flex items-center"
-                            data-tn={`nav-menu-item-${subNav.key}`}
-                            to={subNav.path}
-                            target={subNav.isExternalLink ? '_blank' : ''}
-                            onClick={() =>
-                                onLinkClick?.({
-                                    key: subNav.key,
-                                    title: subNav.title,
-                                    path: subNav.path,
-                                })
-                            }
-                        >
-                            <VerticalMenuIcon
+            {nav.subMenu
+                .filter((nav) => !nav.hidden)
+                .map((subNav) => (
+                    <MenuItem key={subNav.key} eventKey={subNav.key}>
+                        {subNav.path ? (
+                            <Link
                                 key={subNav.key}
-                                icon={subNav.icon}
-                                withMargin={true}
-                            />
+                                className="h-full w-full flex items-center"
+                                data-tn={`nav-menu-item-${subNav.key}`}
+                                to={subNav.path}
+                                target={subNav.isExternalLink ? '_blank' : ''}
+                                onClick={() =>
+                                    onLinkClick?.({
+                                        key: subNav.key,
+                                        title: subNav.title,
+                                        path: subNav.path,
+                                    })
+                                }
+                            >
+                                <VerticalMenuIcon
+                                    key={subNav.key}
+                                    icon={subNav.icon}
+                                    withMargin={true}
+                                />
+                                <span>
+                                    <Trans
+                                        i18nKey={subNav.translateKey}
+                                        defaults={subNav.title}
+                                    />
+                                </span>
+                            </Link>
+                        ) : (
                             <span>
+                                key={subNav.key}
+                                data-tn={`nav-menu-item-${subNav.key}`}
                                 <Trans
                                     i18nKey={subNav.translateKey}
                                     defaults={subNav.title}
                                 />
                             </span>
-                        </Link>
-                    ) : (
-                        <span>
-                            key={subNav.key}
-                            data-tn={`nav-menu-item-${subNav.key}`}
-                            <Trans
-                                i18nKey={subNav.translateKey}
-                                defaults={subNav.title}
-                            />
-                        </span>
-                    )}
-                </MenuItem>
-            ))}
+                        )}
+                    </MenuItem>
+                ))}
         </MenuCollapse>
     )
 }
@@ -105,43 +107,45 @@ const CollapsedItem = (props: CollapsedItemProps) => {
             }
             data-tn={props['data-tn']}
         >
-            {nav.subMenu.map((subNav) => (
-                <Dropdown.Item key={subNav.key} eventKey={subNav.key}>
-                    {subNav.path ? (
-                        <Link
-                            className="h-full w-full flex items-center"
-                            data-tn={`collapsed-${nav.key}-item-${subNav.key}`}
-                            to={subNav.path}
-                            target={subNav.isExternalLink ? '_blank' : ''}
-                            onClick={() =>
-                                onLinkClick?.({
-                                    key: subNav.key,
-                                    title: subNav.title,
-                                    path: subNav.path,
-                                })
-                            }
-                        >
-                            <VerticalMenuIcon
-                                icon={subNav.icon}
-                                withMargin={true}
-                            />
+            {nav.subMenu
+                .filter((nav) => !nav.hidden)
+                .map((subNav) => (
+                    <Dropdown.Item key={subNav.key} eventKey={subNav.key}>
+                        {subNav.path ? (
+                            <Link
+                                className="h-full w-full flex items-center"
+                                data-tn={`collapsed-${nav.key}-item-${subNav.key}`}
+                                to={subNav.path}
+                                target={subNav.isExternalLink ? '_blank' : ''}
+                                onClick={() =>
+                                    onLinkClick?.({
+                                        key: subNav.key,
+                                        title: subNav.title,
+                                        path: subNav.path,
+                                    })
+                                }
+                            >
+                                <VerticalMenuIcon
+                                    icon={subNav.icon}
+                                    withMargin={true}
+                                />
+                                <span>
+                                    <Trans
+                                        i18nKey={subNav.translateKey}
+                                        defaults={subNav.title}
+                                    />
+                                </span>
+                            </Link>
+                        ) : (
                             <span>
                                 <Trans
                                     i18nKey={subNav.translateKey}
                                     defaults={subNav.title}
                                 />
                             </span>
-                        </Link>
-                    ) : (
-                        <span>
-                            <Trans
-                                i18nKey={subNav.translateKey}
-                                defaults={subNav.title}
-                            />
-                        </span>
-                    )}
-                </Dropdown.Item>
-            ))}
+                        )}
+                    </Dropdown.Item>
+                ))}
         </Dropdown>
     )
 }

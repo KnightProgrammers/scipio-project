@@ -67,7 +67,7 @@ const StackedSideNavMini = (props: StackedSideNavMiniProps) => {
             onChange({
                 key: includedRouteTree.key,
                 title: includedRouteTree.title,
-                menu: includedRouteTree.subMenu,
+                menu: includedRouteTree.subMenu.filter((nav) => !nav.hidden),
                 translateKey: includedRouteTree.translateKey,
             })
         }
@@ -98,7 +98,9 @@ const StackedSideNavMini = (props: StackedSideNavMiniProps) => {
                                     handleMenuItemSelect({
                                         key: nav.key,
                                         title: nav.title,
-                                        menu: nav.subMenu,
+                                        menu: nav.subMenu.filter(
+                                            (nav) => !nav.hidden,
+                                        ),
                                         translateKey: nav.translateKey,
                                     })
                                 }

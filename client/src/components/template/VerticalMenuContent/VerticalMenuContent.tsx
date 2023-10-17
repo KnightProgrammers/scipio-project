@@ -36,13 +36,13 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
 
     const { t } = useTranslation()
 
-    const [defaulExpandKey, setDefaulExpandKey] = useState<string[]>([])
+    const [defaultExpandKey, setDefaultExpandKey] = useState<string[]>([])
 
     const { activedRoute } = useMenuActive(navigationTree, routeKey)
 
     useEffect(() => {
-        if (defaulExpandKey.length === 0 && activedRoute?.parentKey) {
-            setDefaulExpandKey([activedRoute?.parentKey])
+        if (defaultExpandKey.length === 0 && activedRoute?.parentKey) {
+            setDefaultExpandKey([activedRoute?.parentKey])
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activedRoute?.parentKey])
@@ -52,7 +52,10 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
     }
 
     const getNavItem = (nav: NavigationTree) => {
-        if (nav.subMenu.length === 0 && nav.type === NAV_ITEM_TYPE_ITEM) {
+        if (
+            nav.subMenu.filter((nav) => !nav.hidden).length === 0 &&
+            nav.type === NAV_ITEM_TYPE_ITEM
+        ) {
             return (
                 <VerticalSingleMenuItem
                     key={nav.key}
@@ -65,7 +68,10 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
             )
         }
 
-        if (nav.subMenu.length > 0 && nav.type === NAV_ITEM_TYPE_COLLAPSE) {
+        if (
+            nav.subMenu.filter((nav) => !nav.hidden).length > 0 &&
+            nav.type === NAV_ITEM_TYPE_COLLAPSE
+        ) {
             return (
                 <VerticalCollapsedMenuItem
                     key={nav.key}
@@ -79,30 +85,33 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
         }
 
         if (nav.type === NAV_ITEM_TYPE_TITLE) {
-            if (nav.subMenu.length > 0) {
+            if (nav.subMenu.filter((nav) => !nav.hidden).length > 0) {
                 return (
                     <MenuGroup label={t(nav.translateKey) || nav.title}>
-                        {nav.subMenu.map((subNav) =>
-                            subNav.subMenu.length > 0 ? (
-                                <VerticalCollapsedMenuItem
-                                    key={subNav.key}
-                                    data-tn={`nav-menu-collapsed-${nav.key}`}
-                                    nav={subNav}
-                                    sideCollapsed={collapsed}
-                                    direction={direction}
-                                    onLinkClick={onMenuItemClick}
-                                />
-                            ) : (
-                                <VerticalSingleMenuItem
-                                    key={subNav.key}
-                                    data-tn={`nav-menu-item-${nav.key}`}
-                                    nav={subNav}
-                                    sideCollapsed={collapsed}
-                                    direction={direction}
-                                    onLinkClick={onMenuItemClick}
-                                />
-                            ),
-                        )}
+                        {nav.subMenu
+                            .filter((nav) => !nav.hidden)
+                            .map((subNav) =>
+                                subNav.subMenu.filter((nav) => !nav.hidden)
+                                    .length > 0 ? (
+                                    <VerticalCollapsedMenuItem
+                                        key={subNav.key}
+                                        data-tn={`nav-menu-collapsed-${nav.key}`}
+                                        nav={subNav}
+                                        sideCollapsed={collapsed}
+                                        direction={direction}
+                                        onLinkClick={onMenuItemClick}
+                                    />
+                                ) : (
+                                    <VerticalSingleMenuItem
+                                        key={subNav.key}
+                                        data-tn={`nav-menu-item-${nav.key}`}
+                                        nav={subNav}
+                                        sideCollapsed={collapsed}
+                                        direction={direction}
+                                        onLinkClick={onMenuItemClick}
+                                    />
+                                ),
+                            )}
                     </MenuGroup>
                 )
             } else {
@@ -118,9 +127,11 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
             data-tn="mobile-nav-menu"
             sideCollapsed={collapsed}
             defaultActiveKeys={activedRoute?.key ? [activedRoute.key] : []}
-            defaultExpandedKeys={defaulExpandKey}
+            defaultExpandedKeys={defaultExpandKey}
         >
-            {navigationTree.map((nav) => getNavItem(nav))}
+            {navigationTree
+                .filter((nav) => !nav.hidden)
+                .map((nav) => getNavItem(nav))}
         </Menu>
     )
 }

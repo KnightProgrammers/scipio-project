@@ -7,4 +7,5 @@ export interface NavigationTree {
     icon: string
     type: 'title' | 'collapse' | 'item'
     subMenu: NavigationTree[]
+    hidden?: boolean
 }
