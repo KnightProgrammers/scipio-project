@@ -58,6 +58,19 @@ const schema = gql`
     creditLimitAmount: Float!
     creditLimitCurrency: Currency!
   }
+  
+  enum CategoryType {
+    NEED
+    WANT
+    SAVE
+  }
+  
+  type Category {
+    id: String!
+    name: String!
+    type: CategoryType!
+    isFixedPayment: Boolean!
+  }
 
   type User {
     id: String!
@@ -69,6 +82,7 @@ const schema = gql`
     currencies: [Currency]!
     banks: [Bank]!
     creditCards: [CreditCard]!
+    categories: [Category]!
   }
 
   type Query {
@@ -92,6 +106,10 @@ const schema = gql`
     createCreditCard(input: CreditCardInput!): CreditCard!
     updateCreditCard(id: String!, input: CreditCardInput!): CreditCard!
     deleteCreditCard(id: String!): Boolean!
+    
+    createCategory(input: CategoryInput!): Category!
+    updateCategory(id: String!, input: CategoryInput!): Category!
+    deleteCategory(id: String!): Boolean!
   }
 
   input NewBankInput {
@@ -125,6 +143,12 @@ const schema = gql`
     status: CreditCardStatus! = ACTIVE
     creditLimitAmount: Float!
     creditLimitCurrencyId: String!
+  }
+  
+  input CategoryInput {
+    name: String!
+    type: CategoryType!
+    isFixedPayment: Boolean!
   }
 `;
 export default schema;
