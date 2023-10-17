@@ -88,7 +88,7 @@
             },
             "deleteConfirmation": {
                 "title": "Eliminar Categoría",
-                "description": "Está seguro que desea eliminar la categoría \"{{name}}?\"?"
+                "description": "Está seguro que desea eliminar la categoría \"{{name}}\"?"
             },
             "emptyState": {
                 "title": "Sin Categorías",
@@ -196,7 +196,9 @@
         "cardHolder": "Titular de la Tarjeta",
         "creditLimitAmount": "Limite de Crédito",
         "issuer": "Emisor",
-        "status": "Estado"
+        "status": "Estado",
+        "type": "Tipo",
+        "isFixedPayment": "Costo Fijo"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -228,6 +230,11 @@
             "updated": "Tarjeta de crédito actualizada correctamente",
             "deleted": "Tarjeta de crédito eliminada correctamente"
         },
+        "category": {
+            "created": "Categoría creada correctamente",
+            "updated": "Categoría actualizada correctamente",
+            "deleted": "Categoría eliminada correctamente"
+        },
         "textCopied": "Copiado!"
     },
     "error": {
@@ -245,7 +252,9 @@
     },
     "messages": {
         "backTo": "Volver a ",
-        "selectNoOptions": "Sin Opciones"
+        "selectNoOptions": "Sin Opciones",
+        "yes": "Si",
+        "no": "No"
     },
     "nav": {
         "home": "Inicio",
@@ -275,5 +284,10 @@
         "ACTIVE": "Activa",
         "BLOCKED": "Bloqueada",
         "EXPIRED": "Expirada"
+    },
+    "categoryTypes": {
+        "NEED": "Necesario",
+        "WANT": "Deseo",
+        "SAVE": "Ahorro"
     }
 }

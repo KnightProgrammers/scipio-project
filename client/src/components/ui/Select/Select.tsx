@@ -204,7 +204,11 @@ function _Select<
                         },
                     }
                 },
-                menu: (provided) => ({ ...provided, zIndex: 50 }),
+                menu: (provided) => ({
+                    ...provided,
+                    position: 'relative',
+                    zIndex: 100,
+                }),
                 ...style,
             }}
             theme={(theme) => ({

@@ -57,11 +57,11 @@ const ModalForm = (props: ModalFormProps) => {
                     onSubmit={onSubmit}
                 >
                     {({ touched, errors, submitForm }) => (
-                        <Form className="mt-4 px-4">
-                            <FormContainer className=" max-h-96 overflow-y-auto">
+                        <Form className="mt-4">
+                            <FormContainer className="max-h-96 overflow-y-auto px-4">
                                 {fields(errors, touched)}
                             </FormContainer>
-                            <div className="mt-6 sm:flex gap-2 pb-4">
+                            <div className="sm:flex gap-2 pb-4 px-4">
                                 <Button
                                     className="w-full justify-center "
                                     variant="default"

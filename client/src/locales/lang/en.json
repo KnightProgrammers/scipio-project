@@ -88,7 +88,7 @@
             },
             "deleteConfirmation": {
                 "title": "Delete Category",
-                "description": "Are you sure you want to delete the category \"{{name}}?\"?"
+                "description": "Are you sure you want to delete the category \"{{name}}\"?"
             },
             "emptyState": {
                 "title": "No Categories",
@@ -196,7 +196,9 @@
         "cardHolder": "Card Holder",
         "creditLimitAmount": "Credit Limit",
         "issuer": "Issuer",
-        "status": "Status"
+        "status": "Status",
+        "type": "Type",
+        "isFixedPayment": "Fixed Payment"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -228,6 +230,11 @@
             "updated": "Credit card successfully updated",
             "deleted": "Credit card successfully deleted"
         },
+        "category": {
+            "created": "Category successfully created",
+            "updated": "Category successfully updated",
+            "deleted": "Category successfully deleted"
+        },
         "textCopied": "Copied!"
     },
     "error": {
@@ -245,7 +252,9 @@
     },
     "messages": {
         "backTo": "Back to ",
-        "selectNoOptions": "No Options"
+        "selectNoOptions": "No Options",
+        "yes": "Yes",
+        "no": "No"
     },
     "nav": {
         "home": "Home",
@@ -275,5 +284,10 @@
         "ACTIVE": "Active",
         "BLOCKED": "Blocked",
         "EXPIRED": "Expired"
+    },
+    "categoryTypes": {
+        "NEED": "Need",
+        "WANT": "Want",
+        "SAVE": "Save"
     }
 }
