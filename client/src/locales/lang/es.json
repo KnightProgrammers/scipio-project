@@ -81,7 +81,7 @@
             "addCreditCardButton": "Agregar Tarjeta de Crédito"
         },
         "categories": {
-            "header": "Caategorías",
+            "header": "Categorías",
             "form": {
                 "newTitle": "Nueva Categoría",
                 "editTitle": "Editar Categoría"

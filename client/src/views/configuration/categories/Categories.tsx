@@ -175,7 +175,7 @@ const Categories = () => {
                                     form={form}
                                     placeholder={t(`fields.type`) || ''}
                                     options={CATEGORY_TYPES}
-                                    id="issuer-select"
+                                    id="type-select"
                                     value={CATEGORY_TYPES.find(
                                         (type: any) =>
                                             type.value === field.value,
@@ -194,6 +194,7 @@ const Categories = () => {
                         <Field name="isFixedPayment">
                             {({ field, form }: FieldProps) => (
                                 <Checkbox
+                                    name="isFixedPayment"
                                     defaultChecked={field.value}
                                     onChange={(value) => {
                                         form.setFieldValue(field.name, value)
@@ -237,7 +238,7 @@ const Categories = () => {
                         variant="solid"
                         className="mt-4"
                         icon={<HiPlus />}
-                        data-tn="add-categories-btn"
+                        data-tn="add-category-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.categories.addCategoryButton')}
@@ -332,7 +333,7 @@ const Categories = () => {
                 variant="twoTone"
                 className="mt-4"
                 icon={<HiPlus />}
-                data-tn="add-categories-btn"
+                data-tn="add-category-btn"
                 onClick={() => setIsFormOpen(true)}
             >
                 {t('pages.categories.addCategoryButton')}
