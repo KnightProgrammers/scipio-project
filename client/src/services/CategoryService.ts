@@ -7,7 +7,7 @@ export async function apiGetCategoryList(): Promise<CategoryDataType[]> {
         method: 'POST',
         data: {
             operationName: 'userCategories',
-            query: `query userCategorys { me { id categorys { id name } } }`,
+            query: `query userCategories { me { id categories { id name type isFixedPayment } } }`,
             variables: {},
         },
     })
