@@ -22,6 +22,7 @@ const navigationConfig: NavigationTree[] = [
         icon: 'expenses',
         type: NAV_ITEM_TYPE_ITEM,
         subMenu: [],
+        hidden: true,
     },
     {
         key: 'savings',
@@ -31,6 +32,7 @@ const navigationConfig: NavigationTree[] = [
         icon: 'savings',
         type: NAV_ITEM_TYPE_ITEM,
         subMenu: [],
+        hidden: true,
     },
     {
         key: 'incomes',
@@ -40,6 +42,7 @@ const navigationConfig: NavigationTree[] = [
         icon: 'incomes',
         type: NAV_ITEM_TYPE_ITEM,
         subMenu: [],
+        hidden: true,
     },
     {
         key: 'configuration',
@@ -84,6 +87,7 @@ const navigationConfig: NavigationTree[] = [
                 icon: 'jobs',
                 type: NAV_ITEM_TYPE_ITEM,
                 subMenu: [],
+                hidden: true,
             },
         ],
     },

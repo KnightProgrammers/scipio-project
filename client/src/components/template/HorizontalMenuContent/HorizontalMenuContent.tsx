@@ -19,65 +19,75 @@ const HorizontalMenuContent = ({ manuVariant }: HorizontalMenuContentProps) => {
 
     return (
         <span className="flex items-center">
-            {navigationConfig.map((nav) => {
-                if (
-                    nav.type === NAV_ITEM_TYPE_TITLE ||
-                    nav.type === NAV_ITEM_TYPE_COLLAPSE
-                ) {
-                    return (
-                        <Dropdown
-                            key={nav.key}
-                            data-tn={`nav-menu-collapse-${nav.key}`}
-                            trigger="click"
-                            renderTitle={
-                                <HorizontalMenuItem
-                                    manuVariant={manuVariant}
-                                    nav={nav}
-                                />
-                            }
-                        >
-                            {nav.subMenu.map((secondarySubNav) =>
-                                secondarySubNav.subMenu.length > 0 ? (
-                                    <Dropdown.Menu
-                                        key={secondarySubNav.key}
-                                        title={t(
-                                            secondarySubNav.translateKey,
-                                            secondarySubNav.title,
-                                        )}
-                                    >
-                                        {secondarySubNav.subMenu.map(
-                                            (tertiarySubNav) => (
-                                                <HorizontalMenuDropdownItem
-                                                    key={tertiarySubNav.key}
-                                                    nav={tertiarySubNav}
-                                                />
-                                            ),
-                                        )}
-                                    </Dropdown.Menu>
-                                ) : (
-                                    <HorizontalMenuDropdownItem
-                                        key={secondarySubNav.key}
-                                        nav={secondarySubNav}
-                                        data-tn={`nav-menu-item-${secondarySubNav.key}`}
+            {navigationConfig
+                .filter((nav) => !nav.hidden)
+                .map((nav) => {
+                    if (
+                        nav.type === NAV_ITEM_TYPE_TITLE ||
+                        nav.type === NAV_ITEM_TYPE_COLLAPSE
+                    ) {
+                        return (
+                            <Dropdown
+                                key={nav.key}
+                                data-tn={`nav-menu-collapse-${nav.key}`}
+                                trigger="click"
+                                renderTitle={
+                                    <HorizontalMenuItem
+                                        manuVariant={manuVariant}
+                                        nav={nav}
                                     />
-                                ),
-                            )}
-                        </Dropdown>
-                    )
-                }
-                if (nav.type === NAV_ITEM_TYPE_ITEM) {
-                    return (
-                        <HorizontalMenuItem
-                            key={nav.key}
-                            isLink
-                            data-tn={`nav-menu-item-${nav.key}`}
-                            nav={nav}
-                            manuVariant={manuVariant}
-                        />
-                    )
-                }
-                return <></>
-            })}
+                                }
+                            >
+                                {nav.subMenu
+                                    .filter((nav) => !nav.hidden)
+                                    .map((secondarySubNav) =>
+                                        secondarySubNav.subMenu.filter(
+                                            (nav) => !nav.hidden,
+                                        ).length > 0 ? (
+                                            <Dropdown.Menu
+                                                key={secondarySubNav.key}
+                                                title={t(
+                                                    secondarySubNav.translateKey,
+                                                    secondarySubNav.title,
+                                                )}
+                                            >
+                                                {secondarySubNav.subMenu
+                                                    .filter(
+                                                        (nav) => !nav.hidden,
+                                                    )
+                                                    .map((tertiarySubNav) => (
+                                                        <HorizontalMenuDropdownItem
+                                                            key={
+                                                                tertiarySubNav.key
+                                                            }
+                                                            nav={tertiarySubNav}
+                                                        />
+                                                    ))}
+                                            </Dropdown.Menu>
+                                        ) : (
+                                            <HorizontalMenuDropdownItem
+                                                key={secondarySubNav.key}
+                                                nav={secondarySubNav}
+                                                data-tn={`nav-menu-item-${secondarySubNav.key}`}
+                                            />
+                                        ),
+                                    )}
+                            </Dropdown>
+                        )
+                    }
+                    if (nav.type === NAV_ITEM_TYPE_ITEM) {
+                        return (
+                            <HorizontalMenuItem
+                                key={nav.key}
+                                isLink
+                                data-tn={`nav-menu-item-${nav.key}`}
+                                nav={nav}
+                                manuVariant={manuVariant}
+                            />
+                        )
+                    }
+                    return <></>
+                })}
         </span>
     )
 }
