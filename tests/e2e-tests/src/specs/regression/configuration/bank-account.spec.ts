@@ -121,9 +121,7 @@ test('cannot delete a bank with at least one account', async () => {
 	await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
 });
 test('validate editable fields', async () => {
-	const waitForBankAccounts = waitForRequest(page, 'userBankAccounts');
 	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
-	await waitForBankAccounts;
 	await openEditBankAccountForm(page, bankAccount.id);
 	const currencyInput = page.locator('input[name="accountCurrencyName"]');
 	await expect(currencyInput).toHaveAttribute('disabled', '');
