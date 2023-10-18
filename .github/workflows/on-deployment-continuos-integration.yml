@@ -64,6 +64,12 @@ jobs:
           TEST_USER_EMAIL:  ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASS: ${{ secrets.TEST_USER_PASS }}
           TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
+          DD_CIVISIBILITY_AGENTLESS_ENABLED: true
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_SITE: ${{ secrets.DD_SITE }}
+          NODE_OPTIONS: "-r dd-trace/ci/init"
+          DD_ENV: ${{ github.event.deployment.environment }}
+          DD_SERVICE: "Scipio"
         run: |
           cd tests/e2e-tests
           npm run smoke-test
