@@ -153,6 +153,12 @@ jobs:
         env:
           BASE_URL: http://localhost:3000
           API_BASE_URL: http://localhost:8080
+          DD_CIVISIBILITY_AGENTLESS_ENABLED: true
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_SITE: ${{ secrets.DD_SITE }}
+          NODE_OPTIONS: "-r dd-trace/ci/init"
+          DD_ENV: "Test"
+          DD_SERVICE: "Scipio"
         run: |
           cd tests/e2e-tests
           npm run regression-test
