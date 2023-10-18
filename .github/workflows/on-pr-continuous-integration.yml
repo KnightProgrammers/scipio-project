@@ -161,7 +161,7 @@ jobs:
           DD_SERVICE: "Scipio"
         run: |
           cd tests/e2e-tests
-          npm run regression-test
+          NODE_OPTIONS="-r dd-trace/ci/init" DD_ENV=test DD_SERVICE=scipio npm run regression-test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
