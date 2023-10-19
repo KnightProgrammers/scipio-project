@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -11,8 +12,10 @@ export default defineConfig({
         'babel-plugin-macros'
       ]
     }
-  }),
-  dynamicImport()],
+  }), dynamicImport(), sentryVitePlugin({
+    org: "scipio-finances",
+    project: "scipio-client-staging"
+  })],
   assetsInclude: ['**/*.md'],
   resolve: {
     alias: {
@@ -20,6 +23,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'build'
+    outDir: 'build',
+    sourcemap: true
   }
 });
