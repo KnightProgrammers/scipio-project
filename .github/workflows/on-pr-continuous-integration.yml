@@ -228,6 +228,16 @@ jobs:
         run: npm i -g @railway/cli
       - name: Deploy ${{ matrix.service }} service
         run: scipio-infra deploy -s ${{ matrix.service }} -e "test-${{ github.event.number }}"
+      - name: Create Sentry release for ${{ matrix.service }}
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "scipio-finances"
+          SENTRY_PROJECT: "scipio-${{ matrix.service }}"
+          SENTRY_URL: https://sentry.io/
+        with:
+          environment: test
+          working_directory: "./${{ matrix.service }}/"
   notify-deployment:
     name: "Notify Deployment"
     runs-on: ubuntu-latest
@@ -265,23 +275,3 @@ jobs:
       - name: Set deployment status
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'skipped')
         run: exit 1;
-      - name: Create Sentry release for Client
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: ${{ secrets.SENTRY_CLIENT_PROJECT }}
-          SENTRY_URL: https://sentry.io/
-        with:
-          environment: test
-          working_directory: './client/'
-      - name: Create Sentry release for Server
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: ${{ secrets.SENTRY_SERVER_PROJECT }}
-          SENTRY_URL: https://sentry.io/
-        with:
-          environment: test
-          working_directory: './server/'
