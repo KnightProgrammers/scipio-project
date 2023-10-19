@@ -48,6 +48,8 @@ jobs:
     defaults:
       run:
         working-directory: client
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4

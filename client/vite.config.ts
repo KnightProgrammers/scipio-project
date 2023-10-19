@@ -6,15 +6,19 @@ import dynamicImport from 'vite-plugin-dynamic-import'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({
+  plugins: [
+    react({
     babel: {
       plugins: [
         'babel-plugin-macros'
       ]
     }
-  }), dynamicImport(), sentryVitePlugin({
-        org: "scipio-finances",
-    project: "scipio-client-staging"
+  }), 
+  dynamicImport(), 
+  sentryVitePlugin({
+    org: "scipio-finances",
+    project: process.env.SENTRY_CLIENT_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
   })],
   assetsInclude: ['**/*.md'],
   resolve: {
