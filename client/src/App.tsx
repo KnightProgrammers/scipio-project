@@ -94,8 +94,4 @@ function App() {
     )
 }
 
-function SentryApp() {
-    return Sentry.withProfiler(App)
-}
-
-export default SentryApp
+export default Sentry.withProfiler(App)
