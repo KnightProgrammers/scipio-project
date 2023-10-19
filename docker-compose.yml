@@ -50,6 +50,7 @@ services:
     build:
       context: client
       args:
+        VITE_ENVIRONMENT: "test"
         VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
         VITE_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
         VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}

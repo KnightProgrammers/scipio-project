@@ -33,20 +33,19 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 		}`,
 	);
 
-	if (['staging'].includes(config.app.environment) && !!process.env.SENTRY_DSN) {
-		console.log('Setting up Sentry');
-		Sentry.init({
-			dsn: process.env.SENTRY_DSN,
-			integrations: [
-				new ProfilingIntegration(),
-				new Sentry.Integrations.GraphQL()
-			],
-			// Performance Monitoring
-			tracesSampleRate: 1.0,
-			// Set sampling rate for profiling - this is relative to tracesSampleRate
-			profilesSampleRate: 1.0,
-		});
-	}
+	console.log('Setting up Sentry');
+	Sentry.init({
+		dsn: process.env.SENTRY_DSN,
+		environment: config.app.environment,
+		integrations: [
+			new ProfilingIntegration(),
+			new Sentry.Integrations.GraphQL()
+		],
+		// Performance Monitoring
+		tracesSampleRate: 1.0,
+		// Set sampling rate for profiling - this is relative to tracesSampleRate
+		profilesSampleRate: 1.0,
+	});
 
 	mongoose
 		.connect(
