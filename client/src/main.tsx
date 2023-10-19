@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-if (import.meta.env.VITE_SENTRY_DSN) {
+if (['staging'].includes(import.meta.env.VITE_ENVIRONMENT)) {
     Sentry.init({
         dsn: import.meta.env.VITE_SENTRY_DSN,
         environment: import.meta.env.VITE_ENVIRONMENT,
