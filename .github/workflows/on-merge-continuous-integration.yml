@@ -203,3 +203,24 @@ jobs:
         run: scipio-infra deploy -s server -e staging
       - name: Deploy client service
         run: scipio-infra deploy -s client -e staging
+      - name: Create Sentry release for Client
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "scipio-finances"
+          SENTRY_PROJECT: ${{ secrets.SENTRY_CLIENT_PROJECT }}
+          SENTRY_URL: https://sentry.io/
+        with:
+          environment: staging
+          working_directory: './client/'
+      - name: Create Sentry release for Server
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "scipio-finances"
+          SENTRY_PROJECT: ${{ secrets.SENTRY_SERVER_PROJECT }}
+          SENTRY_URL: https://sentry.io/
+        with:
+          environment: staging
+          working_directory: './server/'
+  
