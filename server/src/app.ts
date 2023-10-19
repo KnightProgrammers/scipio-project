@@ -33,8 +33,7 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 		}`,
 	);
 
-	console.log('Setting up Sentry');
-	Sentry.init({
+	fastify.register(require('@immobiliarelabs/fastify-sentry'), {
 		dsn: process.env.SENTRY_DSN,
 		environment: config.app.environment,
 		integrations: [
