@@ -1,13 +1,19 @@
 /* eslint-disable import/default */
 import React from 'react'
 import * as Sentry from '@sentry/react'
+import {
+    CaptureConsole,
+    HttpClient,
+    ReportingObserver,
+} from '@sentry/integrations'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-if (import.meta.env.VITE_SENTRY_DSN) {
+if (['staging'].includes(import.meta.env.VITE_ENVIRONMENT)) {
     Sentry.init({
         dsn: import.meta.env.VITE_SENTRY_DSN,
+        environment: import.meta.env.VITE_ENVIRONMENT,
         integrations: [
             new Sentry.BrowserTracing({
                 // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
@@ -17,6 +23,9 @@ if (import.meta.env.VITE_SENTRY_DSN) {
                 ],
             }),
             new Sentry.Replay(),
+            new ReportingObserver(),
+            new HttpClient(),
+            new CaptureConsole(),
         ],
         // Performance Monitoring
         tracesSampleRate: 1.0, // Capture 100% of the transactions

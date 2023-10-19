@@ -11,7 +11,7 @@
     "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org scipio-finances --project scipio-server-staging ./dist && sentry-cli sourcemaps upload --org scipio-finances --project scipio-server-staging ./dist"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org scipio-finances --project scipio-server ./dist && sentry-cli sourcemaps upload --org scipio-finances --project scipio-server ./dist"
   },
   "dependencies": {
     "@fastify/autoload": "5.7.1",
@@ -19,6 +19,7 @@
     "@fastify/mongodb": "8.0.0",
     "@fastify/sensible": "5.3.0",
     "@fastify/type-provider-typebox": "3.5.0",
+    "@immobiliarelabs/fastify-sentry": "7.1.1",
     "@sentry/node": "7.74.1",
     "@sentry/profiling-node": "1.2.1",
     "@sinclair/typebox": "0.31.17",
