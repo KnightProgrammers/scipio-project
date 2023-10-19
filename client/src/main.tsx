@@ -13,7 +13,7 @@ if (import.meta.env.VITE_FIREBASE_API_KEY) {
                 // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
                 tracePropagationTargets: [
                     'localhost',
-                    /^https:\/\/staging-api.scipiofinances.com/,
+                    /^https:\/\/scipiofinances.com/,
                 ],
             }),
             new Sentry.Replay(),
