@@ -8,6 +8,8 @@ RUN npm ci
 
 FROM node:20-alpine AS builder
 ARG APP_ENV
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
 RUN npm install -g npm
 WORKDIR /app
 COPY . .
