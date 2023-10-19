@@ -13,7 +13,7 @@ export default defineConfig({
       ]
     }
   }), dynamicImport(), sentryVitePlugin({
-    org: "scipio-finances",
+        org: "scipio-finances",
     project: "scipio-client-staging"
   })],
   assetsInclude: ['**/*.md'],
