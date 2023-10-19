@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -5,14 +6,20 @@ import dynamicImport from 'vite-plugin-dynamic-import'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({
+  plugins: [
+    react({
     babel: {
       plugins: [
         'babel-plugin-macros'
       ]
     }
-  }),
-  dynamicImport()],
+  }), 
+  dynamicImport(), 
+  sentryVitePlugin({
+    org: "scipio-finances",
+    project: process.env.SENTRY_CLIENT_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+  })],
   assetsInclude: ['**/*.md'],
   resolve: {
     alias: {
@@ -20,6 +27,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'build'
+    outDir: 'build',
+    sourcemap: true
   }
 });

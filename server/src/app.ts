@@ -2,6 +2,8 @@ import 'module-alias/register';
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
+import * as Sentry from '@sentry/node';
+import { ProfilingIntegration } from '@sentry/profiling-node';
 import mongoose from 'mongoose';
 import mercurius from 'mercurius';
 import mercuriusAuth from 'mercurius-auth';
@@ -30,6 +32,19 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 			!!config.db.params && config.db.params
 		}`,
 	);
+
+	if (['staging'].includes(config.app.environment) && !!process.env.SENTRY_DSN) {
+		Sentry.init({
+			dsn: process.env.SENTRY_DSN,
+			integrations: [
+				new ProfilingIntegration(),
+			],
+			// Performance Monitoring
+			tracesSampleRate: 1.0,
+			// Set sampling rate for profiling - this is relative to tracesSampleRate
+			profilesSampleRate: 1.0,
+		});
+	}
 
 	mongoose
 		.connect(

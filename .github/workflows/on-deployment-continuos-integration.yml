@@ -59,6 +59,7 @@ jobs:
           npx playwright install chrome
       - name: Run Tests
         env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           BASE_URL: ${{ env.BASE_URL }}
           API_BASE_URL: ${{ env.API_BASE_URL }}
           TEST_USER_EMAIL:  ${{ secrets.TEST_USER_EMAIL }}
