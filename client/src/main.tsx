@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-if (import.meta.env.VITE_FIREBASE_API_KEY) {
+if (!!import.meta.env.VITE_SENTRY_DSN) {
     Sentry.init({
-        dsn: import.meta.env.VITE_FIREBASE_API_KEY,
+        dsn: import.meta.env.VITE_SENTRY_DSN,
         integrations: [
             new Sentry.BrowserTracing({
                 // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
