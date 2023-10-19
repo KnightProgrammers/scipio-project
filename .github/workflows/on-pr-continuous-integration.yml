@@ -236,7 +236,7 @@ jobs:
           SENTRY_PROJECT: "scipio-${{ matrix.service }}"
           SENTRY_URL: https://sentry.io/
         with:
-          environment: test
+          environment: "test-${{ github.event.number }}"
           working_directory: "./${{ matrix.service }}/"
   notify-deployment:
     name: "Notify Deployment"
