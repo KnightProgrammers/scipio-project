@@ -17,6 +17,7 @@ services:
       timeout: 5s
       retries: 5
   scipio-server:
+    container_name: scipio-server
     build:
       context: server
     environment:
@@ -30,7 +31,7 @@ services:
       MONGO_DB_USER: 'root'
       MONGO_DB_PASSWORD: 'password'
       PORT: '8080'
-      ENVIRONMENT: 'test'
+      NODE_ENV: 'test'
     ports:
       - '8080:8080'
     depends_on:
@@ -42,6 +43,7 @@ services:
       timeout: 3s
       retries: 20
   scipio-client:
+    container_name: scipio-client
     build:
       context: client
       args:
@@ -58,6 +60,7 @@ services:
       timeout: 3s
       retries: 20
   scipio-db-seed:
+    container_name: scipio-db-seed
     build:
       context: .
       dockerfile: ./db-seed/Dockerfile

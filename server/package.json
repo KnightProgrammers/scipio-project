@@ -18,6 +18,8 @@
     "@fastify/mongodb": "8.0.0",
     "@fastify/sensible": "5.3.0",
     "@fastify/type-provider-typebox": "3.5.0",
+    "@sentry/node": "7.74.1",
+    "@sentry/profiling-node": "1.2.1",
     "@sinclair/typebox": "0.31.17",
     "fastify": "4.23.2",
     "fastify-cli": "5.8.0",
