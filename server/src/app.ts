@@ -3,6 +3,7 @@ import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
 import * as Sentry from '@sentry/node';
+import * as FastifySentry from '@immobiliarelabs/fastify-sentry';
 import { ProfilingIntegration } from '@sentry/profiling-node';
 import mongoose from 'mongoose';
 import mercurius from 'mercurius';
@@ -33,7 +34,7 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 		}`,
 	);
 
-	fastify.register(require('@immobiliarelabs/fastify-sentry'), {
+	fastify.register(FastifySentry, {
 		dsn: process.env.SENTRY_DSN,
 		environment: config.app.environment,
 		integrations: [
