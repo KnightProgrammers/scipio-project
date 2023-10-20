@@ -70,6 +70,16 @@ const schema = gql`
     name: String!
     type: CategoryType!
     isFixedPayment: Boolean!
+    expenses(fromDate: String, toDate: String): [Expense]!
+  }
+  
+  type Expense {
+    id: String!
+    amount: Float!
+    billableDate: String!
+    description: String
+    currency: Currency!
+    category: Category!
   }
 
   type User {
@@ -83,6 +93,7 @@ const schema = gql`
     banks: [Bank]!
     creditCards: [CreditCard]!
     categories: [Category]!
+    expenses(fromDate: String, toDate: String): [Expense]!
   }
 
   type Query {
@@ -110,6 +121,9 @@ const schema = gql`
     createCategory(input: CategoryInput!): Category!
     updateCategory(id: String!, input: CategoryInput!): Category!
     deleteCategory(id: String!): Boolean!
+    
+    createExpense(input: ExpenseInput!): Expense!
+    deleteExpense(id: String!): Boolean!
   }
 
   input NewBankInput {
@@ -149,6 +163,14 @@ const schema = gql`
     name: String!
     type: CategoryType!
     isFixedPayment: Boolean!
+  }
+  
+  input ExpenseInput {
+    amount: Float!
+    billableDate: String!
+    description: String
+    currencyId: String!
+    categoryId: String!
   }
 `;
 export default schema;
