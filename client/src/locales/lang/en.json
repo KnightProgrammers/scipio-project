@@ -29,7 +29,15 @@
             "appearance": "Appearance"
         },
         "expenses": {
-            "header": "Expenses"
+            "header": "Expenses",
+            "form": {
+                "newTitle": "New Expense"
+            },
+            "headers": {
+                "summary": "Summary",
+                "detail": "Detail"
+            },
+            "addExpenseButton": "Add expense"
         },
         "savings": {
             "header": "Savings"
@@ -198,7 +206,11 @@
         "issuer": "Issuer",
         "status": "Status",
         "type": "Type",
-        "isFixedPayment": "Fixed Payment"
+        "isFixedPayment": "Fixed Payment",
+        "date": "Date",
+        "amount": "Amount",
+        "description": "Description",
+        "category": "Category"
     },
     "validations": {
         "minString": "The value is too short (min:",

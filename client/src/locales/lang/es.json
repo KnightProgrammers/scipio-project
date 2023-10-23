@@ -29,7 +29,15 @@
             "appearance": "Tema"
         },
         "expenses": {
-            "header": "Gastos"
+            "header": "Gastos",
+            "form": {
+                "newTitle": "Nuevo Gasto"
+            },
+            "headers": {
+                "summary": "Resumen",
+                "detail": "Detalle"
+            },
+            "addExpenseButton": "Agregar gasto"
         },
         "savings": {
             "header": "Ahorros"
@@ -198,7 +206,11 @@
         "issuer": "Emisor",
         "status": "Estado",
         "type": "Tipo",
-        "isFixedPayment": "Costo Fijo"
+        "isFixedPayment": "Costo Fijo",
+        "date": "Fecha",
+        "amount": "Monto",
+        "description": "Descripción",
+        "category": "Categoría"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",

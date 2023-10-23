@@ -13,7 +13,7 @@ import {
     IconText,
     Loading,
 } from '@/components/shared'
-import { DateTime } from 'luxon';
+import { DateTime } from 'luxon'
 import Collapsible from '@/components/shared/Collapsible'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
@@ -30,11 +30,11 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useState } from 'react'
-import { Field, FieldProps, FormikErrors, FormikTouched } from "formik";
+import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { SelectFieldItem } from '@/components/ui/Form'
-import { MdOutlineAttachMoney } from "react-icons/md";
-import DatePicker from "@/components/ui/DatePicker";
+import { MdOutlineAttachMoney } from 'react-icons/md'
+import DatePicker from '@/components/ui/DatePicker'
 
 const getTotalExpenseByCurrency = (
     expenses: any[],
@@ -52,11 +52,11 @@ const getTotalExpenseByCurrency = (
 const ExpensesSummary = (props: {
     userCurrencies: any[]
     countryCode: string
-    lang: string
 }) => {
+    const { t, i18n } = useTranslation()
     return (
         <div>
-            <p className="mb-4">Summary</p>
+            <p className="mb-4">{t('pages.expenses.headers.summary')}</p>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {props.userCurrencies.map((currency: any) => {
                     const total: number = currency.expenses.reduce(
@@ -75,7 +75,7 @@ const ExpensesSummary = (props: {
                                         {currencyFormat(
                                             total,
                                             currency.code,
-                                            props.lang,
+                                            i18n.language,
                                             props.countryCode,
                                         )}
                                     </h3>
@@ -192,8 +192,6 @@ const Expenses = () => {
 
     const filteredCategories = categories.filter((c: any) => c.expenses.length)
 
-
-
     const ExpenseForm = () => (
         <ModalForm
             isOpen={isFormOpen}
@@ -211,7 +209,7 @@ const Expenses = () => {
                 <>
                     <FormItem
                         asterisk
-                        label={t(`fields.billableDate`) || ''}
+                        label={t(`fields.date`) || ''}
                         invalid={
                             !!errors.billableDate || !!touched.billableDate
                         }
@@ -226,10 +224,8 @@ const Expenses = () => {
                                     clearable={false}
                                     onChange={(value: Date | null) => {
                                         const d = value
-                                            ? DateTime.fromJSDate(
-                                                value,
-                                            )
-                                            : DateTime.now();
+                                            ? DateTime.fromJSDate(value)
+                                            : DateTime.now()
                                         form.setFieldValue(
                                             field.name,
                                             d.toFormat('dd/MM/yyyy'),
@@ -301,7 +297,7 @@ const Expenses = () => {
                             type="text"
                             autoComplete="off"
                             name="categoryId"
-                            placeholder={t('fields.categoryId')}
+                            placeholder={t('fields.category')}
                             options={categories?.map((c: any) => ({
                                 value: c.id,
                                 label: c.name,
@@ -329,7 +325,7 @@ const Expenses = () => {
                         icon={<HiPlus />}
                         onClick={() => setIsFormOpen(true)}
                     >
-                        Agregar Gasto
+                        {t('pages.expenses.addExpenseButton')}
                     </Button>
                 </EmptyState>
                 <ExpenseForm />
@@ -342,10 +338,9 @@ const Expenses = () => {
             <ExpensesSummary
                 userCurrencies={userCurrencies}
                 countryCode={userState.country?.code || 'UY'}
-                lang={i18n.language}
             />
             <div className="mt-4">
-                <p className="mb-4">Detail</p>
+                <p className="mb-4">{t('pages.expenses.headers.detail')}</p>
                 {filteredCategories.map((c: any) => (
                     <Collapsible
                         key={c.id}
@@ -391,11 +386,14 @@ const Expenses = () => {
                                         setIsFormOpen(true)
                                         setSelectedExpense({
                                             categoryId: c.id,
-                                            billableDate: DateTime.now().toFormat('dd/MM/yyyy')
+                                            billableDate:
+                                                DateTime.now().toFormat(
+                                                    'dd/MM/yyyy',
+                                                ),
                                         })
                                     }}
                                 >
-                                    Add Expense
+                                    {t('pages.expenses.addExpenseButton')}
                                 </Button>
                             </div>
                         }
