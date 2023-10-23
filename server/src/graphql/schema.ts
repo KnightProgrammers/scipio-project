@@ -81,6 +81,12 @@ const schema = gql`
     currency: Currency!
     category: Category!
   }
+  
+  type UserCurrency {
+    id: String!
+    code: String!
+    expenses(fromDate: String, toDate: String): [Expense]!
+  }
 
   type User {
     id: String!
@@ -89,7 +95,7 @@ const schema = gql`
     avatar: String!
     lang: Lang
     country: Country
-    currencies: [Currency]!
+    currencies: [UserCurrency]!
     banks: [Bank]!
     creditCards: [CreditCard]!
     categories: [Category]!

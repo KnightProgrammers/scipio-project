@@ -49,6 +49,23 @@ class ExpenseService {
 			})
 			.sort({ billableDate: 1 });
 	}
+
+	static async getAllByCurrency(userId: string, currencyId: string, fromDate?: string, toDate?: string) {
+		const formattedFromDate = parseFilterDate(fromDate, 1);
+		const formattedToDate = parseFilterDate(toDate, 32);
+
+		return ExpenseModel
+			.find({
+				userId,
+				currencyId,
+				billableDate: {
+					$gte: formattedFromDate.toJSDate(),
+					$lte: formattedToDate.toJSDate()
+				},
+				isDeleted: false
+			})
+			.sort({ billableDate: 1 });
+	}
 	static async create(userId: string, data: ExpenseInput) {
 		const {
 			amount,

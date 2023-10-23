@@ -2,10 +2,10 @@ import {
 	BankAccountQueryResolver,
 	BankQueryResolver,
 	CategoryQueryResolver,
-	CreditCardQueryResolver,
+	CreditCardQueryResolver, CurrencyQueryResolver,
 	ExpenseQueryResolver,
 	UserQueryResolver
-} from '@/graphql/resolvers/queries';
+} from "@/graphql/resolvers/queries";
 
 import Mutation from '@/graphql/resolvers/mutations';
 import CurrencyService from '@/services/currency.service';
@@ -17,12 +17,13 @@ const resolvers = {
 		currencies: async () => CurrencyService.findAll(),
 		countries: async () => CountryService.getAll()
 	},
-	User: UserQueryResolver,
 	Bank: BankQueryResolver,
 	BankAccount: BankAccountQueryResolver,
+	UserCurrency: CurrencyQueryResolver,
 	Category: CategoryQueryResolver,
 	CreditCard: CreditCardQueryResolver,
 	Expense: ExpenseQueryResolver,
+	User: UserQueryResolver,
 	Mutation
 };
 export default resolvers;
