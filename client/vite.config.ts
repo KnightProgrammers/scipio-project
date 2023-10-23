@@ -13,12 +13,13 @@ export default defineConfig({
         'babel-plugin-macros'
       ]
     }
-  }), 
-  dynamicImport(), 
+  }),
+  dynamicImport(),
   sentryVitePlugin({
     org: "scipio-finances",
     project: process.env.SENTRY_CLIENT_PROJECT,
     authToken: process.env.SENTRY_AUTH_TOKEN,
+    disable: !process.env.SENTRY_AUTH_TOKEN
   })],
   assetsInclude: ['**/*.md'],
   resolve: {

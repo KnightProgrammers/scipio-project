@@ -22,7 +22,6 @@ const navigationConfig: NavigationTree[] = [
         icon: 'expenses',
         type: NAV_ITEM_TYPE_ITEM,
         subMenu: [],
-        hidden: true,
     },
     {
         key: 'savings',

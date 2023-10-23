@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
-const safeListFile = 'safelist.txt'
+const safeListFile = './safelist.txt'
 
 // colors.indigo
 const SAFELIST_COLORS = 'colors'
@@ -9,7 +9,7 @@ module.exports = {
 	mode: 'jit',
 	content:  [
 		"./index.html",
-    	"./src/**/*.{js,ts,jsx,tsx}", 
+    	"./src/**/*.{js,ts,jsx,tsx}",
 		'./safelist.txt'
 	],
 	darkMode: 'class',

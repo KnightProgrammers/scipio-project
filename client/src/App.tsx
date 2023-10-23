@@ -1,5 +1,4 @@
 import { Provider } from 'react-redux'
-import * as Sentry from '@sentry/react'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import store, { persistor } from './store'
@@ -94,4 +93,4 @@ function App() {
     )
 }
 
-export default Sentry.withProfiler(App)
+export default App

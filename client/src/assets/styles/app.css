@@ -8,3 +8,7 @@
 .border-dashed {
     border-style: dashed;
 }
+
+.transition {
+    transition-property: all !important;
+}

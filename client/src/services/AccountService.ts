@@ -72,6 +72,21 @@ export async function apiGetUserCurrencies(): Promise<CurrencyDataType[]> {
     return response.data.data.me.currencies
 }
 
+export async function apiGetUserCurrenciesWithExpenses(): Promise<
+    CurrencyDataType[]
+> {
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'userCurrencies',
+            query: `query userCurrencies { me { id currencies { id code expenses { id, amount } } } }`,
+            variables: {},
+        },
+    })
+    return response.data.data.me.currencies
+}
+
 export async function apiSetUserCurrencies(
     currencyIds: string[],
 ): Promise<CurrencyDataType[]> {
