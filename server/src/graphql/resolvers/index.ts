@@ -5,7 +5,7 @@ import {
 	CreditCardQueryResolver, CurrencyQueryResolver,
 	ExpenseQueryResolver,
 	UserQueryResolver
-} from "@/graphql/resolvers/queries";
+} from '@/graphql/resolvers/queries';
 
 import Mutation from '@/graphql/resolvers/mutations';
 import CurrencyService from '@/services/currency.service';
