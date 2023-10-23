@@ -28,7 +28,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -55,7 +55,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -82,7 +82,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -107,7 +107,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -138,7 +138,7 @@ jobs:
       - name: Run Dockers
         run: docker compose up --detach --wait --build
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -188,7 +188,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Install infra dependencies
