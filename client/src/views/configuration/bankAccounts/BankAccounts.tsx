@@ -43,7 +43,7 @@ import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 
 const BankAccounts = () => {
@@ -60,8 +60,6 @@ const BankAccounts = () => {
 
     const userState = useAppSelector((state) => state.auth.user)
 
-    const queryClient = useQueryClient()
-
     const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
             queryKey: ['user-currencies'],
@@ -69,17 +67,18 @@ const BankAccounts = () => {
             suspense: true,
         })
 
-    const { data: bankAccountList, isFetching: isFetchingBankAccounts } =
-        useQuery({
-            queryKey: ['user-bank-accounts'],
-            queryFn: apiGetBankAccountList,
-            suspense: true,
-        })
+    const {
+        data: bankAccountList,
+        isFetching: isFetchingBankAccounts,
+        refetch: refetchBankAcounts,
+    } = useQuery({
+        queryKey: ['user-bank-accounts'],
+        queryFn: apiGetBankAccountList,
+        suspense: true,
+    })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-bank-accounts'],
-        })
+        refetchBankAcounts()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
@@ -213,9 +212,7 @@ const BankAccounts = () => {
                 return (
                     <Card
                         key={bank.name}
-                        headerBorder={false}
                         data-tn={`bank-${bank.id}-card`}
-                        headerClass={`${bgTheme} rounded-lg rounded-br-none rounded-bl-none`}
                         header={
                             <div
                                 className="flex inline-flex items-center w-full"
@@ -224,10 +221,12 @@ const BankAccounts = () => {
                                 <Avatar
                                     src={bank.icon && bank.icon}
                                     icon={!bank.icon && <HiLibrary />}
-                                    className={`mr-2 ${bgTheme} dark:${bgTheme} text-white`}
+                                    className={`mr-2 ${bgTheme} dark:${bgTheme}`}
                                     size={32}
                                 />
-                                <span className="font-bold text-lg text-white">
+                                <span
+                                    className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+                                >
                                     {bank.name}
                                 </span>
                             </div>

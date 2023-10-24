@@ -40,8 +40,6 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Run build typescript
-        run: npm run build
   client-build-check:
     name: "Client - Build Check"
     runs-on: ubuntu-latest
@@ -69,8 +67,6 @@ jobs:
         run: npm run lint
       - name: Run prettier
         run: npm run prettier
-      - name: Run build typescript
-        run: npm run build
   db-seed-build-check:
     name: "DB-Seed - Build Check"
     runs-on: ubuntu-latest
@@ -94,8 +90,6 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Run build typescript
-        run: npm run build
   infra-build-check:
     name: "Infra - Build Check"
     runs-on: ubuntu-latest

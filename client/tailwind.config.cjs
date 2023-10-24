@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
-const safeListFile = 'safelist.txt'
+const safeListFile = './safelist.txt'
 
 // colors.indigo
 const SAFELIST_COLORS = 'colors'
@@ -92,7 +92,9 @@ module.exports = {
 				`hover:ring-{${SAFELIST_COLORS}}`,
 				`focus:ring-{${SAFELIST_COLORS}}`,
 				`focus-within:ring-{${SAFELIST_COLORS}}`,
+				'border-{borderWidth}',
 				`border-{${SAFELIST_COLORS}}`,
+				`hover:border-{${SAFELIST_COLORS}}`,
 				`focus:border-{${SAFELIST_COLORS}}`,
 				`focus-within:border-{${SAFELIST_COLORS}}`,
 				`dark:text-{${SAFELIST_COLORS}}`,
