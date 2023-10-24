@@ -256,8 +256,6 @@ jobs:
           npm install
       - name: Install scipio-infra globaly
         run: npm install -g ./infra
-      - name: Install railway cli
-        run: npm i -g @railway/cli
       - name: Generate comment
         run: scipio-infra generate-pr-comment -e "test-${{ github.event.number }}"
       - name: Publish Pull Request comment
