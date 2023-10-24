@@ -587,7 +587,7 @@ const CreditCards = () => {
                     className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
                     bodyClass="flex flex-col justify-center items-center h-full"
                     data-tn="add-credit-card-btn"
-                    style={{minHeight: '240px'}}
+                    style={{ minHeight: '240px' }}
                     onClick={() => setIsFormOpen(true)}
                 >
                     <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-600">
