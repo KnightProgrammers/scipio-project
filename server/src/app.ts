@@ -44,12 +44,7 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 	}
 
 	mongoose
-		.connect(
-			config.db.uri,
-			{
-				autoCreate: true,
-			},
-		)
+		.connect(config.db.uri)
 		.then(() => fastify.log.info('MongoDB connected...'))
 		.catch((err) => fastify.log.error(err));
 

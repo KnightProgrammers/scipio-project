@@ -7,6 +7,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: scipio-test
     volumes:
       - dbdata:/data/db
     ports:
@@ -24,7 +25,7 @@ services:
       FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
       FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
-      MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?retryWrites=true&w=majority'
+      MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?authSource=admin'
       PORT: '8080'
       NODE_ENV: 'test'
     ports:
@@ -62,7 +63,7 @@ services:
       context: .
       dockerfile: ./db-seed/Dockerfile
     environment:
-      MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?retryWrites=true&w=majority'
+      MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?authSource=admin'
     depends_on:
       scipio-db:
         condition: service_healthy

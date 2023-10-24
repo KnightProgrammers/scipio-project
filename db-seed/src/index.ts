@@ -16,13 +16,7 @@ const config = {
 	logger.info('Connecting to DB');
 	logger.info(config.db.uri);
 
-	const dbConnection = await mongoose.connect(
-		'mongodb://user:password@127.0.0.1:27017/test',
-		{
-			bufferCommands: false,
-			autoCreate: true,
-		},
-	);
+	const dbConnection = await mongoose.connect(config.db.uri);
 	logger.info('DB connection is up');
 	logger.info('-----------------');
 	logger.info('Starting seeding:');
