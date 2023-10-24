@@ -96,22 +96,22 @@ const CreditCards = () => {
 
     const { t } = useTranslation()
 
-    const {
-        data: userCurrencies,
-        isFetching: isFetchingUserCurrencies,
-        refetch: refetchUserCurrencies,
-    } = useQuery({
-        queryKey: ['user-currencies'],
-        queryFn: apiGetUserCurrencies,
-        suspense: true,
-    })
-
-    const { data: creditCardList, isFetching: isFetchingCreditCards } =
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
-            queryKey: ['user-credit-cards'],
-            queryFn: apiGetCreditCardList,
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
             suspense: true,
         })
+
+    const {
+        data: creditCardList,
+        isFetching: isFetchingCreditCards,
+        refetch: refetchUserCurrencies,
+    } = useQuery({
+        queryKey: ['user-credit-cards'],
+        queryFn: apiGetCreditCardList,
+        suspense: true,
+    })
 
     const onMutationSuccess = async (title: string) => {
         refetchUserCurrencies()
