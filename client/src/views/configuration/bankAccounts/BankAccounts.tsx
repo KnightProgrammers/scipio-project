@@ -113,7 +113,7 @@ const BankAccounts = () => {
 
     const { t, i18n } = useTranslation()
     const { themeColor } = useConfig()
-    const { textTheme } = useThemeClass()
+    const { textTheme, bgTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const validationSchema = Yup.object().shape({
@@ -221,7 +221,7 @@ const BankAccounts = () => {
                                 <Avatar
                                     src={bank.icon && bank.icon}
                                     icon={!bank.icon && <HiLibrary />}
-                                    className={`mr-2 ${textTheme} dark:${textTheme}`}
+                                    className={`mr-2 ${bgTheme} dark:${bgTheme}`}
                                     size={32}
                                 />
                                 <span

@@ -584,13 +584,21 @@ const CreditCards = () => {
                 ))}
                 <Card
                     bordered
-                    className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500"
+                    className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
                     bodyClass="flex flex-col justify-center items-center h-full"
                     data-tn="add-credit-card-btn"
                     onClick={() => setIsFormOpen(true)}
                 >
-                    <HiPlus size={50} color="888888" />
-                    <p>{t('pages.creditCards.addCreditCardButton')}</p>
+                    <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-600">
+                        <HiPlus
+                            size={60}
+                            color="888888"
+                            className="m-4 text-4xl text-gray-300"
+                        />
+                    </div>
+                    <p className="m-4 font-semibold">
+                        {t('pages.creditCards.addCreditCardButton')}
+                    </p>
                 </Card>
             </div>
             <CreditCardForm />
