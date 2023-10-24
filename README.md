@@ -99,13 +99,7 @@ npm run dev
 | `FIREBASE_CLIENT_EMAIL` | String  | `true`   |               | Firebase Credential                                   |
 | `FIREBASE_PRIVATE_KEY`  | String  | `true`   |               | Firebase Credential                                   |
 | `FIREBASE_PROJECT_ID`   | String  | `true`   |               | Firebase Credential                                   |
-| `MONGO_DB_PROTOCOL`     | String  | `false`  | `mongodb`     | Database connection protocol                          |
-| `MONGO_DB_HOST`         | String  | `false`  | `localhost`   | Database connection host                              |
-| `MONGO_DB_PORT`         | String  | `false`  |               | Database connection port                              |
-| `MONGO_DB_NAME`         | String  | `false`  |               | Database name                                         |
-| `MONGO_DB_USER`         | String  | `false`  |               | Database connection credential                        |
-| `MONGO_DB_PASSWORD`     | String  | `false`  |               | Database connection credential                        |
-| `MONGO_DB_PARAMS`       | String  | `false`  |               | Database connection configuration params              | 
+| `MONGO_DB_URI`          | String  | `true`   |               | Database connection string                            |
 | `NODE_ENV`              | String  | `false`  |               | Indicates the environment where the server is running | 
 
 ------
@@ -140,7 +134,7 @@ npm install
 npm run build
 ```
 
-**Run Backup**
+**Run Seed**
 
 ```shell
 npm run start
@@ -150,13 +144,7 @@ npm run start
 
 | Var                 | Type   | Required | Default Value | Description                                        |
 |---------------------|--------|----------|---------------|----------------------------------------------------|
-| `MONGO_DB_PROTOCOL` | String | `false`  | `mongodb`     | Database connection protocol                       |
-| `MONGO_DB_HOST`     | String | `false`  | `localhost`   | Database connection host                           |
-| `MONGO_DB_PORT`     | String | `false`  |               | Database connection port                           |
-| `MONGO_DB_NAME`     | String | `false`  |               | Database name                                      |
-| `MONGO_DB_USER`     | String | `false`  |               | Database connection credential                     |
-| `MONGO_DB_PASSWORD` | String | `false`  |               | Database connection credential                     |
-| `MONGO_DB_PARAMS`   | String | `false`  |               | Database connection configuration params           | 
+| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                    |
 | `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
 
 ------
