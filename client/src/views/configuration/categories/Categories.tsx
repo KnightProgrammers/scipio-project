@@ -265,7 +265,7 @@ const Categories = () => {
                     </Button>
                 </div>
             </div>
-            <Table border={1}>
+            <Table border={1} compact>
                 <THead>
                     <Tr>
                         <Th>{t(`fields.name`)}</Th>
@@ -283,7 +283,7 @@ const Categories = () => {
                                 <div className="flex inline-flex items-center">
                                     <Avatar
                                         icon={<TbCategory2 />}
-                                        className="mr-2 bg-purple-500"
+                                        className="mr-2 bg-purple-500 dark:bg-purple-600"
                                         size={32}
                                     />
                                     <span
