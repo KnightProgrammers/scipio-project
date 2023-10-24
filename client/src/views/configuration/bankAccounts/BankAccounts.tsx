@@ -43,7 +43,7 @@ import Notification from '@/components/ui/Notification'
 import { SelectFieldItem } from '@/components/ui/Form'
 import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 
 const BankAccounts = () => {
