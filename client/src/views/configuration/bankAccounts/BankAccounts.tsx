@@ -67,15 +67,18 @@ const BankAccounts = () => {
             suspense: true,
         })
 
-    const { data: bankAccountList, isFetching: isFetchingBankAccounts, refetch: refetchBankAcounts } =
-        useQuery({
-            queryKey: ['user-bank-accounts'],
-            queryFn: apiGetBankAccountList,
-            suspense: true,
-        })
+    const {
+        data: bankAccountList,
+        isFetching: isFetchingBankAccounts,
+        refetch: refetchBankAcounts,
+    } = useQuery({
+        queryKey: ['user-bank-accounts'],
+        queryFn: apiGetBankAccountList,
+        suspense: true,
+    })
 
     const onMutationSuccess = async (title: string) => {
-        refetchBankAcounts();
+        refetchBankAcounts()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })

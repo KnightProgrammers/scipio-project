@@ -96,12 +96,15 @@ const CreditCards = () => {
 
     const { t } = useTranslation()
 
-    const { data: userCurrencies, isFetching: isFetchingUserCurrencies, refetch: refetchUserCurrencies } =
-        useQuery({
-            queryKey: ['user-currencies'],
-            queryFn: apiGetUserCurrencies,
-            suspense: true,
-        })
+    const {
+        data: userCurrencies,
+        isFetching: isFetchingUserCurrencies,
+        refetch: refetchUserCurrencies,
+    } = useQuery({
+        queryKey: ['user-currencies'],
+        queryFn: apiGetUserCurrencies,
+        suspense: true,
+    })
 
     const { data: creditCardList, isFetching: isFetchingCreditCards } =
         useQuery({
@@ -111,7 +114,7 @@ const CreditCards = () => {
         })
 
     const onMutationSuccess = async (title: string) => {
-        refetchUserCurrencies();
+        refetchUserCurrencies()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
