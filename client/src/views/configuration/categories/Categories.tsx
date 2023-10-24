@@ -18,7 +18,7 @@ import * as Yup from 'yup'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import { TbCategory2 } from 'react-icons/tb'
 import Checkbox from '@/components/ui/Checkbox'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import {
@@ -40,18 +40,18 @@ const Categories = () => {
 
     const { t } = useTranslation()
 
-    const queryClient = useQueryClient()
-
-    const { data: categories, isFetching: isLoadingCategories } = useQuery({
+    const {
+        data: categories,
+        isFetching: isLoadingCategories,
+        refetch: refetchCategories,
+    } = useQuery({
         queryKey: ['user-categories'],
         queryFn: apiGetCategoryList,
         suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-categories'],
-        })
+        refetchCategories()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
