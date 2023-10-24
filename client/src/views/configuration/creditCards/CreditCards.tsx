@@ -96,9 +96,7 @@ const CreditCards = () => {
 
     const { t } = useTranslation()
 
-    const queryClient = useQueryClient()
-
-    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies, refetch: refetchUserCurrencies } =
         useQuery({
             queryKey: ['user-currencies'],
             queryFn: apiGetUserCurrencies,
@@ -113,9 +111,7 @@ const CreditCards = () => {
         })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-credit-cards'],
-        })
+        refetchUserCurrencies();
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })

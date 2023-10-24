@@ -60,8 +60,6 @@ const BankAccounts = () => {
 
     const userState = useAppSelector((state) => state.auth.user)
 
-    const queryClient = useQueryClient()
-
     const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
             queryKey: ['user-currencies'],
@@ -69,7 +67,7 @@ const BankAccounts = () => {
             suspense: true,
         })
 
-    const { data: bankAccountList, isFetching: isFetchingBankAccounts } =
+    const { data: bankAccountList, isFetching: isFetchingBankAccounts, refetch: refetchBankAcounts } =
         useQuery({
             queryKey: ['user-bank-accounts'],
             queryFn: apiGetBankAccountList,
@@ -77,9 +75,7 @@ const BankAccounts = () => {
         })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-bank-accounts'],
-        })
+        refetchBankAcounts();
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
