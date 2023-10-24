@@ -250,6 +250,20 @@ const Categories = () => {
 
     return (
         <Container data-tn="categories-page">
+            <div className="lg:flex items-center justify-between mb-4">
+                <h3></h3>
+                <div className="flex flex-col lg:flex-row lg:items-center">
+                    <Button
+                        variant="solid"
+                        className="mt-4"
+                        icon={<HiPlus />}
+                        data-tn="add-category-btn"
+                        onClick={() => setIsFormOpen(true)}
+                    >
+                        {t('pages.categories.addCategoryButton')}
+                    </Button>
+                </div>
+            </div>
             <Table border={1}>
                 <THead>
                     <Tr>
@@ -329,15 +343,6 @@ const Categories = () => {
                     ))}
                 </TBody>
             </Table>
-            <Button
-                variant="twoTone"
-                className="mt-4"
-                icon={<HiPlus />}
-                data-tn="add-category-btn"
-                onClick={() => setIsFormOpen(true)}
-            >
-                {t('pages.categories.addCategoryButton')}
-            </Button>
             <CategoryForm />
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}
