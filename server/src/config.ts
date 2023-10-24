@@ -5,6 +5,6 @@ export const config = {
 		version: process.env.npm_package_version,
 	},
 	db: {
-		uri: process.env.MONGO_DB_URI
+		uri: process.env.MONGO_DB_URI || ''
 	},
 };

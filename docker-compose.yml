@@ -20,13 +20,10 @@ services:
     container_name: scipio-server
     build:
       context: server
-      args:
-        SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
     environment:
       FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
       FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
-      SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
       MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?retryWrites=true&w=majority'
       PORT: '8080'
       NODE_ENV: 'test'

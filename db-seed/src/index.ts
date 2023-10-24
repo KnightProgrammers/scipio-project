@@ -8,7 +8,7 @@ dotenv.config();
 
 const config = {
 	db: {
-		uri: process.env.MONGO_DB_URI,
+		uri: process.env.MONGO_DB_URI || '',
 	},
 }
 
@@ -17,7 +17,7 @@ const config = {
 	logger.info(config.db.uri);
 
 	const dbConnection = await mongoose.connect(
-		`mongodb://user:password@127.0.0.1:27017/test`,
+		'mongodb://user:password@127.0.0.1:27017/test',
 		{
 			bufferCommands: false,
 			autoCreate: true,
