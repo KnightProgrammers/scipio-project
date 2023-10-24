@@ -225,7 +225,9 @@ const BankAccounts = () => {
                                     className={`mr-2 ${textTheme} dark:${textTheme}`}
                                     size={32}
                                 />
-                                <span className={`font-bold text-lg ${textTheme} dark:${textTheme}`}>
+                                <span
+                                    className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+                                >
                                     {bank.name}
                                 </span>
                             </div>
