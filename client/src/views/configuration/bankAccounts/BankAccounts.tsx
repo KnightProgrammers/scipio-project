@@ -114,7 +114,7 @@ const BankAccounts = () => {
 
     const { t, i18n } = useTranslation()
     const { themeColor } = useConfig()
-    const { textTheme, bgTheme } = useThemeClass()
+    const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const validationSchema = Yup.object().shape({
@@ -213,9 +213,7 @@ const BankAccounts = () => {
                 return (
                     <Card
                         key={bank.name}
-                        headerBorder={false}
                         data-tn={`bank-${bank.id}-card`}
-                        headerClass={`${bgTheme} rounded-lg rounded-br-none rounded-bl-none`}
                         header={
                             <div
                                 className="flex inline-flex items-center w-full"
@@ -224,10 +222,10 @@ const BankAccounts = () => {
                                 <Avatar
                                     src={bank.icon && bank.icon}
                                     icon={!bank.icon && <HiLibrary />}
-                                    className={`mr-2 ${bgTheme} dark:${bgTheme} text-white`}
+                                    className={`mr-2 ${textTheme} dark:${textTheme}`}
                                     size={32}
                                 />
-                                <span className="font-bold text-lg text-white">
+                                <span className={`font-bold text-lg ${textTheme} dark:${textTheme}`}>
                                     {bank.name}
                                 </span>
                             </div>
