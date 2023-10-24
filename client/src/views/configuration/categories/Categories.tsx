@@ -18,7 +18,7 @@ import * as Yup from 'yup'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import { TbCategory2 } from 'react-icons/tb'
 import Checkbox from '@/components/ui/Checkbox'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import {
@@ -40,18 +40,18 @@ const Categories = () => {
 
     const { t } = useTranslation()
 
-    const queryClient = useQueryClient()
-
-    const { data: categories, isFetching: isLoadingCategories } = useQuery({
+    const {
+        data: categories,
+        isFetching: isLoadingCategories,
+        refetch: refetchCategories,
+    } = useQuery({
         queryKey: ['user-categories'],
         queryFn: apiGetCategoryList,
         suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-categories'],
-        })
+        refetchCategories()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
@@ -250,6 +250,21 @@ const Categories = () => {
 
     return (
         <Container data-tn="categories-page">
+            <div className="lg:flex items-center justify-between mb-4">
+                <h2>{t('pages.categories.header')}</h2>
+                <div className="flex flex-col lg:flex-row lg:items-center">
+                    <Button
+                        variant="solid"
+                        size="sm"
+                        className="mt-4"
+                        icon={<HiPlus />}
+                        data-tn="add-category-btn"
+                        onClick={() => setIsFormOpen(true)}
+                    >
+                        {t('pages.categories.addCategoryButton')}
+                    </Button>
+                </div>
+            </div>
             <Table border={1}>
                 <THead>
                     <Tr>
@@ -329,15 +344,6 @@ const Categories = () => {
                     ))}
                 </TBody>
             </Table>
-            <Button
-                variant="twoTone"
-                className="mt-4"
-                icon={<HiPlus />}
-                data-tn="add-category-btn"
-                onClick={() => setIsFormOpen(true)}
-            >
-                {t('pages.categories.addCategoryButton')}
-            </Button>
             <CategoryForm />
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}
