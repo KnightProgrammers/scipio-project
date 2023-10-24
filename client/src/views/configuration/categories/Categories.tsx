@@ -251,7 +251,7 @@ const Categories = () => {
     return (
         <Container data-tn="categories-page">
             <div className="lg:flex items-center justify-between mb-4">
-                <h3></h3>
+                <h2>{t('pages.categories.header')}</h2>
                 <div className="flex flex-col lg:flex-row lg:items-center">
                     <Button
                         variant="solid"

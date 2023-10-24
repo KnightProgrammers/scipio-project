@@ -61,9 +61,6 @@ export const protectedRoutes = [
         path: '/conf/categories',
         component: lazy(() => import('@/views/configuration/categories')),
         authority: [],
-        meta: {
-            header: 'pages.categories.header',
-        },
     },
     {
         key: 'jobs',
