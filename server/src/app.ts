@@ -26,13 +26,7 @@ const options: any = {
 };
 
 const app: any = async (fastify: any, opts: any): Promise<void> => {
-	fastify.log.info(
-		`${config.db.protocol}://${config.db.host}${
-			config.db.port ? `:${config.db.port}` : ''
-		}/${!!config.db.name && config.db.name}${
-			!!config.db.params && config.db.params
-		}`,
-	);
+	fastify.log.info(config.db.uri);
 
 	if(['staging'].includes(config.app.environment)){
 		fastify.register(FastifySentry, {
@@ -51,14 +45,8 @@ const app: any = async (fastify: any, opts: any): Promise<void> => {
 
 	mongoose
 		.connect(
-			`${config.db.protocol}://${config.db.host}${
-				config.db.port ? `:${config.db.port}` : ''
-			}/${!!config.db.name && config.db.name}${
-				!!config.db.params && config.db.params
-			}`,
+			config.db.uri,
 			{
-				user: config.db.user,
-				pass: config.db.password,
 				autoCreate: true,
 			},
 		)
