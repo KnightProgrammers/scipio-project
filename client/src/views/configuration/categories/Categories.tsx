@@ -255,6 +255,7 @@ const Categories = () => {
                 <div className="flex flex-col lg:flex-row lg:items-center">
                     <Button
                         variant="solid"
+                        size="sm"
                         className="mt-4"
                         icon={<HiPlus />}
                         data-tn="add-category-btn"
