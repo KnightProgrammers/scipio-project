@@ -33,7 +33,7 @@
     "d3-fetch": "3.0.1",
     "d3-scale": "4.0.2",
     "dayjs": "1.11.10",
-    "firebase": "10.4.0",
+    "firebase": "10.5.0",
     "formik": "2.4.5",
     "framer-motion": "10.16.4",
     "history": "5.3.0",
