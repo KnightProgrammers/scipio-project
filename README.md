@@ -154,3 +154,19 @@ npm run start
 This project is licensed under the terms of the **GPL-3.0** license.
 
 > You can check out the full license [GPL-3.0](./LICENSE) license.
+
+## Update Dependencies
+
+1. Move to the project directory
+
+2. Check for update and apply the changes
+
+```shell
+npx npm-check-updates -u
+```
+
+3. Install the updates
+
+```shell
+npm install
+```
