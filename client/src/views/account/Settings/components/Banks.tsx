@@ -31,7 +31,7 @@ import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 const { Tr, Td, TBody } = Table
 
@@ -46,18 +46,18 @@ const Banks = () => {
     const { t } = useTranslation()
     const { textTheme } = useThemeClass()
 
-    const queryClient = useQueryClient()
-
-    const { data: bankList, isFetching: isLoadingBanks } = useQuery({
+    const {
+        data: bankList,
+        isFetching: isLoadingBanks,
+        refetch: refetchBanks,
+    } = useQuery({
         queryKey: ['user-banks'],
         queryFn: apiGetBankList,
         suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
-        await queryClient.invalidateQueries({
-            queryKey: ['user-banks'],
-        })
+        refetchBanks()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })

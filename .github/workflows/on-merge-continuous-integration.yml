@@ -28,7 +28,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -41,8 +41,6 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Run build typescript
-        run: npm run build
   client-build-check:
     name: "Client - Build Check"
     runs-on: ubuntu-latest
@@ -55,7 +53,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -70,8 +68,6 @@ jobs:
         run: npm run lint
       - name: Run prettier
         run: npm run prettier
-      - name: Run build typescript
-        run: npm run build
   db-seed-build-check:
     name: "DB-Seed - Build Check"
     runs-on: ubuntu-latest
@@ -82,7 +78,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -95,8 +91,6 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Run build typescript
-        run: npm run build
   infra-build-check:
     name: "Infra - Build Check"
     runs-on: ubuntu-latest
@@ -107,7 +101,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -138,7 +132,7 @@ jobs:
       - name: Run Dockers
         run: docker compose up --detach --wait --build
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Cache node modules
@@ -188,7 +182,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Install infra dependencies

@@ -28,7 +28,7 @@ const Wrapper = () => {
 
     queryClient.setDefaultOptions({
         queries: {
-            refetchOnWindowFocus: (query) => query.state.status !== 'error',
+            refetchOnWindowFocus: false,
         },
         mutations: {
             useErrorBoundary: false,

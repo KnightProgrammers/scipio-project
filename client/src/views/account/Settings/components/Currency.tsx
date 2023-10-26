@@ -14,7 +14,7 @@ import {
     apiSetUserCurrencies,
 } from '@/services/AccountService'
 import { apiGetCurrencies } from '@/services/CurrencyService'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 
@@ -23,13 +23,14 @@ const Currency = () => {
 
     const { t } = useTranslation()
 
-    const queryClient = useQueryClient()
-
-    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
-        useQuery({
-            queryKey: ['user-currencies'],
-            queryFn: apiGetUserCurrencies,
-        })
+    const {
+        data: userCurrencies,
+        isFetching: isFetchingUserCurrencies,
+        refetch: refetchUserCurrencies,
+    } = useQuery({
+        queryKey: ['user-currencies'],
+        queryFn: apiGetUserCurrencies,
+    })
 
     const { data: currencies, isFetching: isFetchingCurrencies } = useQuery({
         queryKey: ['currencies'],
@@ -39,9 +40,7 @@ const Currency = () => {
     const setUserCurrenciesMutation = useMutation({
         mutationFn: apiSetUserCurrencies,
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: ['user-currencies'],
-            })
+            refetchUserCurrencies()
             toast.push(
                 <Notification
                     title={t('notifications.profile.updated') || ''}
