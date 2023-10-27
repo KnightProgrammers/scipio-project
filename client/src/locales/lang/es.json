@@ -45,7 +45,8 @@
                 "title": "Eliminar gasto",
                 "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
             },
-            "genericDescription": "Gasto {{billableDate}}"
+            "genericDescription": "Gasto {{billableDate}}",
+            "filterTitle": "Filtro de Gastos"
         },
         "savings": {
             "header": "Ahorros"
@@ -193,7 +194,8 @@
         "deleting": "Eliminando",
         "edit": "Editar",
         "next": "Siguiente",
-        "tryAgain": "Volver a intentar"
+        "tryAgain": "Volver a intentar",
+        "filter": "Filtrar"
     },
     "fields": {
         "email": "Email",
@@ -218,7 +220,10 @@
         "date": "Fecha",
         "amount": "Monto",
         "description": "Descripción",
-        "category": "Categoría"
+        "category": "Categoría",
+        "from": "Desde",
+        "to": "Hasta",
+        "expenseType": "Tipo de Gasto"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -272,7 +277,9 @@
     },
     "placeholders": {
         "country": "Selecciona un pais",
-        "other": "Otro"
+        "other": "Otro",
+        "currentMonth": "Mes actual",
+        "lastMonth": "Mes anterior"
     },
     "messages": {
         "backTo": "Volver a ",

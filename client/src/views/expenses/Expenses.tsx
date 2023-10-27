@@ -44,6 +44,7 @@ import DatePicker from '@/components/ui/DatePicker'
 import { BsCalendarRange } from 'react-icons/bs'
 import { LuFilter, LuFilterX } from 'react-icons/lu'
 import { useConfig } from '@/components/ui/ConfigProvider'
+import { retry } from '@reduxjs/toolkit/query'
 
 const getTotalExpenseByCurrency = (
     expenses: any[],
@@ -268,20 +269,19 @@ const ExpenseForm = (props: {
 const ExpenseFilter = (props: {
     isActive: boolean
     userCurrencies: any[]
+    defaultValue: ExpenseFilter
     onFilter: (filters: ExpenseFilter) => void
 }) => {
     const { isActive = false, userCurrencies = [], onFilter } = props
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const [fromDate, setFromDate] = useState<Date>(
-        DateTime.now().set({ day: 1 }).toJSDate(),
-    )
-    const [toDate, setToDate] = useState<Date>(
-        DateTime.now().endOf('month').toJSDate(),
-    )
+    const [fromDate, setFromDate] = useState<Date>(props.defaultValue.fromDate)
+    const [toDate, setToDate] = useState<Date>(props.defaultValue.toDate)
 
     const [selectedDateFilterText, setSelectedDateFilterText] = useState('')
+
+    const { t } = useTranslation()
 
     const EXPENSE_TYPE: { value: EXPENSE_TYPE | 'ALL'; label: string }[] = [
         { value: 'FIXED_EXPENSE', label: 'Fixed Expenses' },
@@ -322,7 +322,9 @@ const ExpenseFilter = (props: {
             <Drawer
                 title={
                     <div>
-                        <h4 className="mb-2">Filter</h4>
+                        <h4 className="mb-2">
+                            {t('pages.expenses.filterTitle')}
+                        </h4>
                     </div>
                 }
                 isOpen={isOpen}
@@ -335,7 +337,7 @@ const ExpenseFilter = (props: {
                             className="mr-1"
                             onClick={() => onDrawerClose()}
                         >
-                            Cancel
+                            {t('actions.cancel')}
                         </Button>
                         <Button
                             size="sm"
@@ -354,7 +356,7 @@ const ExpenseFilter = (props: {
                                 onDrawerClose()
                             }}
                         >
-                            Apply
+                            {t('actions.filter')}
                         </Button>
                     </div>
                 }
@@ -364,13 +366,14 @@ const ExpenseFilter = (props: {
                 <AdaptableCard bordered className="">
                     <FormContainer
                         layout="vertical"
-                        className="grid grid-cols-2"
+                        className="grid grid-cols-1"
                     >
-                        <FormItem label="From" className="mb-2 mr-2">
+                        <FormItem label={t('fields.from')} className="mb-2">
                             <DatePicker
                                 defaultValue={fromDate}
                                 maxDate={toDate}
                                 clearable={false}
+                                inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
                                         date.getDate() === toDate.getDate() &&
@@ -396,11 +399,12 @@ const ExpenseFilter = (props: {
                                 }
                             />
                         </FormItem>
-                        <FormItem label="To" className="mb-2 ml-2">
+                        <FormItem label={t('fields.to')} className="mb-2">
                             <DatePicker
                                 defaultValue={toDate}
                                 minDate={fromDate}
                                 clearable={false}
+                                inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
                                         date.getDate() === fromDate.getDate() &&
@@ -440,7 +444,7 @@ const ExpenseFilter = (props: {
                                 )
                             }}
                         >
-                            Current Month
+                            {t('placeholders.currentMonth')}
                         </Button>
                         <Button
                             className="ml-2"
@@ -461,12 +465,12 @@ const ExpenseFilter = (props: {
                                 )
                             }}
                         >
-                            Last Month
+                            {t('placeholders.lastMonth')}
                         </Button>
                     </div>
                 </AdaptableCard>
                 <AdaptableCard bordered className="mt-2">
-                    <p className="mb-2 font-bold">Expense Type</p>
+                    <p className="mb-2 font-bold">{t('fields.expenseType')} </p>
                     <Segment
                         value={expenseTypes}
                         selectionType="multiple"
@@ -507,7 +511,7 @@ const ExpenseFilter = (props: {
                     </Segment>
                 </AdaptableCard>
                 <AdaptableCard bordered className="mt-2">
-                    <p className="mb-2 font-bold">Currency</p>
+                    <p className="mb-2 font-bold">{t('fields.currency')} </p>
                     <Segment
                         value={currencyIds}
                         selectionType="multiple"
@@ -555,9 +559,12 @@ const Expenses = () => {
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
         useState<boolean>(false)
 
-    const [expenseFilter, setExpenseFilter] = useState<
-        ExpenseFilter | undefined
-    >(undefined)
+    const [expenseFilter, setExpenseFilter] = useState<ExpenseFilter>({
+        fromDate: DateTime.now().set({ day: 1 }).toJSDate(),
+        toDate: DateTime.now().endOf('month').toJSDate(),
+        expenseType: 'ALL',
+        currencies: [],
+    })
 
     const userState = useAppSelector((state) => state.auth.user)
     const { t, i18n } = useTranslation()
@@ -568,7 +575,17 @@ const Expenses = () => {
         refetch: getExpenses,
     } = useQuery({
         queryKey: ['user-expenses-by-category'],
-        queryFn: apiGetExpenseList,
+        queryFn: async () => {
+            console.log(expenseFilter)
+            return apiGetExpenseList({
+                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+            })
+        },
     })
 
     const {
@@ -577,7 +594,15 @@ const Expenses = () => {
         refetch: getUserCurrencies,
     } = useQuery({
         queryKey: ['user-currencies-with-expenses'],
-        queryFn: apiGetUserCurrenciesWithExpenses,
+        queryFn: async () =>
+            apiGetUserCurrenciesWithExpenses({
+                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+            }),
     })
 
     const onMutationSuccess = async (title: string) => {
@@ -612,6 +637,15 @@ const Expenses = () => {
         },
     })
 
+    useEffect(() => {
+        if (userCurrencies) {
+            setExpenseFilter({
+                ...expenseFilter,
+                currencies: userCurrencies.map((uc: any) => uc.id),
+            })
+        }
+    }, [userCurrencies])
+
     const onDelete = () => {
         if (selectedExpense) {
             deleteExpenseMutation.mutate(selectedExpense.id)
@@ -622,6 +656,21 @@ const Expenses = () => {
     const onFormSubmit = (value: any) => {
         createExpenseMutation.mutate(value)
         onFormClose()
+    }
+
+    const onFilterChange = (filters: ExpenseFilter) => {
+        setExpenseFilter((prevState) => {
+            if (
+                prevState.toDate !== filters.toDate ||
+                prevState.fromDate !== filters.fromDate
+            ) {
+                setTimeout(() => {
+                    getExpenses()
+                    getUserCurrencies()
+                }, 100)
+            }
+            return filters
+        })
     }
 
     if (
@@ -666,7 +715,6 @@ const Expenses = () => {
         )
         .map((uc: any) => {
             if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
-                console.log(uc)
                 return {
                     ...uc,
                     expenses: uc.expenses.filter((e: any) => {
@@ -695,9 +743,8 @@ const Expenses = () => {
                         <ExpenseFilter
                             isActive
                             userCurrencies={userCurrencies}
-                            onFilter={(filters: ExpenseFilter) =>
-                                setExpenseFilter(filters)
-                            }
+                            defaultValue={expenseFilter}
+                            onFilter={onFilterChange}
                         />
                     </div>
                 </div>
@@ -735,9 +782,8 @@ const Expenses = () => {
                     <ExpenseFilter
                         isActive
                         userCurrencies={userCurrencies}
-                        onFilter={(filters: ExpenseFilter) =>
-                            setExpenseFilter(filters)
-                        }
+                        defaultValue={expenseFilter}
+                        onFilter={onFilterChange}
                     />
                 </div>
             </div>

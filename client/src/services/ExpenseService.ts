@@ -1,20 +1,29 @@
 import BaseService from '@/services/BaseService'
 
-export async function apiGetExpenseList() {
+export async function apiGetExpenseList({
+    fromDate,
+    toDate,
+}: {
+    fromDate?: string
+    toDate?: string
+}) {
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
         data: {
             operationName: 'userExpensesByCategory',
             query: `
-                query userExpensesByCategory {
+                query userExpensesByCategory($fromDate: String, $toDate: String) {
                   me {
                     id
                     categories {
                       id
                       name
                       isFixedPayment
-                      expenses {
+                      expenses(
+                                fromDate: $fromDate
+                                toDate: $toDate
+                            ) {
                         id
                         amount
                         billableDate
@@ -28,7 +37,10 @@ export async function apiGetExpenseList() {
                   }
                 }
             `,
-            variables: {},
+            variables: {
+                fromDate,
+                toDate,
+            },
         },
     })
     return response.data.data.me.categories

@@ -45,7 +45,8 @@
                 "title": "Delete Expense",
                 "description": "Are you sure you want to delete the expense \"{{description}}\"?"
             },
-            "genericDescription": "Expense {{billableDate}}"
+            "genericDescription": "Expense {{billableDate}}",
+            "filterTitle": "Expense Filter"
         },
         "savings": {
             "header": "Savings"
@@ -193,7 +194,8 @@
         "deleting": "Deleting",
         "edit": "Edit",
         "next": "Next",
-        "tryAgain": "Try again"
+        "tryAgain": "Try again",
+        "filter": "Filter"
     },
     "fields": {
         "email": "Email",
@@ -214,11 +216,14 @@
         "issuer": "Issuer",
         "status": "Status",
         "type": "Type",
-        "isFixedPayment": "Fixed Payment",
+        "isFixedPayment": "Fixed Expense",
         "date": "Date",
         "amount": "Amount",
         "description": "Description",
-        "category": "Category"
+        "category": "Category",
+        "from": "From",
+        "to": "To",
+        "expenseType": "Expense Type"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -272,6 +277,8 @@
     },
     "placeholders": {
         "country": "Select a country",
+        "currentMonth": "Current month",
+        "lastMonth": "Last Month",
         "other": "Other"
     },
     "messages": {
