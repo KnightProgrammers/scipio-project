@@ -31,7 +31,9 @@ import currencyFormat from '@/utils/currencyFormat'
 import { HiOutlineTrash, HiPlus } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
-import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
+import {
+    apiGetUserCurrenciesWithExpenses,
+} from '@/services/AccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
@@ -286,7 +288,7 @@ const ExpenseFilter = (props: {
     const [expenseTypes, setExpenseTypes] =
         useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
     const [currencyIds, setCurrencyIds] = useState<string[]>(
-        userCurrencies.map((et: any) => et.id),
+        props.defaultValue.currencies,
     )
 
     const { themeColor } = useConfig()
@@ -568,30 +570,39 @@ const Expenses = () => {
     const { t, i18n } = useTranslation()
 
     const {
-        data: categories,
-        isFetching: isFetchingExpenses,
-        refetch: getExpenses,
-    } = useQuery({
-        queryKey: ['user-expenses-by-category'],
-        queryFn: async () =>
-            apiGetExpenseList({
-                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
-                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
-            }),
-    })
-
-    const {
         data: userCurrencies,
         isFetching: isFetchingUserCurrencies,
         refetch: getUserCurrencies,
     } = useQuery({
         queryKey: ['user-currencies-with-expenses'],
+        queryFn: async () =>{
+            const data = await apiGetUserCurrenciesWithExpenses({
+                    fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
+                        'dd/MM/yyyy',
+                    ),
+                    toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
+                        'dd/MM/yyyy',
+                    ),
+                });
+            if (expenseFilter.currencies.length === 0) {
+                setExpenseFilter({
+                    ...expenseFilter,
+                    currencies: data.map((uc: any) => uc.id),
+                })
+            }
+            return data;
+        }
+    })
+
+    const {
+        data: categories,
+        isFetching: isFetchingExpenses,
+        refetch: getExpenses,
+    } = useQuery({
+        queryKey: ['user-expenses-by-category'],
+        enabled: !userCurrencies,
         queryFn: async () =>
-            apiGetUserCurrenciesWithExpenses({
+            apiGetExpenseList({
                 fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
                     'dd/MM/yyyy',
                 ),
@@ -632,15 +643,6 @@ const Expenses = () => {
             await onMutationSuccess(t('notifications.expenses.created') || '')
         },
     })
-
-    useEffect(() => {
-        if (userCurrencies) {
-            setExpenseFilter({
-                ...expenseFilter,
-                currencies: userCurrencies.map((uc: any) => uc.id),
-            })
-        }
-    }, [userCurrencies])
 
     const onDelete = () => {
         if (selectedExpense) {
