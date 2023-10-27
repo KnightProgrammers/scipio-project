@@ -38,7 +38,7 @@
                 "detail": "Detail"
             },
             "emptyState": {
-                "title": "No expenses for the chosen period"
+                "title": "No expenses found"
             },
             "addExpenseButton": "Add expense",
             "deleteConfirmation": {

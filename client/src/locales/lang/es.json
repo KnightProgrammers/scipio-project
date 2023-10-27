@@ -38,7 +38,7 @@
                 "detail": "Detalle"
             },
             "emptyState": {
-                "title": "No hay gastos para el periodo seleccionado"
+                "title": "No se encontraron gastos"
             },
             "addExpenseButton": "Agregar gasto",
             "deleteConfirmation": {
