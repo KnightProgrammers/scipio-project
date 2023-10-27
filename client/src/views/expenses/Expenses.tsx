@@ -284,7 +284,8 @@ const ExpenseFilter = (props: {
 
     const EXPENSE_TYPES: EXPENSE_TYPE[] = ['FIXED_EXPENSE', 'VARIABLE_EXPENSE']
 
-    const [expenseTypes, setExpenseTypes] = useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
+    const [expenseTypes, setExpenseTypes] =
+        useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
     const [currencyIds, setCurrencyIds] = useState<string[]>(
         userCurrencies.map((et: any) => et.id),
     )
@@ -474,10 +475,7 @@ const ExpenseFilter = (props: {
                     >
                         <div className="flex flex-col items-center gap-4 w-full">
                             {EXPENSE_TYPES.map((item: EXPENSE_TYPE) => (
-                                <Segment.Item
-                                    key={item}
-                                    value={item}
-                                >
+                                <Segment.Item key={item} value={item}>
                                     {({ active, onSegmentItemClick }) => {
                                         return (
                                             <SegmentItemOption
@@ -530,7 +528,9 @@ const ExpenseFilter = (props: {
                                                     checked={active}
                                                 />
                                                 <span className="text-sm">
-                                                    {t(`currencies.${item.code}`)}
+                                                    {t(
+                                                        `currencies.${item.code}`,
+                                                    )}
                                                 </span>
                                             </SegmentItemOption>
                                         )
@@ -638,7 +638,7 @@ const Expenses = () => {
                 currencies: userCurrencies.map((uc: any) => uc.id),
             })
         }
-    }, [userCurrencies])
+    }, [userCurrencies, expenseFilter])
 
     const onDelete = () => {
         if (selectedExpense) {
