@@ -320,5 +320,9 @@
         "NEED": "Need",
         "WANT": "Want",
         "SAVE": "Save"
+    },
+    "expenseType": {
+        "VARIABLE_EXPENSE": "Variable Expense",
+        "FIXED_EXPENSE": "Fixed Expense"
     }
 }

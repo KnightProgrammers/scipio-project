@@ -320,5 +320,9 @@
         "NEED": "Necesario",
         "WANT": "Deseo",
         "SAVE": "Ahorro"
+    },
+    "expenseType": {
+        "VARIABLE_EXPENSE": "Gasto Variable",
+        "FIXED_EXPENSE": "Gasto Fijo"
     }
 }

@@ -44,7 +44,6 @@ import DatePicker from '@/components/ui/DatePicker'
 import { BsCalendarRange } from 'react-icons/bs'
 import { LuFilter, LuFilterX } from 'react-icons/lu'
 import { useConfig } from '@/components/ui/ConfigProvider'
-import { retry } from '@reduxjs/toolkit/query'
 
 const getTotalExpenseByCurrency = (
     expenses: any[],
@@ -283,14 +282,9 @@ const ExpenseFilter = (props: {
 
     const { t } = useTranslation()
 
-    const EXPENSE_TYPE: { value: EXPENSE_TYPE | 'ALL'; label: string }[] = [
-        { value: 'FIXED_EXPENSE', label: 'Fixed Expenses' },
-        { value: 'VARIABLE_EXPENSE', label: 'Variable Expense' },
-    ]
+    const EXPENSE_TYPES: EXPENSE_TYPE[] = ['FIXED_EXPENSE', 'VARIABLE_EXPENSE']
 
-    const [expenseTypes, setExpenseTypes] = useState<EXPENSE_TYPE[]>(
-        EXPENSE_TYPE.map((et: any) => et.value),
-    )
+    const [expenseTypes, setExpenseTypes] = useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
     const [currencyIds, setCurrencyIds] = useState<string[]>(
         userCurrencies.map((et: any) => et.id),
     )
@@ -478,18 +472,18 @@ const ExpenseFilter = (props: {
                             setExpenseTypes(val as EXPENSE_TYPE[])
                         }
                     >
-                        <div className="flex items-center gap-4 w-full">
-                            {EXPENSE_TYPE.map((item: any) => (
+                        <div className="flex flex-col items-center gap-4 w-full">
+                            {EXPENSE_TYPES.map((item: EXPENSE_TYPE) => (
                                 <Segment.Item
-                                    key={item.value}
-                                    value={item.value}
+                                    key={item}
+                                    value={item}
                                 >
                                     {({ active, onSegmentItemClick }) => {
                                         return (
                                             <SegmentItemOption
                                                 hoverable
                                                 active={active}
-                                                className={`w-6/12 `}
+                                                className="w-full"
                                                 customCheck={<></>}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
@@ -500,7 +494,7 @@ const ExpenseFilter = (props: {
                                                     checked={active}
                                                 />
                                                 <span className="text-sm">
-                                                    {item.label}
+                                                    {t(`expenseType.${item}`)}
                                                 </span>
                                             </SegmentItemOption>
                                         )
@@ -536,7 +530,7 @@ const ExpenseFilter = (props: {
                                                     checked={active}
                                                 />
                                                 <span className="text-sm">
-                                                    {item.code}
+                                                    {t(`currencies.${item.code}`)}
                                                 </span>
                                             </SegmentItemOption>
                                         )
