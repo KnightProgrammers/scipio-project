@@ -366,6 +366,7 @@ const ExpenseFilter = (props: {
                         <FormItem label={t('fields.from')} className="mb-2">
                             <DatePicker
                                 defaultValue={fromDate}
+                                value={fromDate}
                                 maxDate={toDate}
                                 clearable={false}
                                 inputFormat="DD/MM/YYYY"
@@ -397,6 +398,7 @@ const ExpenseFilter = (props: {
                         <FormItem label={t('fields.to')} className="mb-2">
                             <DatePicker
                                 defaultValue={toDate}
+                                value={toDate}
                                 minDate={fromDate}
                                 clearable={false}
                                 inputFormat="DD/MM/YYYY"
