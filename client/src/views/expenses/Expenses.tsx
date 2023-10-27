@@ -42,7 +42,7 @@ import { SelectFieldItem } from '@/components/ui/Form'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 import DatePicker from '@/components/ui/DatePicker'
 import { BsCalendarRange } from 'react-icons/bs'
-import { LuFilter, LuFilterX } from 'react-icons/lu'
+import { LuFilter } from 'react-icons/lu'
 import { useConfig } from '@/components/ui/ConfigProvider'
 
 const getTotalExpenseByCurrency = (
@@ -266,12 +266,11 @@ const ExpenseForm = (props: {
 }
 
 const ExpenseFilter = (props: {
-    isActive: boolean
     userCurrencies: any[]
     defaultValue: ExpenseFilter
     onFilter: (filters: ExpenseFilter) => void
 }) => {
-    const { isActive = false, userCurrencies = [], onFilter } = props
+    const { userCurrencies = [], onFilter } = props
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -304,14 +303,17 @@ const ExpenseFilter = (props: {
     }
 
     return (
-        <div className="flex items-center">
+        <div
+            className="flex items-center mb-2"
+            style={{ justifyContent: 'flex-end' }}
+        >
             <span className="border bordered flex items-center mx-2 px-4 py-1 rounded-full">
                 <span className="mr-2">{selectedDateFilterText}</span>
                 <BsCalendarRange />
             </span>
             <Button
                 size="sm"
-                icon={isActive ? <LuFilterX /> : <LuFilter />}
+                icon={<LuFilter />}
                 onClick={() => setIsOpen(true)}
             />
             <Drawer
@@ -571,17 +573,15 @@ const Expenses = () => {
         refetch: getExpenses,
     } = useQuery({
         queryKey: ['user-expenses-by-category'],
-        queryFn: async () => {
-            console.log(expenseFilter)
-            return apiGetExpenseList({
+        queryFn: async () =>
+            apiGetExpenseList({
                 fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
                     'dd/MM/yyyy',
                 ),
                 toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
                     'dd/MM/yyyy',
                 ),
-            })
-        },
+            }),
     })
 
     const {
@@ -640,7 +640,7 @@ const Expenses = () => {
                 currencies: userCurrencies.map((uc: any) => uc.id),
             })
         }
-    }, [userCurrencies, expenseFilter])
+    }, [userCurrencies])
 
     const onDelete = () => {
         if (selectedExpense) {
@@ -733,16 +733,13 @@ const Expenses = () => {
     if (!filteredCategories.length) {
         return (
             <Container>
-                <div className="md:flex items-center justify-between mb-4">
-                    <h2>{t('pages.expenses.header')}</h2>
-                    <div className="flex flex-col lg:flex-row lg:items-center">
-                        <ExpenseFilter
-                            isActive
-                            userCurrencies={userCurrencies}
-                            defaultValue={expenseFilter}
-                            onFilter={onFilterChange}
-                        />
-                    </div>
+                <div className="flex flex-col md:flex-row justify-between mb-4">
+                    <h2 className="mb-2">{t('pages.expenses.header')}</h2>
+                    <ExpenseFilter
+                        userCurrencies={userCurrencies}
+                        defaultValue={expenseFilter}
+                        onFilter={onFilterChange}
+                    />
                 </div>
                 <EmptyState title={t('pages.expenses.emptyState.title')}>
                     <Button
@@ -769,19 +766,13 @@ const Expenses = () => {
 
     return (
         <Container>
-            <div className="md:flex items-center justify-between mb-4">
-                <h2>{t('pages.expenses.header')}</h2>
-                <div
-                    className="flex flex-col md:flex-row mt-2 md:mt-0"
-                    style={{ alignItems: 'flex-end' }}
-                >
-                    <ExpenseFilter
-                        isActive
-                        userCurrencies={userCurrencies}
-                        defaultValue={expenseFilter}
-                        onFilter={onFilterChange}
-                    />
-                </div>
+            <div className="flex flex-col md:flex-row justify-between mb-4">
+                <h2 className="mb-2">{t('pages.expenses.header')}</h2>
+                <ExpenseFilter
+                    userCurrencies={userCurrencies}
+                    defaultValue={expenseFilter}
+                    onFilter={onFilterChange}
+                />
             </div>
             <ExpensesSummary
                 userCurrencies={userCurrenciesFiltered}
