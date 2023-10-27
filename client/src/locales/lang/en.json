@@ -29,7 +29,24 @@
             "appearance": "Appearance"
         },
         "expenses": {
-            "header": "Expenses"
+            "header": "Expenses",
+            "form": {
+                "newTitle": "New Expense"
+            },
+            "headers": {
+                "summary": "Summary",
+                "detail": "Detail"
+            },
+            "emptyState": {
+                "title": "No expenses found"
+            },
+            "addExpenseButton": "Add expense",
+            "deleteConfirmation": {
+                "title": "Delete Expense",
+                "description": "Are you sure you want to delete the expense \"{{description}}\"?"
+            },
+            "genericDescription": "Expense {{billableDate}}",
+            "filterTitle": "Expense Filter"
         },
         "savings": {
             "header": "Savings"
@@ -177,7 +194,8 @@
         "deleting": "Deleting",
         "edit": "Edit",
         "next": "Next",
-        "tryAgain": "Try again"
+        "tryAgain": "Try again",
+        "filter": "Filter"
     },
     "fields": {
         "email": "Email",
@@ -198,7 +216,14 @@
         "issuer": "Issuer",
         "status": "Status",
         "type": "Type",
-        "isFixedPayment": "Fixed Payment"
+        "isFixedPayment": "Fixed Expense",
+        "date": "Date",
+        "amount": "Amount",
+        "description": "Description",
+        "category": "Category",
+        "from": "From",
+        "to": "To",
+        "expenseType": "Expense Type"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -235,6 +260,10 @@
             "updated": "Category successfully updated",
             "deleted": "Category successfully deleted"
         },
+        "expenses": {
+            "created": "Expense successfully created",
+            "deleted": "Expense successfully deleted"
+        },
         "textCopied": "Copied!"
     },
     "error": {
@@ -248,6 +277,8 @@
     },
     "placeholders": {
         "country": "Select a country",
+        "currentMonth": "Current month",
+        "lastMonth": "Last Month",
         "other": "Other"
     },
     "messages": {
@@ -289,5 +320,9 @@
         "NEED": "Need",
         "WANT": "Want",
         "SAVE": "Save"
+    },
+    "expenseType": {
+        "VARIABLE_EXPENSE": "Variable Expense",
+        "FIXED_EXPENSE": "Fixed Expense"
     }
 }

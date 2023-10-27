@@ -16,9 +16,6 @@ export const protectedRoutes = [
         path: '/expenses',
         component: lazy(() => import('@/views/expenses')),
         authority: [],
-        meta: {
-            header: 'pages.expenses.header',
-        },
     },
     {
         key: 'savings',

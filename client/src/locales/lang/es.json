@@ -29,7 +29,24 @@
             "appearance": "Tema"
         },
         "expenses": {
-            "header": "Gastos"
+            "header": "Gastos",
+            "form": {
+                "newTitle": "Nuevo Gasto"
+            },
+            "headers": {
+                "summary": "Resumen",
+                "detail": "Detalle"
+            },
+            "emptyState": {
+                "title": "No se encontraron gastos"
+            },
+            "addExpenseButton": "Agregar gasto",
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
+            },
+            "genericDescription": "Gasto {{billableDate}}",
+            "filterTitle": "Filtro de Gastos"
         },
         "savings": {
             "header": "Ahorros"
@@ -177,7 +194,8 @@
         "deleting": "Eliminando",
         "edit": "Editar",
         "next": "Siguiente",
-        "tryAgain": "Volver a intentar"
+        "tryAgain": "Volver a intentar",
+        "filter": "Filtrar"
     },
     "fields": {
         "email": "Email",
@@ -198,7 +216,14 @@
         "issuer": "Emisor",
         "status": "Estado",
         "type": "Tipo",
-        "isFixedPayment": "Costo Fijo"
+        "isFixedPayment": "Costo Fijo",
+        "date": "Fecha",
+        "amount": "Monto",
+        "description": "Descripción",
+        "category": "Categoría",
+        "from": "Desde",
+        "to": "Hasta",
+        "expenseType": "Tipo de Gasto"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -235,6 +260,10 @@
             "updated": "Categoría actualizada correctamente",
             "deleted": "Categoría eliminada correctamente"
         },
+        "expenses": {
+            "created": "Gasto creado correctamente",
+            "deleted": "Gasto eliminado correctamente"
+        },
         "textCopied": "Copiado!"
     },
     "error": {
@@ -248,7 +277,9 @@
     },
     "placeholders": {
         "country": "Selecciona un pais",
-        "other": "Otro"
+        "other": "Otro",
+        "currentMonth": "Mes actual",
+        "lastMonth": "Mes anterior"
     },
     "messages": {
         "backTo": "Volver a ",
@@ -289,5 +320,9 @@
         "NEED": "Necesario",
         "WANT": "Deseo",
         "SAVE": "Ahorro"
+    },
+    "expenseType": {
+        "VARIABLE_EXPENSE": "Gasto Variable",
+        "FIXED_EXPENSE": "Gasto Fijo"
     }
 }
