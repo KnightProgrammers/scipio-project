@@ -733,7 +733,7 @@ const Expenses = () => {
     if (!filteredCategories.length) {
         return (
             <Container>
-                <div className="lg:flex items-center justify-between mb-4">
+                <div className="md:flex items-center justify-between mb-4">
                     <h2>{t('pages.expenses.header')}</h2>
                     <div className="flex flex-col lg:flex-row lg:items-center">
                         <ExpenseFilter
@@ -769,7 +769,7 @@ const Expenses = () => {
 
     return (
         <Container>
-            <div className="lg:flex items-center justify-between mb-4">
+            <div className="md:flex items-center justify-between mb-4">
                 <h2>{t('pages.expenses.header')}</h2>
                 <div
                     className="flex flex-col md:flex-row mt-2 md:mt-0"
