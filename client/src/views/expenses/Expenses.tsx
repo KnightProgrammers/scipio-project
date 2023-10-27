@@ -1,17 +1,23 @@
 import {
     Button,
     Card,
+    Checkbox,
+    Drawer,
     Dropdown,
+    FormContainer,
     FormItem,
     Input,
     ModalForm,
+    Segment,
 } from '@/components/ui'
 import {
+    AdaptableCard,
     ConfirmDialog,
     Container,
     EllipsisButton,
     IconText,
     Loading,
+    SegmentItemOption,
 } from '@/components/shared'
 import { DateTime } from 'luxon'
 import Collapsible from '@/components/shared/Collapsible'
@@ -29,12 +35,15 @@ import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { SelectFieldItem } from '@/components/ui/Form'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 import DatePicker from '@/components/ui/DatePicker'
+import { BsCalendarRange } from 'react-icons/bs'
+import { LuFilter, LuFilterX } from 'react-icons/lu'
+import { useConfig } from '@/components/ui/ConfigProvider'
 
 const getTotalExpenseByCurrency = (
     expenses: any[],
@@ -47,6 +56,15 @@ const getTotalExpenseByCurrency = (
         .reduce((prevE, curE) => prevE + curE.amount, 0)
     if (!total) return null
     return currencyFormat(total, currencyCode, lang, countryCode)
+}
+
+type EXPENSE_TYPE = 'FIXED_EXPENSE' | 'VARIABLE_EXPENSE'
+
+type ExpenseFilter = {
+    fromDate: Date
+    toDate: Date
+    expenseType: EXPENSE_TYPE | 'ALL'
+    currencies: string[]
 }
 
 const ExpensesSummary = (props: {
@@ -97,104 +115,35 @@ const ExpenseTag = (props: { value: string }) => {
     )
 }
 
-const Expenses = () => {
-    const [isFormOpen, setIsFormOpen] = useState(false)
-    const [selectedExpense, setSelectedExpense] = useState<any | undefined>(
-        undefined,
-    )
-    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
-        useState<boolean>(false)
+const ExpenseForm = (props: {
+    open: boolean
+    selectedExpense: any
+    userCurrencies: any[]
+    categories: any[]
+    onFormClose: () => void
+    onFormSubmit: (value: any) => void
+    isSaving: boolean
+}) => {
+    const {
+        open,
+        selectedExpense,
+        userCurrencies,
+        categories,
+        isSaving,
+        onFormClose,
+        onFormSubmit,
+    } = props
 
-    const userState = useAppSelector((state) => state.auth.user)
     const { t, i18n } = useTranslation()
-
-    const {
-        data: categories,
-        isFetching: isFetchingExpenses,
-        refetch: getExpenses,
-    } = useQuery({
-        queryKey: ['user-expenses-by-category'],
-        queryFn: apiGetExpenseList,
-        suspense: true,
-    })
-
-    const {
-        data: userCurrencies,
-        isFetching: isFetchingUserCurrencies,
-        refetch: getUserCurrencies,
-    } = useQuery({
-        queryKey: ['user-currencies-with-expenses'],
-        queryFn: apiGetUserCurrenciesWithExpenses,
-        suspense: true,
-    })
-
-    const onMutationSuccess = async (title: string) => {
-        toast.push(<Notification title={title} type="success" />, {
-            placement: 'top-center',
-        })
-        getExpenses()
-        getUserCurrencies()
-    }
-
-    const onDeleteConfirmClose = () => {
-        setIsConfirmDeleteOpen(false)
-        setSelectedExpense(undefined)
-    }
-
-    const onFormClose = () => {
-        setIsFormOpen(false)
-        setSelectedExpense(undefined)
-    }
-
-    const deleteExpenseMutation = useMutation({
-        mutationFn: apiDeleteExpense,
-        onSuccess: async () => {
-            await onMutationSuccess(t('notifications.expenses.deleted') || '')
-        },
-        onSettled: onDeleteConfirmClose,
-    })
-
-    const createExpenseMutation = useMutation({
-        mutationFn: apiCreateExpense,
-        onSuccess: async () => {
-            await onMutationSuccess(t('notifications.expenses.created') || '')
-        },
-        onSettled: onFormClose,
-    })
-
-    const onDelete = () => {
-        if (selectedExpense) {
-            deleteExpenseMutation.mutate(selectedExpense.id)
-        }
-    }
-
-    const onFormSubmit = (value: any) => {
-        createExpenseMutation.mutate(value)
-    }
-
-    if (
-        !categories ||
-        isFetchingExpenses ||
-        !userCurrencies ||
-        isFetchingUserCurrencies
-    ) {
-        return (
-            <Container className="h-full">
-                <Loading loading />
-            </Container>
-        )
-    }
 
     const validationSchema = Yup.object().shape({
         billableDate: Yup.string().required(t('validations.required') || ''),
         amount: Yup.string().required(t('validations.required') || ''),
     })
 
-    const filteredCategories = categories.filter((c: any) => c.expenses.length)
-
-    const ExpenseForm = () => (
+    return (
         <ModalForm
-            isOpen={isFormOpen}
+            isOpen={open}
             entity={
                 selectedExpense || {
                     billableDate: DateTime.now().toFormat('dd/MM/yyyy'),
@@ -276,7 +225,7 @@ const Expenses = () => {
                             autoComplete="off"
                             name="currencyId"
                             placeholder={t('fields.currency')}
-                            options={userCurrencies?.map((c) => ({
+                            options={userCurrencies.map((c) => ({
                                 value: c.id,
                                 label: `${c.code} - ${t(
                                     `currencies.${c.code}`,
@@ -298,7 +247,7 @@ const Expenses = () => {
                             autoComplete="off"
                             name="categoryId"
                             placeholder={t('fields.category')}
-                            options={categories?.map((c: any) => ({
+                            options={categories.map((c: any) => ({
                                 value: c.id,
                                 label: c.name,
                             }))}
@@ -309,16 +258,450 @@ const Expenses = () => {
                     </FormItem>
                 </>
             )}
-            isSaving={createExpenseMutation.isLoading}
+            isSaving={isSaving}
             onClose={onFormClose}
             onSubmit={onFormSubmit}
         />
+    )
+}
+
+const ExpenseFilter = (props: {
+    isActive: boolean
+    userCurrencies: any[]
+    onFilter: (filters: ExpenseFilter) => void
+}) => {
+    const { isActive = false, userCurrencies = [], onFilter } = props
+
+    const [isOpen, setIsOpen] = useState(false)
+
+    const [fromDate, setFromDate] = useState<Date>(
+        DateTime.now().set({ day: 1 }).toJSDate(),
+    )
+    const [toDate, setToDate] = useState<Date>(
+        DateTime.now().endOf('month').toJSDate(),
+    )
+
+    const [selectedDateFilterText, setSelectedDateFilterText] = useState('')
+
+    const EXPENSE_TYPE: { value: EXPENSE_TYPE | 'ALL'; label: string }[] = [
+        { value: 'FIXED_EXPENSE', label: 'Fixed Expenses' },
+        { value: 'VARIABLE_EXPENSE', label: 'Variable Expense' },
+    ]
+
+    const [expenseTypes, setExpenseTypes] = useState<EXPENSE_TYPE[]>(
+        EXPENSE_TYPE.map((et: any) => et.value),
+    )
+    const [currencyIds, setCurrencyIds] = useState<string[]>(
+        userCurrencies.map((et: any) => et.id),
+    )
+
+    const { themeColor } = useConfig()
+
+    useEffect(() => {
+        const fromDateParsed =
+            DateTime.fromJSDate(fromDate).toFormat('dd/MM/yyyy')
+        const toDateParsed = DateTime.fromJSDate(toDate).toFormat('dd/MM/yyyy')
+        setSelectedDateFilterText(`${fromDateParsed} - ${toDateParsed}`)
+    }, [fromDate, toDate])
+
+    const onDrawerClose = () => {
+        setIsOpen(false)
+    }
+
+    return (
+        <div className="flex items-center">
+            <span className="border bordered flex items-center mx-2 px-4 py-1 rounded-full">
+                <span className="mr-2">{selectedDateFilterText}</span>
+                <BsCalendarRange />
+            </span>
+            <Button
+                size="sm"
+                icon={isActive ? <LuFilterX /> : <LuFilter />}
+                onClick={() => setIsOpen(true)}
+            />
+            <Drawer
+                title={
+                    <div>
+                        <h4 className="mb-2">Filter</h4>
+                    </div>
+                }
+                isOpen={isOpen}
+                placement="right"
+                headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
+                footer={
+                    <div className="text-right w-full grid grid-cols-2">
+                        <Button
+                            size="sm"
+                            className="mr-1"
+                            onClick={() => onDrawerClose()}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            size="sm"
+                            className="ml-1"
+                            variant="solid"
+                            onClick={() => {
+                                onFilter({
+                                    fromDate,
+                                    toDate,
+                                    expenseType:
+                                        expenseTypes.length > 1
+                                            ? 'ALL'
+                                            : expenseTypes[0],
+                                    currencies: currencyIds,
+                                })
+                                onDrawerClose()
+                            }}
+                        >
+                            Apply
+                        </Button>
+                    </div>
+                }
+                onClose={() => setIsOpen(false)}
+                onRequestClose={() => setIsOpen(false)}
+            >
+                <AdaptableCard bordered className="">
+                    <FormContainer
+                        layout="vertical"
+                        className="grid grid-cols-2"
+                    >
+                        <FormItem label="From" className="mb-2 mr-2">
+                            <DatePicker
+                                defaultValue={fromDate}
+                                maxDate={toDate}
+                                clearable={false}
+                                dayClassName={(date, { selected }) => {
+                                    if (
+                                        date.getDate() === toDate.getDate() &&
+                                        date.getMonth() === toDate.getMonth() &&
+                                        date.getFullYear() ===
+                                            toDate.getFullYear()
+                                    ) {
+                                        return `text-white bg-${themeColor}-500 dark:bg-${themeColor}-500 rounded-bl-none rounded-tl-none`
+                                    }
+
+                                    if (date < toDate && date > fromDate) {
+                                        return `bg-${themeColor}-100 rounded-none`
+                                    }
+
+                                    if (selected) {
+                                        return 'text-white rounded-br-none rounded-tr-none'
+                                    }
+
+                                    return 'text-gray-700 dark:text-gray-200'
+                                }}
+                                onChange={(value) =>
+                                    value && setFromDate(value)
+                                }
+                            />
+                        </FormItem>
+                        <FormItem label="To" className="mb-2 ml-2">
+                            <DatePicker
+                                defaultValue={toDate}
+                                minDate={fromDate}
+                                clearable={false}
+                                dayClassName={(date, { selected }) => {
+                                    if (
+                                        date.getDate() === fromDate.getDate() &&
+                                        date.getMonth() ===
+                                            fromDate.getMonth() &&
+                                        date.getFullYear() ===
+                                            fromDate.getFullYear()
+                                    ) {
+                                        return `text-white bg-${themeColor}-500 dark:bg-${themeColor}-500 rounded-br-none rounded-tr-none`
+                                    }
+
+                                    if (selected) {
+                                        return 'text-white rounded-bl-none rounded-tl-none'
+                                    }
+
+                                    if (date < toDate && date > fromDate) {
+                                        return `bg-${themeColor}-100 rounded-none`
+                                    }
+
+                                    return 'text-gray-700 dark:text-gray-200'
+                                }}
+                                onChange={(value) => value && setToDate(value)}
+                            />
+                        </FormItem>
+                    </FormContainer>
+                    <div className="grid grid-cols-2 items-center p-2 card-border border-dashed rounded">
+                        <Button
+                            className="mr-2"
+                            size="sm"
+                            variant="twoTone"
+                            onClick={() => {
+                                setFromDate(
+                                    DateTime.now().set({ day: 1 }).toJSDate(),
+                                )
+                                setToDate(
+                                    DateTime.now().endOf('month').toJSDate(),
+                                )
+                            }}
+                        >
+                            Current Month
+                        </Button>
+                        <Button
+                            className="ml-2"
+                            size="sm"
+                            variant="twoTone"
+                            onClick={() => {
+                                setFromDate(
+                                    DateTime.now()
+                                        .minus({ month: 1 })
+                                        .set({ day: 1 })
+                                        .toJSDate(),
+                                )
+                                setToDate(
+                                    DateTime.now()
+                                        .minus({ month: 1 })
+                                        .endOf('month')
+                                        .toJSDate(),
+                                )
+                            }}
+                        >
+                            Last Month
+                        </Button>
+                    </div>
+                </AdaptableCard>
+                <AdaptableCard bordered className="mt-2">
+                    <p className="mb-2 font-bold">Expense Type</p>
+                    <Segment
+                        value={expenseTypes}
+                        selectionType="multiple"
+                        onChange={(val) =>
+                            setExpenseTypes(val as EXPENSE_TYPE[])
+                        }
+                    >
+                        <div className="flex items-center gap-4 w-full">
+                            {EXPENSE_TYPE.map((item: any) => (
+                                <Segment.Item
+                                    key={item.value}
+                                    value={item.value}
+                                >
+                                    {({ active, onSegmentItemClick }) => {
+                                        return (
+                                            <SegmentItemOption
+                                                hoverable
+                                                active={active}
+                                                className={`w-6/12 `}
+                                                customCheck={<></>}
+                                                onSegmentItemClick={
+                                                    onSegmentItemClick
+                                                }
+                                            >
+                                                <Checkbox
+                                                    readOnly
+                                                    checked={active}
+                                                />
+                                                <span className="text-sm">
+                                                    {item.label}
+                                                </span>
+                                            </SegmentItemOption>
+                                        )
+                                    }}
+                                </Segment.Item>
+                            ))}
+                        </div>
+                    </Segment>
+                </AdaptableCard>
+                <AdaptableCard bordered className="mt-2">
+                    <p className="mb-2 font-bold">Currency</p>
+                    <Segment
+                        value={currencyIds}
+                        selectionType="multiple"
+                        onChange={(val) => setCurrencyIds(val as string[])}
+                    >
+                        <div className="flex flex-col gap-2 w-full py-2">
+                            {userCurrencies.map((item: any) => (
+                                <Segment.Item key={item.id} value={item.id}>
+                                    {({ active, onSegmentItemClick }) => {
+                                        return (
+                                            <SegmentItemOption
+                                                hoverable
+                                                active={active}
+                                                className="w-full py-2"
+                                                customCheck={<></>}
+                                                onSegmentItemClick={
+                                                    onSegmentItemClick
+                                                }
+                                            >
+                                                <Checkbox
+                                                    readOnly
+                                                    checked={active}
+                                                />
+                                                <span className="text-sm">
+                                                    {item.code}
+                                                </span>
+                                            </SegmentItemOption>
+                                        )
+                                    }}
+                                </Segment.Item>
+                            ))}
+                        </div>
+                    </Segment>
+                </AdaptableCard>
+            </Drawer>
+        </div>
+    )
+}
+
+const Expenses = () => {
+    const [isFormOpen, setIsFormOpen] = useState(false)
+    const [selectedExpense, setSelectedExpense] = useState<any | undefined>(
+        undefined,
+    )
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
+        useState<boolean>(false)
+
+    const [expenseFilter, setExpenseFilter] = useState<
+        ExpenseFilter | undefined
+    >(undefined)
+
+    const userState = useAppSelector((state) => state.auth.user)
+    const { t, i18n } = useTranslation()
+
+    const {
+        data: categories,
+        isFetching: isFetchingExpenses,
+        refetch: getExpenses,
+    } = useQuery({
+        queryKey: ['user-expenses-by-category'],
+        queryFn: apiGetExpenseList,
+    })
+
+    const {
+        data: userCurrencies,
+        isFetching: isFetchingUserCurrencies,
+        refetch: getUserCurrencies,
+    } = useQuery({
+        queryKey: ['user-currencies-with-expenses'],
+        queryFn: apiGetUserCurrenciesWithExpenses,
+    })
+
+    const onMutationSuccess = async (title: string) => {
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+        getExpenses()
+        getUserCurrencies()
+    }
+
+    const onDeleteConfirmClose = () => {
+        setIsConfirmDeleteOpen(false)
+        setSelectedExpense(undefined)
+    }
+
+    const onFormClose = () => {
+        setIsFormOpen(false)
+        setSelectedExpense(undefined)
+    }
+
+    const deleteExpenseMutation = useMutation({
+        mutationFn: apiDeleteExpense,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.expenses.deleted') || '')
+        },
+    })
+
+    const createExpenseMutation = useMutation({
+        mutationFn: apiCreateExpense,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.expenses.created') || '')
+        },
+    })
+
+    const onDelete = () => {
+        if (selectedExpense) {
+            deleteExpenseMutation.mutate(selectedExpense.id)
+            onDeleteConfirmClose()
+        }
+    }
+
+    const onFormSubmit = (value: any) => {
+        createExpenseMutation.mutate(value)
+        onFormClose()
+    }
+
+    if (
+        !categories ||
+        isFetchingExpenses ||
+        !userCurrencies ||
+        isFetchingUserCurrencies
+    ) {
+        return (
+            <Container className="h-full">
+                <Loading loading />
+            </Container>
+        )
+    }
+
+    const newCategories = categories
+        .filter((c: any) => {
+            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
+                if (c.isFixedPayment) {
+                    return expenseFilter.expenseType === 'FIXED_EXPENSE'
+                } else {
+                    return expenseFilter.expenseType === 'VARIABLE_EXPENSE'
+                }
+            }
+            return true
+        })
+        .map((c: any) => {
+            if (expenseFilter && expenseFilter.currencies) {
+                return {
+                    ...c,
+                    expenses: c.expenses.filter((e: any) =>
+                        expenseFilter.currencies.includes(e.currency.id),
+                    ),
+                }
+            }
+            return c
+        })
+
+    const userCurrenciesFiltered = userCurrencies
+        .filter((uc: any) =>
+            expenseFilter ? expenseFilter.currencies.includes(uc.id) : true,
+        )
+        .map((uc: any) => {
+            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
+                console.log(uc)
+                return {
+                    ...uc,
+                    expenses: uc.expenses.filter((e: any) => {
+                        if (e.category.isFixedPayment) {
+                            return expenseFilter.expenseType === 'FIXED_EXPENSE'
+                        } else {
+                            return (
+                                expenseFilter.expenseType === 'VARIABLE_EXPENSE'
+                            )
+                        }
+                    }),
+                }
+            }
+            return uc
+        })
+    const filteredCategories = newCategories.filter(
+        (c: any) => c.expenses.length,
     )
 
     if (!filteredCategories.length) {
         return (
             <Container>
-                <EmptyState title="Sin Gastos Reportados">
+                <div className="lg:flex items-center justify-between mb-4">
+                    <h2>{t('pages.expenses.header')}</h2>
+                    <div className="flex flex-col lg:flex-row lg:items-center">
+                        <ExpenseFilter
+                            isActive
+                            userCurrencies={userCurrencies}
+                            onFilter={(filters: ExpenseFilter) =>
+                                setExpenseFilter(filters)
+                            }
+                        />
+                    </div>
+                </div>
+                <EmptyState title={t('pages.expenses.emptyState.title')}>
                     <Button
                         className="mt-4"
                         variant="twoTone"
@@ -328,15 +711,38 @@ const Expenses = () => {
                         {t('pages.expenses.addExpenseButton')}
                     </Button>
                 </EmptyState>
-                <ExpenseForm />
+                <ExpenseForm
+                    open={isFormOpen}
+                    selectedExpense={selectedExpense}
+                    categories={categories}
+                    userCurrencies={userCurrencies}
+                    isSaving={createExpenseMutation.isPending}
+                    onFormClose={onFormClose}
+                    onFormSubmit={onFormSubmit}
+                />
             </Container>
         )
     }
 
     return (
         <Container>
+            <div className="lg:flex items-center justify-between mb-4">
+                <h2>{t('pages.expenses.header')}</h2>
+                <div
+                    className="flex flex-col md:flex-row mt-2 md:mt-0"
+                    style={{ alignItems: 'flex-end' }}
+                >
+                    <ExpenseFilter
+                        isActive
+                        userCurrencies={userCurrencies}
+                        onFilter={(filters: ExpenseFilter) =>
+                            setExpenseFilter(filters)
+                        }
+                    />
+                </div>
+            </div>
             <ExpensesSummary
-                userCurrencies={userCurrencies}
+                userCurrencies={userCurrenciesFiltered}
                 countryCode={userState.country?.code || 'UY'}
             />
             <div className="mt-4">
@@ -345,13 +751,11 @@ const Expenses = () => {
                     <Collapsible
                         key={c.id}
                         collapsibleClassName="my-4"
-                        headerClassName="text-white bg-purple-500"
+                        headerClassName=""
                         header={
                             <div className="w-full flex items-center">
                                 <div className="w-full flex flex-col">
-                                    <span className="text-2xl text-white">
-                                        {c.name}
-                                    </span>
+                                    <span className="text-2xl">{c.name}</span>
                                     <span className="rounded-md text-white mt-2">
                                         {userCurrencies
                                             .map((currency) =>
@@ -409,7 +813,15 @@ const Expenses = () => {
                                             {item.billableDate}
                                         </small>
                                         <span className="text-lg">
-                                            {item.description}
+                                            {item.description
+                                                ? item.description
+                                                : t(
+                                                      'pages.expenses.genericDescription',
+                                                      {
+                                                          billableDate:
+                                                              item.billableDate,
+                                                      },
+                                                  )}
                                         </span>
                                     </span>
                                     <span className="text-left font-bold mt-4">
@@ -464,11 +876,23 @@ const Expenses = () => {
             >
                 <p>
                     {t('pages.expenses.deleteConfirmation.description', {
-                        description: selectedExpense?.description,
+                        description: selectedExpense?.description
+                            ? selectedExpense.description
+                            : t('pages.expenses.genericDescription', {
+                                  billableDate: selectedExpense?.billableDate,
+                              }),
                     })}
                 </p>
             </ConfirmDialog>
-            <ExpenseForm />
+            <ExpenseForm
+                open={isFormOpen}
+                selectedExpense={selectedExpense}
+                categories={categories}
+                userCurrencies={userCurrencies}
+                isSaving={createExpenseMutation.isPending}
+                onFormClose={onFormClose}
+                onFormSubmit={onFormSubmit}
+            />
             <Button
                 className=""
                 style={{

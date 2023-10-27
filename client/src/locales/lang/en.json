@@ -37,7 +37,15 @@
                 "summary": "Summary",
                 "detail": "Detail"
             },
-            "addExpenseButton": "Add expense"
+            "emptyState": {
+                "title": "No expenses for the chosen period"
+            },
+            "addExpenseButton": "Add expense",
+            "deleteConfirmation": {
+                "title": "Delete Expense",
+                "description": "Are you sure you want to delete the expense \"{{description}}\"?"
+            },
+            "genericDescription": "Expense {{billableDate}}"
         },
         "savings": {
             "header": "Savings"
@@ -246,6 +254,10 @@
             "created": "Category successfully created",
             "updated": "Category successfully updated",
             "deleted": "Category successfully deleted"
+        },
+        "expenses": {
+            "created": "Expense successfully created",
+            "deleted": "Expense successfully deleted"
         },
         "textCopied": "Copied!"
     },

@@ -37,7 +37,15 @@
                 "summary": "Resumen",
                 "detail": "Detalle"
             },
-            "addExpenseButton": "Agregar gasto"
+            "emptyState": {
+                "title": "No hay gastos para el periodo seleccionado"
+            },
+            "addExpenseButton": "Agregar gasto",
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
+            },
+            "genericDescription": "Gasto {{billableDate}}"
         },
         "savings": {
             "header": "Ahorros"
@@ -246,6 +254,10 @@
             "created": "Categoría creada correctamente",
             "updated": "Categoría actualizada correctamente",
             "deleted": "Categoría eliminada correctamente"
+        },
+        "expenses": {
+            "created": "Gasto creado correctamente",
+            "deleted": "Gasto eliminado correctamente"
         },
         "textCopied": "Copiado!"
     },

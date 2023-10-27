@@ -80,7 +80,7 @@ export async function apiGetUserCurrenciesWithExpenses(): Promise<
         method: 'POST',
         data: {
             operationName: 'userCurrencies',
-            query: `query userCurrencies { me { id currencies { id code expenses { id, amount } } } }`,
+            query: `query userCurrencies { me { id currencies { id code expenses { id, amount category { id isFixedPayment } } } } }`,
             variables: {},
         },
     })

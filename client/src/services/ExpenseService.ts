@@ -13,6 +13,7 @@ export async function apiGetExpenseList() {
                     categories {
                       id
                       name
+                      isFixedPayment
                       expenses {
                         id
                         amount

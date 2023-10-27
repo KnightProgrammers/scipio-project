@@ -227,6 +227,9 @@ const Categories = () => {
     if (categories.length === 0) {
         return (
             <Container data-tn="categories-page">
+                <div className="lg:flex items-center justify-between mb-4">
+                    <h2>{t('pages.categories.header')}</h2>
+                </div>
                 <CategoryForm />
                 <EmptyState
                     title={t('pages.categories.emptyState.title')}
@@ -265,7 +268,7 @@ const Categories = () => {
                     </Button>
                 </div>
             </div>
-            <Table border={1} compact>
+            <Table compact border={1}>
                 <THead>
                     <Tr>
                         <Th>{t(`fields.name`)}</Th>
