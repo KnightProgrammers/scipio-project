@@ -47,7 +47,6 @@ const Categories = () => {
     } = useQuery({
         queryKey: ['user-categories'],
         queryFn: apiGetCategoryList,
-        suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
@@ -208,8 +207,8 @@ const Categories = () => {
                 </>
             )}
             isSaving={
-                createCategoryMutation.isLoading ||
-                updateCategoryMutation.isLoading
+                createCategoryMutation.isPending ||
+                updateCategoryMutation.isPending
             }
             onClose={onFormClose}
             onSubmit={onFormSubmit}

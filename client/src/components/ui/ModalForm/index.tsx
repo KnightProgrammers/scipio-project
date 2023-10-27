@@ -63,7 +63,7 @@ const ModalForm = (props: ModalFormProps) => {
                             </FormContainer>
                             <div className="sm:flex gap-2 pb-4 px-4">
                                 <Button
-                                    className="w-full justify-center "
+                                    className="w-full justify-center mb-2"
                                     variant="default"
                                     type="button"
                                     data-tn="modal-form-cancel-btn"
@@ -75,7 +75,7 @@ const ModalForm = (props: ModalFormProps) => {
                                 <Button
                                     variant="solid"
                                     type="submit"
-                                    className="w-full justify-center "
+                                    className="w-full justify-center mb-2"
                                     data-tn="modal-form-save-btn"
                                     disabled={isSaving}
                                     loading={isSaving}
