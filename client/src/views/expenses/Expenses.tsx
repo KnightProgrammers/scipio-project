@@ -31,9 +31,7 @@ import currencyFormat from '@/utils/currencyFormat'
 import { HiOutlineTrash, HiPlus } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
-import {
-    apiGetUserCurrenciesWithExpenses,
-} from '@/services/AccountService'
+import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
@@ -575,23 +573,23 @@ const Expenses = () => {
         refetch: getUserCurrencies,
     } = useQuery({
         queryKey: ['user-currencies-with-expenses'],
-        queryFn: async () =>{
+        queryFn: async () => {
             const data = await apiGetUserCurrenciesWithExpenses({
-                    fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
-                        'dd/MM/yyyy',
-                    ),
-                    toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
-                        'dd/MM/yyyy',
-                    ),
-                });
+                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
+                    'dd/MM/yyyy',
+                ),
+            })
             if (expenseFilter.currencies.length === 0) {
                 setExpenseFilter({
                     ...expenseFilter,
                     currencies: data.map((uc: any) => uc.id),
                 })
             }
-            return data;
-        }
+            return data
+        },
     })
 
     const {
