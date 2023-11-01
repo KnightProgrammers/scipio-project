@@ -18,7 +18,7 @@
     "@fullcalendar/react": "6.1.9",
     "@fullcalendar/timegrid": "6.1.9",
     "@reduxjs/toolkit": "1.9.7",
-    "@sentry/integrations": "7.75.1",
+    "@sentry/integrations": "7.77.0",
     "@sentry/react": "7.75.1",
     "@sentry/vite-plugin": "2.9.0",
     "@tanstack/match-sorter-utils": "8.8.4",
