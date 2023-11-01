@@ -1,6 +1,4 @@
-import { gql } from 'mercurius-codegen';
-
-const schema = gql`
+const schema = `
   directive @auth on OBJECT | FIELD_DEFINITION
   
   enum Lang {
