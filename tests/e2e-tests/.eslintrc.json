@@ -42,6 +42,7 @@
         "import/no-duplicates": "error",
         "import/no-named-as-default": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "import/no-unresolved": "off"
+        "import/no-unresolved": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }

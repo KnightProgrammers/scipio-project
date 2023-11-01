@@ -37,17 +37,17 @@ export const createCreditCard = async (page: Page, data: {
 	await page.keyboard.press('Enter');
 
 	const saveCreditCardWaitForRequest = waitForRequest(page, 'createCreditCard');
-const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
+	const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
 
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
 	const saveCreditCardRequest = await saveCreditCardWaitForRequest;
-const getCreditCardListRequest = await getCreditCardListWaitForRequest;
+	const getCreditCardListRequest = await getCreditCardListWaitForRequest;
 	const saveCreditCardResponse = await saveCreditCardRequest.response();
 	const { data: { createCreditCard: newCreditCard } } = await saveCreditCardResponse.json();
-const getBankListResponse = await getCreditCardListRequest.response();
+	const getBankListResponse = await getCreditCardListRequest.response();
 	const { data: { me: { creditCards } } } = await getBankListResponse.json();
 	expect(newCreditCard.id).toBeDefined();
-expect(Array.isArray(creditCards)).toBeTruthy();
+	expect(Array.isArray(creditCards)).toBeTruthy();
 	const foundNewCreditCard = creditCards.find(b => b.id === newCreditCard.id);
 	expect(foundNewCreditCard).toBeTruthy();
 	expect(foundNewCreditCard.label).toEqual(label);
@@ -107,16 +107,16 @@ export const editCreditCard = async (page: Page, creditCardId: string, data: {
 	await page.locator('#currency-select input.select__input').fill(currency);
 	await page.keyboard.press('Enter');
 	const saveCreditCardWaitForRequest = waitForRequest(page, 'updateCreditCard');
-const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
+	const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
 	const saveCreditCardRequest = await saveCreditCardWaitForRequest;
-const getCreditCardListRequest = await getCreditCardListWaitForRequest;
+	const getCreditCardListRequest = await getCreditCardListWaitForRequest;
 	const saveCreditCardResponse = await saveCreditCardRequest.response();
 	const { data: { updateCreditCard: updated } } = await saveCreditCardResponse.json();
-const getCreditCardListResponse = await getCreditCardListRequest.response();
+	const getCreditCardListResponse = await getCreditCardListRequest.response();
 	const { data: { me: { creditCards } } } = await getCreditCardListResponse.json();
 	expect(updated.id).toEqual(creditCardId);
-expect(Array.isArray(creditCards)).toBeTruthy();
+	expect(Array.isArray(creditCards)).toBeTruthy();
 	const foundNewCreditCard = creditCards.find(c => c.id === creditCardId);
 	expect(foundNewCreditCard).toBeTruthy();
 	expect(foundNewCreditCard.label).toEqual(label);
@@ -145,10 +145,10 @@ export const openDeleteCreditCardDialog = async (page: Page, creditCardId: strin
 
 export const confirmDeleteCreditCard = async (page: Page, creditCardId: string) => {
 	const deleteCreditCardWaitForRequest = waitForRequest(page, 'deleteCreditCard');
-const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
+	const getCreditCardListWaitForRequest = waitForRequest(page, 'userCreditCards');
 	await page.locator('button[data-tn="confirm-dialog-confirm-btn"]').click();
 	await deleteCreditCardWaitForRequest;
-const getCreditCardListRequest = await getCreditCardListWaitForRequest;
+	const getCreditCardListRequest = await getCreditCardListWaitForRequest;
 	const getCreditCardListResponse = await getCreditCardListRequest.response();
 	const { data: { me: { creditCards } } } = await getCreditCardListResponse.json();
 	expect(Array.isArray(creditCards)).toBeTruthy();
