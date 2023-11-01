@@ -23,7 +23,7 @@
     "@sentry/profiling-node": "1.2.1",
     "@sinclair/typebox": "0.31.20",
     "fastify": "4.24.3",
-    "fastify-cli": "5.8.0",
+    "fastify-cli": "5.9.0",
     "fastify-plugin": "4.5.1",
     "firebase-admin": "11.11.0",
     "gravatar": "1.8.2",
