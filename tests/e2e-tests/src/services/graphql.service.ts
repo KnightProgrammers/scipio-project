@@ -41,10 +41,10 @@ class GraphqlService {
 		});
 	}
 
-    async createCategories(variables: NewCategoryInput) {
-        return graphQLClient({
-            authToken: this.authToken,
-            query: `
+	async createCategories(variables: NewCategoryInput) {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
                 mutation createCategory(
                     $name: String!
                     $type: CategoryType!
@@ -62,9 +62,27 @@ class GraphqlService {
                   }
                 }
             `,
-            variables
-        });
-    }
+			variables,
+		});
+
+		return data.createCategory;
+	}
+
+	async deleteCategory(id: string) {
+		return graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation deleteCategory(
+                    $id: String!
+                ) {
+                  deleteCategory(id: $id)
+                }
+            `,
+			variables: {
+				id
+			},
+		});
+	}
 }
 
 export default GraphqlService;
