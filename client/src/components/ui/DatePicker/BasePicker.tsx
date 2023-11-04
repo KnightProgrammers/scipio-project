@@ -38,6 +38,7 @@ export interface BasePickerSharedProps {
     form?: any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     field?: any
+    'data-tn'?: string
 }
 
 interface BasePickerProps extends CommonProps, BasePickerSharedProps {
@@ -185,6 +186,7 @@ const BasePicker = forwardRef<HTMLInputElement, BasePickerProps>(
                     type={type}
                     disabled={disabled}
                     asElement={'input'}
+                    data-tn={props['data-tn']}
                     onClick={handleInputClick}
                     onKeyDown={handleKeyDown}
                     onBlur={handleInputBlur}

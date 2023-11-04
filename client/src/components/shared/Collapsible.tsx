@@ -37,6 +37,7 @@ const Collapsible: React.FC<IProps> = ({
                     <button
                         type="button"
                         className={iconButtonClassName}
+                        data-tn="collapsible-toggle-btn"
                         onClick={handleFilterOpening}
                     >
                         {isOpen ? <FaAngleDown /> : <FaAngleUp />}

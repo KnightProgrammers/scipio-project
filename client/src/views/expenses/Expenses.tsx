@@ -167,10 +167,13 @@ const ExpenseForm = (props: {
                         <Field name="billableDate" placeholder="DD/MM/YYYY">
                             {({ field, form }: FieldProps) => (
                                 <DatePicker
+                                    inputtable
+                                    inputtableBlurClose={false}
                                     inputFormat="DD/MM/YYYY"
                                     defaultValue={new Date()}
                                     locale={i18n.language}
                                     clearable={false}
+                                    data-tn="billable-date-input"
                                     onChange={(value: Date | null) => {
                                         const d = value
                                             ? DateTime.fromJSDate(value)
@@ -598,7 +601,6 @@ const Expenses = () => {
         refetch: getExpenses,
     } = useQuery({
         queryKey: ['user-expenses-by-category'],
-        enabled: !userCurrencies,
         queryFn: async () =>
             apiGetExpenseList({
                 fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
@@ -741,11 +743,15 @@ const Expenses = () => {
                         onFilter={onFilterChange}
                     />
                 </div>
-                <EmptyState title={t('pages.expenses.emptyState.title')}>
+                <EmptyState
+                    title={t('pages.expenses.emptyState.title')}
+                    data-tn="empty-state-no-expenses"
+                >
                     <Button
                         className="mt-4"
                         variant="twoTone"
                         icon={<HiPlus />}
+                        data-tn="add-expense-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.expenses.addExpenseButton')}
@@ -819,6 +825,7 @@ const Expenses = () => {
                                     size="xs"
                                     className="mr-4"
                                     icon={<HiPlus />}
+                                    data-tn={`add-expense-cat-${c.id}-btn`}
                                     onClick={() => {
                                         setIsFormOpen(true)
                                         setSelectedExpense({
@@ -840,6 +847,7 @@ const Expenses = () => {
                                 <li
                                     key={item.id}
                                     className="py-2 px-4 flex items-center card-border my-2 rounded-lg relative"
+                                    data-tn={`expense-container-${item.id}`}
                                 >
                                     <span className="w-full flex flex-col">
                                         <small className="font-light text-current">
@@ -869,12 +877,12 @@ const Expenses = () => {
                                         className="absolute right-2 top-1"
                                         placement="middle-end-top"
                                         renderTitle={
-                                            <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                            <EllipsisButton data-tn="dropdown-expense-btn" />
                                         }
                                     >
                                         <Dropdown.Item
                                             eventKey="delete"
-                                            data-tn="delete-bank-account-btn"
+                                            data-tn="delete-expense-btn"
                                             onClick={() => {
                                                 setIsConfirmDeleteOpen(true)
                                                 setSelectedExpense(item)
@@ -927,7 +935,6 @@ const Expenses = () => {
                 onFormSubmit={onFormSubmit}
             />
             <Button
-                className=""
                 style={{
                     position: 'fixed',
                     right: '1rem',
@@ -936,6 +943,7 @@ const Expenses = () => {
                 shape="circle"
                 variant="solid"
                 size="lg"
+                data-tn="add-expense-btn"
                 icon={<HiPlus />}
                 onClick={() => setIsFormOpen(true)}
             />
