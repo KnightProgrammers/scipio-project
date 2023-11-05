@@ -20,6 +20,7 @@ export interface SegmentItemProps
     disabled?: boolean
     size?: TypeAttributes.Size
     value?: string
+    'data-tn'?: string
 }
 
 const unwrapArray = (arg: (params: ChildrenParams) => ReactNode) =>
@@ -110,6 +111,7 @@ const SegmentItem = forwardRef<HTMLButtonElement, SegmentItemProps>(
                     getSegmentSize(),
                     className,
                 )}
+                data-tn={props['data-tn']}
                 onClick={onSegmentItemClick}
                 {...rest}
             >

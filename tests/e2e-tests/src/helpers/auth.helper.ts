@@ -1,3 +1,5 @@
+
+// @ts-ignore
 import dotenv from 'dotenv';
 
 import { expect, Page } from '@playwright/test';
@@ -50,6 +52,7 @@ export const signInUser = async (page: Page, data: {
 	await page.getByRole('button', { name: 'Sign In', exact: true }).click();
 	const userProfileRequest = await waitForUserProfileRequest;
 	const userProfileResponse = await userProfileRequest.response();
+	const headers = userProfileRequest.headers();
 	if (withWelcome) {
 		await welcomeUser(page, {
 			lang: DEFAULT_USER_LANG,
@@ -58,7 +61,10 @@ export const signInUser = async (page: Page, data: {
 		});
 	}
 	const { data: { me: userProfile } } = await userProfileResponse.json();
-	return userProfile;
+	return {
+		...userProfile,
+		authToken: headers['authorization']
+	};
 };
 
 export const welcomeUser = async (page: Page, data: { lang: string, country: string, currencies: string[] }) => {

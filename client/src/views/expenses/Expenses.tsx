@@ -83,7 +83,10 @@ const ExpensesSummary = (props: {
                     )
                     if (!total) return null
                     return (
-                        <Card key={currency.id}>
+                        <Card
+                            key={currency.id}
+                            data-tn={`summary-card-${currency.code.toLowerCase()}`}
+                        >
                             <h6 className="font-light mb-4 text-sm">
                                 {currency.code}
                             </h6>
@@ -167,10 +170,13 @@ const ExpenseForm = (props: {
                         <Field name="billableDate" placeholder="DD/MM/YYYY">
                             {({ field, form }: FieldProps) => (
                                 <DatePicker
+                                    inputtable
+                                    inputtableBlurClose={false}
                                     inputFormat="DD/MM/YYYY"
                                     defaultValue={new Date()}
                                     locale={i18n.language}
                                     clearable={false}
+                                    data-tn="billable-date-input"
                                     onChange={(value: Date | null) => {
                                         const d = value
                                             ? DateTime.fromJSDate(value)
@@ -313,6 +319,7 @@ const ExpenseFilter = (props: {
             </span>
             <Button
                 size="sm"
+                data-tn="open-expense-filter-btn"
                 icon={<LuFilter />}
                 onClick={() => setIsOpen(true)}
             />
@@ -340,6 +347,7 @@ const ExpenseFilter = (props: {
                             size="sm"
                             className="ml-1"
                             variant="solid"
+                            data-tn="apply-expense-filter-btn"
                             onClick={() => {
                                 onFilter({
                                     fromDate,
@@ -367,10 +375,13 @@ const ExpenseFilter = (props: {
                     >
                         <FormItem label={t('fields.from')} className="mb-2">
                             <DatePicker
+                                inputtable
+                                inputtableBlurClose={false}
                                 defaultValue={fromDate}
                                 value={fromDate}
                                 maxDate={toDate}
                                 clearable={false}
+                                data-tn="filter-from-date-input"
                                 inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
@@ -399,10 +410,13 @@ const ExpenseFilter = (props: {
                         </FormItem>
                         <FormItem label={t('fields.to')} className="mb-2">
                             <DatePicker
+                                inputtable
+                                inputtableBlurClose={false}
                                 defaultValue={toDate}
                                 value={toDate}
                                 minDate={fromDate}
                                 clearable={false}
+                                data-tn="filter-to-date-input"
                                 inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
@@ -487,6 +501,7 @@ const ExpenseFilter = (props: {
                                                 active={active}
                                                 className="w-full"
                                                 customCheck={<></>}
+                                                data-tn={`expense-type-filter-${item.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
@@ -523,6 +538,7 @@ const ExpenseFilter = (props: {
                                                 active={active}
                                                 className="w-full py-2"
                                                 customCheck={<></>}
+                                                data-tn={`expense-currency-filter-${item.code.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
@@ -598,7 +614,6 @@ const Expenses = () => {
         refetch: getExpenses,
     } = useQuery({
         queryKey: ['user-expenses-by-category'],
-        enabled: !userCurrencies,
         queryFn: async () =>
             apiGetExpenseList({
                 fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
@@ -741,11 +756,15 @@ const Expenses = () => {
                         onFilter={onFilterChange}
                     />
                 </div>
-                <EmptyState title={t('pages.expenses.emptyState.title')}>
+                <EmptyState
+                    title={t('pages.expenses.emptyState.title')}
+                    data-tn="empty-state-no-expenses"
+                >
                     <Button
                         className="mt-4"
                         variant="twoTone"
                         icon={<HiPlus />}
+                        data-tn="add-expense-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.expenses.addExpenseButton')}
@@ -785,6 +804,7 @@ const Expenses = () => {
                         key={c.id}
                         collapsibleClassName="my-4"
                         headerClassName=""
+                        data-tn={`category-detail-${c.id}`}
                         header={
                             <div className="w-full flex items-center">
                                 <div className="w-full flex flex-col">
@@ -819,6 +839,7 @@ const Expenses = () => {
                                     size="xs"
                                     className="mr-4"
                                     icon={<HiPlus />}
+                                    data-tn={`add-expense-cat-${c.id}-btn`}
                                     onClick={() => {
                                         setIsFormOpen(true)
                                         setSelectedExpense({
@@ -840,6 +861,7 @@ const Expenses = () => {
                                 <li
                                     key={item.id}
                                     className="py-2 px-4 flex items-center card-border my-2 rounded-lg relative"
+                                    data-tn={`expense-container-${item.id}`}
                                 >
                                     <span className="w-full flex flex-col">
                                         <small className="font-light text-current">
@@ -869,12 +891,12 @@ const Expenses = () => {
                                         className="absolute right-2 top-1"
                                         placement="middle-end-top"
                                         renderTitle={
-                                            <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                            <EllipsisButton data-tn="dropdown-expense-btn" />
                                         }
                                     >
                                         <Dropdown.Item
                                             eventKey="delete"
-                                            data-tn="delete-bank-account-btn"
+                                            data-tn="delete-expense-btn"
                                             onClick={() => {
                                                 setIsConfirmDeleteOpen(true)
                                                 setSelectedExpense(item)
@@ -927,7 +949,6 @@ const Expenses = () => {
                 onFormSubmit={onFormSubmit}
             />
             <Button
-                className=""
                 style={{
                     position: 'fixed',
                     right: '1rem',
@@ -936,6 +957,7 @@ const Expenses = () => {
                 shape="circle"
                 variant="solid"
                 size="lg"
+                data-tn="add-expense-btn"
                 icon={<HiPlus />}
                 onClick={() => setIsFormOpen(true)}
             />

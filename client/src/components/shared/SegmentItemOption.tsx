@@ -50,6 +50,7 @@ const SegmentItemOption = forwardRef<HTMLDivElement, SegmentItemOptionProps>(
                     disabled && 'opacity-50 cursor-not-allowed',
                     className,
                 )}
+                data-tn={props['data-tn']}
                 onClick={onSegmentItemClick}
             >
                 {children}

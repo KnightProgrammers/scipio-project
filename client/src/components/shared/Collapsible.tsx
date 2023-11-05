@@ -12,16 +12,18 @@ interface IProps {
     contentContainerClassName?: string
     collapsibleClassName?: string
     children: React.ReactNode
+    'data-tn'?: string
 }
 
-const Collapsible: React.FC<IProps> = ({
-    open,
-    collapsibleClassName = '',
-    headerClassName = '',
-    iconButtonClassName = '',
-    children,
-    header,
-}) => {
+const Collapsible: React.FC<IProps> = (props) => {
+    const {
+        open,
+        collapsibleClassName = '',
+        headerClassName = '',
+        iconButtonClassName = '',
+        children,
+        header,
+    } = props
     const [isOpen, setIsOpen] = useState(open)
     const handleFilterOpening = () => {
         setIsOpen((prev) => !prev)
@@ -31,12 +33,14 @@ const Collapsible: React.FC<IProps> = ({
             className={`transition duration-500 ease-in-out overflow-hidden ${collapsibleClassName}`}
             headerClass={`transition flex justify-between ${headerClassName}`}
             headerBorder={isOpen}
+            data-tn={props['data-tn']}
             header={
                 <>
                     {header}
                     <button
                         type="button"
                         className={iconButtonClassName}
+                        data-tn="collapsible-toggle-btn"
                         onClick={handleFilterOpening}
                     >
                         {isOpen ? <FaAngleDown /> : <FaAngleUp />}
