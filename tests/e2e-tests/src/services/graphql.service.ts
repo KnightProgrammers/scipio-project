@@ -6,6 +6,14 @@ type NewCategoryInput = {
     isFixedPayment: boolean
 }
 
+type NewExpenseInput = {
+	billableDate: string
+	description?: string
+	amount: number,
+	currencyId: string
+	categoryId: string
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -82,6 +90,41 @@ class GraphqlService {
 				id
 			},
 		});
+	}
+
+	async createExpense(variables: NewExpenseInput) {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
+				mutation createExpense(
+					$amount: Float!
+					$description: String
+					$billableDate: String!
+					$currencyId: String!
+					$categoryId: String!
+				) {
+					createExpense(input: {
+						amount: $amount
+						description: $description
+						billableDate: $billableDate
+						currencyId: $currencyId
+						categoryId: $categoryId
+					}) {
+						id
+					}
+				}
+			`,
+			variables
+		});
+		return data.createExpense;
+	}
+
+	async getUserCurrencies () {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: 'query userCurrencies { me { id currencies { id code } } }'
+		});
+		return data.me.currencies;
 	}
 }
 

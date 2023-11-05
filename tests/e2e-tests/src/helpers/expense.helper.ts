@@ -1,6 +1,14 @@
 import { expect, Page } from '@playwright/test';
 import { waitForRequest } from './generic.helper';
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
+import { DEFAULT_USER_CURRENCIES } from './auth.helper';
+
+type ExpenseFilterType = {
+	fromDate?: DateTime
+	toDate?: DateTime
+	expenseType?: string[]
+	currency?: string[]
+}
 
 export const createExpense = async (page: Page, data: {
 	billableDate?: Date
@@ -74,4 +82,44 @@ export const confirmDeleteExpense = async (page: Page, expenseId: string, catego
 	expect(foundExpense).toBeFalsy();
 
 	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
+};
+
+
+export const applyExpenseFilter = async (page: Page, filters: ExpenseFilterType) => {
+	await page.locator('button[data-tn="open-expense-filter-btn"]').click();
+	if (filters.fromDate) {
+		await page.locator('input[data-tn="filter-from-date-input"]').clear();
+		await page.locator('input[data-tn="filter-from-date-input"]').fill(filters.fromDate.toFormat('MM/dd/yyyy'));
+		await page.keyboard.press('Enter');
+		await page.waitForTimeout(3000);
+	}
+	if (filters.toDate) {
+		await page.locator('input[data-tn="filter-to-date-input"]').clear();
+		await page.locator('input[data-tn="filter-to-date-input"]').fill(filters.toDate.toFormat('MM/dd/yyyy'));
+		await page.keyboard.press('Enter');
+		await page.waitForTimeout(3000);
+	}
+	if (filters.expenseType) {
+		for (const expTp of ['FIXED_EXPENSE', 'VARIABLE_EXPENSE']) {
+			const isSelected: boolean = await page.locator(`div[data-tn="expense-type-filter-${expTp.toLowerCase()}-opt"] input`).isChecked();
+			if (
+				(isSelected && !filters.expenseType.includes(expTp)) ||
+				(!isSelected && filters.expenseType.includes(expTp))
+			) {
+				await page.locator(`div[data-tn="expense-type-filter-${expTp.toLowerCase()}-opt"]`).click();
+			}
+		}
+	}
+	if (filters.currency) {
+		for (const currency of DEFAULT_USER_CURRENCIES) {
+			const isSelected: boolean = await page.locator(`div[data-tn="expense-currency-filter-${currency.toLowerCase()}-opt"] input`).isChecked();
+			if (
+				(isSelected && !filters.currency.includes(currency)) ||
+				(!isSelected && filters.currency.includes(currency))
+			) {
+				await page.locator(`div[data-tn="expense-currency-filter-${currency.toLowerCase()}-opt"]`).click();
+			}
+		}
+	}
+	await page.locator('button[data-tn="apply-expense-filter-btn"]').click();
 };

@@ -1,11 +1,12 @@
 import { test, Page, expect } from '@playwright/test';
-import { DEFAULT_USER_CURRENCIES, signInUser } from "../../../helpers/auth.helper";
+import { DEFAULT_USER_CURRENCIES, signInUser } from '../../../helpers/auth.helper';
 import { getDefaultUserData } from '../../../config';
 
 import GraphqlService from '../../../services/graphql.service';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { createExpense, deleteExpense } from "../../../helpers/expense.helper";
+import { createExpense, deleteExpense } from '../../../helpers/expense.helper';
+import { waitForRequest } from '../../../helpers/generic.helper';
 
 let email: string;
 let password: string;
@@ -32,7 +33,7 @@ test.beforeAll(async ({ browser }) => {
 
 	const data1 = await graphqlService.createCategories({
 		name: categoryName,
-		type: "WANT",
+		type: 'WANT',
 		isFixedPayment: false,
 	});
 	categoryId = data1.id;
@@ -43,9 +44,12 @@ test.afterAll(async () => {
 	await page.close();
 });
 
-test("Create Expense", async () => {
+test('Create Expense', async () => {
+	const waitForExpenses = waitForRequest(page, 'userExpensesByCategory');
+	await navigateMenu(page, NAV_MENU.EXPENSES);
+	await waitForExpenses;
 	const expense = await createExpense(page, {
-		description: "Expense 1",
+		description: 'Expense 1',
 		amount: 34.21,
 		currencyCode: DEFAULT_USER_CURRENCIES[0],
 		categoryName: categoryName,
@@ -61,7 +65,7 @@ test("Create Expense", async () => {
 	).toBeVisible();
 });
 
-test("Delete Expense", async () => {
+test('Delete Expense', async () => {
 	await deleteExpense(page, expenseId, categoryName);
 	const emptyStateContainer = page.locator(
 		'div[data-tn="empty-state-no-expenses"]',
