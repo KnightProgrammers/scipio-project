@@ -83,7 +83,10 @@ const ExpensesSummary = (props: {
                     )
                     if (!total) return null
                     return (
-                        <Card key={currency.id}>
+                        <Card
+                            key={currency.id}
+                            data-tn={`summary-card-${currency.code.toLowerCase()}`}
+                        >
                             <h6 className="font-light mb-4 text-sm">
                                 {currency.code}
                             </h6>
@@ -316,6 +319,7 @@ const ExpenseFilter = (props: {
             </span>
             <Button
                 size="sm"
+                data-tn="open-expense-filter-btn"
                 icon={<LuFilter />}
                 onClick={() => setIsOpen(true)}
             />
@@ -343,6 +347,7 @@ const ExpenseFilter = (props: {
                             size="sm"
                             className="ml-1"
                             variant="solid"
+                            data-tn="apply-expense-filter-btn"
                             onClick={() => {
                                 onFilter({
                                     fromDate,
@@ -370,10 +375,13 @@ const ExpenseFilter = (props: {
                     >
                         <FormItem label={t('fields.from')} className="mb-2">
                             <DatePicker
+                                inputtable
+                                inputtableBlurClose={false}
                                 defaultValue={fromDate}
                                 value={fromDate}
                                 maxDate={toDate}
                                 clearable={false}
+                                data-tn="filter-from-date-input"
                                 inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
@@ -402,10 +410,13 @@ const ExpenseFilter = (props: {
                         </FormItem>
                         <FormItem label={t('fields.to')} className="mb-2">
                             <DatePicker
+                                inputtable
+                                inputtableBlurClose={false}
                                 defaultValue={toDate}
                                 value={toDate}
                                 minDate={fromDate}
                                 clearable={false}
+                                data-tn="filter-to-date-input"
                                 inputFormat="DD/MM/YYYY"
                                 dayClassName={(date, { selected }) => {
                                     if (
@@ -490,6 +501,7 @@ const ExpenseFilter = (props: {
                                                 active={active}
                                                 className="w-full"
                                                 customCheck={<></>}
+                                                data-tn={`expense-type-filter-${item.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
@@ -526,6 +538,7 @@ const ExpenseFilter = (props: {
                                                 active={active}
                                                 className="w-full py-2"
                                                 customCheck={<></>}
+                                                data-tn={`expense-currency-filter-${item.code.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
@@ -791,6 +804,7 @@ const Expenses = () => {
                         key={c.id}
                         collapsibleClassName="my-4"
                         headerClassName=""
+                        data-tn={`category-detail-${c.id}`}
                         header={
                             <div className="w-full flex items-center">
                                 <div className="w-full flex flex-col">
