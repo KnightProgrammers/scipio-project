@@ -2,7 +2,7 @@ import SavingService from '@/services/saving.service';
 import CurrencyService from '@/services/currency.service';
 import { errorCodes } from 'fastify';
 import BankAccountService from '@/services/bank-account.service';
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 type SavingInput = {
 	name: string;
@@ -78,23 +78,23 @@ export const SavingMutation = {
 			id,
 			context.auth._id,
 			{
-			name,
-			description,
-			status,
-			targetDate: DateTime
-				.fromISO(targetDate)
-				.set({
-					hour: 0,
-					minute: 0,
-					second: 0,
-					millisecond: 0
-				})
-				.toJSDate(),
-			targetAmount,
-			currencyId: currency.id,
-			bankAccountId,
-			userId: context.auth._id,
-		});
+				name,
+				description,
+				status,
+				targetDate: DateTime
+					.fromISO(targetDate)
+					.set({
+						hour: 0,
+						minute: 0,
+						second: 0,
+						millisecond: 0
+					})
+					.toJSDate(),
+				targetAmount,
+				currencyId: currency.id,
+				bankAccountId,
+				userId: context.auth._id,
+			});
 	},
 	deleteSaving: async (root: any, params: {id: string}, context: any) => {
 		const {id} = params;

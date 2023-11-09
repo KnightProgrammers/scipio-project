@@ -43,7 +43,7 @@ class SavingService {
 				userId
 			});
 		} catch (e: any) {
-			throw new Error(e.message)
+			throw new Error(e.message);
 		}
 
 		return saving;
@@ -71,7 +71,7 @@ class SavingService {
 		try {
 			await saving.save();
 		} catch (e: any) {
-			throw new Error(e.message)
+			throw new Error(e.message);
 		}
 
 		return saving;
