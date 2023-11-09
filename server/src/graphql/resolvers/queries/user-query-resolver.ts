@@ -3,6 +3,7 @@ import BankService from '@/services/bank.service';
 import CreditCardService from '@/services/credit-card-service';
 import CategoryService from '@/services/category.service';
 import ExpenseService from '@/services/expense.service';
+import SavingService, { SAVING_STATUS_TYPE } from '@/services/saving.service';
 
 export const UserQueryResolver = {
 	id: (user: any) => user._id,
@@ -32,5 +33,8 @@ export const UserQueryResolver = {
 	categories: async (user: any) => CategoryService.getAll(user._id),
 	expenses: async (user: any, params: {fromDate?: string, toDate?: string}) => {
 		return ExpenseService.getAll(user._id, params.fromDate, params.toDate);
+	},
+	savings: async (user: any, params: { statuses?: SAVING_STATUS_TYPE[] }) => {
+		return SavingService.getAll(user._id, params.statuses);
 	}
 };
