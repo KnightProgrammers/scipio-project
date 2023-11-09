@@ -80,6 +80,24 @@ const schema = `
     category: Category!
   }
   
+  enum SavingStatus {
+    IN_PROGRESS
+    COMPLETE
+    NOT_CONCLUDED
+    EXPIRED
+  }
+  
+  type Saving {
+    id: String!
+    name: String!
+    description: String
+    targetAmount: Float!
+    targetDate: String!
+    status: SavingStatus!
+    bankAccount: BankAccount!
+    currency: Currency!
+  }
+  
   type UserCurrency {
     id: String!
     code: String!
@@ -98,6 +116,7 @@ const schema = `
     creditCards: [CreditCard]!
     categories: [Category]!
     expenses(fromDate: String, toDate: String): [Expense]!
+    savings(statuses: [SavingStatus]): [Saving]!
   }
 
   type Query {
@@ -128,6 +147,10 @@ const schema = `
     
     createExpense(input: ExpenseInput!): Expense!
     deleteExpense(id: String!): Boolean!
+    
+    createSaving(input: SavingInput!): Saving!
+    updateSaving(id: String!, input: SavingInput!): Saving!
+    deleteSaving(id: String!): Boolean!
   }
 
   input NewBankInput {
@@ -175,6 +198,16 @@ const schema = `
     description: String
     currencyId: String!
     categoryId: String!
+  }
+  
+  input SavingInput {
+    name: String!
+    description: String
+    targetAmount: Float!
+    targetDate: String!
+    status: SavingStatus
+    bankAccountId: String!
+    currencyCode: String!
   }
 `;
 export default schema;
