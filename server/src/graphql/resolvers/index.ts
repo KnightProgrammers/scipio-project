@@ -2,10 +2,12 @@ import {
 	BankAccountQueryResolver,
 	BankQueryResolver,
 	CategoryQueryResolver,
-	CreditCardQueryResolver, CurrencyQueryResolver,
+	CreditCardQueryResolver,
+	CurrencyQueryResolver,
 	ExpenseQueryResolver,
+	SavingQueryResolver,
 	UserQueryResolver
-} from '@/graphql/resolvers/queries';
+} from "@/graphql/resolvers/queries";
 
 import Mutation from '@/graphql/resolvers/mutations';
 import CurrencyService from '@/services/currency.service';
@@ -23,6 +25,7 @@ const resolvers = {
 	Category: CategoryQueryResolver,
 	CreditCard: CreditCardQueryResolver,
 	Expense: ExpenseQueryResolver,
+	Saving: SavingQueryResolver,
 	User: UserQueryResolver,
 	Mutation
 };

@@ -4,6 +4,7 @@ import { CategoryQueryResolver } from '@/graphql/resolvers/queries/category-quer
 import { CreditCardQueryResolver } from '@/graphql/resolvers/queries/credit-card-query-resolver';
 import { CurrencyQueryResolver } from '@/graphql/resolvers/queries/currency-query-resolver';
 import { ExpenseQueryResolver } from '@/graphql/resolvers/queries/expense-query-resolver';
+import { SavingQueryResolver } from '@/graphql/resolvers/queries/saving-query-resolver';
 import { UserQueryResolver } from '@/graphql/resolvers/queries/user-query-resolver';
 
 export {
@@ -13,5 +14,6 @@ export {
 	CreditCardQueryResolver,
 	CurrencyQueryResolver,
 	ExpenseQueryResolver,
+	SavingQueryResolver,
 	UserQueryResolver,
 };

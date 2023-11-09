@@ -82,7 +82,7 @@ const schema = `
   
   enum SavingStatus {
     IN_PROGRESS
-    COMPLETE
+    COMPLETED
     NOT_CONCLUDED
     EXPIRED
   }
@@ -207,7 +207,6 @@ const schema = `
     targetDate: String!
     status: SavingStatus
     bankAccountId: String!
-    currencyCode: String!
   }
 `;
 export default schema;
