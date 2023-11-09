@@ -12,7 +12,7 @@ export const CountrySchema = new mongoose.Schema(
 		},
 		isSupported: {
 			type: Boolean,
-			defaultValue: false,
+			default: false,
 		},
 	},
 	{ timestamps: true, skipVersioning: { dontVersionMe: true } },

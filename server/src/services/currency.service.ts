@@ -7,6 +7,9 @@ class CurrencyService {
 	static async findOne(id: string) {
 		return CurrencySchema.findById(id);
 	}
+	static async findByCode(code: string) {
+		return CurrencySchema.findOne({code});
+	}
 }
 
 export default CurrencyService;
