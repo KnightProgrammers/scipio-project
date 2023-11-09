@@ -13,12 +13,12 @@ export const BankAccountSchema = new mongoose.Schema(
 		},
 		accountBalance: {
 			type: Number,
-			defaultValue: 0,
+			default: 0,
 			required: true,
 		},
 		accountIsDeleted: {
 			type: Boolean,
-			defaultValue: false,
+			default: false,
 		},
 		accountUserId: {
 			type: mongoose.Schema.Types.ObjectId,

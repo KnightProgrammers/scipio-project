@@ -28,7 +28,7 @@ export const ExpenseSchema = new mongoose.Schema(
 		},
 		isDeleted: {
 			type: Boolean,
-			defaultValue: false,
+			default: false,
 		},
 	},
 	{ timestamps: true, skipVersioning: { dontVersionMe: true } },

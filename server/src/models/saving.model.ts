@@ -19,9 +19,8 @@ export const SavingSchema = new mongoose.Schema(
 		},
 		status: {
 			type: String,
-			required: true,
 			enum : ['IN_PROGRESS','COMPLETED','NOT_CONCLUDED','EXPIRED'],
-			defaultValue: 'IN_PROGRESS'
+			default: 'IN_PROGRESS'
 		},
 		bankAccountId: {
 			type: mongoose.Schema.Types.ObjectId,

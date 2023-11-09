@@ -10,11 +10,11 @@ export const CategorySchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			enum : ['NEED', 'WANT', 'SAVE'],
-			defaultValue: 'NEED'
+			default: 'NEED'
 		},
 		isFixedPayment: {
 			type: Boolean,
-			defaultValue: false,
+			default: false,
 		},
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ export const CategorySchema = new mongoose.Schema(
 		},
 		isDeleted: {
 			type: Boolean,
-			defaultValue: false,
+			default: false,
 		},
 	},
 	{ timestamps: true, skipVersioning: { dontVersionMe: true } },
