@@ -49,7 +49,8 @@
             "filterTitle": "Filtro de Gastos"
         },
         "savings": {
-            "header": "Ahorros"
+            "header": "Ahorros",
+            "addSavingButton": "Agregar Ahorro"
         },
         "incomes": {
             "header": "Ingresos"
