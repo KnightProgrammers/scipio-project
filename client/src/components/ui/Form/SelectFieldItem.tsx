@@ -26,8 +26,8 @@ function SelectFieldItem(props: SelectFieldItemProps) {
                     !option
                         ? ''
                         : Array.isArray(option)
-                        ? option.map((o) => o.value).join(',')
-                        : option.value,
+                          ? option.map((o) => o.value).join(',')
+                          : option.value,
                 )
                 setValue(option ? option : null)
             }}
