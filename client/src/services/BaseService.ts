@@ -26,9 +26,8 @@ BaseService.interceptors.request.use(
         }
 
         if (accessToken) {
-            config.headers[
-                REQUEST_HEADER_AUTH_KEY
-            ] = `${TOKEN_TYPE}${accessToken}`
+            config.headers[REQUEST_HEADER_AUTH_KEY] =
+                `${TOKEN_TYPE}${accessToken}`
         }
 
         return config
@@ -46,9 +45,8 @@ const refreshAuth = async (failedRequest: any) => {
     const authToken = await auth.currentUser.getIdToken(true)
     store.dispatch(signInSuccess(authToken))
     // eslint-disable-next-line no-param-reassign
-    failedRequest.response.config.headers[
-        REQUEST_HEADER_AUTH_KEY
-    ] = `${TOKEN_TYPE}${authToken}`
+    failedRequest.response.config.headers[REQUEST_HEADER_AUTH_KEY] =
+        `${TOKEN_TYPE}${authToken}`
 }
 createAuthRefreshInterceptor(BaseService, refreshAuth, {
     pauseInstanceWhileRefreshing: true,
