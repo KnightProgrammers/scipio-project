@@ -14,7 +14,7 @@ export const SavingQueryResolver = {
 		return DateTime.fromJSDate(saving.targetDate).toISO();
 	},
 	status: async (saving: any) => {
-		if (saving.status === 'IN_PROGRESS' && DateTime.fromISO(saving.targetDate).diffNow('days').days < 0) {
+		if (saving.status === 'IN_PROGRESS' && DateTime.fromJSDate(saving.targetDate).diffNow('days').days < 0) {
 			return 'EXPIRED';
 		}
 		return saving.status;
