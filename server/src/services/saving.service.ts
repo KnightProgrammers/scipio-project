@@ -15,8 +15,10 @@ type SavingInputData = {
 
 class SavingService {
 	static async getAll(userId: string, statuses?: SAVING_STATUS_TYPE[]) {
-		console.log({statuses});
-		return SavingSchema.find({ userId }).sort({ targetDate: 1 });
+		return SavingSchema.find({ userId, status: statuses }).sort({ targetDate: 1 });
+	}
+	static async getAllByBankAccount(userId: string, bankAccountId: string, statuses?: SAVING_STATUS_TYPE[]) {
+		return SavingSchema.find({ userId, bankAccountId, status: statuses }).sort({ targetDate: 1 });
 	}
 	static async create(data: SavingInputData) {
 		const {
