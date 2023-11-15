@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui'
-import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { ReactNode } from 'react'
 import { DoubleSidedImage } from '@/components/shared/index'
 
@@ -9,6 +8,7 @@ type EmptyStateProps = {
     description?: string | null
     iconSize?: number
     children?: ReactNode
+    bySearch?: boolean
     'data-tn'?: string
 }
 
@@ -19,6 +19,7 @@ const EmptyState = (props: EmptyStateProps) => {
         description = '',
         children,
         iconSize = 360,
+        // bySearch = false
     } = props
 
     return (

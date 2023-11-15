@@ -64,21 +64,19 @@ const BankAccounts = () => {
         useQuery({
             queryKey: ['user-currencies'],
             queryFn: apiGetUserCurrencies,
-            suspense: true,
         })
 
     const {
         data: bankAccountList,
         isFetching: isFetchingBankAccounts,
-        refetch: refetchBankAcounts,
+        refetch: refetchBankAccounts,
     } = useQuery({
         queryKey: ['user-bank-accounts'],
         queryFn: apiGetBankAccountList,
-        suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
-        refetchBankAcounts()
+        refetchBankAccounts()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })

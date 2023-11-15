@@ -58,7 +58,7 @@ const ModalForm = (props: ModalFormProps) => {
                 >
                     {({ touched, errors, submitForm }) => (
                         <Form className="mt-4">
-                            <FormContainer className="max-h-96 overflow-y-auto px-4">
+                            <FormContainer className="px-4">
                                 {fields(errors, touched)}
                             </FormContainer>
                             <div className="sm:flex gap-2 pb-4 px-4">
@@ -74,7 +74,7 @@ const ModalForm = (props: ModalFormProps) => {
                                 </Button>
                                 <Button
                                     variant="solid"
-                                    type="submit"
+                                    type="button"
                                     className="w-full justify-center mb-2"
                                     data-tn="modal-form-save-btn"
                                     disabled={isSaving}

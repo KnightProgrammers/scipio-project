@@ -2,24 +2,36 @@ import BaseService from '@/services/BaseService'
 
 type NewSavingInput = {
     name: string
+    targetDate: string
+    targetAmount: number
+    bankAccountId: string
 }
 
 type EditSavingInput = {
     id: string
     name: string
+    targetDate: string
+    targetAmount: number
+    bankAccountId: string
+    status: string
 }
 
-export async function apiGetSavingList(): Promise<any[]> {
+export async function apiGetSavingList(filters: {
+    statuses: string[]
+}): Promise<any[]> {
+    const { statuses = ['IN_PROGRESS'] } = filters
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
         data: {
             operationName: 'userSavings',
             query: `
-                query userSavings { 
+                query userSavings(
+                    $statuses: [SavingStatus!]
+                ) { 
                     me { 
                         id 
-                        savings { 
+                        savings(statuses: $statuses) { 
                             id 
                             name  
                             description
@@ -30,6 +42,7 @@ export async function apiGetSavingList(): Promise<any[]> {
                                 id
                                 code
                             }
+                            bankAccountId
                             bankAccount {
                                 id
                                 balance
@@ -44,14 +57,16 @@ export async function apiGetSavingList(): Promise<any[]> {
                     } 
                 }
             `,
-            variables: {},
+            variables: {
+                statuses: statuses,
+            },
         },
     })
     return response.data.data.me.savings
 }
 
 export async function apiCreateSaving(data: NewSavingInput): Promise<any> {
-    const { name } = data
+    const { name, targetAmount, targetDate, bankAccountId } = data
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
@@ -60,9 +75,15 @@ export async function apiCreateSaving(data: NewSavingInput): Promise<any> {
             query: `
                 mutation createSaving(
                     $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
                 ) {
                   createSaving(input: {
                     name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
                   }) {
                     id
                   }
@@ -70,6 +91,9 @@ export async function apiCreateSaving(data: NewSavingInput): Promise<any> {
             `,
             variables: {
                 name,
+                targetAmount,
+                targetDate,
+                bankAccountId,
             },
         },
     })
@@ -77,7 +101,7 @@ export async function apiCreateSaving(data: NewSavingInput): Promise<any> {
 }
 
 export async function apiUpdateSaving(data: EditSavingInput): Promise<any> {
-    const { id, name } = data
+    const { id, name, targetAmount, targetDate, bankAccountId, status } = data
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
@@ -87,9 +111,17 @@ export async function apiUpdateSaving(data: EditSavingInput): Promise<any> {
                 mutation updateSaving(
                     $id: String!
                     $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
+                    $status: SavingStatus!
                 ) {
                   updateSaving(id: $id, input: {
                     name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
+                    status: $status
                   }) {
                     id
                   }
@@ -98,6 +130,10 @@ export async function apiUpdateSaving(data: EditSavingInput): Promise<any> {
             variables: {
                 id,
                 name,
+                targetAmount,
+                targetDate,
+                bankAccountId,
+                status,
             },
         },
     })

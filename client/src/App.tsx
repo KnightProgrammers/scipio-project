@@ -31,7 +31,6 @@ const Wrapper = () => {
             refetchOnWindowFocus: false,
         },
         mutations: {
-            useErrorBoundary: false,
             onError: (e: unknown) => {
                 toast.push(
                     <Notification
