@@ -627,9 +627,9 @@ const Savings = () => {
     if (filteredSavings.length === 0) {
         return (
             <Container data-tn="savings-page">
-                <div className="lg:flex items-center justify-between mb-4">
-                    <h2>{t('pages.savings.header')}</h2>
-                    <div className="flex flex-col lg:flex-row lg:items-center">
+                <div className="md:flex items-center justify-between mb-4">
+                    <h2 className="my-2">{t('pages.savings.header')}</h2>
+                    <div className="flex lg:items-center my-2">
                         <Input
                             value={searchByName}
                             placeholder="Search by Name"
@@ -677,24 +677,26 @@ const Savings = () => {
 
     return (
         <Container data-tn="savings-page">
-            <div className="lg:flex items-center justify-between mb-4">
+            <div className="lg:flex items-center justify-between mb-4 my-2">
                 <h2>{t('pages.savings.header')}</h2>
                 <div className="flex flex-col lg:flex-row lg:items-center">
-                    <Input
-                        value={searchByName}
-                        placeholder="Search by Name"
-                        size="sm"
-                        prefix={<BiSearch className="text-md" />}
-                        onChange={(e) => setSearchByName(e.target.value)}
-                    />
-                    <SavingFilter
-                        defaultValue={filters}
-                        onFilter={onFilterChange}
-                    />
+                    <div className="flex my-2">
+                        <Input
+                            value={searchByName}
+                            placeholder="Search by Name"
+                            size="sm"
+                            prefix={<BiSearch className="text-md" />}
+                            onChange={(e) => setSearchByName(e.target.value)}
+                        />
+                        <SavingFilter
+                            defaultValue={filters}
+                            onFilter={onFilterChange}
+                        />
+                    </div>
                     <Button
                         variant="solid"
                         size="sm"
-                        className="ml-2"
+                        className="lg:ml-2 my-2"
                         icon={<HiPlus />}
                         data-tn="add-category-btn"
                         onClick={() => setIsFormOpen(true)}
