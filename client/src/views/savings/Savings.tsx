@@ -26,8 +26,13 @@ import {
 } from '@/components/shared'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
-import { apiGetSavingList } from '@/services/SavingService'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+    apiCreateSaving,
+    apiDeleteSaving,
+    apiGetSavingList,
+    apiUpdateSaving,
+} from '@/services/SavingService'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import currencyFormat from '@/utils/currencyFormat'
@@ -38,6 +43,12 @@ import { SlWallet } from 'react-icons/sl'
 import { LuTimer } from 'react-icons/lu'
 import { DateTime } from 'luxon'
 import { HiFire } from 'react-icons/hi2'
+import {
+    apiCreateBankAccount,
+    apiDeleteBankAccount,
+    apiUpdateBankAccount,
+} from '@/services/BankAccountService'
+import EmptyState from '@/components/shared/EmptyState'
 
 const BankTag = (props: { saving: any }) => {
     const { saving } = props
@@ -243,15 +254,68 @@ const Savings = () => {
         })
     }
 
-    const onDeleteConfirmClose = () => {}
+    const createSavingMutation = useMutation({
+        mutationFn: apiCreateSaving,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.saving.created') || '')
+        },
+    })
 
-    const onDelete = () => {}
+    const updateSavingMutation = useMutation({
+        mutationFn: apiUpdateSaving,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.saving.updated') || '')
+        },
+    })
+
+    const deleteSavingMutation = useMutation({
+        mutationFn: apiDeleteSaving,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.saving.deleted') || '')
+        },
+    })
+
+    const onDeleteConfirmClose = () => {
+        setIsConfirmDeleteOpen(false)
+        setSelectedSaving(undefined)
+    }
+
+    const onDelete = () => {
+        deleteSavingMutation.mutate(selectedSaving.id)
+        onDeleteConfirmClose()
+    }
 
     if (!savings || isLoadingSavings) {
         return (
             <div className="flex h-full mx-auto w-0" data-tn="savings-page">
                 <Loading loading />
             </div>
+        )
+    }
+
+    if (savings.length === 0) {
+        return (
+            <Container data-tn="savings-page">
+                <div className="lg:flex items-center justify-between mb-4">
+                    <h2>{t('pages.savings.header')}</h2>
+                </div>
+                <EmptyState
+                    title="No Savings"
+                    description="You don't have any savings created"
+                >
+                    <Button
+                        variant="twoTone"
+                        size="lg"
+                        className="mt-4"
+                        style={{ width: '300px' }}
+                        icon={<HiPlus />}
+                        data-tn="add-category-btn"
+                        onClick={() => setIsFormOpen(true)}
+                    >
+                        {t('pages.savings.addSavingButton')}
+                    </Button>
+                </EmptyState>
+            </Container>
         )
     }
 
