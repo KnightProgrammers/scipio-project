@@ -1,4 +1,5 @@
 import SavingSchema from '@/models/saving.model';
+import { ObjectId } from '@fastify/mongodb';
 
 export type SAVING_STATUS_TYPE = 'IN_PROGRESS'|'COMPLETED'|'NOT_CONCLUDED'|'EXPIRED'
 
@@ -15,8 +16,10 @@ type SavingInputData = {
 
 class SavingService {
 	static async getAll(userId: string, statuses?: SAVING_STATUS_TYPE[]) {
-		console.log({statuses});
-		return SavingSchema.find({ userId }).sort({ targetDate: 1 });
+		return SavingSchema.find({ userId, status: statuses }).sort({ targetDate: 1 });
+	}
+	static async getAllByBankAccount(userId: string, bankAccountId: string, statuses?: SAVING_STATUS_TYPE[]) {
+		return SavingSchema.find({ userId, bankAccountId, status: statuses }).sort({ targetDate: 1 });
 	}
 	static async create(data: SavingInputData) {
 		const {
@@ -54,7 +57,9 @@ class SavingService {
 			description,
 			status,
 			targetDate,
-			targetAmount
+			targetAmount,
+			bankAccountId,
+			currencyId
 		} = data;
 
 		const saving = await this.findOne(id, userId);
@@ -66,6 +71,8 @@ class SavingService {
 		saving.status = status;
 		saving.targetDate = targetDate;
 		saving.targetAmount = targetAmount;
+		saving.bankAccountId = new ObjectId(bankAccountId);
+		saving.currencyId = new ObjectId(currencyId);
 
 		await saving.save();
 		try {

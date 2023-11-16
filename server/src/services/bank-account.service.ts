@@ -2,13 +2,22 @@ import BankAccountSchema from '@/models/bank-account.model';
 
 class BankAccountService {
 	static async getAll(
-		bank: any,
-		user: any,
+		userId: any,
 		accountIsDeleted: boolean = false,
 	): Promise<any> {
 		return BankAccountSchema.find({
-			accountUserId: user.id,
-			accountBankId: bank.id,
+			accountUserId: userId,
+			accountIsDeleted,
+		});
+	}
+	static async getAllByBank(
+		bankId: any,
+		userId: any,
+		accountIsDeleted: boolean = false,
+	): Promise<any> {
+		return BankAccountSchema.find({
+			accountUserId: userId,
+			accountBankId: bankId,
 			accountIsDeleted,
 		});
 	}

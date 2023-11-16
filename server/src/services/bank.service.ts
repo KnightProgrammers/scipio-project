@@ -30,7 +30,7 @@ class BankService {
 	static async delete(id: string, user: any) {
 		const bank = await this.findOne(id, user);
 		if (!bank) return null;
-		const bankAccounts = await bankAccountService.getAll(bank, user, true);
+		const bankAccounts = await bankAccountService.getAllByBank(bank, user, true);
 		await bank.deleteOne();
 		for (const bankAccount of bankAccounts) {
 			await bankAccount.deleteOne();

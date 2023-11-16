@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui'
-import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { ReactNode } from 'react'
+import { DoubleSidedImage } from '@/components/shared/index'
 
 type EmptyStateProps = {
     className?: string
@@ -8,6 +8,7 @@ type EmptyStateProps = {
     description?: string | null
     iconSize?: number
     children?: ReactNode
+    bySearch?: boolean
     'data-tn'?: string
 }
 
@@ -17,20 +18,25 @@ const EmptyState = (props: EmptyStateProps) => {
         title = '',
         description = '',
         children,
-        iconSize = 80,
+        iconSize = 360,
+        // bySearch = false
     } = props
 
     return (
         <Card
             bordered
-            className={`text-center border-dashed ${className}`}
+            className={`text-center ${className}`}
             bodyClass="flex flex-col items-center"
             data-tn={props['data-tn'] || 'empty-state'}
         >
             {iconSize > 0 && (
-                <HiOutlineExclamationCircle
-                    size={iconSize}
-                    className=" text-2xl"
+                <DoubleSidedImage
+                    src="/img/others/empty-state.svg"
+                    darkModeSrc="/img/others/empty-state-dark.svg"
+                    alt="empty state icon"
+                    width={iconSize}
+                    height="auto"
+                    className="mb-4"
                 />
             )}
             {title && (

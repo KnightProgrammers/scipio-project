@@ -100,7 +100,6 @@ const CreditCards = () => {
         useQuery({
             queryKey: ['user-currencies'],
             queryFn: apiGetUserCurrencies,
-            suspense: true,
         })
 
     const {
@@ -110,7 +109,6 @@ const CreditCards = () => {
     } = useQuery({
         queryKey: ['user-credit-cards'],
         queryFn: apiGetCreditCardList,
-        suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
@@ -406,8 +404,8 @@ const CreditCards = () => {
                 </>
             )}
             isSaving={
-                createCreditCardMutation.isLoading ||
-                updateCreditCardMutation.isLoading
+                createCreditCardMutation.isPending ||
+                updateCreditCardMutation.isPending
             }
             onClose={onFormClose}
             onSubmit={onFormSubmit}

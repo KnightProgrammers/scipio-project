@@ -14,6 +14,41 @@ export async function apiGetBankAccountList(): Promise<unknown[]> {
     return response.data.data.me.banks
 }
 
+export async function apiGetUserBankAccountList(): Promise<unknown[]> {
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'userBankAccounts',
+            query: `
+                query userBankAccounts { 
+                    me { 
+                        id 
+                        bankAccounts { 
+                            id
+                            label
+                            accountNumber
+                            bank {
+                                id
+                                name
+                            }
+                            currency {
+                                id
+                                code
+                            }
+                            savings(statuses: [IN_PROGRESS, EXPIRED]) {
+                                id
+                            }
+                        } 
+                    }
+                }
+            `,
+            variables: {},
+        },
+    })
+    return response.data.data.me.bankAccounts
+}
+
 export async function apiCreateBankAccount(body: {
     accountName: string
     accountNumber: string

@@ -49,7 +49,37 @@
             "filterTitle": "Filtro de Gastos"
         },
         "savings": {
-            "header": "Ahorros"
+            "header": "Ahorros",
+            "addSavingButton": "Agregar Ahorro",
+            "form": {
+                "newTitle": "Nuevo Ahorro",
+                "editTitle": "Editar Ahorro"
+            },
+            "changeStatus": {
+                "title": "Cambiar Estado",
+                "description": "Selecciona el nuevo estado"
+            },
+            "emptyState": {
+                "title": "No hay ahorros",
+                "description": "No tienes ningún ahorro creado"
+            },
+            "emptySearch": {
+                "title": "Sin resultados",
+                "description": "Prueba cambiando el filtro para mostrar resultados"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{name}}\"?"
+            },
+            "filterTitle": "Filtro de Gastos",
+            "labels": {
+                "goal": "Objetivo",
+                "saved": "Ahorrado",
+                "expiration": "Expiración",
+                "completed": "Completedo",
+                "noCompleted": "No Completado",
+                "expiredOn": "Expiró el"
+            }
         },
         "incomes": {
             "header": "Ingresos"
@@ -195,7 +225,8 @@
         "edit": "Editar",
         "next": "Siguiente",
         "tryAgain": "Volver a intentar",
-        "filter": "Filtrar"
+        "filter": "Filtrar",
+        "changeStatus": "Cambiar Estado"
     },
     "fields": {
         "email": "Email",
@@ -223,7 +254,10 @@
         "category": "Categoría",
         "from": "Desde",
         "to": "Hasta",
-        "expenseType": "Tipo de Gasto"
+        "expenseType": "Tipo de Gasto",
+        "savingStatus": "Estado de Ahorro",
+        "targetDate": "Fecha Límite",
+        "bankAccount": "Cuenta de Banco"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -264,6 +298,11 @@
             "created": "Gasto creado correctamente",
             "deleted": "Gasto eliminado correctamente"
         },
+        "saving": {
+            "created": "Ahorro creado correctamente",
+            "updated": "Ahorro actualizado correctamente",
+            "deleted": "Ahorro eliminado correctamente"
+        },
         "textCopied": "Copiado!"
     },
     "error": {
@@ -277,9 +316,10 @@
     },
     "placeholders": {
         "country": "Selecciona un pais",
-        "other": "Otro",
         "currentMonth": "Mes actual",
-        "lastMonth": "Mes anterior"
+        "lastMonth": "Mes anterior",
+        "other": "Otro",
+        "searchByName": "Buscar por Nombre"
     },
     "messages": {
         "backTo": "Volver a ",
@@ -324,5 +364,10 @@
     "expenseType": {
         "VARIABLE_EXPENSE": "Gasto Variable",
         "FIXED_EXPENSE": "Gasto Fijo"
+    },
+    "savingStatus": {
+        "IN_PROGRESS": "Activo",
+        "COMPLETED": "Completado",
+        "NOT_CONCLUDED": "No Alcanzado"
     }
 }

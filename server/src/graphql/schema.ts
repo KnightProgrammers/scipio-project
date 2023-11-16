@@ -31,6 +31,7 @@ const schema = `
     accountNumber: String!
     label: String
     currency: Currency!
+    savings(statuses: [SavingStatus]): [Saving!]
   }
   
   enum CreditCardIssuer {
@@ -94,6 +95,7 @@ const schema = `
     targetAmount: Float!
     targetDate: String!
     status: SavingStatus!
+    bankAccountId: String!
     bankAccount: BankAccount!
     currency: Currency!
   }
@@ -113,6 +115,7 @@ const schema = `
     country: Country
     currencies: [UserCurrency]!
     banks: [Bank]!
+    bankAccounts: [BankAccount]!
     creditCards: [CreditCard]!
     categories: [Category]!
     expenses(fromDate: String, toDate: String): [Expense]!

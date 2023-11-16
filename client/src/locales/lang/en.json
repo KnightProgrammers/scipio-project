@@ -49,7 +49,37 @@
             "filterTitle": "Expense Filter"
         },
         "savings": {
-            "header": "Savings"
+            "header": "Savings",
+            "addSavingButton": "Add Saving",
+            "form": {
+                "newTitle": "Nuevo Ahorro",
+                "editTitle": "Editar Ahorro"
+            },
+            "changeStatus": {
+                "title": "Change Status",
+                "description": "Select the new status"
+            },
+            "emptyState": {
+                "title": "No Savings",
+                "description": "You don't have any savings created"
+            },
+            "emptySearch": {
+                "title": "No Results",
+                "description": "Try changing the filter to show results"
+            },
+            "deleteConfirmation": {
+                "title": "Delete saving",
+                "description": "Are you sure you want to delete the saving \"{{name}}\"?"
+            },
+            "filterTitle": "Saving Filter",
+            "labels": {
+                "goal": "Goal",
+                "saved": "Saved",
+                "expiration": "Expiration",
+                "completed": "Completed",
+                "noCompleted": "No Completed",
+                "expiredOn": "Expired On"
+            }
         },
         "incomes": {
             "header": "Incomes"
@@ -195,7 +225,8 @@
         "edit": "Edit",
         "next": "Next",
         "tryAgain": "Try again",
-        "filter": "Filter"
+        "filter": "Filter",
+        "changeStatus": "Change Status"
     },
     "fields": {
         "email": "Email",
@@ -223,7 +254,10 @@
         "category": "Category",
         "from": "From",
         "to": "To",
-        "expenseType": "Expense Type"
+        "expenseType": "Expense Type",
+        "savingStatus": "Saving Status",
+        "targetDate": "Target Date",
+        "bankAccount": "Bank Account"
     },
     "validations": {
         "minString": "The value is too short (min:",
@@ -264,6 +298,11 @@
             "created": "Expense successfully created",
             "deleted": "Expense successfully deleted"
         },
+        "saving": {
+            "created": "Saving successfully created",
+            "updated": "Saving successfully updated",
+            "deleted": "Saving successfully deleted"
+        },
         "textCopied": "Copied!"
     },
     "error": {
@@ -279,7 +318,8 @@
         "country": "Select a country",
         "currentMonth": "Current month",
         "lastMonth": "Last Month",
-        "other": "Other"
+        "other": "Other",
+        "searchByName": "Search by Name"
     },
     "messages": {
         "backTo": "Back to ",
@@ -324,5 +364,10 @@
     "expenseType": {
         "VARIABLE_EXPENSE": "Variable Expense",
         "FIXED_EXPENSE": "Fixed Expense"
+    },
+    "savingStatus": {
+        "IN_PROGRESS": "Active",
+        "COMPLETED": "Completed",
+        "NOT_CONCLUDED": "No Concluded"
     }
 }

@@ -22,9 +22,6 @@ export const protectedRoutes = [
         path: '/savings',
         component: lazy(() => import('@/views/savings')),
         authority: [],
-        meta: {
-            header: 'pages.savings.header',
-        },
     },
     {
         key: 'incomes',
