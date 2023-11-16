@@ -87,6 +87,8 @@ const SavingExpiration = (props: { saving: any }) => {
     const { saving } = props
     const { status, targetDate } = saving
 
+    const { t } = useTranslation()
+
     if (status === 'COMPLETED') {
         return (
             <Alert
@@ -95,7 +97,7 @@ const SavingExpiration = (props: { saving: any }) => {
                 className="mt-2"
                 customIcon={<HiCheckCircle />}
             >
-                Completado
+                {t('pages.savings.labels.completed')}
             </Alert>
         )
     }
@@ -108,7 +110,7 @@ const SavingExpiration = (props: { saving: any }) => {
                 className="mt-2"
                 customIcon={<HiXCircle />}
             >
-                No Completado
+                {t('pages.savings.labels.noCompleted')}
             </Alert>
         )
     }
@@ -121,7 +123,7 @@ const SavingExpiration = (props: { saving: any }) => {
                 className="mt-2"
                 customIcon={<HiFire />}
             >
-                <b>Expired on:</b>{' '}
+                <b>{t('pages.savings.labels.expiredOn')}:</b>{' '}
                 {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
             </Alert>
         )
@@ -129,7 +131,7 @@ const SavingExpiration = (props: { saving: any }) => {
 
     return (
         <Alert showIcon type="info" className="mt-2" customIcon={<LuTimer />}>
-            <b>Expiration:</b>{' '}
+            <b>{t('pages.savings.labels.expiration')}:</b>{' '}
             {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
         </Alert>
     )
@@ -178,6 +180,8 @@ const UpdateSavingStatusModal = (props: {
 
     const [newStatus, setNewStatus] = useState<string>(saving.status)
 
+    const { t } = useTranslation()
+
     const submitStatus = () => {
         onSave({
             ...saving,
@@ -192,8 +196,10 @@ const UpdateSavingStatusModal = (props: {
             onClose={onClose}
             onRequestClose={onClose}
         >
-            <h5 className="mb-4">Change Status - {saving.name}</h5>
-            <p>Select the new status</p>
+            <h5 className="mb-4">
+                {t('pages.savings.changeStatus.title')} - {saving.name}
+            </h5>
+            <p>{t('pages.savings.changeStatus.description')}</p>
             <Segment
                 value={newStatus}
                 selectionType="single"
@@ -217,7 +223,7 @@ const UpdateSavingStatusModal = (props: {
                                         onSegmentItemClick={onSegmentItemClick}
                                     >
                                         <span className="font-bold">
-                                            {savingStatus}
+                                            {t(`savingStatus.${savingStatus}`)}
                                         </span>
                                     </SegmentItemOption>
                                 )
@@ -228,10 +234,10 @@ const UpdateSavingStatusModal = (props: {
             </Segment>
             <div className="mt-4 grid grid-cols-2 gap-4">
                 <Button variant="plain" onClick={onClose}>
-                    Cancel
+                    {t('actions.cancel')}
                 </Button>
                 <Button variant="solid" onClick={submitStatus}>
-                    Save
+                    {t('actions.save')}
                 </Button>
             </div>
         </Dialog>
@@ -518,10 +524,7 @@ const Savings = () => {
         refetch: refetchBankAccounts,
     } = useQuery({
         queryKey: ['user-bank-accounts-by-savings'],
-        queryFn: async () => {
-            const data = await apiGetUserBankAccountList()
-            return data.filter((ba: any) => !ba.savings.length)
-        },
+        queryFn: apiGetUserBankAccountList,
     })
 
     const onFormClose = () => {
@@ -632,7 +635,7 @@ const Savings = () => {
                     <div className="flex lg:items-center my-2">
                         <Input
                             value={searchByName}
-                            placeholder="Search by Name"
+                            placeholder={t('placeholders.searchByName')}
                             size="sm"
                             prefix={<BiSearch className="text-md" />}
                             onChange={(e) => setSearchByName(e.target.value)}
@@ -644,8 +647,8 @@ const Savings = () => {
                     </div>
                 </div>
                 <EmptyState
-                    title="No Savings"
-                    description="You don't have any savings created"
+                    title={t('pages.savings.emptyState.title')}
+                    description={t('pages.savings.emptyState.description')}
                     bySearch={!!searchByName.length}
                 >
                     <Button
@@ -683,7 +686,7 @@ const Savings = () => {
                     <div className="flex my-2">
                         <Input
                             value={searchByName}
-                            placeholder="Search by Name"
+                            placeholder={t('placeholders.searchByName')}
                             size="sm"
                             prefix={<BiSearch className="text-md" />}
                             onChange={(e) => setSearchByName(e.target.value)}
@@ -786,7 +789,9 @@ const Savings = () => {
                             >
                                 <div className="flex justify-between items-center">
                                     <div className="py-4 px-2">
-                                        <p className="font-light">Goal:</p>
+                                        <p className="font-light">
+                                            {t('pages.savings.labels.goal')}:
+                                        </p>
                                         <p className="text-2xl font-bold mt-2">
                                             {currencyFormat(
                                                 s.targetAmount,
@@ -803,7 +808,7 @@ const Savings = () => {
                                 s.status,
                             ) ? (
                                 <p className="mt-2">
-                                    Saved:
+                                    {t('pages.savings.labels.saved')}:
                                     <b className="ml-2">
                                         {currencyFormat(
                                             s.bankAccount.balance,
@@ -840,7 +845,7 @@ const Savings = () => {
             >
                 <p>
                     {t('pages.savings.deleteConfirmation.description', {
-                        saving: selectedSaving?.name,
+                        name: selectedSaving?.name,
                     })}
                 </p>
             </ConfirmDialog>
