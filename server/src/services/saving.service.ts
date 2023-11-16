@@ -1,4 +1,5 @@
 import SavingSchema from '@/models/saving.model';
+import { ObjectId } from '@fastify/mongodb';
 
 export type SAVING_STATUS_TYPE = 'IN_PROGRESS'|'COMPLETED'|'NOT_CONCLUDED'|'EXPIRED'
 
@@ -56,7 +57,9 @@ class SavingService {
 			description,
 			status,
 			targetDate,
-			targetAmount
+			targetAmount,
+			bankAccountId,
+			currencyId
 		} = data;
 
 		const saving = await this.findOne(id, userId);
@@ -68,6 +71,8 @@ class SavingService {
 		saving.status = status;
 		saving.targetDate = targetDate;
 		saving.targetAmount = targetAmount;
+		saving.bankAccountId = new ObjectId(bankAccountId);
+		saving.currencyId = new ObjectId(currencyId);
 
 		await saving.save();
 		try {

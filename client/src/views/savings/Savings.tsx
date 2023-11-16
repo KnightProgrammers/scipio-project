@@ -67,7 +67,7 @@ const BankTag = (props: { saving: any }) => {
 
     const { bgTheme } = useThemeClass()
     return (
-        <div>
+        <>
             <Avatar
                 src={bank.icon && bank.icon}
                 icon={!bank.icon && <HiLibrary />}
@@ -75,11 +75,10 @@ const BankTag = (props: { saving: any }) => {
                 size={20}
                 shape="circle"
             />
-
             <span className="font-light">
                 {`${bank.name} - ${accountNumber} (${currency.code})`}
             </span>
-        </div>
+        </>
     )
 }
 
@@ -266,6 +265,8 @@ const SavingForm = (props: {
     const validationSchema = Yup.object().shape({
         name: Yup.string().required(t('validations.required') || ''),
         targetDate: Yup.string().required(t('validations.required') || ''),
+        targetAmount: Yup.string().required(t('validations.required') || ''),
+        bankAccountId: Yup.string().required(t('validations.required') || ''),
     })
 
     return (
@@ -823,7 +824,7 @@ const Savings = () => {
                             )}
                             <SavingStatus saving={s} />
                             <SavingExpiration saving={s} />
-                            <div className="flex flex-col justify-between mt-4">
+                            <div className="flex items-center mt-4">
                                 <BankTag saving={s} />
                             </div>
                         </div>

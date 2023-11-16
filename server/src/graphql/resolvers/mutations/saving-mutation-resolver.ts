@@ -80,7 +80,7 @@ export const SavingMutation = {
 			{
 				name,
 				description,
-				status,
+				status: status === 'EXPIRED' ? 'IN_PROGRESS' : status,
 				targetDate: DateTime
 					.fromISO(targetDate)
 					.set({
