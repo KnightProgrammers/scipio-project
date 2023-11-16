@@ -1,5 +1,5 @@
 import BankService from '@/services/bank.service';
-import SavingService from "@/services/saving.service";
+import SavingService from '@/services/saving.service';
 
 export const BankAccountQueryResolver = {
 	id: (bankAccount: any) => bankAccount._id,
@@ -12,6 +12,6 @@ export const BankAccountQueryResolver = {
 		return bankAccount.accountCurrency;
 	},
 	savings: async (bankAccount: any, params: any, ctx: any) => {
-		return SavingService.getAllByBankAccount(ctx.auth._id, bankAccount.id, params.statuses)
+		return SavingService.getAllByBankAccount(ctx.auth._id, bankAccount.id, params.statuses);
 	},
 };
