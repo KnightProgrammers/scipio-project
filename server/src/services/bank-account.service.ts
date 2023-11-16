@@ -11,13 +11,13 @@ class BankAccountService {
 		});
 	}
 	static async getAllByBank(
-		bank: any,
-		user: any,
+		bankId: any,
+		userId: any,
 		accountIsDeleted: boolean = false,
 	): Promise<any> {
 		return BankAccountSchema.find({
-			accountUserId: user.id,
-			accountBankId: bank.id,
+			accountUserId: userId,
+			accountBankId: bankId,
 			accountIsDeleted,
 		});
 	}
