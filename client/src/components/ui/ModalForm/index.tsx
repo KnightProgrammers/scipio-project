@@ -49,7 +49,9 @@ const ModalForm = (props: ModalFormProps) => {
                 {isSaving ? (
                     <div className="py-8">
                         <Loading loading={true} type="default" />
-                        <p className="text-center mt-8">{t('actions.saving')}...</p>
+                        <p className="text-center mt-8">
+                            {t('actions.saving')}...
+                        </p>
                     </div>
                 ) : (
                     <Formik

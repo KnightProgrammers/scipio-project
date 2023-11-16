@@ -99,7 +99,7 @@ const CreditCards = () => {
     const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
         useQuery({
             queryKey: ['user-currencies'],
-            queryFn: apiGetUserCurrencies
+            queryFn: apiGetUserCurrencies,
         })
 
     const {
@@ -108,7 +108,7 @@ const CreditCards = () => {
         refetch: refetchUserCurrencies,
     } = useQuery({
         queryKey: ['user-credit-cards'],
-        queryFn: apiGetCreditCardList
+        queryFn: apiGetCreditCardList,
     })
 
     const onMutationSuccess = async (title: string) => {
