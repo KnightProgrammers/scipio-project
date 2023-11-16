@@ -298,6 +298,11 @@
             "created": "Gasto creado correctamente",
             "deleted": "Gasto eliminado correctamente"
         },
+        "saving": {
+            "created": "Ahorro creado correctamente",
+            "updated": "Ahorro actualizado correctamente",
+            "deleted": "Ahorro eliminado correctamente"
+        },
         "textCopied": "Copiado!"
     },
     "error": {
