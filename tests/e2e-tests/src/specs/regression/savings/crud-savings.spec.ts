@@ -9,6 +9,8 @@ import firebaseService from '../../../services/firebase.service';
 import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
+import { createSaving, deleteSaving, updateSaving } from '../../../helpers/saving.helper';
+import { DateTime } from 'luxon';
 
 let email: string;
 let password: string;
@@ -27,6 +29,10 @@ let bankAccountId1: string;
 let bankAccountId2: string;
 
 let userCurrencies: any[];
+
+let savingId: string;
+
+const savingName: string = `Saving ${uuidv4()}`;
 
 test.beforeAll(async ({ browser }) => {
 	email = `test-${uuidv4()}@automation.com`;
@@ -56,7 +62,7 @@ test.beforeAll(async ({ browser }) => {
 	const bankAccount1 = await graphqlService.createBankAccount({
 		label: 'Bank Account #1',
 		accountNumber: '123456',
-		balance: 2000,
+		balance: 200,
 		bankId: bankId1,
 		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[0]).id
 	});
@@ -93,7 +99,42 @@ test('Empty State', async () => {
 	await navigateMenu(page, NAV_MENU.SAVINGS);
 	await waitForSavings;
 	const emptyStateContainer = page.locator(
-		'div[data-tn="empty-state"]',
+		'div[data-tn="empty-state-no-savings"]',
+	);
+	await expect(emptyStateContainer).toBeVisible();
+});
+
+test('Create Saving', async () => {
+	const saving: any = await createSaving(page, {
+		name: savingName,
+		targetDate: DateTime.now().toJSDate(),
+		targetAmount: 3000,
+		bankAccountName: 'Bank Account #1'
+	});
+	savingId = saving.id;
+	const emptyStateContainer = page.locator(
+		'div[data-tn="empty-state-no-savings"]',
+	);
+	await expect(emptyStateContainer).not.toBeVisible();
+	await expect(
+		page.locator(`div.card[data-tn="saving-card-${savingId}"]`),
+	).toBeVisible();
+	await expect(page.locator(`div.card[data-tn="saving-card-${savingId}"] div.card-header h6`)).toHaveText(savingName);
+});
+test('Update Saving', async () => {
+	const newSavingName = savingName + ' - updated';
+	await updateSaving(page, savingId, {
+		name: newSavingName,
+		targetDate: DateTime.now().plus({day: 10}).toJSDate(),
+		targetAmount: 2500,
+		bankAccountName: 'Bank Account #2'
+	});
+	await expect(page.locator(`div.card[data-tn="saving-card-${savingId}"] div.card-header h6`)).toHaveText(newSavingName);
+});
+test('Delete Saving', async () => {
+	await deleteSaving(page, savingId);
+	const emptyStateContainer = page.locator(
+		'div[data-tn="empty-state-no-savings"]',
 	);
 	await expect(emptyStateContainer).toBeVisible();
 });
