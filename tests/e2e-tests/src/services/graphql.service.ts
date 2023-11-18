@@ -26,6 +26,14 @@ type BankAccountInput = {
 	currencyId: string,
 }
 
+type SavingInput = {
+	name: string,
+	targetAmount: number,
+	targetDate: string,
+	bankAccountId: string
+	status?: string
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -216,6 +224,67 @@ class GraphqlService {
 				id
 			},
 		});
+	}
+
+	async createSaving (variables: SavingInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation createSaving(
+                    $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
+                ) {
+                  createSaving(input: {
+                    name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
+                  }) {
+                    id
+                    name
+                    targetAmount,
+                    targetDate,
+                    status,
+                    bankAccountId
+                  }
+                }
+			`,
+			variables
+		}));
+		return data.createSaving;
+	}
+
+	async updateSaving (id: string, variables: SavingInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation updateSaving(
+                    $id: String!
+                    $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
+                    $status: SavingStatus!
+                ) {
+                  updateSaving(id: $id, input: {
+                    name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
+                    status: $status
+                  }) {
+                    id
+                  }
+                }
+			`,
+			variables: {
+				...variables,
+				id
+			}
+		}));
+		return data.updateSaving;
 	}
 }
 

@@ -2,6 +2,10 @@ import { expect, Page } from '@playwright/test';
 import { DateTime } from 'luxon';
 import { waitForRequest } from './generic.helper';
 
+type SavingFilterType = {
+	statuses: string[]
+}
+
 export const createSaving = async (page: Page, data: {
     name: string,
     targetDate: Date,
@@ -117,3 +121,20 @@ export const deleteSaving = async (page: Page, savingId: string) => {
 	expect(foundSaving).toBeFalsy();
 	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
 };
+
+export const setSavingFilters = async (page: Page, filters: SavingFilterType) => {
+	await page.locator('button[data-tn="open-saving-filter-btn"]').click();
+	if (filters.statuses) {
+		for (const savingStatus of ["IN_PROGRESS", "NOT_CONCLUDED", "COMPLETED"]) {
+			const isSelected: boolean = await page.locator(`div[data-tn="saving-status-filter-${savingStatus.toLowerCase()}-opt"] input`).isChecked();
+			if (
+				(isSelected && !filters.statuses.includes(savingStatus)) ||
+				(!isSelected && filters.statuses.includes(savingStatus))
+			) {
+				// saving-status-filter-IN_PROGRESS-opt
+				await page.locator(`div[data-tn="saving-status-filter-${savingStatus.toLowerCase()}-opt"]`).click();
+			}
+		}
+	}
+	await page.locator('button[data-tn="apply-saving-filter-btn"]').click();
+}
