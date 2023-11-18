@@ -410,7 +410,7 @@ const SavingFilter = (props: {
             <Button
                 variant="default"
                 size="sm"
-                data-tn="open-expense-filter-btn"
+                data-tn="open-saving-filter-btn"
                 className="p-2 ml-2"
                 icon={<LuFilter />}
                 onClick={() => setIsOpen(true)}
@@ -471,7 +471,7 @@ const SavingFilter = (props: {
                                                 active={active}
                                                 className="w-full py-2"
                                                 customCheck={<></>}
-                                                data-tn={`saving-status-filter-${item}-opt`}
+                                                data-tn={`saving-status-filter-${item.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
