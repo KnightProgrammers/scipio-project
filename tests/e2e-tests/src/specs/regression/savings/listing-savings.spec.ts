@@ -9,7 +9,7 @@ import firebaseService from '../../../services/firebase.service';
 import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
-import { createSaving, deleteSaving, setSavingFilters, updateSaving } from "../../../helpers/saving.helper";
+import { createSaving, deleteSaving, setSavingFilters, updateSaving } from '../../../helpers/saving.helper';
 import { DateTime } from 'luxon';
 
 let email: string;
@@ -91,7 +91,7 @@ test.beforeAll(async ({ browser }) => {
 		targetAmount: saving3.targetAmount,
 		bankAccountId: saving3.bankAccountId,
 		status: 'COMPLETED'
-	})
+	});
 
 	savingCompletedId = saving3.id;
 
@@ -108,7 +108,7 @@ test.beforeAll(async ({ browser }) => {
 		targetAmount: saving4.targetAmount,
 		bankAccountId: saving4.bankAccountId,
 		status: 'NOT_CONCLUDED'
-	})
+	});
 
 	savingNotConcludedId = saving4.id;
 
@@ -182,7 +182,7 @@ test.describe('filters', () => {
 	});
 	test('Filter by status - All', async () => {
 		await setSavingFilters(page, {
-			statuses: ["IN_PROGRESS", "NOT_CONCLUDED", "COMPLETED"]
+			statuses: ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']
 		});
 		await expect(
 			page.locator(`div.card[data-tn="saving-card-${savingActiveId}"]`),
@@ -200,22 +200,46 @@ test.describe('filters', () => {
 });
 
 test.describe('search', () => {
+	test.beforeAll(async () => {
+		await setSavingFilters(page, {
+			statuses: ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']
+		});
+	});
 	test('Search - All status - One coincidence', async () => {
-
+		await page.locator('input[data-tn="search-saving-by-name"]').fill('Saving Expired');
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingActiveId}"]`),
+		).not.toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingExpiredId}"]`),
+		).toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingCompletedId}"]`),
+		).not.toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingNotConcludedId}"]`),
+		).not.toBeVisible();
 	});
 	test('Search - All status - No coincidences ', async () => {
-
+		await page.locator('input[data-tn="search-saving-by-name"]').fill('Search without results');
+		const emptyStateContainer = page.locator(
+			'div[data-tn="empty-state-no-savings"]',
+		);
+		await expect(emptyStateContainer).toBeVisible();
 	});
 	test('Search - All status - Reset search', async () => {
-
-	});
-	test('Search - Random filter - One coincidence ', async () => {
-
-	});
-	test('Search - Random filter - No coincidences ', async () => {
-
-	});
-	test('Search - Random filter - Reset search', async () => {
-
+		await page.locator('input[data-tn="search-saving-by-name"]').fill('');
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingActiveId}"]`),
+		).toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingExpiredId}"]`),
+		).toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingCompletedId}"]`),
+		).toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingNotConcludedId}"]`),
+		).toBeVisible();
 	});
 });
