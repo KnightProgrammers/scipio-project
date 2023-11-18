@@ -45,6 +45,7 @@ export async function apiGetSavingList(filters: {
                             bankAccountId
                             bankAccount {
                                 id
+                                label
                                 balance
                                 accountNumber
                                 bank {

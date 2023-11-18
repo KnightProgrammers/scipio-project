@@ -82,6 +82,13 @@ const BankTag = (props: { saving: any }) => {
     )
 }
 
+const isSavingExpire = (saving: any) => {
+    return (
+        saving.status === 'IN_PROGRESS' &&
+        DateTime.fromISO(saving.targetDate).diffNow('days').days < 0
+    )
+}
+
 const SavingExpiration = (props: { saving: any }) => {
     const { saving } = props
     const { status, targetDate } = saving
@@ -114,7 +121,7 @@ const SavingExpiration = (props: { saving: any }) => {
         )
     }
 
-    if (status === 'EXPIRED') {
+    if (isSavingExpire(saving)) {
         return (
             <Alert
                 showIcon
@@ -650,6 +657,7 @@ const Savings = () => {
                 <EmptyState
                     title={t('pages.savings.emptyState.title')}
                     description={t('pages.savings.emptyState.description')}
+                    data-tn="empty-state-no-savings"
                     bySearch={!!searchByName.length}
                 >
                     <Button
@@ -658,7 +666,7 @@ const Savings = () => {
                         className="mt-4"
                         style={{ width: '300px' }}
                         icon={<HiPlus />}
-                        data-tn="add-category-btn"
+                        data-tn="add-saving-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.savings.addSavingButton')}
@@ -702,7 +710,7 @@ const Savings = () => {
                         size="sm"
                         className="lg:ml-2 my-2"
                         icon={<HiPlus />}
-                        data-tn="add-category-btn"
+                        data-tn="add-saving-btn"
                         onClick={() => setIsFormOpen(true)}
                     >
                         {t('pages.savings.addSavingButton')}
@@ -715,6 +723,7 @@ const Savings = () => {
                         key={s.id}
                         clickable
                         bodyClass="flex flex-col justify-between h-full"
+                        data-tn={`saving-card-${s.id}`}
                         header={
                             <div className="flex justify-between">
                                 <div className="grid grid-flow-col items-center">
@@ -727,7 +736,7 @@ const Savings = () => {
                                 <Dropdown
                                     placement="bottom-end"
                                     renderTitle={
-                                        <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                        <EllipsisButton data-tn="dropdown-saving-btn" />
                                     }
                                 >
                                     <Dropdown.Item
