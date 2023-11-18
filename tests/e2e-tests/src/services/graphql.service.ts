@@ -14,6 +14,26 @@ type NewExpenseInput = {
 	categoryId: string
 }
 
+type BankInput = {
+	name: string
+}
+
+type BankAccountInput = {
+	label: string,
+	accountNumber: string,
+	balance: number,
+	bankId: string,
+	currencyId: string,
+}
+
+type SavingInput = {
+	name: string,
+	targetAmount: number,
+	targetDate: string,
+	bankAccountId: string
+	status?: string
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -125,6 +145,146 @@ class GraphqlService {
 			query: 'query userCurrencies { me { id currencies { id code } } }'
 		});
 		return data.me.currencies;
+	}
+
+	async createBank (variables: BankInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+				mutation createBank(
+					$name: String!
+				) {
+					createBank(input: {
+						name: $name
+					}) {
+						id
+					}
+				}
+			`,
+			variables
+		}));
+		return data.createBank;
+	}
+
+	async deleteBank(id: string) {
+		return graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation deleteBank(
+                    $id: String!
+                ) {
+                  deleteBank(id: $id)
+                }
+            `,
+			variables: {
+				id
+			},
+		});
+	}
+
+	async createBankAccount (variables: BankAccountInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation createBankAccount(
+                    $label: String
+                    $accountNumber: String!
+                    $balance: Float!
+                    $bankId: String!
+                    $currencyId: String!
+                ) {
+                  createBankAccount(input: {
+                    label: $label
+                    accountNumber: $accountNumber
+                    balance: $balance
+                    bankId: $bankId
+                    currencyId: $currencyId
+                  }) {
+                    id
+                  }
+                }
+            
+			`,
+			variables
+		}));
+		return data.createBankAccount;
+	}
+
+	async deleteBankAccount(id: string) {
+		return graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation deleteBankAccount(
+                    $id: String!
+                ) {
+                  deleteBankAccount(id: $id)
+                }
+            `,
+			variables: {
+				id
+			},
+		});
+	}
+
+	async createSaving (variables: SavingInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation createSaving(
+                    $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
+                ) {
+                  createSaving(input: {
+                    name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
+                  }) {
+                    id
+                    name
+                    targetAmount,
+                    targetDate,
+                    status,
+                    bankAccountId
+                  }
+                }
+			`,
+			variables
+		}));
+		return data.createSaving;
+	}
+
+	async updateSaving (id: string, variables: SavingInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation updateSaving(
+                    $id: String!
+                    $name: String!
+                    $targetAmount: Float!
+                    $targetDate: String!
+                    $bankAccountId: String!
+                    $status: SavingStatus!
+                ) {
+                  updateSaving(id: $id, input: {
+                    name: $name
+                    targetAmount: $targetAmount
+                    targetDate: $targetDate
+                    bankAccountId: $bankAccountId
+                    status: $status
+                  }) {
+                    id
+                  }
+                }
+			`,
+			variables: {
+				...variables,
+				id
+			}
+		}));
+		return data.updateSaving;
 	}
 }
 
