@@ -645,6 +645,7 @@ const Savings = () => {
                             value={searchByName}
                             placeholder={t('placeholders.searchByName')}
                             size="sm"
+                            data-tn="search-saving-by-name"
                             prefix={<BiSearch className="text-md" />}
                             onChange={(e) => setSearchByName(e.target.value)}
                         />
@@ -697,6 +698,7 @@ const Savings = () => {
                             value={searchByName}
                             placeholder={t('placeholders.searchByName')}
                             size="sm"
+                            data-tn="search-saving-by-name"
                             prefix={<BiSearch className="text-md" />}
                             onChange={(e) => setSearchByName(e.target.value)}
                         />
