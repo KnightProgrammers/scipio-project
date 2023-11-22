@@ -1,6 +1,8 @@
 import {
 	BankAccountQueryResolver,
 	BankQueryResolver,
+	BudgetQueryResolver,
+	BudgetItemQueryResolver,
 	CategoryQueryResolver,
 	CreditCardQueryResolver,
 	CurrencyQueryResolver,
@@ -21,6 +23,8 @@ const resolvers = {
 	},
 	Bank: BankQueryResolver,
 	BankAccount: BankAccountQueryResolver,
+	Budget: BudgetQueryResolver,
+	BudgetItem: BudgetItemQueryResolver,
 	UserCurrency: CurrencyQueryResolver,
 	Category: CategoryQueryResolver,
 	CreditCard: CreditCardQueryResolver,

@@ -106,6 +106,22 @@ const schema = `
     expenses(fromDate: String, toDate: String): [Expense]!
   }
 
+  type BudgetItemCurrency {
+    currency: UserCurrency!
+    limit: Float!
+  }
+
+  type BudgetItem {
+    id: String!
+    category: Category!
+    currencies: [BudgetItemCurrency]!
+  }
+
+  type Budget {
+    id: String!
+    items: [BudgetItem]!
+  }
+
   type User {
     id: String!
     name: String!
@@ -120,6 +136,7 @@ const schema = `
     categories: [Category]!
     expenses(fromDate: String, toDate: String): [Expense]!
     savings(statuses: [SavingStatus]): [Saving]!
+    budget: Budget
   }
 
   type Query {
@@ -154,6 +171,10 @@ const schema = `
     createSaving(input: SavingInput!): Saving!
     updateSaving(id: String!, input: SavingInput!): Saving!
     deleteSaving(id: String!): Boolean!
+
+    createBudget: Budget
+    upsertBudgetItem(input: BudgetItemInput!): BudgetItem
+    deleteBudgetItem(id: String!, budgetId: String!): Boolean!
   }
 
   input NewBankInput {
@@ -210,6 +231,17 @@ const schema = `
     targetDate: String!
     status: SavingStatus
     bankAccountId: String!
+  }
+
+  input BudgetItemCurrencyInput {
+    currencyCode: String!
+    limit: Float!
+  }
+
+  input BudgetItemInput {
+    budgetId: String!
+    categoryId: String!
+    currencies: [BudgetItemCurrencyInput]!
   }
 `;
 export default schema;
