@@ -11,14 +11,14 @@ export const BudgetCategorySchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Category',
 		},
-        currencies: [{
-            limit: {
-                type: Number
-            },
-            currency: {
-                type: CurrencySchema
-            }
-        }],
+		currencies: [{
+			limit: {
+				type: Number
+			},
+			currency: {
+				type: CurrencySchema
+			}
+		}],
 	},
 	{ timestamps: false, skipVersioning: { dontVersionMe: true } },
 );

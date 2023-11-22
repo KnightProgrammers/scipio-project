@@ -24,7 +24,7 @@ export const authenticateUser = async (authorization: string) => {
 			}
 			return user.toObject();
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 			const error = new mercurius.ErrorWithProps('Token Expired');
 			error.statusCode = 401;
 			throw error;

@@ -5,7 +5,7 @@ import CategoryService from '@/services/category.service';
 import ExpenseService from '@/services/expense.service';
 import SavingService, { SAVING_STATUS_TYPE } from '@/services/saving.service';
 import BankAccountService from '@/services/bank-account.service';
-import BudgetService from '@/services/budget.service'
+import BudgetService from '@/services/budget.service';
 
 export const UserQueryResolver = {
 	id: (user: any) => user._id,
