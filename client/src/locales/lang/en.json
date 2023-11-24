@@ -53,14 +53,14 @@
             }
         },
         "budgets": {
-            "header": "Credit Cards",
+            "header": "Budgets",
             "deleteConfirmation": {
-                "title": "Delete Credit Card",
-                "description": "Are you sure you want to delete the credit card?"
+                "title": "Delete Budget Item",
+                "description": "Are you sure you want to delete the item?"
             },
             "emptyState": {
-                "title": "No Credit cards",
-                "description": "Try adding credit cards to better control your expenses"
+                "title": "No Budgets",
+                "description": "Let's start creating your first budget"
             }
         },
         "creditCards": {
@@ -233,6 +233,8 @@
         "signOut": "Sign Out",
         "signUp": "Sign Up",
         "signingIn": "Signing in...",
+        "start": "Start",
+        "starting": "Starting",
         "submit": "Submit",
         "submitting": "Submiting...",
         "tryAgain": "Try again",
@@ -330,7 +332,8 @@
         "currentMonth": "Current month",
         "lastMonth": "Last Month",
         "other": "Other",
-        "searchByName": "Search by Name"
+        "searchByName": "Search by Name",
+        "total": "Total"
     },
     "messages": {
         "backTo": "Back to ",

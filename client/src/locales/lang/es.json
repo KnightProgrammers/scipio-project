@@ -52,6 +52,17 @@
                 "description": "Está seguro que desea eliminar la cuenta de banco \"{{accountNumber}}\"?"
             }
         },
+        "budgets": {
+            "header": "Presupuestos",
+            "deleteConfirmation": {
+                "title": "Eliminar Entrada de Presupuesto",
+                "description": "Está seguro que desea eliminar la entrada de presupuesto?"
+            },
+            "emptyState": {
+                "title": "Sin Presupuestos",
+                "description": "Comencemos creando su primer presupuesto"
+            }
+        },
         "creditCards": {
             "header": "Tarjetas de Créditos",
             "form": {
@@ -222,6 +233,8 @@
         "signOut": "Cerrar Sesión",
         "signUp": "Registrarse",
         "signingIn": "Iniciando Sesión...",
+        "start": "Comenzar",
+        "starting": "Comenzando",
         "submit": "Enviar",
         "submitting": "Enviando...",
         "tryAgain": "Volver a intentar",
@@ -319,7 +332,8 @@
         "currentMonth": "Mes actual",
         "lastMonth": "Mes anterior",
         "other": "Otro",
-        "searchByName": "Buscar por Nombre"
+        "searchByName": "Buscar por Nombre",
+        "total": "Total"
     },
     "messages": {
         "backTo": "Volver a ",
