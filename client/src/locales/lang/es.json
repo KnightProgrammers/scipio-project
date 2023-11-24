@@ -25,65 +25,6 @@
                 "footer": "Volver a"
             }
         },
-        "profile": {
-            "appearance": "Tema"
-        },
-        "expenses": {
-            "header": "Gastos",
-            "form": {
-                "newTitle": "Nuevo Gasto"
-            },
-            "headers": {
-                "summary": "Resumen",
-                "detail": "Detalle"
-            },
-            "emptyState": {
-                "title": "No se encontraron gastos"
-            },
-            "addExpenseButton": "Agregar gasto",
-            "deleteConfirmation": {
-                "title": "Eliminar gasto",
-                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
-            },
-            "genericDescription": "Gasto {{billableDate}}",
-            "filterTitle": "Filtro de Gastos"
-        },
-        "savings": {
-            "header": "Ahorros",
-            "addSavingButton": "Agregar Ahorro",
-            "form": {
-                "newTitle": "Nuevo Ahorro",
-                "editTitle": "Editar Ahorro"
-            },
-            "changeStatus": {
-                "title": "Cambiar Estado",
-                "description": "Selecciona el nuevo estado"
-            },
-            "emptyState": {
-                "title": "No hay ahorros",
-                "description": "No tienes ningún ahorro creado"
-            },
-            "emptySearch": {
-                "title": "Sin resultados",
-                "description": "Prueba cambiando el filtro para mostrar resultados"
-            },
-            "deleteConfirmation": {
-                "title": "Eliminar gasto",
-                "description": "Está seguro que desea eliminar el gasto \"{{name}}\"?"
-            },
-            "filterTitle": "Filtro de Gastos",
-            "labels": {
-                "goal": "Objetivo",
-                "saved": "Ahorrado",
-                "expiration": "Expiración",
-                "completed": "Completedo",
-                "noCompleted": "No Completado",
-                "expiredOn": "Expiró el"
-            }
-        },
-        "incomes": {
-            "header": "Ingresos"
-        },
         "bankAccounts": {
             "header": "Cuentas de Banco",
             "emptyState": {
@@ -143,8 +84,67 @@
             },
             "addCategoryButton": "Agregar Categoría"
         },
+        "expenses": {
+            "header": "Gastos",
+            "form": {
+                "newTitle": "Nuevo Gasto"
+            },
+            "headers": {
+                "summary": "Resumen",
+                "detail": "Detalle"
+            },
+            "emptyState": {
+                "title": "No se encontraron gastos"
+            },
+            "addExpenseButton": "Agregar gasto",
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
+            },
+            "genericDescription": "Gasto {{billableDate}}",
+            "filterTitle": "Filtro de Gastos"
+        },
+        "incomes": {
+            "header": "Ingresos"
+        },
         "jobs": {
             "header": "Trabajos"
+        },
+        "profile": {
+            "appearance": "Tema"
+        },
+        "savings": {
+            "header": "Ahorros",
+            "addSavingButton": "Agregar Ahorro",
+            "form": {
+                "newTitle": "Nuevo Ahorro",
+                "editTitle": "Editar Ahorro"
+            },
+            "changeStatus": {
+                "title": "Cambiar Estado",
+                "description": "Selecciona el nuevo estado"
+            },
+            "emptyState": {
+                "title": "No hay ahorros",
+                "description": "No tienes ningún ahorro creado"
+            },
+            "emptySearch": {
+                "title": "Sin resultados",
+                "description": "Prueba cambiando el filtro para mostrar resultados"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{name}}\"?"
+            },
+            "filterTitle": "Filtro de Gastos",
+            "labels": {
+                "goal": "Objetivo",
+                "saved": "Ahorrado",
+                "expiration": "Expiración",
+                "completed": "Completedo",
+                "noCompleted": "No Completado",
+                "expiredOn": "Expiró el"
+            }
         },
         "settings": {
             "header": "Configuraciones",

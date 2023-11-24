@@ -25,65 +25,6 @@
                 "footer": "Back to"
             }
         },
-        "profile": {
-            "appearance": "Appearance"
-        },
-        "expenses": {
-            "header": "Expenses",
-            "form": {
-                "newTitle": "New Expense"
-            },
-            "headers": {
-                "summary": "Summary",
-                "detail": "Detail"
-            },
-            "emptyState": {
-                "title": "No expenses found"
-            },
-            "addExpenseButton": "Add expense",
-            "deleteConfirmation": {
-                "title": "Delete Expense",
-                "description": "Are you sure you want to delete the expense \"{{description}}\"?"
-            },
-            "genericDescription": "Expense {{billableDate}}",
-            "filterTitle": "Expense Filter"
-        },
-        "savings": {
-            "header": "Savings",
-            "addSavingButton": "Add Saving",
-            "form": {
-                "newTitle": "Nuevo Ahorro",
-                "editTitle": "Editar Ahorro"
-            },
-            "changeStatus": {
-                "title": "Change Status",
-                "description": "Select the new status"
-            },
-            "emptyState": {
-                "title": "No Savings",
-                "description": "You don't have any savings created"
-            },
-            "emptySearch": {
-                "title": "No Results",
-                "description": "Try changing the filter to show results"
-            },
-            "deleteConfirmation": {
-                "title": "Delete saving",
-                "description": "Are you sure you want to delete the saving \"{{name}}\"?"
-            },
-            "filterTitle": "Saving Filter",
-            "labels": {
-                "goal": "Goal",
-                "saved": "Saved",
-                "expiration": "Expiration",
-                "completed": "Completed",
-                "noCompleted": "No Completed",
-                "expiredOn": "Expired On"
-            }
-        },
-        "incomes": {
-            "header": "Incomes"
-        },
         "bankAccounts": {
             "header": "Bank Accounts",
             "emptyState": {
@@ -143,8 +84,67 @@
             },
             "addCategoryButton": "Add a Category"
         },
+        "expenses": {
+            "header": "Expenses",
+            "form": {
+                "newTitle": "New Expense"
+            },
+            "headers": {
+                "summary": "Summary",
+                "detail": "Detail"
+            },
+            "emptyState": {
+                "title": "No expenses found"
+            },
+            "addExpenseButton": "Add expense",
+            "deleteConfirmation": {
+                "title": "Delete Expense",
+                "description": "Are you sure you want to delete the expense \"{{description}}\"?"
+            },
+            "genericDescription": "Expense {{billableDate}}",
+            "filterTitle": "Expense Filter"
+        },
+        "incomes": {
+            "header": "Incomes"
+        },
         "jobs": {
             "header": "Jobs"
+        },
+        "profile": {
+            "appearance": "Appearance"
+        },
+        "savings": {
+            "header": "Savings",
+            "addSavingButton": "Add Saving",
+            "form": {
+                "newTitle": "Nuevo Ahorro",
+                "editTitle": "Editar Ahorro"
+            },
+            "changeStatus": {
+                "title": "Change Status",
+                "description": "Select the new status"
+            },
+            "emptyState": {
+                "title": "No Savings",
+                "description": "You don't have any savings created"
+            },
+            "emptySearch": {
+                "title": "No Results",
+                "description": "Try changing the filter to show results"
+            },
+            "deleteConfirmation": {
+                "title": "Delete saving",
+                "description": "Are you sure you want to delete the saving \"{{name}}\"?"
+            },
+            "filterTitle": "Saving Filter",
+            "labels": {
+                "goal": "Goal",
+                "saved": "Saved",
+                "expiration": "Expiration",
+                "completed": "Completed",
+                "noCompleted": "No Completed",
+                "expiredOn": "Expired On"
+            }
         },
         "settings": {
             "header": "Settings",
