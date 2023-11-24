@@ -1,4 +1,5 @@
-import { Container } from '@/components/shared'
+import { useEffect } from 'react';
+import { ConfirmDialog, Container, Loading } from '@/components/shared'
 import EmptyState from '@/components/shared/EmptyState'
 import { Button, Select, Table } from '@/components/ui'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +8,9 @@ import { useState } from 'react'
 import { BiSave, BiTrash } from 'react-icons/bi'
 import { FormItem } from '@/components/ui/Form'
 import TFoot from '@/components/ui/Table/TFoot'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { apiGetCategoryList } from '@/services/CategoryService'
+import { apiGetUserCurrencies } from '@/services/AccountService'
 
 const { Tr, Th, Td, THead, TBody } = Table
 
@@ -20,8 +24,8 @@ const CategoryCell = (props: {
     const [isSelected, setIsSelected] = useState(false)
 
     const [value, setValue] = useState({
-        value: category,
-        label: category,
+        value: category.id,
+        label: category.name,
     })
 
     const { t } = useTranslation()
@@ -42,9 +46,9 @@ const CategoryCell = (props: {
                     defaultInputValue=""
                     isDisabled={false}
                     isLoading={false}
-                    options={categoryList.map((c: string) => ({
-                        label: c,
-                        value: c,
+                    options={categoryList.map((c: any) => ({
+                        label: c.name,
+                        value: c.id,
                     }))}
                     onChange={(newValue) => onValueChange(newValue as any)}
                 />
@@ -63,6 +67,11 @@ const BudgetRow = (props: {
     onRefetch: () => void
 }) => {
     const { budgetItem, categoryList, currencies, index, onRefetch } = props
+
+    useEffect(() => {
+        console.log('currencies changed');
+        console.log(currencies)
+    }, [currencies]);
 
     return (
         <Tr key={budgetItem.category}>
@@ -98,6 +107,21 @@ const Budgets = () => {
     ])
     const { t } = useTranslation()
 
+    const {
+        data: categoryList,
+        isFetching: isLoadingCategories,
+        refetch: refetchCategories,
+    } = useQuery({
+        queryKey: ['user-categories'],
+        queryFn: apiGetCategoryList,
+    })
+
+    const { data: userCurrencies, isFetching: isFetchingUserCurrencies } =
+        useQuery({
+            queryKey: ['user-currencies'],
+            queryFn: apiGetUserCurrencies,
+        })
+
     const budget = {}
 
     const isStarting = false
@@ -114,16 +138,17 @@ const Budgets = () => {
         },
     ]
 
-    const categoryList = ['Category #1', 'Category #2', 'Category #3']
-
-    const userCurrencies = [
-        {
-            name: 'USD',
-        },
-        {
-            name: 'UYU',
-        },
-    ]
+    if (
+        !budget ||
+        !categoryList || isLoadingCategories || 
+        !userCurrencies || isFetchingUserCurrencies
+    ) {
+        return (
+            <div className="flex h-full mx-auto w-0" data-tn="budgets-page">
+                <Loading loading />
+            </div>
+        )
+    }
 
     if (!budget) {
         return (
@@ -170,13 +195,13 @@ const Budgets = () => {
                         size="sm"
                         isMulti={true}
                         defaultInputValue=""
-                        options={userCurrencies.map((c: { name: string }) => ({
-                            label: c.name,
-                            value: c.name,
+                        options={userCurrencies.map((c: any) => ({
+                            label: c.code,
+                            value: c.id,
                         }))}
                         onChange={(newValue: any[]) => {
                             setSelectedCurrencies(
-                                newValue.map((nv: any) => nv.value),
+                                newValue.map((nv: any) => nv.label),
                             )
                         }}
                     />
