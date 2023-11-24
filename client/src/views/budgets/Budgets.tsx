@@ -10,12 +10,12 @@ import TFoot from '@/components/ui/Table/TFoot'
 
 const { Tr, Th, Td, THead, TBody } = Table
 
-const CategoryCell = (props: { category: any; categoryList: any[], index: number }) => {
-    const { 
-        category, 
-        categoryList,
-        index
-     } = props
+const CategoryCell = (props: {
+    category: any
+    categoryList: any[]
+    index: number
+}) => {
+    const { category, categoryList, index } = props
 
     const [isSelected, setIsSelected] = useState(false)
 
@@ -56,46 +56,40 @@ const CategoryCell = (props: { category: any; categoryList: any[], index: number
 }
 
 const BudgetRow = (props: {
-    budgetItem: any,
+    budgetItem: any
     categoryList: any[]
-    currencies: string[],
+    currencies: string[]
     index: number
     onRefetch: () => void
 }) => {
-    const {
-        budgetItem,
-        categoryList,
-        currencies,
-        index,
-        onRefetch
-    } = props;
+    const { budgetItem, categoryList, currencies, index, onRefetch } = props
 
-    return (<Tr key={budgetItem.category}>
-        <CategoryCell
-            category={budgetItem.category}
-            categoryList={categoryList}
-            index={index}
-        />
-        {currencies.map((c: string) => (
-            <Td key={`${budgetItem.category}-currency-${c}`}>
-                1235
+    return (
+        <Tr key={budgetItem.category}>
+            <CategoryCell
+                category={budgetItem.category}
+                categoryList={categoryList}
+                index={index}
+            />
+            {currencies.map((c: string) => (
+                <Td key={`${budgetItem.category}-currency-${c}`}>1235</Td>
+            ))}
+            <Td width={120}>
+                <Button
+                    variant="plain"
+                    size="sm"
+                    icon={<BiSave />}
+                    onClick={onRefetch}
+                />
+                <Button
+                    variant="plain"
+                    size="sm"
+                    icon={<BiTrash />}
+                    onClick={onRefetch}
+                />
             </Td>
-        ))}
-        <Td width={120}>
-            <Button
-                variant="plain"
-                size="sm"
-                icon={<BiSave />}
-                onClick={onRefetch}
-            />
-            <Button
-                variant="plain"
-                size="sm"
-                icon={<BiTrash />}
-                onClick={onRefetch}
-            />
-        </Td>
-    </Tr>)
+        </Tr>
+    )
 }
 
 const Budgets = () => {
@@ -106,7 +100,7 @@ const Budgets = () => {
 
     const budget = {}
 
-    const isStarting = false;
+    const isStarting = false
 
     const items = [
         {
@@ -146,9 +140,9 @@ const Budgets = () => {
                         data-tn="budget-start"
                         loading={isStarting}
                     >
-                        {
-                            isStarting ? t('actions.starting') : t('actions.start')
-                        }
+                        {isStarting
+                            ? t('actions.starting')
+                            : t('actions.start')}
                     </Button>
                 </EmptyState>
             </Container>
@@ -201,7 +195,8 @@ const Budgets = () => {
                     </THead>
                     <TBody>
                         {items.map((item: any, index: number) => (
-                            <BudgetRow 
+                            <BudgetRow
+                                key={`budget-row-${index}`}
                                 budgetItem={item}
                                 categoryList={categoryList}
                                 currencies={selectedCurrencies}
@@ -210,7 +205,7 @@ const Budgets = () => {
                             />
                         ))}
                     </TBody>
-                    <TFoot className='hidden'>
+                    <TFoot className="hidden">
                         <Tr style={{ borderTop: 'solid 2px' }}>
                             <Td>
                                 <b>{t('placeholders.total')}:</b>
