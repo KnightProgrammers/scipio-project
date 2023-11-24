@@ -1,14 +1,13 @@
-import { useEffect } from 'react';
-import { ConfirmDialog, Container, Loading } from '@/components/shared'
+import { useEffect, useState } from 'react'
+import { Container, Loading } from '@/components/shared'
 import EmptyState from '@/components/shared/EmptyState'
 import { Button, Select, Table } from '@/components/ui'
 import { useTranslation } from 'react-i18next'
 import { HiOutlineRocketLaunch } from 'react-icons/hi2'
-import { useState } from 'react'
 import { BiSave, BiTrash } from 'react-icons/bi'
 import { FormItem } from '@/components/ui/Form'
 import TFoot from '@/components/ui/Table/TFoot'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { apiGetCategoryList } from '@/services/CategoryService'
 import { apiGetUserCurrencies } from '@/services/AccountService'
 
@@ -69,9 +68,9 @@ const BudgetRow = (props: {
     const { budgetItem, categoryList, currencies, index, onRefetch } = props
 
     useEffect(() => {
-        console.log('currencies changed');
+        console.log('currencies changed')
         console.log(currencies)
-    }, [currencies]);
+    }, [currencies])
 
     return (
         <Tr key={budgetItem.category}>
@@ -107,11 +106,7 @@ const Budgets = () => {
     ])
     const { t } = useTranslation()
 
-    const {
-        data: categoryList,
-        isFetching: isLoadingCategories,
-        refetch: refetchCategories,
-    } = useQuery({
+    const { data: categoryList, isFetching: isLoadingCategories } = useQuery({
         queryKey: ['user-categories'],
         queryFn: apiGetCategoryList,
     })
@@ -140,8 +135,10 @@ const Budgets = () => {
 
     if (
         !budget ||
-        !categoryList || isLoadingCategories || 
-        !userCurrencies || isFetchingUserCurrencies
+        !categoryList ||
+        isLoadingCategories ||
+        !userCurrencies ||
+        isFetchingUserCurrencies
     ) {
         return (
             <div className="flex h-full mx-auto w-0" data-tn="budgets-page">
