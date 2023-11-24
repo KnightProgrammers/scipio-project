@@ -10,8 +10,12 @@ import TFoot from '@/components/ui/Table/TFoot'
 
 const { Tr, Th, Td, THead, TBody } = Table
 
-const CategoryCell = (props: { category: any; categoryList: any[] }) => {
-    const { category, categoryList } = props
+const CategoryCell = (props: { category: any; categoryList: any[], index: number }) => {
+    const { 
+        category, 
+        categoryList,
+        index
+     } = props
 
     const [isSelected, setIsSelected] = useState(false)
 
@@ -31,8 +35,8 @@ const CategoryCell = (props: { category: any; categoryList: any[] }) => {
         return (
             <Td>
                 <Select
-                    placeholder={t('placeholders.category')}
-                    id="category-select"
+                    placeholder={t('fields.category')}
+                    id={`category-select-${index}`}
                     value={value}
                     defaultValue={value}
                     defaultInputValue=""
@@ -51,6 +55,49 @@ const CategoryCell = (props: { category: any; categoryList: any[] }) => {
     return <Td onClick={() => setIsSelected(true)}>{category}</Td>
 }
 
+const BudgetRow = (props: {
+    budgetItem: any,
+    categoryList: any[]
+    currencies: string[],
+    index: number
+    onRefetch: () => void
+}) => {
+    const {
+        budgetItem,
+        categoryList,
+        currencies,
+        index,
+        onRefetch
+    } = props;
+
+    return (<Tr key={budgetItem.category}>
+        <CategoryCell
+            category={budgetItem.category}
+            categoryList={categoryList}
+            index={index}
+        />
+        {currencies.map((c: string) => (
+            <Td key={`${budgetItem.category}-currency-${c}`}>
+                1235
+            </Td>
+        ))}
+        <Td width={120}>
+            <Button
+                variant="plain"
+                size="sm"
+                icon={<BiSave />}
+                onClick={onRefetch}
+            />
+            <Button
+                variant="plain"
+                size="sm"
+                icon={<BiTrash />}
+                onClick={onRefetch}
+            />
+        </Td>
+    </Tr>)
+}
+
 const Budgets = () => {
     const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([
         'USD',
@@ -58,6 +105,8 @@ const Budgets = () => {
     const { t } = useTranslation()
 
     const budget = {}
+
+    const isStarting = false;
 
     const items = [
         {
@@ -95,8 +144,11 @@ const Budgets = () => {
                     <Button
                         icon={<HiOutlineRocketLaunch />}
                         data-tn="budget-start"
+                        loading={isStarting}
                     >
-                        {t('actions.start')}
+                        {
+                            isStarting ? t('actions.starting') : t('actions.start')
+                        }
                     </Button>
                 </EmptyState>
             </Container>
@@ -110,9 +162,9 @@ const Budgets = () => {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="lg:col-span-2"></div>
-                <FormItem layout="horizontal" label="Currencies">
+                <FormItem layout="horizontal" label={t('fields.currency')}>
                     <Select
-                        placeholder={t('placeholders.currency')}
+                        placeholder={t('fields.currency')}
                         id="currency-select"
                         defaultValue={selectedCurrencies.map((c: string) => ({
                             label: c,
@@ -140,7 +192,7 @@ const Budgets = () => {
                 <Table className="w-full h-full">
                     <THead>
                         <Tr>
-                            <Th>Category</Th>
+                            <Th>{t('fields.category')}</Th>
                             {selectedCurrencies.map((c: string) => (
                                 <Th key={`currency-colum-${c}`}>{c}</Th>
                             ))}
@@ -148,36 +200,20 @@ const Budgets = () => {
                         </Tr>
                     </THead>
                     <TBody>
-                        {items.map((item: any) => (
-                            <Tr key={item.category}>
-                                <CategoryCell
-                                    category={item.category}
-                                    categoryList={categoryList}
-                                />
-                                {selectedCurrencies.map((c: string) => (
-                                    <Td key={`${item.category}-currency-${c}`}>
-                                        1235
-                                    </Td>
-                                ))}
-                                <Td width={120}>
-                                    <Button
-                                        variant="plain"
-                                        size="sm"
-                                        icon={<BiSave />}
-                                    />
-                                    <Button
-                                        variant="plain"
-                                        size="sm"
-                                        icon={<BiTrash />}
-                                    />
-                                </Td>
-                            </Tr>
+                        {items.map((item: any, index: number) => (
+                            <BudgetRow 
+                                budgetItem={item}
+                                categoryList={categoryList}
+                                currencies={selectedCurrencies}
+                                index={index}
+                                onRefetch={() => console.log('Refetch budget')}
+                            />
                         ))}
                     </TBody>
-                    <TFoot>
+                    <TFoot className='hidden'>
                         <Tr style={{ borderTop: 'solid 2px' }}>
                             <Td>
-                                <b>Total:</b>
+                                <b>{t('placeholders.total')}:</b>
                             </Td>
                             {selectedCurrencies.map((c: string) => (
                                 <Td key={`currency-colum-${c}`}>1234</Td>
