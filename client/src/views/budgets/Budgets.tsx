@@ -14,9 +14,10 @@ import { MultiValue } from 'react-select'
 import {
     apiCreateBudget,
     apiDeleteBudgetItem,
-    apiGetBudget, apiUpdateBudgetCurrencies,
-    apiUpsertBudgetItem
-} from "@/services/BudgetService";
+    apiGetBudget,
+    apiUpdateBudgetCurrencies,
+    apiUpsertBudgetItem,
+} from '@/services/BudgetService'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { HiPlus } from 'react-icons/hi'
@@ -186,7 +187,9 @@ const BudgetRow = (props: {
         props
     const [wasModified, setWasModified] = useState(false)
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
-    const [newItem, setNewItem] = useState(JSON.parse(JSON.stringify(budgetItem)));
+    const [newItem, setNewItem] = useState(
+        JSON.parse(JSON.stringify(budgetItem)),
+    )
 
     const { t, i18n } = useTranslation()
 
@@ -315,7 +318,9 @@ const BudgetRow = (props: {
                                 onClick={() => {
                                     setWasModified(false)
                                     console.log(budgetItem)
-                                    setNewItem(JSON.parse(JSON.stringify(budgetItem)))
+                                    setNewItem(
+                                        JSON.parse(JSON.stringify(budgetItem)),
+                                    )
                                 }}
                             />
                         </>
@@ -358,9 +363,11 @@ const BudgetRow = (props: {
                             >
                                 <p>
                                     {t(
-                                        'pages.budgets.deleteConfirmation.description', {
-                                            categoryName: budgetItem.category.name
-                                        }
+                                        'pages.budgets.deleteConfirmation.description',
+                                        {
+                                            categoryName:
+                                                budgetItem.category.name,
+                                        },
                                     )}
                                 </p>
                             </ConfirmDialog>
@@ -521,12 +528,12 @@ const Budgets = () => {
         if (budget.items.length > 0) {
             updateBudgetCurrenciesMutation.mutate({
                 id: budget.id,
-                currencies: newCurrencies
+                currencies: newCurrencies,
             })
         } else {
             setSelectedCurrencies(newCurrencies)
         }
-    };
+    }
 
     return (
         <Container data-tn="budgets-page">
@@ -556,7 +563,9 @@ const Budgets = () => {
                             })) ?? []
                         }
                         onChange={(newValue: MultiValue<any>) => {
-                            handleCurrenciesChange((newValue as any[]).map((nv: any) => nv.label))
+                            handleCurrenciesChange(
+                                (newValue as any[]).map((nv: any) => nv.label),
+                            )
                         }}
                     />
                 </FormItem>

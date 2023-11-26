@@ -56,13 +56,10 @@ export async function apiCreateBudget(): Promise<any> {
 }
 
 export async function apiUpdateBudgetCurrencies(data: {
-    id: string,
+    id: string
     currencies: string[]
 }): Promise<any> {
-    const {
-        id,
-        currencies
-    } = data;
+    const { id, currencies } = data
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
@@ -83,7 +80,7 @@ export async function apiUpdateBudgetCurrencies(data: {
             `,
             variables: {
                 id,
-                currencies
+                currencies,
             },
         },
     })
