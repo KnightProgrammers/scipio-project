@@ -53,15 +53,17 @@
             }
         },
         "budgets": {
-            "header": "Budgets",
+            "header": "Budget",
             "deleteConfirmation": {
                 "title": "Delete Budget Item",
                 "description": "Are you sure you want to delete the item?"
             },
             "emptyState": {
                 "title": "No Budgets",
-                "description": "Let's start creating your first budget"
-            }
+                "description": "Let's start creating your first budget",
+                "noItems": "No items - Add categories and the limit per currency"
+            },
+            "addBudgetItem": "Add new item"
         },
         "creditCards": {
             "header": "Credit Cards",
@@ -296,6 +298,11 @@
             "created": "Bank account successfully created",
             "updated": "Bank account successfully updated",
             "deleted": "Bank account successfully deleted"
+        },
+        "budget": {
+            "created": "Budget successfully created",
+            "updated": "Budget successfully updated",
+            "deleted": "Budget successfully deleted"
         },
         "creditCard": {
             "created": "Credit card successfully created",

@@ -53,15 +53,17 @@
             }
         },
         "budgets": {
-            "header": "Presupuestos",
+            "header": "Presupuesto",
             "deleteConfirmation": {
                 "title": "Eliminar Entrada de Presupuesto",
                 "description": "Está seguro que desea eliminar la entrada de presupuesto?"
             },
             "emptyState": {
                 "title": "Sin Presupuestos",
-                "description": "Comencemos creando su primer presupuesto"
-            }
+                "description": "Comencemos creando su primer presupuesto",
+                "noItems": "Sin items - Agrega categorías y los límites por moneda"
+            },
+            "addBudgetItem": "Agregar nuevo elemento"
         },
         "creditCards": {
             "header": "Tarjetas de Créditos",
@@ -296,6 +298,11 @@
             "created": "Cuenta creada correctamente",
             "updated": "Cuenta actualizada correctamente",
             "deleted": "Cuenta eliminada correctamente"
+        },
+        "budget": {
+            "created": "Presupuesto creado correctamente",
+            "updated": "Presupuesto actualizado correctamente",
+            "deleted": "Presupuesto eliminado correctamente"
         },
         "creditCard": {
             "created": "Tarjeta de crédito creada correctamente",
