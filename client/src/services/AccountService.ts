@@ -99,6 +99,7 @@ export async function apiGetUserCurrenciesWithExpenses({
                                 amount 
                                 category { id isFixedPayment } 
                             } 
+                            budget
                         } 
                     } 
                 }
