@@ -56,7 +56,7 @@
             "header": "Presupuesto",
             "deleteConfirmation": {
                 "title": "Eliminar Entrada de Presupuesto",
-                "description": "Está seguro que desea eliminar la entrada de presupuesto?"
+                "description": "Está seguro que desea eliminar la entrada de presupuesto para la categoría \"{{categoryName}}\"?"
             },
             "emptyState": {
                 "title": "Sin Presupuestos",

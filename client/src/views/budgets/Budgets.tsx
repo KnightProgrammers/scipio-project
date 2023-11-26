@@ -358,7 +358,9 @@ const BudgetRow = (props: {
                             >
                                 <p>
                                     {t(
-                                        'pages.budgets.deleteConfirmation.description',
+                                        'pages.budgets.deleteConfirmation.description', {
+                                            categoryName: budgetItem.category.name
+                                        }
                                     )}
                                 </p>
                             </ConfirmDialog>

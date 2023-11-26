@@ -49,14 +49,14 @@
             "defaultLabel": "Account",
             "deleteConfirmation": {
                 "title": "Delete Bank Account",
-                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}?\"?"
+                "description": "Are you sure you want to delete the bank account \"{{accountNumber}}\"?"
             }
         },
         "budgets": {
             "header": "Budget",
             "deleteConfirmation": {
                 "title": "Delete Budget Item",
-                "description": "Are you sure you want to delete the item?"
+                "description": "Are you sure you want to delete the item for the category \"{{categoryName}}\"?"
             },
             "emptyState": {
                 "title": "No Budgets",
