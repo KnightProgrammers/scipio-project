@@ -104,6 +104,7 @@ const schema = `
     id: String!
     code: String!
     expenses(fromDate: String, toDate: String): [Expense]!
+    budget: Float!
   }
 
   type BudgetItemCurrency {
