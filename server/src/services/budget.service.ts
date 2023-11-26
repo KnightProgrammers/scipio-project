@@ -5,8 +5,8 @@ import { errorCodes } from 'fastify';
 import CurrencyService from './currency.service';
 
 type BudgetInput = {
-    userId: string
-}
+  userId: string;
+};
 
 type BudgetItemInput = {
     budgetId: string
@@ -28,6 +28,30 @@ class BudgetService {
 			_id: id,
 			userId
 		});
+	}
+	static async updateCurrencies(id: string, userId: string, currencies: string[]): Promise<void> {
+		const budget: any = await this.findById(id, userId);
+		if (!budget) return;
+		const items: any[] = await this.getAllItems(id, userId);
+
+		for (const item of items) {
+			if (item.currencies.length > currencies.length) {
+				item.currencies = item.currencies.filter((c: any) =>
+					currencies.includes(c.currency.code)
+				);
+			} else {
+				const existingCurrencies = item.currencies.map((c: any) => c.currency.code);
+				const newCurrencyCodes: string[] = currencies.filter((c: string) => !existingCurrencies.includes(c));
+				for (const newCurrencyCode of newCurrencyCodes) {
+					const newCurrency = await CurrencyService.findByCode(newCurrencyCode);
+					item.currencies.push({
+						currency: newCurrency,
+						limit: 0
+					});
+				}
+			}
+			await item.save();
+		}
 	}
 	static async create(data: BudgetInput): Promise<any> {
 		const {
