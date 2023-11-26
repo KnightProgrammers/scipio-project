@@ -31,10 +31,16 @@ const CategoryCell = (props: {
     readonly: boolean
     category: any
     categoryList: any[]
-    index: number
+    budgetId: string
     onChange: (category: any) => void
 }) => {
-    const { readonly = true, category, categoryList, index, onChange } = props
+    const {
+        readonly = true,
+        category,
+        categoryList,
+        budgetId,
+        onChange,
+    } = props
 
     const [isSelected, setIsSelected] = useState(!category)
 
@@ -68,7 +74,11 @@ const CategoryCell = (props: {
             <Td>
                 <Select
                     placeholder={t('fields.category')}
-                    id={`category-select-${index}`}
+                    id={
+                        budgetId
+                            ? `category-select-${budgetId}`
+                            : 'category-select-new-budget-item'
+                    }
                     value={value}
                     defaultValue={
                         category
@@ -180,11 +190,9 @@ const BudgetRow = (props: {
     budgetItem: any
     categoryList: any[]
     currencies: string[]
-    index: number
     onRefetch: () => void
 }) => {
-    const { budgetId, budgetItem, categoryList, currencies, index, onRefetch } =
-        props
+    const { budgetId, budgetItem, categoryList, currencies, onRefetch } = props
     const [wasModified, setWasModified] = useState(false)
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
     const [newItem, setNewItem] = useState(
@@ -272,7 +280,7 @@ const BudgetRow = (props: {
                 readonly={!!newItem.id}
                 category={newItem?.category}
                 categoryList={categoryList}
-                index={index}
+                budgetId={newItem.id}
                 onChange={async (category: any) => {
                     await handleUpdate({
                         ...newItem,
@@ -366,7 +374,7 @@ const BudgetRow = (props: {
                                         'pages.budgets.deleteConfirmation.description',
                                         {
                                             categoryName:
-                                                budgetItem.category.name,
+                                                budgetItem.category?.name ?? '',
                                         },
                                     )}
                                 </p>
@@ -586,14 +594,13 @@ const Budgets = () => {
                         </Tr>
                     </THead>
                     <TBody>
-                        {budget.items.map((item: any, index: number) => (
+                        {budget.items.map((item: any) => (
                             <BudgetRow
-                                key={`budget-row-${index}`}
+                                key={`budget-row-${item.id}`}
                                 budgetId={budget.id}
                                 budgetItem={item}
                                 categoryList={remainingCategories}
                                 currencies={selectedCurrencies}
-                                index={index}
                                 onRefetch={handleOnRefetch}
                             />
                         ))}
@@ -605,7 +612,6 @@ const Budgets = () => {
                                 )}
                                 categoryList={remainingCategories}
                                 currencies={selectedCurrencies}
-                                index={-1}
                                 onRefetch={handleOnRefetch}
                             />
                         )}
