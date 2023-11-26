@@ -173,6 +173,7 @@ const schema = `
     deleteSaving(id: String!): Boolean!
 
     createBudget: Budget
+    updateBudgetCurrencies(id: String!, currencies: [String!]!): Budget
     upsertBudgetItem(input: BudgetItemInput!): BudgetItem
     deleteBudgetItem(id: String!, budgetId: String!): Boolean!
   }
