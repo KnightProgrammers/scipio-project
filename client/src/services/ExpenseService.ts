@@ -33,6 +33,13 @@ export async function apiGetExpenseList({
                           code
                         }
                       }
+                      budget {
+                        id
+                        currencies {
+                            currency { id code }
+                            limit
+                        }
+                      }
                     }
                   }
                 }

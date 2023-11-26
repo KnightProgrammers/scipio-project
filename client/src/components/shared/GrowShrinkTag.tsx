@@ -6,33 +6,45 @@ import growShrinkColor from '@/utils/growShrinkColor'
 import type { ReactNode } from 'react'
 
 type GrowShrinkTagProps = {
-    value?: number
+    value?: number | string
     showIcon?: boolean
+    valuation: 1 | -1 | 0
     prefix?: ReactNode | string
     suffix?: ReactNode | string
+    inverse?: boolean
     className?: string
 }
 
 const GrowShrinkTag = forwardRef<HTMLDivElement, GrowShrinkTagProps>(
     (props, ref) => {
-        const { value = 0, className, prefix, suffix, showIcon = true } = props
+        const {
+            value = 0,
+            valuation,
+            className,
+            prefix,
+            suffix,
+            inverse = false,
+            showIcon = true,
+        } = props
 
         return (
             <Tag
                 ref={ref}
                 className={classNames(
                     'gap-1 font-bold border-0',
-                    growShrinkColor(value, 'text'),
-                    growShrinkColor(value, 'bg'),
+                    growShrinkColor(valuation, 'text'),
+                    growShrinkColor(valuation, 'bg'),
                     className,
                 )}
             >
-                {value !== 0 && (
-                    <span>
-                        {showIcon &&
-                            (value > 0 ? <HiArrowUp /> : <HiArrowDown />)}
-                    </span>
-                )}
+                <span>
+                    {showIcon &&
+                        valuation > 0 &&
+                        (inverse ? <HiArrowDown /> : <HiArrowUp />)}
+                    {showIcon &&
+                        valuation < 0 &&
+                        (inverse ? <HiArrowDown /> : <HiArrowDown />)}
+                </span>
                 <span>
                     {prefix}
                     {value}

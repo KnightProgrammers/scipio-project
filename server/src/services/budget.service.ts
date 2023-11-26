@@ -130,6 +130,30 @@ class BudgetService {
 		await budgetItem.deleteOne();
 		return true;
 	}
+
+	static async getTotalBudgetByCurrency(currencyCode: string, userId: string) {
+		const budgets: any[] = await this.findAllByUserId(userId);
+		if (!budgets[0]) return 0;
+		const budgetId: string = budgets[0]._id;
+		const budgetItems: any[] = await this.getAllItems(budgetId, userId);
+		return budgetItems.reduce((previousValue: number, currentValue: any) => {
+			const currencyLimit = currentValue.currencies.find((c: any) => c.currency.code === currencyCode);
+			if (!currencyLimit) {
+				return previousValue;
+			}
+			return previousValue + currencyLimit.limit;
+		}, 0);
+	}
+
+	static async findItemsByCategory(categoryId: string, userId: string) {
+		const budgets: any[] = await this.findAllByUserId(userId);
+		if (!budgets[0]) return null;
+		const budgetId: string = budgets[0]._id;
+		return BudgetCategorySchema.findOne({
+			budgetId,
+			categoryId
+		});
+	}
 }
 
 export default BudgetService;

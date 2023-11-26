@@ -11,5 +11,7 @@ export default function growShrinkColor(value: number, type: 'bg' | 'text') {
             : 'text-red-600 dark:text-red-500'
     }
 
-    return ''
+    return type === 'bg'
+        ? 'bg-gray-100 dark:bg-gray-500/20 dark:text-gray-100'
+        : 'text-gray-600 dark:text-gray-500'
 }

@@ -70,6 +70,7 @@ const schema = `
     type: CategoryType!
     isFixedPayment: Boolean!
     expenses(fromDate: String, toDate: String): [Expense]!
+    budget: BudgetItem
   }
   
   type Expense {
@@ -104,6 +105,7 @@ const schema = `
     id: String!
     code: String!
     expenses(fromDate: String, toDate: String): [Expense]!
+    budget: Float!
   }
 
   type BudgetItemCurrency {

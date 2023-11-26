@@ -15,6 +15,7 @@ import {
     ConfirmDialog,
     Container,
     EllipsisButton,
+    GrowShrinkTag,
     IconText,
     Loading,
     SegmentItemOption,
@@ -45,17 +46,12 @@ import { BsCalendarRange } from 'react-icons/bs'
 import { LuFilter } from 'react-icons/lu'
 import { useConfig } from '@/components/ui/ConfigProvider'
 
-const getTotalExpenseByCurrency = (
-    expenses: any[],
-    currencyCode: string,
-    lang: string,
-    countryCode: string,
-) => {
+const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
         .filter((e: any) => e.currency.code === currencyCode)
         .reduce((prevE, curE) => prevE + curE.amount, 0)
     if (!total) return null
-    return currencyFormat(total, currencyCode, lang, countryCode)
+    return total
 }
 
 type EXPENSE_TYPE = 'FIXED_EXPENSE' | 'VARIABLE_EXPENSE'
@@ -82,24 +78,57 @@ const ExpensesSummary = (props: {
                         0,
                     )
                     if (!total) return null
+
+                    const budgetDiff = currency.budget - total
+
+                    const valuation =
+                        budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
+
                     return (
                         <Card
                             key={currency.id}
                             data-tn={`summary-card-${currency.code.toLowerCase()}`}
                         >
-                            <h6 className="font-light mb-4 text-sm">
-                                {currency.code}
-                            </h6>
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <h3 className="font-bold">
-                                        {currencyFormat(
-                                            total,
+                            <div className="flex items-center justify-between my-2">
+                                <div className="flex items-center gap-3">
+                                    <div>
+                                        <p className="font-bold text-4xl text-purple-500 dark:text-purple-500">
+                                            {currency.code}
+                                        </p>
+                                        <p>
+                                            <small>Budget</small>
+                                        </p>
+                                        <p className="font-light">
+                                            {currencyFormat(
+                                                currency.budget,
+                                                currency.code,
+                                                i18n.language,
+                                                props.countryCode,
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right rtl:text-left">
+                                    <h3 className="mb-2">
+                                        <span>
+                                            {currencyFormat(
+                                                total,
+                                                currency.code,
+                                                i18n.language,
+                                                props.countryCode,
+                                            )}
+                                        </span>
+                                    </h3>
+                                    <GrowShrinkTag
+                                        inverse
+                                        valuation={valuation}
+                                        value={currencyFormat(
+                                            budgetDiff,
                                             currency.code,
                                             i18n.language,
                                             props.countryCode,
                                         )}
-                                    </h3>
+                                    />
                                 </div>
                             </div>
                         </Card>
@@ -110,11 +139,61 @@ const ExpensesSummary = (props: {
     )
 }
 
-const ExpenseTag = (props: { value: string }) => {
+const ExpenseTag = (props: {
+    value: number
+    budget: any
+    currencyCode: string
+    lang: string
+    country: string
+}) => {
+    const { value = 0, budget, currencyCode, lang, country } = props
+
+    if (!budget) return null
+
+    const budgetDiff: number = budget.limit - value
+
+    const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
+
     return (
-        <span className="text-xs py-1 mr-2 px-4 rounded-lg bg-violet-900 ">
-            {props.value}
-        </span>
+        <Card bordered bodyClass="py-2" className="w-full">
+            <div className="flex items-center justify-between my-2">
+                <div className="flex items-center gap-3">
+                    <div>
+                        <p className="font-bold text-xl text-purple-500 dark:text-purple-500">
+                            {currencyCode}
+                        </p>
+                        <p>
+                            <small>Budget</small>
+                        </p>
+                        <p className="font-light">
+                            {currencyFormat(
+                                budget.limit,
+                                currencyCode,
+                                lang,
+                                country,
+                            )}
+                        </p>
+                    </div>
+                </div>
+                <div className="text-right rtl:text-left">
+                    <p className="mb-2 text-lg font-bold">
+                        <span>
+                            {currencyFormat(value, currencyCode, lang, country)}
+                        </span>
+                    </p>
+                    <GrowShrinkTag
+                        inverse
+                        valuation={valuation}
+                        value={currencyFormat(
+                            budgetDiff,
+                            currencyCode,
+                            lang,
+                            country,
+                        )}
+                    />
+                </div>
+            </div>
+        </Card>
     )
 }
 
@@ -806,53 +885,56 @@ const Expenses = () => {
                         headerClassName=""
                         data-tn={`category-detail-${c.id}`}
                         header={
-                            <div className="w-full flex items-center">
-                                <div className="w-full flex flex-col">
-                                    <span className="text-2xl">{c.name}</span>
-                                    <span className="rounded-md text-white mt-2">
-                                        {userCurrencies
-                                            .map((currency) =>
-                                                getTotalExpenseByCurrency(
-                                                    c.expenses,
-                                                    currency.code,
-                                                    i18n.language,
-                                                    userState.country?.code ||
-                                                        'UY',
-                                                ),
-                                            )
-                                            .map(
-                                                (
-                                                    value: string | null,
-                                                    index: number,
-                                                ) =>
-                                                    value ? (
-                                                        <ExpenseTag
-                                                            key={index}
-                                                            value={value}
-                                                        />
-                                                    ) : null,
-                                            )}
+                            <div className="w-full flex flex-col items-center">
+                                <div className="w-full flex justify-between items-center mb-2 mr-4">
+                                    <span className="text-md sm:text-lg lg:text-2xl font-semibold">
+                                        {c.name}
                                     </span>
+                                    <Button
+                                        variant="twoTone"
+                                        size="sm"
+                                        icon={<HiPlus />}
+                                        data-tn={`add-expense-cat-${c.id}-btn`}
+                                        onClick={() => {
+                                            setIsFormOpen(true)
+                                            setSelectedExpense({
+                                                categoryId: c.id,
+                                                billableDate:
+                                                    DateTime.now().toFormat(
+                                                        'dd/MM/yyyy',
+                                                    ),
+                                            })
+                                        }}
+                                    >
+                                        {t('pages.expenses.addExpenseButton')}
+                                    </Button>
                                 </div>
-                                <Button
-                                    variant="twoTone"
-                                    size="xs"
-                                    className="mr-4"
-                                    icon={<HiPlus />}
-                                    data-tn={`add-expense-cat-${c.id}-btn`}
-                                    onClick={() => {
-                                        setIsFormOpen(true)
-                                        setSelectedExpense({
-                                            categoryId: c.id,
-                                            billableDate:
-                                                DateTime.now().toFormat(
-                                                    'dd/MM/yyyy',
-                                                ),
-                                        })
-                                    }}
-                                >
-                                    {t('pages.expenses.addExpenseButton')}
-                                </Button>
+                                {c.budget && (
+                                    <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
+                                        {userCurrencies.map(
+                                            (currency: any, index: number) => (
+                                                <ExpenseTag
+                                                    key={index}
+                                                    value={getTotalExpenseByCurrency(
+                                                        c.expenses,
+                                                        currency.code,
+                                                    )}
+                                                    budget={c.budget.currencies.find(
+                                                        (c: any) =>
+                                                            c.currency.code ===
+                                                            currency.code,
+                                                    )}
+                                                    currencyCode={currency.code}
+                                                    lang={i18n.language}
+                                                    country={
+                                                        userState.country
+                                                            ?.code || 'UY'
+                                                    }
+                                                />
+                                            ),
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         }
                     >
