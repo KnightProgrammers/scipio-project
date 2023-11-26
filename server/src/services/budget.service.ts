@@ -143,6 +143,15 @@ class BudgetService {
 			return previousValue + currencyLimit.limit;
 		}, 0);
 	}
+
+    static async findItemsByCategory(categoryId: string, userId: string) {
+		const budgets: any[] = await this.findAllByUserId(userId);
+		const budgetId: string = budgets[0]._id;
+		return BudgetCategorySchema.findOne({
+			budgetId,
+			categoryId
+		});
+    }
 }
 
 export default BudgetService;

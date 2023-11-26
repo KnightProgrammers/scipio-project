@@ -70,6 +70,7 @@ const schema = `
     type: CategoryType!
     isFixedPayment: Boolean!
     expenses(fromDate: String, toDate: String): [Expense]!
+    budget: BudgetItem
   }
   
   type Expense {
