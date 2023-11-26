@@ -206,8 +206,7 @@ function _Select<
                 },
                 menu: (provided) => ({
                     ...provided,
-                    position: 'relative',
-                    zIndex: 100,
+                    zIndex: 10000,
                 }),
                 ...style,
             }}

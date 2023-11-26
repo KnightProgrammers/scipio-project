@@ -33,6 +33,15 @@ const navigationConfig: NavigationTree[] = [
         subMenu: [],
     },
     {
+        key: 'budgets',
+        path: '/budgets',
+        title: 'Budgets',
+        translateKey: 'nav.budgets',
+        icon: 'budgets',
+        type: NAV_ITEM_TYPE_ITEM,
+        subMenu: [],
+    },
+    {
         key: 'incomes',
         path: '/incomes',
         title: 'Incomes',

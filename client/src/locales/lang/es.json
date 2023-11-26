@@ -25,65 +25,6 @@
                 "footer": "Volver a"
             }
         },
-        "profile": {
-            "appearance": "Tema"
-        },
-        "expenses": {
-            "header": "Gastos",
-            "form": {
-                "newTitle": "Nuevo Gasto"
-            },
-            "headers": {
-                "summary": "Resumen",
-                "detail": "Detalle"
-            },
-            "emptyState": {
-                "title": "No se encontraron gastos"
-            },
-            "addExpenseButton": "Agregar gasto",
-            "deleteConfirmation": {
-                "title": "Eliminar gasto",
-                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
-            },
-            "genericDescription": "Gasto {{billableDate}}",
-            "filterTitle": "Filtro de Gastos"
-        },
-        "savings": {
-            "header": "Ahorros",
-            "addSavingButton": "Agregar Ahorro",
-            "form": {
-                "newTitle": "Nuevo Ahorro",
-                "editTitle": "Editar Ahorro"
-            },
-            "changeStatus": {
-                "title": "Cambiar Estado",
-                "description": "Selecciona el nuevo estado"
-            },
-            "emptyState": {
-                "title": "No hay ahorros",
-                "description": "No tienes ningún ahorro creado"
-            },
-            "emptySearch": {
-                "title": "Sin resultados",
-                "description": "Prueba cambiando el filtro para mostrar resultados"
-            },
-            "deleteConfirmation": {
-                "title": "Eliminar gasto",
-                "description": "Está seguro que desea eliminar el gasto \"{{name}}\"?"
-            },
-            "filterTitle": "Filtro de Gastos",
-            "labels": {
-                "goal": "Objetivo",
-                "saved": "Ahorrado",
-                "expiration": "Expiración",
-                "completed": "Completedo",
-                "noCompleted": "No Completado",
-                "expiredOn": "Expiró el"
-            }
-        },
-        "incomes": {
-            "header": "Ingresos"
-        },
         "bankAccounts": {
             "header": "Cuentas de Banco",
             "emptyState": {
@@ -110,6 +51,19 @@
                 "title": "Eliminar Cuenta de Banco",
                 "description": "Está seguro que desea eliminar la cuenta de banco \"{{accountNumber}}\"?"
             }
+        },
+        "budgets": {
+            "header": "Presupuesto",
+            "deleteConfirmation": {
+                "title": "Eliminar Entrada de Presupuesto",
+                "description": "Está seguro que desea eliminar la entrada de presupuesto para la categoría \"{{categoryName}}\"?"
+            },
+            "emptyState": {
+                "title": "Sin Presupuestos",
+                "description": "Comencemos creando su primer presupuesto",
+                "noItems": "Sin items - Agrega categorías y los límites por moneda"
+            },
+            "addBudgetItem": "Agregar nuevo elemento"
         },
         "creditCards": {
             "header": "Tarjetas de Créditos",
@@ -143,8 +97,67 @@
             },
             "addCategoryButton": "Agregar Categoría"
         },
+        "expenses": {
+            "header": "Gastos",
+            "form": {
+                "newTitle": "Nuevo Gasto"
+            },
+            "headers": {
+                "summary": "Resumen",
+                "detail": "Detalle"
+            },
+            "emptyState": {
+                "title": "No se encontraron gastos"
+            },
+            "addExpenseButton": "Agregar gasto",
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
+            },
+            "genericDescription": "Gasto {{billableDate}}",
+            "filterTitle": "Filtro de Gastos"
+        },
+        "incomes": {
+            "header": "Ingresos"
+        },
         "jobs": {
             "header": "Trabajos"
+        },
+        "profile": {
+            "appearance": "Tema"
+        },
+        "savings": {
+            "header": "Ahorros",
+            "addSavingButton": "Agregar Ahorro",
+            "form": {
+                "newTitle": "Nuevo Ahorro",
+                "editTitle": "Editar Ahorro"
+            },
+            "changeStatus": {
+                "title": "Cambiar Estado",
+                "description": "Selecciona el nuevo estado"
+            },
+            "emptyState": {
+                "title": "No hay ahorros",
+                "description": "No tienes ningún ahorro creado"
+            },
+            "emptySearch": {
+                "title": "Sin resultados",
+                "description": "Prueba cambiando el filtro para mostrar resultados"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar gasto",
+                "description": "Está seguro que desea eliminar el gasto \"{{name}}\"?"
+            },
+            "filterTitle": "Filtro de Gastos",
+            "labels": {
+                "goal": "Objetivo",
+                "saved": "Ahorrado",
+                "expiration": "Expiración",
+                "completed": "Completedo",
+                "noCompleted": "No Completado",
+                "expiredOn": "Expiró el"
+            }
         },
         "settings": {
             "header": "Configuraciones",
@@ -207,57 +220,59 @@
     },
     "actions": {
         "cancel": "Cancelar",
-        "signOut": "Cerrar Sesión",
-        "signIn": "Iniciar Sesion",
-        "signUp": "Registrarse",
-        "signingIn": "Iniciando Sesión...",
+        "changeStatus": "Cambiar Estado",
         "creatingAccount": "Creando cuenta...",
-        "sendEmail": "Enviar Email",
-        "reSendEmail": "Re-enviar Email",
-        "update": "Actualizar",
-        "updating": "Actualizando",
-        "save": "Guardar",
-        "saving": "Guardando",
-        "submit": "Enviar",
-        "submitting": "Enviando...",
         "delete": "Eliminar",
         "deleting": "Eliminando",
         "edit": "Editar",
-        "next": "Siguiente",
-        "tryAgain": "Volver a intentar",
         "filter": "Filtrar",
-        "changeStatus": "Cambiar Estado"
+        "next": "Siguiente",
+        "reSendEmail": "Re-enviar Email",
+        "save": "Guardar",
+        "saving": "Guardando",
+        "sendEmail": "Enviar Email",
+        "signIn": "Iniciar Sesion",
+        "signOut": "Cerrar Sesión",
+        "signUp": "Registrarse",
+        "signingIn": "Iniciando Sesión...",
+        "start": "Comenzar",
+        "starting": "Comenzando",
+        "submit": "Enviar",
+        "submitting": "Enviando...",
+        "tryAgain": "Volver a intentar",
+        "update": "Actualizar",
+        "updating": "Actualizando"
     },
     "fields": {
-        "email": "Email",
-        "name": "Nombre",
-        "language": "Idioma",
-        "password": "Contraseña",
-        "newPassword": "Nueva Contraseña",
-        "currentPassword": "Contraseña Actual",
-        "confirmPassword": "Repetir Contraseña",
-        "rememberMe": "Recordarme",
-        "country": "Pais",
-        "currency": "Moneda",
-        "label": "Etiqueta",
-        "lastFourDigits": "Últimos 4 dígitos",
-        "expiration": "Fecha de Caducidad",
-        "cardHolder": "Titular de la Tarjeta",
-        "creditLimitAmount": "Limite de Crédito",
-        "issuer": "Emisor",
-        "status": "Estado",
-        "type": "Tipo",
-        "isFixedPayment": "Costo Fijo",
-        "date": "Fecha",
         "amount": "Monto",
-        "description": "Descripción",
+        "bankAccount": "Cuenta de Banco",
+        "cardHolder": "Titular de la Tarjeta",
         "category": "Categoría",
-        "from": "Desde",
-        "to": "Hasta",
+        "confirmPassword": "Repetir Contraseña",
+        "country": "Pais",
+        "creditLimitAmount": "Limite de Crédito",
+        "currency": "Moneda",
+        "currentPassword": "Contraseña Actual",
+        "date": "Fecha",
+        "description": "Descripción",
+        "email": "Email",
         "expenseType": "Tipo de Gasto",
+        "expiration": "Fecha de Caducidad",
+        "from": "Desde",
+        "isFixedPayment": "Costo Fijo",
+        "issuer": "Emisor",
+        "label": "Etiqueta",
+        "language": "Idioma",
+        "lastFourDigits": "Últimos 4 dígitos",
+        "name": "Nombre",
+        "newPassword": "Nueva Contraseña",
+        "password": "Contraseña",
+        "rememberMe": "Recordarme",
         "savingStatus": "Estado de Ahorro",
+        "status": "Estado",
         "targetDate": "Fecha Límite",
-        "bankAccount": "Cuenta de Banco"
+        "to": "Hasta",
+        "type": "Tipo"
     },
     "validations": {
         "minString": "El valor es muy corto (min:",
@@ -283,6 +298,11 @@
             "created": "Cuenta creada correctamente",
             "updated": "Cuenta actualizada correctamente",
             "deleted": "Cuenta eliminada correctamente"
+        },
+        "budget": {
+            "created": "Presupuesto creado correctamente",
+            "updated": "Presupuesto actualizado correctamente",
+            "deleted": "Presupuesto eliminado correctamente"
         },
         "creditCard": {
             "created": "Tarjeta de crédito creada correctamente",
@@ -319,7 +339,8 @@
         "currentMonth": "Mes actual",
         "lastMonth": "Mes anterior",
         "other": "Otro",
-        "searchByName": "Buscar por Nombre"
+        "searchByName": "Buscar por Nombre",
+        "total": "Total"
     },
     "messages": {
         "backTo": "Volver a ",
