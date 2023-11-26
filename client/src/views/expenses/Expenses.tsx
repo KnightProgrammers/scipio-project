@@ -150,9 +150,9 @@ const ExpenseTag = (props: {
 
     if (!budget) return null
 
-    const budgetDiff: number = budget.limit - value;
+    const budgetDiff: number = budget.limit - value
 
-    const valuation = budgetDiff > 0 ? 1 : ( budgetDiff < 0 ? -1 : 0 );
+    const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
 
     return (
         <Card bordered bodyClass="py-2" className="w-full">
@@ -909,8 +909,8 @@ const Expenses = () => {
                                         {t('pages.expenses.addExpenseButton')}
                                     </Button>
                                 </div>
-                                {
-                                    c.budget && <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
+                                {c.budget && (
+                                    <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
                                         {userCurrencies.map(
                                             (currency: any, index: number) => (
                                                 <ExpenseTag
@@ -919,18 +919,22 @@ const Expenses = () => {
                                                         c.expenses,
                                                         currency.code,
                                                     )}
-                                                    budget={c.budget.currencies.find((c: any) => c.currency.code === currency.code)}
+                                                    budget={c.budget.currencies.find(
+                                                        (c: any) =>
+                                                            c.currency.code ===
+                                                            currency.code,
+                                                    )}
                                                     currencyCode={currency.code}
                                                     lang={i18n.language}
                                                     country={
-                                                        userState.country?.code ||
-                                                        'UY'
+                                                        userState.country
+                                                            ?.code || 'UY'
                                                     }
                                                 />
                                             ),
                                         )}
                                     </div>
-                                }
+                                )}
                             </div>
                         }
                     >
