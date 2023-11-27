@@ -115,7 +115,10 @@
                 "description": "Está seguro que desea eliminar el gasto \"{{description}}\"?"
             },
             "genericDescription": "Gasto {{billableDate}}",
-            "filterTitle": "Filtro de Gastos"
+            "filterTitle": "Filtro de Gastos",
+            "labels": {
+                "budget": "Presupuesto"
+            }
         },
         "incomes": {
             "header": "Ingresos"

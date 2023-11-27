@@ -115,7 +115,10 @@
                 "description": "Are you sure you want to delete the expense \"{{description}}\"?"
             },
             "genericDescription": "Expense {{billableDate}}",
-            "filterTitle": "Expense Filter"
+            "filterTitle": "Expense Filter",
+            "labels": {
+                "budget": "Budget"
+            }
         },
         "incomes": {
             "header": "Incomes"
