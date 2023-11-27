@@ -96,7 +96,11 @@ const ExpensesSummary = (props: {
                                             {currency.code}
                                         </p>
                                         <p>
-                                            <small>{t('pages.expenses.labels.budget')}</small>
+                                            <small>
+                                                {t(
+                                                    'pages.expenses.labels.budget',
+                                                )}
+                                            </small>
                                         </p>
                                         <p className="font-light">
                                             {currencyFormat(
