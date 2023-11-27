@@ -96,7 +96,11 @@ const ExpensesSummary = (props: {
                                             {currency.code}
                                         </p>
                                         <p>
-                                            <small>Budget</small>
+                                            <small>
+                                                {t(
+                                                    'pages.expenses.labels.budget',
+                                                )}
+                                            </small>
                                         </p>
                                         <p className="font-light">
                                             {currencyFormat(
@@ -147,6 +151,7 @@ const ExpenseTag = (props: {
     country: string
 }) => {
     const { value = 0, budget, currencyCode, lang, country } = props
+    const { t } = useTranslation()
 
     if (!budget) return null
 
@@ -163,7 +168,7 @@ const ExpenseTag = (props: {
                             {currencyCode}
                         </p>
                         <p>
-                            <small>Budget</small>
+                            <small>{t('pages.expenses.labels.budget')}</small>
                         </p>
                         <p className="font-light">
                             {currencyFormat(
