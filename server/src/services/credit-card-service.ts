@@ -52,6 +52,7 @@ class CreditCardService {
 
 
 	static async findOne(id: string, userId: string) {
+		if (!id || !userId) return null;
 		return CreditCardModel.findOne({ _id: id, userId });
 	}
 }
