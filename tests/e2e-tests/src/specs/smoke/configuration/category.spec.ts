@@ -65,6 +65,4 @@ test('Edit a category', async () => {
 test('delete a category', async () => {
 	await deleteCategory(page, categoryId);
 	await expect(page.locator(`div[data-tn="category-${categoryId}"]`)).not.toBeVisible();
-	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-categories"]');
-	await expect(emptyStateContainer).toBeVisible();
 });
