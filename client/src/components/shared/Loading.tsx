@@ -8,6 +8,7 @@ interface BaseLoadingProps extends CommonProps {
     customLoader?: ReactNode
     loading: boolean
     spinnerClass?: string
+    'data-tn'?: string
 }
 
 interface LoadingProps extends BaseLoadingProps {
@@ -53,7 +54,10 @@ const CoveredLoading = (props: BaseLoadingProps) => {
     } = props
 
     return (
-        <Component className={classNames(loading ? 'relative' : '', className)}>
+        <Component
+            className={classNames(loading ? 'relative' : '', className)}
+            data-tn={props['data-tn']}
+        >
             {children}
             {loading && (
                 <div className="w-full h-full bg-white dark:bg-gray-800 dark:bg-opacity-60 bg-opacity-50 absolute inset-0" />

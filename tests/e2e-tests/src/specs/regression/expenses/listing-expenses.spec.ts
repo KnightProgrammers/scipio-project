@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { applyExpenseFilter } from '../../../helpers/expense.helper';
+import { convertToNumber } from '../../../utils/convertToNumber';
 
 let email: string;
 let password: string;
@@ -21,10 +22,6 @@ let graphqlService: GraphqlService;
 let categoryId_1: string;
 let categoryId_2: string;
 let categoryId_3: string;
-
-function convertToNumber(currency: string) {
-	return Number(currency.replace('.', '').replace(',', '.').replace(/[^0-9.-]+/g,''));
-}
 
 test.beforeAll(async ({ browser }) => {
 	email = `test-${uuidv4()}@automation.com`;

@@ -9,7 +9,7 @@ import firebaseService from '../../../services/firebase.service';
 import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
-import { createSaving, deleteSaving, setSavingFilters, updateSaving } from '../../../helpers/saving.helper';
+import { setSavingFilters } from '../../../helpers/saving.helper';
 import { DateTime } from 'luxon';
 
 let email: string;
@@ -46,7 +46,12 @@ test.beforeAll(async ({ browser }) => {
 
 	graphqlService = new GraphqlService(authToken);
 
+	// Wait until the save of the profile is completed
+	await page.waitForTimeout(5000);
+
 	userCurrencies = await graphqlService.getUserCurrencies();
+
+	expect(userCurrencies.length).toEqual(DEFAULT_USER_CURRENCIES.length);
 
 	const bank = await graphqlService.createBank({
 		name: 'Bank #1'

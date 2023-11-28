@@ -131,6 +131,7 @@ const CurrencyCell = (props: {
     editionMode: boolean
     onChange: (newValue: number) => void
     onEdited: (isEdited: boolean) => void
+    'data-tn': string
 }) => {
     const {
         limit,
@@ -154,7 +155,7 @@ const CurrencyCell = (props: {
 
     if (editionMode) {
         return (
-            <Td>
+            <Td data-tn={`${props['data-tn']}`}>
                 <Input
                     width={50}
                     className=""
@@ -179,7 +180,7 @@ const CurrencyCell = (props: {
     }
 
     return (
-        <Td onClick={() => onEdited(true)}>
+        <Td data-tn={`${props['data-tn']}`} onClick={() => onEdited(true)}>
             {currencyFormat(limit, currencyCode, lang, country)}
         </Td>
     )
@@ -275,7 +276,7 @@ const BudgetRow = (props: {
         upsertBudgetItemMutation.isPending || deleteBudgetItemMutation.isPending
 
     return (
-        <Tr>
+        <Tr data-tn={`budget-item-${newItem?.id ?? 'new-item'}-row`}>
             <CategoryCell
                 readonly={!!newItem.id}
                 category={newItem?.category}
@@ -291,8 +292,11 @@ const BudgetRow = (props: {
             {currencies.map((currencyCode: string) => (
                 <CurrencyCell
                     key={`${
-                        newItem?.category ?? 'new-category'
-                    }-currency-${currencyCode}`}
+                        newItem?.id ?? 'new-item'
+                    }-currency-${currencyCode.toLowerCase()}`}
+                    data-tn={`${
+                        newItem?.id ?? 'new-item'
+                    }-currency-${currencyCode.toLowerCase()}-limit`}
                     limit={getLimit(currencyCode)}
                     currencyCode={currencyCode}
                     lang={i18n.language}
@@ -317,12 +321,14 @@ const BudgetRow = (props: {
                                 variant="plain"
                                 size="sm"
                                 icon={<BiSave />}
+                                data-tn="save-budget-item"
                                 onClick={async () => handleUpdate(newItem)}
                             />
                             <Button
                                 variant="plain"
                                 size="sm"
                                 icon={<GrUndo />}
+                                data-tn="reset-limits-btn"
                                 onClick={() => {
                                     setWasModified(false)
                                     console.log(budgetItem)
@@ -338,6 +344,7 @@ const BudgetRow = (props: {
                                 variant="plain"
                                 size="sm"
                                 icon={<BiTrash />}
+                                data-tn="delete-budget-item"
                                 onClick={() => {
                                     if (newItem.id) {
                                         setIsConfirmDeleteOpen(true)
@@ -578,96 +585,98 @@ const Budgets = () => {
                     />
                 </FormItem>
             </div>
-            <div>
-                <Table className="w-full h-full">
-                    <THead>
-                        <Tr>
-                            <Th>{t('fields.category')}</Th>
-                            {selectedCurrencies.map((c: string) => (
-                                <Th
-                                    key={`currency-head-colum-${c.toLowerCase()}`}
-                                >
-                                    {c}
-                                </Th>
-                            ))}
-                            <Th></Th>
-                        </Tr>
-                    </THead>
-                    <TBody>
-                        {budget.items.map((item: any) => (
-                            <BudgetRow
-                                key={`budget-row-${item.id}`}
-                                budgetId={budget.id}
-                                budgetItem={item}
-                                categoryList={remainingCategories}
-                                currencies={selectedCurrencies}
-                                onRefetch={handleOnRefetch}
-                            />
+            <Table className="w-full h-full">
+                <THead>
+                    <Tr>
+                        <Th>{t('fields.category')}</Th>
+                        {selectedCurrencies.map((c: string) => (
+                            <Th key={`currency-head-colum-${c.toLowerCase()}`}>
+                                {c}
+                            </Th>
                         ))}
-                        {showNewItemRow && (
-                            <BudgetRow
-                                budgetId={budget.id}
-                                budgetItem={getDefaultBudgetItem(
-                                    selectedCurrencies,
-                                )}
-                                categoryList={remainingCategories}
-                                currencies={selectedCurrencies}
-                                onRefetch={handleOnRefetch}
-                            />
-                        )}
-                        {!budget.items.length && !showNewItemRow && (
-                            <Tr>
-                                <Td colSpan={selectedCurrencies.length + 2}>
-                                    <Alert
-                                        showIcon
-                                        className="justify-center"
-                                        type="info"
-                                    >
-                                        {t('pages.budgets.emptyState.noItems')}
-                                    </Alert>
-                                </Td>
-                            </Tr>
-                        )}
-                    </TBody>
-                    <TFoot>
-                        {!!remainingCategories.length && (
-                            <Tr>
-                                <Td colSpan={selectedCurrencies.length + 2}>
-                                    <Button
-                                        variant="twoTone"
-                                        className="w-80"
-                                        disabled={!remainingCategories.length}
-                                        icon={<HiPlus />}
-                                        onClick={addNewBudgetItem}
-                                    >
-                                        {t('pages.budgets.addBudgetItem')}
-                                    </Button>
-                                </Td>
-                            </Tr>
-                        )}
-                        <Loading
-                            asElement={'tr'}
-                            type="cover"
-                            loading={isLoadingBudget}
-                        >
-                            <Td>
-                                <b>{t('placeholders.total')}:</b>
+                        <Th></Th>
+                    </Tr>
+                </THead>
+                <TBody>
+                    {budget.items.map((item: any) => (
+                        <BudgetRow
+                            key={`budget-row-${item.id}`}
+                            budgetId={budget.id}
+                            budgetItem={item}
+                            categoryList={remainingCategories}
+                            currencies={selectedCurrencies}
+                            onRefetch={handleOnRefetch}
+                        />
+                    ))}
+                    {showNewItemRow && (
+                        <BudgetRow
+                            budgetId={budget.id}
+                            budgetItem={getDefaultBudgetItem(
+                                selectedCurrencies,
+                            )}
+                            categoryList={remainingCategories}
+                            currencies={selectedCurrencies}
+                            onRefetch={handleOnRefetch}
+                        />
+                    )}
+                    {!budget.items.length && !showNewItemRow && (
+                        <Tr>
+                            <Td colSpan={selectedCurrencies.length + 2}>
+                                <Alert
+                                    showIcon
+                                    className="justify-center"
+                                    type="info"
+                                    data-tn="budget-without-items"
+                                >
+                                    {t('pages.budgets.emptyState.noItems')}
+                                </Alert>
                             </Td>
-                            {selectedCurrencies.map((c: string) => (
-                                <Td key={`currency-colum-${c}`}>
-                                    {currencyFormat(
-                                        totalByCurrency[c] ?? 0,
-                                        c,
-                                        i18n.language,
-                                        userState.country?.code || 'UY',
-                                    )}
-                                </Td>
-                            ))}
-                            <Td></Td>
-                        </Loading>
-                    </TFoot>
-                </Table>
-            </div>
+                        </Tr>
+                    )}
+                </TBody>
+                <TFoot>
+                    {!!remainingCategories.length && (
+                        <Tr>
+                            <Td colSpan={selectedCurrencies.length + 2}>
+                                <Button
+                                    variant="twoTone"
+                                    className="w-80"
+                                    disabled={!remainingCategories.length}
+                                    icon={<HiPlus />}
+                                    data-tn="add-budget-item-btn"
+                                    onClick={addNewBudgetItem}
+                                >
+                                    {t('pages.budgets.addBudgetItem')}
+                                </Button>
+                            </Td>
+                        </Tr>
+                    )}
+                    <Loading
+                        asElement={'tr'}
+                        type="cover"
+                        loading={isLoadingBudget}
+                        data-tn={`budget-totals-row`}
+                    >
+                        <Td>
+                            <b>{t('placeholders.total')}:</b>
+                        </Td>
+                        {selectedCurrencies.map((c: string) => (
+                            <Td
+                                key={`currency-colum-${c}`}
+                                data-tn={`budget-total-${c.toLowerCase()}`}
+                            >
+                                {currencyFormat(
+                                    totalByCurrency[c] ?? 0,
+                                    c,
+                                    i18n.language,
+                                    userState.country?.code || 'UY',
+                                )}
+                            </Td>
+                        ))}
+                        <Td></Td>
+                    </Loading>
+                </TFoot>
+            </Table>
         </Container>
     )
 }
