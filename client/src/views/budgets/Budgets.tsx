@@ -276,11 +276,7 @@ const BudgetRow = (props: {
         upsertBudgetItemMutation.isPending || deleteBudgetItemMutation.isPending
 
     return (
-        <Tr
-            data-tn={`budget-item-${
-                newItem?.category?.id ?? 'new-category'
-            }-row`}
-        >
+        <Tr data-tn={`budget-item-${newItem?.id ?? 'new-item'}-row`}>
             <CategoryCell
                 readonly={!!newItem.id}
                 category={newItem?.category}
@@ -296,10 +292,10 @@ const BudgetRow = (props: {
             {currencies.map((currencyCode: string) => (
                 <CurrencyCell
                     key={`${
-                        newItem?.category?.id ?? 'new-category'
+                        newItem?.id ?? 'new-item'
                     }-currency-${currencyCode.toLowerCase()}`}
                     data-tn={`${
-                        newItem?.category?.id ?? 'new-category'
+                        newItem?.id ?? 'new-item'
                     }-currency-${currencyCode.toLowerCase()}-limit`}
                     limit={getLimit(currencyCode)}
                     currencyCode={currencyCode}
