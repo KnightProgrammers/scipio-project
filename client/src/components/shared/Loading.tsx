@@ -44,7 +44,6 @@ const DefaultLoading = (props: BaseLoadingProps) => {
 }
 
 const CoveredLoading = (props: BaseLoadingProps) => {
-    console.log(props['data-tn'])
     const {
         loading,
         children,
@@ -77,7 +76,6 @@ const CoveredLoading = (props: BaseLoadingProps) => {
 }
 
 const Loading = ({ type, ...rest }: LoadingProps) => {
-    console.log({ ...rest })
     switch (type) {
         case 'default':
             return <DefaultLoading {...rest} />
