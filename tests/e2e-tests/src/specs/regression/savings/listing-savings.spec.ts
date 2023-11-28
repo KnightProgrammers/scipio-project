@@ -9,7 +9,7 @@ import firebaseService from '../../../services/firebase.service';
 import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
-import { createSaving, deleteSaving, setSavingFilters, updateSaving } from '../../../helpers/saving.helper';
+import { setSavingFilters } from '../../../helpers/saving.helper';
 import { DateTime } from 'luxon';
 
 let email: string;
