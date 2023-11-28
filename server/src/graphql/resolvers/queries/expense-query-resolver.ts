@@ -14,6 +14,6 @@ export const ExpenseQueryResolver = {
 		return CurrencyService.findOne(expense.currencyId);
 	},
 	creditCard: async (expense: any, params: any, ctx: any) => {
-		return CreditCardService.findOne(expense.creditCardId, ctx.auth._id)
+		return CreditCardService.findOne(expense.creditCardId, ctx.auth._id);
 	}
 };
