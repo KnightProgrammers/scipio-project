@@ -46,7 +46,12 @@ test.beforeAll(async ({ browser }) => {
 
 	graphqlService = new GraphqlService(authToken);
 
+	// Wait until the save of the profile is completed
+	await page.waitForTimeout(5000);
+
 	userCurrencies = await graphqlService.getUserCurrencies();
+
+	expect(userCurrencies.length).toEqual(DEFAULT_USER_CURRENCIES.length);
 
 	const bank = await graphqlService.createBank({
 		name: 'Bank #1'
