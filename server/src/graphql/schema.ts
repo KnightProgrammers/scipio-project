@@ -87,6 +87,7 @@ const schema = `
     category: Category!
     type: ExpenseType!
     creditCard: CreditCard
+    creditCardId: String
   }
   
   enum SavingStatus {
