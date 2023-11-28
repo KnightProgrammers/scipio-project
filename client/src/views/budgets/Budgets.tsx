@@ -655,12 +655,16 @@ const Budgets = () => {
                         asElement={'tr'}
                         type="cover"
                         loading={isLoadingBudget}
+                        data-tn={`budget-totals-row`}
                     >
                         <Td>
                             <b>{t('placeholders.total')}:</b>
                         </Td>
                         {selectedCurrencies.map((c: string) => (
-                            <Td key={`currency-colum-${c}`}>
+                            <Td
+                                key={`currency-colum-${c}`}
+                                data-tn={`budget-total-${c.toLowerCase()}`}
+                            >
                                 {currencyFormat(
                                     totalByCurrency[c] ?? 0,
                                     c,
