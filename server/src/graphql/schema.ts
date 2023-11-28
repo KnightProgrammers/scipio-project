@@ -232,6 +232,7 @@ const schema = `
     description: String
     currencyId: String!
     categoryId: String!
+    creditCardId: String
   }
   
   input SavingInput {

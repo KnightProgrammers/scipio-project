@@ -3,10 +3,11 @@ import ExpenseModel from '@/models/expense.model';
 
 interface ExpenseInput {
 	amount: number,
-	billableDate: string,
+	billableDate: Date,
 	description?: string,
 	currencyId: string,
 	categoryId: string,
+	creditCardId?: string,
 }
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
@@ -72,24 +73,24 @@ class ExpenseService {
 			billableDate,
 			description = '',
 			currencyId,
-			categoryId
+			categoryId,
+			creditCardId
 		} = data;
 
-		const parseBillableDate = DateTime
-			.fromFormat(billableDate, 'dd/MM/yyyy')
-			.set({
-				hour: 0,
-				minute: 0,
-				second: 0,
-				millisecond: 0
-			});
+		let type: string = 'CASH';
+
+		if (creditCardId) {
+			type = 'CREDIT_CARD';
+		}
 
 		return ExpenseModel.create({
 			amount,
-			billableDate: parseBillableDate.toJSDate(),
+			billableDate,
 			description,
+			type,
 			currencyId,
 			categoryId,
+			creditCardId,
 			userId,
 			isDeleted: false
 		});
