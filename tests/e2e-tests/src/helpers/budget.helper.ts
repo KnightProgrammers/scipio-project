@@ -3,7 +3,7 @@ import { waitForRequest } from "./generic.helper";
 
 export const addBudgetItem = async (page: Page, categoryName: string): Promise<string> => {
     await page.locator('button[data-tn="add-budget-item-btn"]').click();
-    await expect(page.locator('tr[data-tn="budget-item-new-category-row"]')).toBeVisible();
+    await expect(page.locator('tr[data-tn="budget-item-new-item-row"]')).toBeVisible();
     await expect(page.locator('div#category-select-new-budget-item')).toBeVisible();
     const waitForCreateBudgetItemRequest = waitForRequest(page, 'upsertBudgetItem');
     const waitForBudget = waitForRequest(page, 'userBudget');
@@ -44,7 +44,7 @@ export const modifyBudgetItemLimit = async (page: Page, data: {
 
 
 export const deleteBudgetItem = async (page: Page, budgetItemId: string) => {
-    const waitForDeleteBudgetItemRequest = waitForRequest(page, 'upsertBudgetItem');
+    const waitForDeleteBudgetItemRequest = waitForRequest(page, 'deleteBudgetItem');
     await page.locator(`div[data-tn="budgets-page"] table tr[data-tn="budget-item-${budgetItemId}-row"] button[data-tn="delete-budget-item"]`).click();
     await page.locator('button[data-tn="confirm-dialog-confirm-btn"]').click();
     await waitForDeleteBudgetItemRequest;

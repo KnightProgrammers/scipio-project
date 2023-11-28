@@ -88,8 +88,10 @@ test('Start without items', async () => {
 test('Add an item', async () => {
 	const budgetItemId: string = await addBudgetItem(page, 'Category #1');
 	budgetItemIds.push(budgetItemId);
+	await expect(page.locator('div[data-tn="budgets-page"] div.alert[data-tn="budget-without-items"]')).not.toBeVisible();
 });
 test('Modify limit', async () => {
+	await page.reload();
 	await modifyBudgetItemLimit(page, {
 		budgetItemId: budgetItemIds[0],
 		currencyCode: DEFAULT_USER_CURRENCIES[0],
@@ -103,15 +105,14 @@ test('Another item', async () => {
 test('All items for all categories', async () => {
 	const budgetItemId: string = await addBudgetItem(page, 'Category #3');
 	budgetItemIds.push(budgetItemId);
+	await expect(page.locator('button[data-tn="add-budget-item-btn"]')).not.toBeVisible();
 });
 test('Delete one item', async () => {
 	await deleteBudgetItem(page, budgetItemIds[1]);
+	await expect(page.locator('button[data-tn="add-budget-item-btn"]')).toBeVisible();
 });
 test('Delete all items', async () => {
 	await deleteBudgetItem(page, budgetItemIds[0]);
 	await deleteBudgetItem(page, budgetItemIds[2]);
-	const emptyStateContainer = page.locator(
-		'div[data-tn="empty-state"]',
-	);
-	await expect(emptyStateContainer).toBeVisible();
+	await expect(page.locator('div[data-tn="budgets-page"] div.alert[data-tn="budget-without-items"]')).toBeVisible();
 });
