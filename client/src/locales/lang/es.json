@@ -272,6 +272,7 @@
         "name": "Nombre",
         "newPassword": "Nueva Contraseña",
         "password": "Contraseña",
+        "paymentMethod": "Método de Pago",
         "rememberMe": "Recordarme",
         "savingStatus": "Estado de Ahorro",
         "status": "Estado",

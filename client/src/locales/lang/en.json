@@ -272,6 +272,7 @@
         "name": "Name",
         "newPassword": "New Password",
         "password": "Password",
+        "paymentMethod": "Payment Method",
         "rememberMe": "Remember Me",
         "savingStatus": "Saving Status",
         "status": "Status",

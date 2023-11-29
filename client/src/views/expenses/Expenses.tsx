@@ -60,11 +60,13 @@ const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
 }
 
 type EXPENSE_TYPE = 'FIXED_EXPENSE' | 'VARIABLE_EXPENSE'
+type PAYMENT_METHOD_TYPE = 'CASH' | 'CREDIT_CARD'
 
 type ExpenseFilter = {
     fromDate: Date
     toDate: Date
     expenseType: EXPENSE_TYPE | 'ALL'
+    paymentMethod: PAYMENT_METHOD_TYPE | 'ALL'
     currencies: string[]
 }
 
@@ -504,12 +506,15 @@ const ExpenseFilter = (props: {
     const { t } = useTranslation()
 
     const EXPENSE_TYPES: EXPENSE_TYPE[] = ['FIXED_EXPENSE', 'VARIABLE_EXPENSE']
+    const PAYMENT_METHODS: PAYMENT_METHOD_TYPE[] = ['CASH', 'CREDIT_CARD']
 
     const [expenseTypes, setExpenseTypes] =
         useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
     const [currencyIds, setCurrencyIds] = useState<string[]>(
         props.defaultValue.currencies,
     )
+    const [paymentMethods, setPaymentMethods] =
+        useState<PAYMENT_METHOD_TYPE[]>(PAYMENT_METHODS)
 
     const { themeColor } = useConfig()
 
@@ -573,6 +578,10 @@ const ExpenseFilter = (props: {
                                             ? 'ALL'
                                             : expenseTypes[0],
                                     currencies: currencyIds,
+                                    paymentMethod:
+                                        paymentMethods.length > 1
+                                            ? 'ALL'
+                                            : paymentMethods[0],
                                 })
                                 onDrawerClose()
                             }}
@@ -776,6 +785,51 @@ const ExpenseFilter = (props: {
                         </div>
                     </Segment>
                 </AdaptableCard>
+                <AdaptableCard bordered className="mt-2">
+                    <p className="mb-2 font-bold">
+                        {t('fields.paymentMethod')}{' '}
+                    </p>
+                    <Segment
+                        value={paymentMethods}
+                        selectionType="multiple"
+                        onChange={(val) =>
+                            setPaymentMethods(val as PAYMENT_METHOD_TYPE[])
+                        }
+                    >
+                        <div className="flex flex-col gap-2 w-full py-2">
+                            {PAYMENT_METHODS.map(
+                                (item: PAYMENT_METHOD_TYPE) => (
+                                    <Segment.Item key={item} value={item}>
+                                        {({ active, onSegmentItemClick }) => {
+                                            return (
+                                                <SegmentItemOption
+                                                    hoverable
+                                                    active={active}
+                                                    className="w-full py-2"
+                                                    customCheck={<></>}
+                                                    data-tn={`payment-method-filter-${item.toLowerCase()}-opt`}
+                                                    onSegmentItemClick={
+                                                        onSegmentItemClick
+                                                    }
+                                                >
+                                                    <Checkbox
+                                                        readOnly
+                                                        checked={active}
+                                                    />
+                                                    <span className="text-sm">
+                                                        {t(
+                                                            `expensePaymentType.${item}`,
+                                                        )}
+                                                    </span>
+                                                </SegmentItemOption>
+                                            )
+                                        }}
+                                    </Segment.Item>
+                                ),
+                            )}
+                        </div>
+                    </Segment>
+                </AdaptableCard>
             </Drawer>
         </div>
     )
@@ -813,6 +867,7 @@ const Expenses = () => {
         toDate: DateTime.now().endOf('month').toJSDate(),
         expenseType: 'ALL',
         currencies: [],
+        paymentMethod: 'ALL',
     })
 
     const userState = useAppSelector((state) => state.auth.user)
@@ -944,12 +999,25 @@ const Expenses = () => {
             return true
         })
         .map((c: any) => {
-            if (expenseFilter && expenseFilter.currencies) {
+            if (
+                expenseFilter &&
+                (expenseFilter.currencies || expenseFilter.paymentMethod)
+            ) {
                 return {
                     ...c,
-                    expenses: c.expenses.filter((e: any) =>
-                        expenseFilter.currencies.includes(e.currency.id),
-                    ),
+                    expenses: c.expenses
+                        .filter((e: any) => {
+                            if (
+                                expenseFilter &&
+                                expenseFilter.paymentMethod !== 'ALL'
+                            ) {
+                                return expenseFilter.paymentMethod === e.type
+                            }
+                            return true
+                        })
+                        .filter((e: any) =>
+                            expenseFilter.currencies.includes(e.currency.id),
+                        ),
                 }
             }
             return c
