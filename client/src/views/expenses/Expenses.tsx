@@ -233,7 +233,7 @@ const ExpenseForm = (props: {
             isOpen={open}
             entity={
                 selectedExpense || {
-                    billableDate: DateTime.now().toFormat('dd/MM/yyyy'),
+                    billableDate: DateTime.now().toISO(),
                 }
             }
             title={t('pages.expenses.form.newTitle')}
@@ -267,7 +267,7 @@ const ExpenseForm = (props: {
                                             : DateTime.now()
                                         form.setFieldValue(
                                             field.name,
-                                            d.toFormat('dd/MM/yyyy'),
+                                            d.toISO(),
                                         )
                                     }}
                                 />
