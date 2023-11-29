@@ -50,6 +50,22 @@ class ExpenseService {
 			})
 			.sort({ billableDate: 1 });
 	}
+	static async getAllByCreditCard(userId: string, creditCardId: string, fromDate?: string, toDate?: string) {
+		const formattedFromDate = parseFilterDate(fromDate, 1);
+		const formattedToDate = parseFilterDate(toDate, 32);
+
+		return ExpenseModel
+			.find({
+				userId,
+				creditCardId,
+				billableDate: {
+					$gte: formattedFromDate.toJSDate(),
+					$lte: formattedToDate.toJSDate()
+				},
+				isDeleted: false
+			})
+			.sort({ billableDate: 1 });
+	}
 
 	static async getAllByCurrency(userId: string, currencyId: string, fromDate?: string, toDate?: string) {
 		const formattedFromDate = parseFilterDate(fromDate, 1);

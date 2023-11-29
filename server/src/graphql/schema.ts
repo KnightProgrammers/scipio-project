@@ -56,6 +56,7 @@ const schema = `
     status: CreditCardStatus!
     creditLimitAmount: Float!
     creditLimitCurrency: Currency!
+    expenses(fromDate: String, toDate: String): [Expense]!
   }
   
   enum CategoryType {
