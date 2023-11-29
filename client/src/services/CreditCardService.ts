@@ -60,6 +60,7 @@ export async function apiGetCreditCardListForSelect(): Promise<any[]> {
                           label
                           lastFourDigits
                           issuer
+                          cardHolder
                           status
                         }
                     }

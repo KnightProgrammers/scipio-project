@@ -7,7 +7,6 @@ import {
     FormItem,
     Input,
     ModalForm,
-    Progress,
     Select,
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
@@ -62,7 +61,7 @@ const CardTitle = (props: { creditCard: any }) => {
     let subTitle: string = creditCard.issuer
 
     if (creditCard.lastFourDigits) {
-        subTitle = `•••• ${creditCard.lastFourDigits}`;
+        subTitle = `•••• ${creditCard.lastFourDigits}`
     } else if (creditCard.cardHolder) {
         subTitle = creditCard.cardHolder
     }
@@ -172,16 +171,6 @@ const CreditCards = () => {
         { label: t('creditCardStatus.ACTIVE'), value: 'ACTIVE' },
         { label: t('creditCardStatus.BLOCKED'), value: 'BLOCKED' },
     ]
-
-    const progressColor = (actualUsage: number): string => {
-        if (actualUsage < 50) {
-            return 'green-500'
-        }
-        if (actualUsage < 75) {
-            return 'yellow-500'
-        }
-        return 'red-500'
-    }
 
     const validationSchema = Yup.object().shape({
         label: Yup.string().required(t('validations.required') || ''),
