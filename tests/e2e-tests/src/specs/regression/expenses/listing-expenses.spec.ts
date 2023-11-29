@@ -56,21 +56,21 @@ test.beforeAll(async ({ browser }) => {
 	await graphqlService.createExpense({
 		amount: 456,
 		categoryId: categoryId_1,
-		billableDate: DateTime.fromJSDate(new Date()).toFormat('dd/MM/yyyy'),
+		billableDate: DateTime.fromJSDate(new Date()).toISO(),
 		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[1]).id,
 		description: 'Expense #1'
 	});
 	await graphqlService.createExpense({
 		amount: 1203,
 		categoryId: categoryId_2,
-		billableDate: DateTime.fromJSDate(new Date()).toFormat('dd/MM/yyyy'),
+		billableDate: DateTime.fromJSDate(new Date()).toISO(),
 		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[0]).id,
 		description: 'Expense #2'
 	});
 	await graphqlService.createExpense({
 		amount: 86,
 		categoryId: categoryId_3,
-		billableDate: DateTime.fromJSDate(new Date()).minus({month: 1}).toFormat('dd/MM/yyyy'),
+		billableDate: DateTime.fromJSDate(new Date()).minus({month: 1}).toISO(),
 		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[1]).id,
 		description: 'Expense #3'
 	});
@@ -91,7 +91,6 @@ test.afterAll(async () => {
 		await page.close();
 	}
 });
-
 
 test('Validate Summary', async () => {
 	const summaryCard1 = await page.locator(`div[data-tn="summary-card-${DEFAULT_USER_CURRENCIES[0].toLowerCase()}"] h3`).textContent();
