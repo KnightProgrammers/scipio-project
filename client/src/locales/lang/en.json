@@ -394,7 +394,7 @@
         "COMPLETED": "Completed",
         "NOT_CONCLUDED": "No Concluded"
     },
-    "expenseMode": {
+    "expensePaymentType": {
         "CASH": "Cash",
         "CREDIT_CARD": "Credit Card"
     }

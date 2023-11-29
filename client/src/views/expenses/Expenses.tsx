@@ -657,7 +657,7 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
     const { textTheme } = useThemeClass()
 
     let icon = <BsCashCoin className="text-lg" />
-    const label = t(`expenseMode.${expense.type ?? 'CASH'}`)
+    const label = t(`expensePaymentType.${expense.type ?? 'CASH'}`)
 
     if (expense.type === 'CREDIT_CARD') {
         icon = <HiOutlineCreditCard className="text-lg" />

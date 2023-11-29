@@ -394,7 +394,7 @@
         "COMPLETED": "Completado",
         "NOT_CONCLUDED": "No Alcanzado"
     },
-    "expenseMode": {
+    "expensePaymentType": {
         "CASH": "Efectivo",
         "CREDIT_CARD": "Tarjeta de Crédito"
     }
