@@ -14,6 +14,12 @@ export const ExpenseSchema = new mongoose.Schema(
 			type: String,
 			required: false,
 		},
+		type: {
+			type: String,
+			required: true,
+			enum : ['CASH', 'CREDIT_CARD'],
+			default: 'CASH'
+		},
 		currencyId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Currency',
@@ -25,6 +31,10 @@ export const ExpenseSchema = new mongoose.Schema(
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
+		},
+		creditCardId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'CreditCard',
 		},
 		isDeleted: {
 			type: Boolean,

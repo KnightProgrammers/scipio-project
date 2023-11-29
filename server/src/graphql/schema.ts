@@ -56,6 +56,7 @@ const schema = `
     status: CreditCardStatus!
     creditLimitAmount: Float!
     creditLimitCurrency: Currency!
+    expenses(fromDate: String, toDate: String): [Expense]!
   }
   
   enum CategoryType {
@@ -73,6 +74,11 @@ const schema = `
     budget: BudgetItem
   }
   
+  enum ExpenseType {
+    CASH
+    CREDIT_CARD
+  }
+  
   type Expense {
     id: String!
     amount: Float!
@@ -80,6 +86,9 @@ const schema = `
     description: String
     currency: Currency!
     category: Category!
+    type: ExpenseType!
+    creditCard: CreditCard
+    creditCardId: String
   }
   
   enum SavingStatus {
@@ -225,6 +234,7 @@ const schema = `
     description: String
     currencyId: String!
     categoryId: String!
+    creditCardId: String
   }
   
   input SavingInput {

@@ -233,7 +233,7 @@ const ExpenseForm = (props: {
             isOpen={open}
             entity={
                 selectedExpense || {
-                    billableDate: DateTime.now().toFormat('dd/MM/yyyy'),
+                    billableDate: DateTime.now().toISO(),
                 }
             }
             title={t('pages.expenses.form.newTitle')}
@@ -267,7 +267,7 @@ const ExpenseForm = (props: {
                                             : DateTime.now()
                                         form.setFieldValue(
                                             field.name,
-                                            d.toFormat('dd/MM/yyyy'),
+                                            d.toISO(),
                                         )
                                     }}
                                 />
@@ -675,12 +675,12 @@ const Expenses = () => {
         queryKey: ['user-currencies-with-expenses'],
         queryFn: async () => {
             const data = await apiGetUserCurrenciesWithExpenses({
-                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
-                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
+                fromDate:
+                    DateTime.fromJSDate(expenseFilter.fromDate).toISO() ??
+                    undefined,
+                toDate:
+                    DateTime.fromJSDate(expenseFilter.toDate).toISO() ??
+                    undefined,
             })
             if (expenseFilter.currencies.length === 0) {
                 setExpenseFilter({
@@ -700,12 +700,12 @@ const Expenses = () => {
         queryKey: ['user-expenses-by-category'],
         queryFn: async () =>
             apiGetExpenseList({
-                fromDate: DateTime.fromJSDate(expenseFilter.fromDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
-                toDate: DateTime.fromJSDate(expenseFilter.toDate).toFormat(
-                    'dd/MM/yyyy',
-                ),
+                fromDate:
+                    DateTime.fromJSDate(expenseFilter.fromDate).toISO() ??
+                    undefined,
+                toDate:
+                    DateTime.fromJSDate(expenseFilter.toDate).toISO() ??
+                    undefined,
             }),
     })
 
@@ -952,7 +952,9 @@ const Expenses = () => {
                                 >
                                     <span className="w-full flex flex-col">
                                         <small className="font-light text-current">
-                                            {item.billableDate}
+                                            {DateTime.fromISO(
+                                                item.billableDate,
+                                            ).toFormat('dd/MM/yyyy')}
                                         </small>
                                         <span className="text-lg">
                                             {item.description
@@ -961,7 +963,11 @@ const Expenses = () => {
                                                       'pages.expenses.genericDescription',
                                                       {
                                                           billableDate:
-                                                              item.billableDate,
+                                                              DateTime.fromISO(
+                                                                  item.billableDate,
+                                                              ).toFormat(
+                                                                  'dd/MM/yyyy',
+                                                              ),
                                                       },
                                                   )}
                                         </span>

@@ -3,15 +3,16 @@ import ExpenseModel from '@/models/expense.model';
 
 interface ExpenseInput {
 	amount: number,
-	billableDate: string,
+	billableDate: Date,
 	description?: string,
 	currencyId: string,
 	categoryId: string,
+	creditCardId?: string,
 }
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
 	const formattedDate = stringDate ?
-		DateTime.fromFormat(stringDate, 'dd/MM/yyyy') :
+		DateTime.fromISO(stringDate) :
 		DateTime.now().set({day: defaultDay});
 
 	return formattedDate.set({hour: 0, minute: 0, second: 0, millisecond: 0});
@@ -49,6 +50,22 @@ class ExpenseService {
 			})
 			.sort({ billableDate: 1 });
 	}
+	static async getAllByCreditCard(userId: string, creditCardId: string, fromDate?: string, toDate?: string) {
+		const formattedFromDate = parseFilterDate(fromDate, 1);
+		const formattedToDate = parseFilterDate(toDate, 32);
+
+		return ExpenseModel
+			.find({
+				userId,
+				creditCardId,
+				billableDate: {
+					$gte: formattedFromDate.toJSDate(),
+					$lte: formattedToDate.toJSDate()
+				},
+				isDeleted: false
+			})
+			.sort({ billableDate: 1 });
+	}
 
 	static async getAllByCurrency(userId: string, currencyId: string, fromDate?: string, toDate?: string) {
 		const formattedFromDate = parseFilterDate(fromDate, 1);
@@ -72,24 +89,24 @@ class ExpenseService {
 			billableDate,
 			description = '',
 			currencyId,
-			categoryId
+			categoryId,
+			creditCardId
 		} = data;
 
-		const parseBillableDate = DateTime
-			.fromFormat(billableDate, 'dd/MM/yyyy')
-			.set({
-				hour: 0,
-				minute: 0,
-				second: 0,
-				millisecond: 0
-			});
+		let type: string = 'CASH';
+
+		if (creditCardId) {
+			type = 'CREDIT_CARD';
+		}
 
 		return ExpenseModel.create({
 			amount,
-			billableDate: parseBillableDate.toJSDate(),
+			billableDate,
 			description,
+			type,
 			currencyId,
 			categoryId,
+			creditCardId,
 			userId,
 			isDeleted: false
 		});
