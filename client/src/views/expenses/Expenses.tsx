@@ -289,6 +289,7 @@ const ExpenseForm = (props: {
                                                 hoverable
                                                 active={active}
                                                 className="bg-white dark:bg-gray-800 w-full"
+                                                data-tn={`payment-method-selector-${item.label.toLowerCase()}-opt`}
                                                 onSegmentItemClick={
                                                     onSegmentItemClick
                                                 }
