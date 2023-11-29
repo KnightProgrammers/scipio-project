@@ -50,6 +50,7 @@ import { useConfig } from '@/components/ui/ConfigProvider'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 import { apiGetCreditCardListForSelect } from '@/services/CreditCardService'
 import { PiMoneyBold } from 'react-icons/pi'
+import { useNavigate } from "react-router-dom";
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -840,6 +841,7 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
     const { expense } = props
     const { t } = useTranslation()
     const { textTheme } = useThemeClass()
+    const navigate = useNavigate()
 
     let icon = <PiMoneyBold className="text-lg" />
     const label = t(`expensePaymentType.${expense.type ?? 'CASH'}`)
@@ -848,10 +850,20 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
         icon = <HiOutlineCreditCard className="text-lg" />
     }
 
+    const cursorClassName: string = expense.type === 'CREDIT_CARD' ? 'cursor-pointer' : 'cursor-default'
+
+    const handleClick = () => {
+        if (expense.type === 'CREDIT_CARD') {
+            navigate(`/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`)
+        }
+    }
+
     return (
-        <IconText className={`${textTheme} text-sm font-semibold`} icon={icon}>
-            {label}
-        </IconText>
+        <span onClick={handleClick}>
+            <IconText className={`${textTheme} text-sm font-semibold ${cursorClassName}`} icon={icon}>
+                {label}
+            </IconText>
+        </span>
     )
 }
 
@@ -1182,7 +1194,7 @@ const Expenses = () => {
                                         className="py-2 px-4 flex items-center card-border my-2 rounded-lg relative"
                                         data-tn={`expense-container-${item.id}`}
                                     >
-                                        <span className="w-full flex flex-col">
+                                        <div className="w-full flex flex-col">
                                             <div className="flex items-center">
                                                 <ExpenseTypeIcon
                                                     expense={item}
@@ -1208,7 +1220,7 @@ const Expenses = () => {
                                                           },
                                                       )}
                                             </p>
-                                        </span>
+                                        </div>
                                         <span className="text-left font-bold mt-4">
                                             {currencyFormat(
                                                 item.amount,
