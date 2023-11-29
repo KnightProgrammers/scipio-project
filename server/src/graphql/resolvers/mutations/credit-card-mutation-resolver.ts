@@ -2,9 +2,9 @@ import CreditCardService from '@/services/credit-card-service';
 import CurrencyService from '@/services/currency.service';
 
 type CreditCardInput = {
-	label?: string;
+	label: string;
 	lastFourDigits?: string;
-	cardHolder: string;
+	cardHolder?: string;
 	expiration: string;
 	issuer: string;
 	status: string;

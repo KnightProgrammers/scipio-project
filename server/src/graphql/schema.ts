@@ -48,9 +48,9 @@ const schema = `
   
   type CreditCard {
     id: String!
-    label: String
-    cardHolder: String!
-    lastFourDigits: String!
+    label: String!
+    cardHolder: String
+    lastFourDigits: String
     expiration: String!
     issuer: CreditCardIssuer!
     status: CreditCardStatus!
@@ -143,7 +143,7 @@ const schema = `
     currencies: [UserCurrency]!
     banks: [Bank]!
     bankAccounts: [BankAccount]!
-    creditCards: [CreditCard]!
+    creditCards(statuses: [CreditCardStatus]): [CreditCard]!
     categories: [Category]!
     expenses(fromDate: String, toDate: String): [Expense]!
     savings(statuses: [SavingStatus]): [Saving]!
@@ -212,9 +212,9 @@ const schema = `
   }
 
   input CreditCardInput {
-    label: String = ""
+    label: String!
     lastFourDigits: String = ""
-    cardHolder: String!
+    cardHolder: String = ""
     expiration: String!
     issuer: CreditCardIssuer!
     status: CreditCardStatus! = ACTIVE

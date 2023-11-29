@@ -1,15 +1,24 @@
 import { DateTime } from 'luxon';
-import CreditCardModel from '@/models/credit-card.model';
+import CreditCardSchema from '@/models/credit-card.model';
+
+export type CREDIT_CARD_STATUS_TYPE = 'ACTIVE'|'EXPIRED'|'BLOCKED';
 
 class CreditCardService {
-	static async getAll(userId: string) {
-		return CreditCardModel.find({userId});
+	static async getAll(userId: string, statuses?: CREDIT_CARD_STATUS_TYPE[]) {
+		let query: any = { userId };
+		if (statuses) {
+			query = {
+				...query,
+				status: statuses
+			}
+		}
+		return CreditCardSchema.find(query).sort({ label: 1 })
 	}
 
 	static async create(userId: string, data: {
-		label?: string
+		label: string
 		lastFourDigits?: string
-		cardHolder: string
+		cardHolder?: string
 		expiration: string
 		issuer: string
 		status: string
@@ -18,16 +27,16 @@ class CreditCardService {
 	}) {
 		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MMyy');
 
-		return CreditCardModel.create({
+		return CreditCardSchema.create({
 			...data,
 			expiration: parsedExpiration.toJSDate(),
 			userId
 		});
 	}
 	static async update(id: string, userId: string, data: {
-		label?: string
+		label: string
 		lastFourDigits?: string
-		cardHolder: string
+		cardHolder?: string
 		expiration: string
 		issuer: string
 		status: string
@@ -37,7 +46,7 @@ class CreditCardService {
 		const creditCard = await this.findOne(id, userId);
 		if (!creditCard) return null;
 		const parsedExpiration = DateTime.fromFormat(data.expiration, 'MMyy');
-		return CreditCardModel.findOneAndUpdate({ _id: id, userId }, {
+		return CreditCardSchema.findOneAndUpdate({ _id: id, userId }, {
 			...data,
 			expiration: parsedExpiration.toJSDate(),
 		});
@@ -53,7 +62,7 @@ class CreditCardService {
 
 	static async findOne(id: string, userId: string) {
 		if (!id || !userId) return null;
-		return CreditCardModel.findOne({ _id: id, userId });
+		return CreditCardSchema.findOne({ _id: id, userId });
 	}
 }
 
