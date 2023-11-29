@@ -28,9 +28,13 @@ export async function apiGetExpenseList({
                         amount
                         billableDate
                         description
+                        type
                         currency {
                           id
                           code
+                        }
+                        creditCard {
+                            id
                         }
                       }
                       budget {

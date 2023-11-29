@@ -393,5 +393,9 @@
         "IN_PROGRESS": "Active",
         "COMPLETED": "Completed",
         "NOT_CONCLUDED": "No Concluded"
+    },
+    "expenseMode": {
+        "CASH": "Cash",
+        "CREDIT_CARD": "Credit Card"
     }
 }

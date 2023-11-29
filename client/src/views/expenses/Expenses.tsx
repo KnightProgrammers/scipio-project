@@ -29,7 +29,7 @@ import {
     apiGetExpenseList,
 } from '@/services/ExpenseService'
 import currencyFormat from '@/utils/currencyFormat'
-import { HiOutlineTrash, HiPlus } from 'react-icons/hi'
+import { HiOutlineCreditCard, HiOutlineTrash, HiPlus } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
 import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
@@ -42,9 +42,11 @@ import * as Yup from 'yup'
 import { SelectFieldItem } from '@/components/ui/Form'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 import DatePicker from '@/components/ui/DatePicker'
-import { BsCalendarRange } from 'react-icons/bs'
+import { BsCalendarRange, BsCashCoin } from 'react-icons/bs'
 import { LuFilter } from 'react-icons/lu'
 import { useConfig } from '@/components/ui/ConfigProvider'
+import { HiClock } from 'react-icons/hi2'
+import useThemeClass from '@/utils/hooks/useThemeClass'
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -649,6 +651,25 @@ const ExpenseFilter = (props: {
     )
 }
 
+const ExpenseTypeIcon = (props: { expense: any }) => {
+    const { expense } = props
+    const { t } = useTranslation()
+    const { textTheme } = useThemeClass()
+
+    let icon = <BsCashCoin className="text-lg" />
+    const label = t(`expenseMode.${expense.type ?? 'CASH'}`)
+
+    if (expense.type === 'CREDIT_CARD') {
+        icon = <HiOutlineCreditCard className="text-lg" />
+    }
+
+    return (
+        <IconText className={`${textTheme} text-sm font-semibold`} icon={icon}>
+            {label}
+        </IconText>
+    )
+}
+
 const Expenses = () => {
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [selectedExpense, setSelectedExpense] = useState<any | undefined>(
@@ -891,7 +912,7 @@ const Expenses = () => {
                         data-tn={`category-detail-${c.id}`}
                         header={
                             <div className="w-full flex flex-col items-center">
-                                <div className="w-full flex justify-between items-center mb-2 mr-4">
+                                <div className="w-full flex justify-between items-center mr-4">
                                     <span className="text-md sm:text-lg lg:text-2xl font-semibold">
                                         {c.name}
                                     </span>
@@ -905,9 +926,7 @@ const Expenses = () => {
                                             setSelectedExpense({
                                                 categoryId: c.id,
                                                 billableDate:
-                                                    DateTime.now().toFormat(
-                                                        'dd/MM/yyyy',
-                                                    ),
+                                                    DateTime.now().toISO(),
                                             })
                                         }}
                                     >
@@ -951,12 +970,15 @@ const Expenses = () => {
                                     data-tn={`expense-container-${item.id}`}
                                 >
                                     <span className="w-full flex flex-col">
-                                        <small className="font-light text-current">
-                                            {DateTime.fromISO(
-                                                item.billableDate,
-                                            ).toFormat('dd/MM/yyyy')}
-                                        </small>
-                                        <span className="text-lg">
+                                        <div className="flex items-center">
+                                            <ExpenseTypeIcon expense={item} />
+                                            <span className="font-light text-current ml-2">
+                                                {DateTime.fromISO(
+                                                    item.billableDate,
+                                                ).toFormat('dd/MM/yyyy')}
+                                            </span>
+                                        </div>
+                                        <p className="text-lg">
                                             {item.description
                                                 ? item.description
                                                 : t(
@@ -970,7 +992,7 @@ const Expenses = () => {
                                                               ),
                                                       },
                                                   )}
-                                        </span>
+                                        </p>
                                     </span>
                                     <span className="text-left font-bold mt-4">
                                         {currencyFormat(
