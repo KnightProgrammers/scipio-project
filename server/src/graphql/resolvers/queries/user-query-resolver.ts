@@ -1,6 +1,6 @@
 import * as gavatar from 'gravatar';
 import BankService from '@/services/bank.service';
-import CreditCardService, { CREDIT_CARD_STATUS_TYPE } from "@/services/credit-card-service";
+import CreditCardService, { CREDIT_CARD_STATUS_TYPE } from '@/services/credit-card-service';
 import CategoryService from '@/services/category.service';
 import ExpenseService from '@/services/expense.service';
 import SavingService, { SAVING_STATUS_TYPE } from '@/services/saving.service';

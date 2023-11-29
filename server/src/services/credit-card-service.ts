@@ -10,9 +10,9 @@ class CreditCardService {
 			query = {
 				...query,
 				status: statuses
-			}
+			};
 		}
-		return CreditCardSchema.find(query).sort({ label: 1 })
+		return CreditCardSchema.find(query).sort({ label: 1 });
 	}
 
 	static async create(userId: string, data: {
