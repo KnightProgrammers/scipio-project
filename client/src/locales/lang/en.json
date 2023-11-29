@@ -254,6 +254,7 @@
         "category": "Category",
         "confirmPassword": "Confirm Password",
         "country": "Country",
+        "creditCard": "Credit Card",
         "creditLimitAmount": "Credit Limit",
         "currency": "Currency",
         "currentPassword": "Current Password",

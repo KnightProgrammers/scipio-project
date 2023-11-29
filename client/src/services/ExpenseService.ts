@@ -63,6 +63,7 @@ export async function apiCreateExpense(data: {
     billableDate: string
     currencyId: string
     categoryId: string
+    creditCardId: string
 }) {
     const response = await BaseService.request({
         url: '/graphql',
@@ -76,6 +77,7 @@ export async function apiCreateExpense(data: {
                     $billableDate: String!
                     $currencyId: String!
                     $categoryId: String!
+                    $creditCardId: String
                 ) {
                     createExpense(input: {
                         amount: $amount
@@ -83,6 +85,7 @@ export async function apiCreateExpense(data: {
                         billableDate: $billableDate
                         currencyId: $currencyId
                         categoryId: $categoryId
+                        creditCardId: $creditCardId
                     }) {
                         id
                     }
