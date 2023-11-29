@@ -127,14 +127,14 @@ const CreditCards = () => {
     const {
         data: creditCardList,
         isFetching: isFetchingCreditCards,
-        refetch: refetchUserCurrencies,
+        refetch: refetchCreditCards,
     } = useQuery({
         queryKey: ['user-credit-cards'],
         queryFn: apiGetCreditCardList,
     })
 
     const onMutationSuccess = async (title: string) => {
-        refetchUserCurrencies()
+        refetchCreditCards()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
