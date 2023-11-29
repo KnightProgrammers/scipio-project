@@ -50,7 +50,7 @@ import { useConfig } from '@/components/ui/ConfigProvider'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 import { apiGetCreditCardListForSelect } from '@/services/CreditCardService'
 import { PiMoneyBold } from 'react-icons/pi'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -850,17 +850,23 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
         icon = <HiOutlineCreditCard className="text-lg" />
     }
 
-    const cursorClassName: string = expense.type === 'CREDIT_CARD' ? 'cursor-pointer' : 'cursor-default'
+    const cursorClassName: string =
+        expense.type === 'CREDIT_CARD' ? 'cursor-pointer' : 'cursor-default'
 
     const handleClick = () => {
         if (expense.type === 'CREDIT_CARD') {
-            navigate(`/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`)
+            navigate(
+                `/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`,
+            )
         }
     }
 
     return (
         <span onClick={handleClick}>
-            <IconText className={`${textTheme} text-sm font-semibold ${cursorClassName}`} icon={icon}>
+            <IconText
+                className={`${textTheme} text-sm font-semibold ${cursorClassName}`}
+                icon={icon}
+            >
                 {label}
             </IconText>
         </span>
