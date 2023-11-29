@@ -12,7 +12,7 @@ interface ExpenseInput {
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
 	const formattedDate = stringDate ?
-		DateTime.fromFormat(stringDate, 'dd/MM/yyyy') :
+		DateTime.fromISO(stringDate) :
 		DateTime.now().set({day: defaultDay});
 
 	return formattedDate.set({hour: 0, minute: 0, second: 0, millisecond: 0});
