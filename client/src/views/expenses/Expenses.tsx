@@ -1197,10 +1197,10 @@ const Expenses = () => {
                                 {c.expenses.map((item: any) => (
                                     <li
                                         key={item.id}
-                                        className="py-2 px-4 flex items-center card-border my-2 rounded-lg relative"
+                                        className="py-2 px-4 flex flex-col w-full items-center card-border my-2 rounded-lg relative"
                                         data-tn={`expense-container-${item.id}`}
                                     >
-                                        <div className="w-full flex flex-col">
+                                        <div className="w-full flex">
                                             <div className="flex items-center">
                                                 <ExpenseTypeIcon
                                                     expense={item}
@@ -1211,6 +1211,36 @@ const Expenses = () => {
                                                     ).toFormat('dd/MM/yyyy')}
                                                 </span>
                                             </div>
+
+                                            <Dropdown
+                                                className="absolute right-2 top-1"
+                                                placement="middle-end-top"
+                                                renderTitle={
+                                                    <EllipsisButton data-tn="dropdown-expense-btn" />
+                                                }
+                                            >
+                                                <Dropdown.Item
+                                                    eventKey="delete"
+                                                    data-tn="delete-expense-btn"
+                                                    onClick={() => {
+                                                        setIsConfirmDeleteOpen(
+                                                            true,
+                                                        )
+                                                        setSelectedExpense(item)
+                                                    }}
+                                                >
+                                                    <IconText
+                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                        icon={
+                                                            <HiOutlineTrash />
+                                                        }
+                                                    >
+                                                        {t('actions.delete')}
+                                                    </IconText>
+                                                </Dropdown.Item>
+                                            </Dropdown>
+                                        </div>
+                                        <div className="w-full grid grid-cols-2 items-center">
                                             <p className="text-lg">
                                                 {item.description
                                                     ? item.description
@@ -1226,38 +1256,15 @@ const Expenses = () => {
                                                           },
                                                       )}
                                             </p>
+                                            <span className="text-right font-bold">
+                                                {currencyFormat(
+                                                    item.amount,
+                                                    item.currency.code,
+                                                    i18n.language,
+                                                    userState.country?.code,
+                                                )}
+                                            </span>
                                         </div>
-                                        <span className="text-left font-bold mt-4">
-                                            {currencyFormat(
-                                                item.amount,
-                                                item.currency.code,
-                                                i18n.language,
-                                                userState.country?.code,
-                                            )}
-                                        </span>
-                                        <Dropdown
-                                            className="absolute right-2 top-1"
-                                            placement="middle-end-top"
-                                            renderTitle={
-                                                <EllipsisButton data-tn="dropdown-expense-btn" />
-                                            }
-                                        >
-                                            <Dropdown.Item
-                                                eventKey="delete"
-                                                data-tn="delete-expense-btn"
-                                                onClick={() => {
-                                                    setIsConfirmDeleteOpen(true)
-                                                    setSelectedExpense(item)
-                                                }}
-                                            >
-                                                <IconText
-                                                    className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                    icon={<HiOutlineTrash />}
-                                                >
-                                                    {t('actions.delete')}
-                                                </IconText>
-                                            </Dropdown.Item>
-                                        </Dropdown>
                                     </li>
                                 ))}
                             </ul>
