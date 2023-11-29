@@ -244,7 +244,8 @@
         "submitting": "Submiting...",
         "tryAgain": "Try again",
         "update": "Update",
-        "updating": "Updating"
+        "updating": "Updating",
+        "viewDetail": "View Detail"
     },
     "fields": {
         "amount": "Amount",
@@ -253,6 +254,7 @@
         "category": "Category",
         "confirmPassword": "Confirm Password",
         "country": "Country",
+        "creditCard": "Credit Card",
         "creditLimitAmount": "Credit Limit",
         "currency": "Currency",
         "currentPassword": "Current Password",
@@ -270,6 +272,7 @@
         "name": "Name",
         "newPassword": "New Password",
         "password": "Password",
+        "paymentMethod": "Payment Method",
         "rememberMe": "Remember Me",
         "savingStatus": "Saving Status",
         "status": "Status",
@@ -393,5 +396,9 @@
         "IN_PROGRESS": "Active",
         "COMPLETED": "Completed",
         "NOT_CONCLUDED": "No Concluded"
+    },
+    "expensePaymentType": {
+        "CASH": "Cash",
+        "CREDIT_CARD": "Credit Card"
     }
 }

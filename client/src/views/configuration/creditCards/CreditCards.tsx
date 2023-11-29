@@ -7,7 +7,6 @@ import {
     FormItem,
     Input,
     ModalForm,
-    Progress,
     Select,
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
@@ -54,6 +53,29 @@ function limit(val: string, max: string) {
     }
 
     return val
+}
+
+const CardTitle = (props: { creditCard: any }) => {
+    const { creditCard } = props
+
+    let subTitle: string = creditCard.issuer
+
+    if (creditCard.lastFourDigits) {
+        subTitle = `•••• ${creditCard.lastFourDigits}`
+    } else if (creditCard.cardHolder) {
+        subTitle = creditCard.cardHolder
+    }
+
+    return (
+        <div className="grid ">
+            <span className="pl-2 text-xs font-light inline-flex">
+                {subTitle.toLocaleUpperCase()}
+            </span>
+            <span className="pl-2 text-lg inline-flex">
+                {creditCard.label.toLocaleUpperCase()}
+            </span>
+        </div>
+    )
 }
 
 function cardExpiryFormat(val: string) {
@@ -105,14 +127,14 @@ const CreditCards = () => {
     const {
         data: creditCardList,
         isFetching: isFetchingCreditCards,
-        refetch: refetchUserCurrencies,
+        refetch: refetchCreditCards,
     } = useQuery({
         queryKey: ['user-credit-cards'],
         queryFn: apiGetCreditCardList,
     })
 
     const onMutationSuccess = async (title: string) => {
-        refetchUserCurrencies()
+        refetchCreditCards()
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
@@ -150,18 +172,8 @@ const CreditCards = () => {
         { label: t('creditCardStatus.BLOCKED'), value: 'BLOCKED' },
     ]
 
-    const progressColor = (actualUsage: number): string => {
-        if (actualUsage < 50) {
-            return 'green-500'
-        }
-        if (actualUsage < 75) {
-            return 'yellow-500'
-        }
-        return 'red-500'
-    }
-
     const validationSchema = Yup.object().shape({
-        cardHolder: Yup.string().required(t('validations.required') || ''),
+        label: Yup.string().required(t('validations.required') || ''),
         expiration: Yup.string().required(t('validations.required') || ''),
         issuer: Yup.string().required(t('validations.required') || ''),
         status: Yup.string().required(t('validations.required') || ''),
@@ -232,6 +244,7 @@ const CreditCards = () => {
             ) => (
                 <>
                     <FormItem
+                        asterisk
                         label={t(`fields.label`) || ''}
                         invalid={!!errors.label || !!touched.label}
                         errorMessage={errors.label?.toString()}
@@ -245,7 +258,6 @@ const CreditCards = () => {
                         />
                     </FormItem>
                     <FormItem
-                        asterisk
                         label={t(`fields.cardHolder`) || ''}
                         invalid={!!errors.cardHolder || !!touched.cardHolder}
                         errorMessage={errors.cardHolder?.toString()}
@@ -471,16 +483,7 @@ const CreditCards = () => {
                         header={
                             <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
                                 <CardIcon cardIssuer={c.issuer} />
-                                <div className="grid ">
-                                    <span className="pl-2 text-xs font-light inline-flex">
-                                        {c.label.toLocaleUpperCase()}
-                                    </span>
-                                    {!!c.lastFourDigits && (
-                                        <span className="pl-2 text-lg inline-flex">
-                                            •••• {c.lastFourDigits}
-                                        </span>
-                                    )}
-                                </div>
+                                <CardTitle creditCard={c} />
                                 <Dropdown
                                     className="absolute right-0 top-0"
                                     placement="middle-end-top"
@@ -556,25 +559,15 @@ const CreditCards = () => {
                                         )}
                                     </p>
                                 </div>
-                                <p className="text-gray-500 font-light hidden">
-                                    Crédito Usado
-                                </p>
-                                <div className="hidden">
-                                    <Progress
-                                        percent={0}
-                                        size="md"
-                                        color={progressColor(0)}
-                                    />
-                                </div>
                             </div>
-                            <div className="py-4 hidden">
+                            <div className="p-4 hidden">
                                 <Button
                                     block
                                     variant="twoTone"
                                     size="sm"
                                     icon={<HiEye />}
                                 >
-                                    Ver Movimientos
+                                    {t('actions.viewDetail')}
                                 </Button>
                             </div>
                         </div>

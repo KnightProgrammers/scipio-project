@@ -2,9 +2,9 @@ import BaseService from '@/services/BaseService'
 
 type CreditCardInput = {
     id?: string
-    label?: string
+    label: string
     lastFourDigits?: string
-    cardHolder: string
+    cardHolder?: string
     expiration: string
     issuer: string
     status: string
@@ -45,6 +45,33 @@ export async function apiGetCreditCardList(): Promise<any[]> {
     return response.data.data.me.creditCards
 }
 
+export async function apiGetCreditCardListForSelect(): Promise<any[]> {
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'userCreditCards',
+            query: `
+                query userCreditCards { 
+                    me {
+                        id
+                        creditCards {
+                          id
+                          label
+                          lastFourDigits
+                          issuer
+                          cardHolder
+                          status
+                        }
+                    }
+                }
+            `,
+            variables: {},
+        },
+    })
+    return response.data.data.me.creditCards
+}
+
 export async function apiCreateCreditCard(body: CreditCardInput): Promise<any> {
     const {
         label,
@@ -63,9 +90,9 @@ export async function apiCreateCreditCard(body: CreditCardInput): Promise<any> {
             operationName: 'createCreditCard',
             query: `
                 mutation createCreditCard(
-                    $label: String
+                    $label: String!
                     $lastFourDigits: String
-                    $cardHolder: String!
+                    $cardHolder: String
                     $expiration: String!
                     $issuer: CreditCardIssuer!
                     $status: CreditCardStatus!
@@ -132,9 +159,9 @@ export async function apiUpdateCreditCard(body: CreditCardInput): Promise<any> {
             query: `
                 mutation updateCreditCard(
                     $id: String!
-                    $label: String
+                    $label: String!
                     $lastFourDigits: String
-                    $cardHolder: String!
+                    $cardHolder: String
                     $expiration: String!
                     $issuer: CreditCardIssuer!
                     $status: CreditCardStatus!

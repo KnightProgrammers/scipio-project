@@ -11,22 +11,27 @@ type ExpenseFilterType = {
 }
 
 export const createExpense = async (page: Page, data: {
+	type: 'CASH' | 'CREDIT_CARD'
 	billableDate?: Date
 	description?: string
 	amount: number,
 	currencyCode: string
 	categoryName: string
+	creditCardId?: string
 })=>  {
 	const {
+		type = 'CASH',
 		billableDate= new Date(),
 		description = '',
 		amount,
 		currencyCode,
-		categoryName
+		categoryName,
+		creditCardId
 	} = data;
 	await page.locator('button[data-tn="add-expense-btn"]').click();
 	const expenseFormContainer = page.locator('div[role="dialog"]');
 	await expect(expenseFormContainer).toBeVisible();
+	await page.locator(`div[data-tn="payment-method-selector-${type.toLowerCase()}-opt"]`).click();
 	await page.locator('input[data-tn="billable-date-input"]').fill(DateTime.fromJSDate(billableDate).toFormat('dd/MM/yyyy'));
 	await page.locator('input[name="description"]').fill(description);
 	await page.locator('input[name="amount"]').fill(amount.toString());
@@ -34,6 +39,10 @@ export const createExpense = async (page: Page, data: {
 	await page.keyboard.press('Enter');
 	await page.locator('#category-select input.select__input').fill(categoryName);
 	await page.keyboard.press('Enter');
+	if (creditCardId) {
+		await page.locator('#credit-card-select input.select__input').fill(creditCardId);
+		await page.keyboard.press('Enter');
+	}
 	const saveExpenseWaitForRequest = waitForRequest(page, 'createExpense');
 	const getExpenseListWaitForRequest = waitForRequest(page, 'userExpensesByCategory');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();

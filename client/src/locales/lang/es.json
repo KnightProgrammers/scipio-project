@@ -244,7 +244,8 @@
         "submitting": "Enviando...",
         "tryAgain": "Volver a intentar",
         "update": "Actualizar",
-        "updating": "Actualizando"
+        "updating": "Actualizando",
+        "viewDetail": "Ver Detalle"
     },
     "fields": {
         "amount": "Monto",
@@ -253,6 +254,7 @@
         "category": "Categoría",
         "confirmPassword": "Repetir Contraseña",
         "country": "Pais",
+        "creditCard": "Tarjeta de Crédito",
         "creditLimitAmount": "Limite de Crédito",
         "currency": "Moneda",
         "currentPassword": "Contraseña Actual",
@@ -270,6 +272,7 @@
         "name": "Nombre",
         "newPassword": "Nueva Contraseña",
         "password": "Contraseña",
+        "paymentMethod": "Método de Pago",
         "rememberMe": "Recordarme",
         "savingStatus": "Estado de Ahorro",
         "status": "Estado",
@@ -393,5 +396,9 @@
         "IN_PROGRESS": "Activo",
         "COMPLETED": "Completado",
         "NOT_CONCLUDED": "No Alcanzado"
+    },
+    "expensePaymentType": {
+        "CASH": "Efectivo",
+        "CREDIT_CARD": "Tarjeta de Crédito"
     }
 }
