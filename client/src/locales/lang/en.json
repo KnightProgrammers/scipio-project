@@ -50,6 +50,9 @@
             "deleteConfirmation": {
                 "title": "Delete Bank Account",
                 "description": "Are you sure you want to delete the bank account \"{{accountNumber}}\"?"
+            },
+            "tooltips": {
+                "warnHasSavings": "The account has savings associated, delete them before continuing"
             }
         },
         "budgets": {
