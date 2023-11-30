@@ -36,6 +36,10 @@ export const ExpenseSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'CreditCard',
 		},
+		creditCardMonthlyStatementId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'CreditCardMonthlyStatement',
+		},
 		isDeleted: {
 			type: Boolean,
 			default: false,
