@@ -14,6 +14,7 @@ import {
     FormItem,
     Input,
     ModalForm,
+    Tooltip,
 } from '@/components/ui'
 import currencyFormat from '@/utils/currencyFormat'
 import { useState } from 'react'
@@ -45,6 +46,7 @@ import * as Yup from 'yup'
 import { useAppSelector } from '@/store'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { MdOutlineAttachMoney } from 'react-icons/md'
+import { PiWarningOctagonBold } from 'react-icons/pi'
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -171,11 +173,7 @@ const BankAccounts = () => {
         onDeleteConfirmClose()
     }
 
-    if (
-        !bankAccountList ||
-        isFetchingUserCurrencies ||
-        isFetchingBankAccounts
-    ) {
+    if (!bankAccountList) {
         return <Loading loading={true} type="cover" className="w-full h-80" />
     }
 
@@ -206,58 +204,61 @@ const BankAccounts = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             data-tn="bank-accounts-page"
         >
-            {bankAccountList.map((bank: any) => {
-                return (
-                    <Card
-                        key={bank.name}
-                        data-tn={`bank-${bank.id}-card`}
-                        header={
-                            <div
-                                className="flex inline-flex items-center w-full"
-                                style={{ overflow: 'hidden' }}
-                            >
-                                <Avatar
-                                    src={bank.icon && bank.icon}
-                                    icon={!bank.icon && <HiLibrary />}
-                                    className={`mr-2 ${bgTheme} dark:${bgTheme}`}
-                                    size={32}
-                                />
-                                <span
-                                    className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+            <Loading
+                loading={isFetchingUserCurrencies || isFetchingBankAccounts}
+                type="cover"
+            >
+                {bankAccountList.map((bank: any) => {
+                    return (
+                        <Card
+                            key={bank.name}
+                            data-tn={`bank-${bank.id}-card`}
+                            header={
+                                <div
+                                    className="flex inline-flex items-center w-full"
+                                    style={{ overflow: 'hidden' }}
                                 >
-                                    {bank.name}
-                                </span>
-                            </div>
-                        }
-                        className="flex flex-col justify-between"
-                        footerClass=""
-                        footer={
-                            <Button
-                                variant="twoTone"
-                                block={true}
-                                icon={<HiPlus />}
-                                data-tn="add-bank-account-btn"
-                                color={`${themeColor}`}
-                                onClick={() => {
-                                    setSelectedBank(bank)
-                                    setIsFormOpen(true)
-                                }}
-                            >
-                                {t('pages.bankAccounts.addAccountButton')}
-                            </Button>
-                        }
-                    >
-                        {bank.bankAccounts.length === 0 ? (
-                            <EmptyState
-                                description={t(
-                                    'pages.bankAccounts.emptyState.noAccounts.description',
-                                )}
-                                iconSize={0}
-                            />
-                        ) : (
-                            <>
-                                {bank.bankAccounts.map(
-                                    (a: BankAccountDataType) => (
+                                    <Avatar
+                                        src={bank.icon && bank.icon}
+                                        icon={!bank.icon && <HiLibrary />}
+                                        className={`mr-2 ${bgTheme} dark:${bgTheme}`}
+                                        size={32}
+                                    />
+                                    <span
+                                        className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+                                    >
+                                        {bank.name}
+                                    </span>
+                                </div>
+                            }
+                            className="flex flex-col justify-between"
+                            footerClass=""
+                            footer={
+                                <Button
+                                    variant="twoTone"
+                                    block={true}
+                                    icon={<HiPlus />}
+                                    data-tn="add-bank-account-btn"
+                                    color={`${themeColor}`}
+                                    onClick={() => {
+                                        setSelectedBank(bank)
+                                        setIsFormOpen(true)
+                                    }}
+                                >
+                                    {t('pages.bankAccounts.addAccountButton')}
+                                </Button>
+                            }
+                        >
+                            {bank.bankAccounts.length === 0 ? (
+                                <EmptyState
+                                    description={t(
+                                        'pages.bankAccounts.emptyState.noAccounts.description',
+                                    )}
+                                    iconSize={0}
+                                />
+                            ) : (
+                                <>
+                                    {bank.bankAccounts.map((a: any) => (
                                         <Card
                                             key={a.id}
                                             bordered
@@ -294,6 +295,7 @@ const BankAccounts = () => {
                                                 <Dropdown.Item
                                                     eventKey="delete"
                                                     data-tn="delete-bank-account-btn"
+                                                    disabled={a.savings.length}
                                                     onClick={() => {
                                                         setSelectedBank(bank)
                                                         setSelectedBankAccount(
@@ -304,14 +306,49 @@ const BankAccounts = () => {
                                                         )
                                                     }}
                                                 >
-                                                    <IconText
-                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                        icon={
-                                                            <HiOutlineTrash />
-                                                        }
-                                                    >
-                                                        {t('actions.delete')}
-                                                    </IconText>
+                                                    {a.savings.length ? (
+                                                        <Tooltip
+                                                            title={
+                                                                <IconText
+                                                                    className="text-yellow-400"
+                                                                    icon={
+                                                                        <PiWarningOctagonBold
+                                                                            size={
+                                                                                64
+                                                                            }
+                                                                        />
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        'pages.bankAccounts.tooltips.warnHasSavings',
+                                                                    )}
+                                                                </IconText>
+                                                            }
+                                                            placement="left"
+                                                        >
+                                                            <IconText
+                                                                className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                                icon={
+                                                                    <HiOutlineTrash />
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    'actions.delete',
+                                                                )}
+                                                            </IconText>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <IconText
+                                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                            icon={
+                                                                <HiOutlineTrash />
+                                                            }
+                                                        >
+                                                            {t(
+                                                                'actions.delete',
+                                                            )}
+                                                        </IconText>
+                                                    )}
                                                 </Dropdown.Item>
                                             </Dropdown>
                                             <div className="w-full flex items-center">
@@ -349,13 +386,13 @@ const BankAccounts = () => {
                                                 </div>
                                             </div>
                                         </Card>
-                                    ),
-                                )}
-                            </>
-                        )}
-                    </Card>
-                )
-            })}
+                                    ))}
+                                </>
+                            )}
+                        </Card>
+                    )
+                })}
+            </Loading>
             <ModalForm
                 isOpen={isFormOpen}
                 entity={{

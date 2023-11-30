@@ -7,7 +7,30 @@ export async function apiGetBankAccountList(): Promise<unknown[]> {
         method: 'POST',
         data: {
             operationName: 'userBankAccounts',
-            query: `query userBankAccounts { me { id banks { id name icon bankAccounts { id accountName: label accountNumber accountBalance: balance accountCurrency: currency { id code } } } } }`,
+            query: `
+                query userBankAccounts { 
+                    me { 
+                        id 
+                        banks { 
+                            id 
+                            name 
+                            icon 
+                            bankAccounts { 
+                                id 
+                                accountName: label 
+                                accountNumber 
+                                accountBalance: balance 
+                                accountCurrency: currency { 
+                                    id code 
+                                }
+                                savings(statuses: [IN_PROGRESS, EXPIRED]) {
+                                    id
+                                } 
+                            } 
+                        }
+                    } 
+                }
+            `,
             variables: {},
         },
     })
