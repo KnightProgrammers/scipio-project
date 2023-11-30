@@ -33,6 +33,7 @@ export const UserQueryResolver = {
 	banks: async (user: any) => BankService.getAll(user),
 	bankAccounts: async (user: any) => BankAccountService.getAll(user._id),
 	creditCards: async (user: any, params: { statuses?: CREDIT_CARD_STATUS_TYPE[] }) => CreditCardService.getAll(user._id, params.statuses),
+	creditCard: async (user: any, params: { id: string }) => CreditCardService.findOne(params.id, user._id),
 	categories: async (user: any) => CategoryService.getAll(user._id),
 	expenses: async (user: any, params: {fromDate?: string, toDate?: string}) => {
 		return ExpenseService.getAll(user._id, params.fromDate, params.toDate);
