@@ -57,6 +57,14 @@ const schema = `
     creditLimitAmount: Float!
     creditLimitCurrency: Currency!
     expenses(fromDate: String, toDate: String): [Expense]!
+    monthlyStatements: [CreditCardMonthlyStatement]!
+  }
+
+  type CreditCardMonthlyStatement {
+    id: String!
+    closeDate: String!
+    creditCard: CreditCard!
+    expenses: [Expense]!
   }
   
   enum CategoryType {
@@ -171,6 +179,8 @@ const schema = `
     createCreditCard(input: CreditCardInput!): CreditCard!
     updateCreditCard(id: String!, input: CreditCardInput!): CreditCard!
     deleteCreditCard(id: String!): Boolean!
+
+    createCreditCardMonthlyStatement(creditCardId: String!, closeDate: String!): CreditCardMonthlyStatement
     
     createCategory(input: CategoryInput!): Category!
     updateCategory(id: String!, input: CategoryInput!): Category!

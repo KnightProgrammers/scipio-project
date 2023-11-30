@@ -4,6 +4,7 @@ import { BudgetQueryResolver } from '@/graphql/resolvers/queries/budget-query-re
 import { BudgetItemQueryResolver } from '@/graphql/resolvers/queries/budget-item-query-resolver';
 import { CategoryQueryResolver } from '@/graphql/resolvers/queries/category-query-resolver';
 import { CreditCardQueryResolver } from '@/graphql/resolvers/queries/credit-card-query-resolver';
+import { CreditCardMonthlyStatementQueryResolver } from '@/graphql/resolvers/queries/credit-card-monhtly-statement-query-resolver';
 import { CurrencyQueryResolver } from '@/graphql/resolvers/queries/currency-query-resolver';
 import { ExpenseQueryResolver } from '@/graphql/resolvers/queries/expense-query-resolver';
 import { SavingQueryResolver } from '@/graphql/resolvers/queries/saving-query-resolver';
@@ -16,6 +17,7 @@ export {
 	BudgetItemQueryResolver,
 	CategoryQueryResolver,
 	CreditCardQueryResolver,
+	CreditCardMonthlyStatementQueryResolver,
 	CurrencyQueryResolver,
 	ExpenseQueryResolver,
 	SavingQueryResolver,
