@@ -7,7 +7,21 @@ export async function apiGetBankList(): Promise<BankDataType[]> {
         method: 'POST',
         data: {
             operationName: 'userBanks',
-            query: `query userBanks { me { id banks { id name icon bankAccounts { id } } } }`,
+            query: `
+                query userBanks { 
+                    me { 
+                        id 
+                        banks { 
+                            id 
+                            name 
+                            icon 
+                            bankAccounts { 
+                                id 
+                            } 
+                        } 
+                    } 
+                }
+            `,
             variables: {},
         },
     })

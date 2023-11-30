@@ -50,6 +50,9 @@
             "deleteConfirmation": {
                 "title": "Eliminar Cuenta de Banco",
                 "description": "Está seguro que desea eliminar la cuenta de banco \"{{accountNumber}}\"?"
+            },
+            "tooltips": {
+                "warnHasSavings": "La cuenta tiene ahorros asociados, eliminelos antes de continuar"
             }
         },
         "budgets": {
