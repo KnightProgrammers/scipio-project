@@ -91,17 +91,22 @@ class ExpenseService {
 			})
 			.sort({ billableDate: -1 });
 	}
-	static async getAllWithoutCreditCardMonthlyStatement(userId: string, creditCardId: string, toDate: Date) {
+	static async getAllWithoutCreditCardMonthlyStatement(userId: string, creditCardId: string, toDate?: Date) {
+		const query: any = {
+			userId,
+			creditCardId,
+			creditCardMonthlyStatementId: { $exists: false },
+			isDeleted: false
+		};
+
+		if (toDate) {
+			query.billableDate = {
+				$lte: toDate
+			};
+		}
+
 		return ExpenseModel
-			.find({
-				userId,
-				creditCardId,
-				billableDate: {
-					$lte: toDate
-				},
-				creditCardMonthlyStatementId: { $exists: false },
-				isDeleted: false
-			})
+			.find(query)
 			.sort({ billableDate: -1 });
 	}
 	static async create(userId: string, data: ExpenseInput) {

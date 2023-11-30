@@ -58,6 +58,7 @@ const schema = `
     creditLimitCurrency: Currency!
     expenses(fromDate: String, toDate: String): [Expense]!
     monthlyStatements: [CreditCardMonthlyStatement]!
+    expensesNextStatement: [Expense]!
   }
 
   type CreditCardMonthlyStatement {
