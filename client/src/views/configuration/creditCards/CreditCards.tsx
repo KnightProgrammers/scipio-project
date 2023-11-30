@@ -3,11 +3,13 @@ import {
     Badge,
     Button,
     Card,
+    Drawer,
     Dropdown,
     FormItem,
     Input,
     ModalForm,
     Select,
+    Tabs,
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
 import {
@@ -37,7 +39,13 @@ import {
     apiCreateCreditCard,
     apiUpdateCreditCard,
     apiDeleteCreditCard,
+    apiGetCreditCard,
 } from '@/services/CreditCardService'
+import TabList from '@/components/ui/Tabs/TabList'
+import TabNav from '@/components/ui/Tabs/TabNav'
+import TabContent from '@/components/ui/Tabs/TabContent'
+import { DateTime } from 'luxon'
+import { useAppSelector } from '@/store'
 
 function limit(val: string, max: string) {
     if (val.length === 1 && val[0] > max[0]) {
@@ -53,6 +61,19 @@ function limit(val: string, max: string) {
     }
 
     return val
+}
+
+const getBadgedColor = (status: string) => {
+    switch (status) {
+        case 'ACTIVE':
+            return 'emerald'
+        case 'BLOCKED':
+            return 'yellow'
+        case 'EXPIRED':
+            return 'red'
+        default:
+            return 'gray'
+    }
 }
 
 const CardTitle = (props: { creditCard: any }) => {
@@ -108,6 +129,126 @@ const CardIcon = (props: { cardIssuer: string }) => {
     }
 }
 
+const CreditCardDrawer = (props: {
+    isOpen: boolean
+    creditCard: any
+    onClose: () => void
+}) => {
+    const { isOpen, creditCard, onClose } = props
+
+    const { t, i18n } = useTranslation()
+
+    const userState = useAppSelector((state) => state.auth.user)
+
+    const { data: creditCardDetail, isFetching: isFetchingCreditCardDetail } =
+        useQuery({
+            enabled: isOpen && !!creditCard,
+            queryKey: [`user-creditCard-${creditCard?.id ?? ''}`],
+            queryFn: async () => apiGetCreditCard(creditCard.id),
+        })
+
+    if (!isOpen || !creditCard) return null
+
+    const ExpenseList = (props: { expenses: any }) => {
+        const { expenses } = props
+        return (
+            <div>
+                {expenses.map((e: any) => (
+                    <Card key={e.id} bordered={true} className="mt-2">
+                        <small>
+                            {DateTime.fromISO(e.billableDate).toFormat(
+                                'dd/MM/yyyy',
+                            )}
+                        </small>
+                        <div className="w-full flex justify-between items-center">
+                            <span>
+                                {e.description
+                                    ? e.description
+                                    : t('pages.expenses.genericDescription', {
+                                          billableDate: DateTime.fromISO(
+                                              e.billableDate,
+                                          ).toFormat('dd/MM/yyyy'),
+                                      })}
+                            </span>
+                            <span className="text-right font-bold">
+                                {currencyFormat(
+                                    e.amount,
+                                    e.currency.code,
+                                    i18n.language,
+                                    userState.country?.code,
+                                )}
+                            </span>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <Drawer
+            headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
+            title={
+                <div className="flex flex-col w-full divide-y">
+                    <div className="grid grid-flow-col auto-cols-max gap-4 items-center mb-4">
+                        <CardIcon cardIssuer={creditCard.issuer} />
+                        <CardTitle creditCard={creditCard} />
+                    </div>
+                    <div className="grid grid-cols-2 items-center pt-4">
+                        <div className="flex flex-col">
+                            <small className="font-light">
+                                {t(`fields.expiration`)}
+                            </small>
+                            <span className="font-semibold">
+                                {creditCard.expiration}
+                            </span>
+                        </div>
+                        <div className="text-right w-full">
+                            <Badge
+                                content={t(
+                                    `creditCardStatus.${creditCard.status}`,
+                                ).toUpperCase()}
+                                innerClass={`bg-${getBadgedColor(
+                                    creditCard.status,
+                                )}-500`}
+                                className="text-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+            }
+            data-tn="credit-card-detail-drawer"
+            isOpen={isOpen}
+            onClose={onClose}
+            onRequestClose={onClose}
+        >
+            {!creditCardDetail || isFetchingCreditCardDetail ? (
+                <Loading loading />
+            ) : (
+                <Tabs defaultValue="next">
+                    <TabList>
+                        <TabNav value="next">Next Statement</TabNav>
+                        {creditCardDetail.monthlyStatements.map((ms: any) => (
+                            <TabNav key={ms.id} value="tab2">
+                                {ms.closeDate}
+                            </TabNav>
+                        ))}
+                    </TabList>
+                    <div className="">
+                        <TabContent value="next">
+                            <ExpenseList
+                                expenses={
+                                    creditCardDetail.expensesNextStatement
+                                }
+                            />
+                        </TabContent>
+                    </div>
+                </Tabs>
+            )}
+        </Drawer>
+    )
+}
+
 const CreditCards = () => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
     const [selectedCreditCard, setSelectedCreditCard] = useState<
@@ -115,6 +256,7 @@ const CreditCards = () => {
     >(undefined)
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
         useState<boolean>(false)
+    const [showCreditCardInfo, setShowCreditCardInfo] = useState<boolean>(false)
 
     const { t } = useTranslation()
 
@@ -424,7 +566,12 @@ const CreditCards = () => {
         />
     )
 
-    if (!creditCardList || isFetchingCreditCards) {
+    const handleClickCreditCard = (creditCard: any) => {
+        setShowCreditCardInfo(true)
+        setSelectedCreditCard(creditCard)
+    }
+
+    if (!creditCardList) {
         return (
             <div
                 className="flex h-full mx-auto w-0"
@@ -458,141 +605,148 @@ const CreditCards = () => {
             </Container>
         )
     }
-
-    const getBadgedColor = (status: string) => {
-        switch (status) {
-            case 'ACTIVE':
-                return 'emerald'
-            case 'BLOCKED':
-                return 'yellow'
-            case 'EXPIRED':
-                return 'red'
-            default:
-                return 'gray'
-        }
-    }
     return (
         <Container data-tn="credit-cards-page">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {creditCardList.map((c) => (
+            <Loading loading={isFetchingCreditCards} type="cover">
+                <Card bodyClass="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {creditCardList.map((c) => (
+                        <Card
+                            key={c.id}
+                            bordered
+                            className="my-4"
+                            bodyClass="p-0"
+                            data-tn={`credit-card-${c.id}`}
+                            header={
+                                <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
+                                    <CardIcon cardIssuer={c.issuer} />
+                                    <CardTitle creditCard={c} />
+                                    <Dropdown
+                                        className="absolute right-0 top-0"
+                                        placement="middle-end-top"
+                                        renderTitle={
+                                            <EllipsisButton data-tn="dropdown-credit-card-btn" />
+                                        }
+                                    >
+                                        <Dropdown.Item
+                                            eventKey="view"
+                                            data-tn={`view-credit-card-btn-${c.id}`}
+                                            onClick={() =>
+                                                handleClickCreditCard(c)
+                                            }
+                                        >
+                                            <IconText
+                                                className="text-sm font-semibold w-full"
+                                                icon={<HiEye />}
+                                            >
+                                                {t('actions.view')}
+                                            </IconText>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item
+                                            eventKey="edit"
+                                            data-tn={`edit-credit-card-btn-${c.id}`}
+                                            onClick={() => {
+                                                setSelectedCreditCard(c)
+                                                setIsFormOpen(true)
+                                            }}
+                                        >
+                                            <IconText
+                                                className="text-sm font-semibold w-full"
+                                                icon={<HiOutlinePencilAlt />}
+                                            >
+                                                {t('actions.edit')}
+                                            </IconText>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item
+                                            eventKey="delete"
+                                            data-tn={`delete-credit-card-btn-${c.id}`}
+                                            onClick={() => {
+                                                setSelectedCreditCard(c)
+                                                setIsConfirmDeleteOpen(true)
+                                            }}
+                                        >
+                                            <IconText
+                                                className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                icon={<HiOutlineTrash />}
+                                            >
+                                                {t('actions.delete')}
+                                            </IconText>
+                                        </Dropdown.Item>
+                                    </Dropdown>
+                                </div>
+                            }
+                        >
+                            <div
+                                className="divide-y cursor-pointer"
+                                onClick={() => handleClickCreditCard(c)}
+                            >
+                                <div className="grid grid-cols-2 pb-4 items-center p-4">
+                                    <div className="flex flex-col">
+                                        <small className="font-light">
+                                            {t(`fields.expiration`)}
+                                        </small>
+                                        <span className="font-semibold">
+                                            {c.expiration}
+                                        </span>
+                                    </div>
+                                    <div className="text-right w-full">
+                                        <Badge
+                                            content={t(
+                                                `creditCardStatus.${c.status}`,
+                                            ).toUpperCase()}
+                                            innerClass={`bg-${getBadgedColor(
+                                                c.status,
+                                            )}-500`}
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="p-4">
+                                    <div className="block mb-2">
+                                        <p className="text-gray-500 font-light">
+                                            {t(`fields.creditLimitAmount`)}
+                                        </p>
+                                        <p className="text-4xl font-semibold text-center">
+                                            {currencyFormat(
+                                                c.creditLimitAmount,
+                                                c.creditLimitCurrency.code,
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="p-4 hidden">
+                                    <Button
+                                        block
+                                        variant="twoTone"
+                                        size="sm"
+                                        icon={<HiEye />}
+                                    >
+                                        {t('actions.viewDetail')}
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
                     <Card
-                        key={c.id}
-                        className="my-4"
-                        bodyClass="p-0"
-                        data-tn={`credit-card-${c.id}`}
-                        header={
-                            <div className="grid grid-flow-col auto-cols-max gap-4 items-center relative">
-                                <CardIcon cardIssuer={c.issuer} />
-                                <CardTitle creditCard={c} />
-                                <Dropdown
-                                    className="absolute right-0 top-0"
-                                    placement="middle-end-top"
-                                    renderTitle={
-                                        <EllipsisButton data-tn="dropdown-credit-card-btn" />
-                                    }
-                                >
-                                    <Dropdown.Item
-                                        eventKey="edit"
-                                        data-tn={`edit-credit-card-btn-${c.id}`}
-                                        onClick={() => {
-                                            setSelectedCreditCard(c)
-                                            setIsFormOpen(true)
-                                        }}
-                                    >
-                                        <IconText
-                                            className="text-sm font-semibold w-full"
-                                            icon={<HiOutlinePencilAlt />}
-                                        >
-                                            {t('actions.edit')}
-                                        </IconText>
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                        eventKey="delete"
-                                        data-tn={`delete-credit-card-btn-${c.id}`}
-                                        onClick={() => {
-                                            setSelectedCreditCard(c)
-                                            setIsConfirmDeleteOpen(true)
-                                        }}
-                                    >
-                                        <IconText
-                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                            icon={<HiOutlineTrash />}
-                                        >
-                                            {t('actions.delete')}
-                                        </IconText>
-                                    </Dropdown.Item>
-                                </Dropdown>
-                            </div>
-                        }
+                        bordered
+                        className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
+                        bodyClass="flex flex-col justify-center items-center h-full"
+                        data-tn="add-credit-card-btn"
+                        style={{ minHeight: '240px' }}
+                        onClick={() => setIsFormOpen(true)}
                     >
-                        <div className="divide-y">
-                            <div className="grid grid-cols-2 pb-4 items-center p-4">
-                                <div className="flex flex-col">
-                                    <small className="font-light">
-                                        {t(`fields.expiration`)}
-                                    </small>
-                                    <span className="font-semibold">
-                                        {c.expiration}
-                                    </span>
-                                </div>
-                                <div className="text-right w-full">
-                                    <Badge
-                                        content={t(
-                                            `creditCardStatus.${c.status}`,
-                                        ).toUpperCase()}
-                                        innerClass={`bg-${getBadgedColor(
-                                            c.status,
-                                        )}-500`}
-                                        className="text-sm"
-                                    />
-                                </div>
-                            </div>
-                            <div className="p-4">
-                                <div className="block mb-2">
-                                    <p className="text-gray-500 font-light">
-                                        {t(`fields.creditLimitAmount`)}
-                                    </p>
-                                    <p className="text-4xl font-semibold text-center">
-                                        {currencyFormat(
-                                            c.creditLimitAmount,
-                                            c.creditLimitCurrency.code,
-                                        )}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="p-4 hidden">
-                                <Button
-                                    block
-                                    variant="twoTone"
-                                    size="sm"
-                                    icon={<HiEye />}
-                                >
-                                    {t('actions.viewDetail')}
-                                </Button>
-                            </div>
+                        <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-600">
+                            <HiPlus
+                                size={32}
+                                color="888888"
+                                className="text-4xl text-gray-300"
+                            />
                         </div>
+                        <p className="m-4 font-semibold">
+                            {t('pages.creditCards.addCreditCardButton')}
+                        </p>
                     </Card>
-                ))}
-                <Card
-                    bordered
-                    className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
-                    bodyClass="flex flex-col justify-center items-center h-full"
-                    data-tn="add-credit-card-btn"
-                    style={{ minHeight: '240px' }}
-                    onClick={() => setIsFormOpen(true)}
-                >
-                    <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-600">
-                        <HiPlus
-                            size={32}
-                            color="888888"
-                            className="text-4xl text-gray-300"
-                        />
-                    </div>
-                    <p className="m-4 font-semibold">
-                        {t('pages.creditCards.addCreditCardButton')}
-                    </p>
                 </Card>
-            </div>
+            </Loading>
             <CreditCardForm />
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}
@@ -609,6 +763,11 @@ const CreditCards = () => {
             >
                 <p>{t('pages.creditCards.deleteConfirmation.description')}</p>
             </ConfirmDialog>
+            <CreditCardDrawer
+                isOpen={showCreditCardInfo}
+                creditCard={selectedCreditCard}
+                onClose={() => setShowCreditCardInfo(false)}
+            />
         </Container>
     )
 }
