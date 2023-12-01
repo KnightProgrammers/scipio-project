@@ -3,12 +3,12 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
 WORKDIR /app
-COPY /models ./models
-RUN cd /models && npm ci && npm run build
-COPY /server/package.json /server/package-lock.json ./server/
-RUN cd /server && npm ci
-COPY /server/ ./server/
-RUN cd /server && ls && npm run build
+COPY /models /app/models
+RUN cd /app/models && npm ci && npm run build
+COPY /server/package.json /server/package-lock.json /app/server/
+RUN cd /app/server && npm ci
+COPY /server/ /app/server/
+RUN cd /app/server && ls && npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app/server
