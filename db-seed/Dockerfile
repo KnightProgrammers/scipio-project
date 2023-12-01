@@ -3,25 +3,21 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
 WORKDIR /app
-COPY /server/src ./server
+COPY ./models ./models
+RUN cd ./models && npm ci && npm run build
 COPY /db-seed/package.json  ./db-seed/
 COPY /db-seed/package-lock.json ./db-seed/
 RUN cd ./db-seed && npm ci
-
-FROM node:20-alpine AS builder
-RUN npm install -g npm
-WORKDIR /app
 COPY ./db-seed ./db-seed
-COPY /server/src ./server/src
-COPY --from=deps /app/db-seed/node_modules ./db-seed/node_modules
 RUN cd ./db-seed && npm run build
 
 FROM node:20-alpine AS runner
-WORKDIR /usr/app
+WORKDIR /app/db-seed
 RUN npm install -g npm
-COPY --from=deps /app/db-seed/node_modules ./node_modules
-COPY --from=builder /app/db-seed/dist ./dist
-COPY ./db-seed/package.json ./
+COPY --from=deps /app/db-seed/node_modules /app/db-seed/node_modules
+COPY --from=deps /app/db-seed/dist /app/db-seed/dist
+COPY --from=deps /app/models /app/models
+COPY ./db-seed/package.json /app/db-seed/
 USER node
 ENV NODE_ENV="production"
 CMD ["npm", "start"]
