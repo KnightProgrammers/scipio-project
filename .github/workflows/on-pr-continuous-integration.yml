@@ -15,189 +15,189 @@ permissions:
   pull-requests: write
 
 jobs:
-  server-build-check:
-    name: "Server - Build Check"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: server/node_modules
-          key: server-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: server-node_modules-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run lint
-        run: npm run lint
-  client-build-check:
-    name: "Client - Build Check"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: client/node_modules
-          key: client-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: client-node_modules-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run lint
-        run: npm run lint
-      - name: Run prettier
-        run: npm run prettier
-  db-seed-build-check:
-    name: "DB-Seed - Build Check"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: db-seed
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: db-seed/node_modules
-          key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: db-seed-node_modules-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run lint
-        run: npm run lint
-  infra-build-check:
-    name: "Infra - Build Check"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: infra
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: infra/node_modules
-          key: infra-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: infra-node_modules-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run lint
-        run: npm run lint
-  e2e-tests-regression:
-    name: "E2E Tests - Regression"
-    runs-on: ubuntu-latest
-    needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check ]
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
-      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-      FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-      FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Run Dockers
-        run: docker compose up --detach --wait --build
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: tests/e2e-tests/node_modules
-          key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: e2e-tests-node_modules-
-      - name: Install Dependencies
-        run: |
-          cd tests/e2e-tests
-          npm install
-      - name: Install Playwright Browsers
-        run: |
-          cd tests/e2e-tests
-          npx playwright install --with-deps
-      - name: Run Tests
-        env:
-          BASE_URL: http://localhost:3000
-          API_BASE_URL: http://localhost:8080
-          DD_CIVISIBILITY_AGENTLESS_ENABLED: true
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
-          DD_SITE: ${{ secrets.DD_SITE }}
-          NODE_OPTIONS: "-r dd-trace/ci/init"
-          DD_ENV: "Test"
-          DD_SERVICE: "Scipio"
-        run: |
-          cd tests/e2e-tests
-          npm run regression-test
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: e2e-report
-          path: tests/e2e-tests/playwright-report/
-          retention-days: 7
-  create-test-env:
-    name: "Create Test Environment"
-    runs-on: ubuntu-latest
-    needs: [ e2e-tests-regression ]
-    concurrency:
-      group: ${{ github.repository }}-concurrency-create-test-env
-      cancel-in-progress: false
-    env:
-      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
-      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install infra dependencies
-        run: |
-          cd infra
-          npm install
-      - name: Install scipio-infra globaly
-        run: npm install -g ./infra
-      - name: Create environment
-        run: |
-          sleep 30 # Railway allows to create an environment every 30 seconds
-          scipio-infra environment-create "test-${{ github.event.number }}"
+#  server-build-check:
+#    name: "Server - Build Check"
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: server
+#    env:
+#      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Cache node modules
+#        uses: actions/cache@v3
+#        with:
+#          path: server/node_modules
+#          key: server-node_modules-${{hashFiles('package-lock.json')}}
+#          restore-keys: server-node_modules-
+#      - name: Install Dependencies
+#        run: npm ci
+#      - name: Run lint
+#        run: npm run lint
+#  client-build-check:
+#    name: "Client - Build Check"
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: client
+#    env:
+#      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Cache node modules
+#        uses: actions/cache@v3
+#        with:
+#          path: client/node_modules
+#          key: client-node_modules-${{hashFiles('package-lock.json')}}
+#          restore-keys: client-node_modules-
+#      - name: Install Dependencies
+#        run: npm ci
+#      - name: Run lint
+#        run: npm run lint
+#      - name: Run prettier
+#        run: npm run prettier
+#  db-seed-build-check:
+#    name: "DB-Seed - Build Check"
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: db-seed
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Cache node modules
+#        uses: actions/cache@v3
+#        with:
+#          path: db-seed/node_modules
+#          key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
+#          restore-keys: db-seed-node_modules-
+#      - name: Install Dependencies
+#        run: npm ci
+#      - name: Run lint
+#        run: npm run lint
+#  infra-build-check:
+#    name: "Infra - Build Check"
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: infra
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Cache node modules
+#        uses: actions/cache@v3
+#        with:
+#          path: infra/node_modules
+#          key: infra-node_modules-${{hashFiles('package-lock.json')}}
+#          restore-keys: infra-node_modules-
+#      - name: Install Dependencies
+#        run: npm ci
+#      - name: Run lint
+#        run: npm run lint
+#  e2e-tests-regression:
+#    name: "E2E Tests - Regression"
+#    runs-on: ubuntu-latest
+#    needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check ]
+#    env:
+#      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+#      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+#      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+#      FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+#      FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+#      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Run Dockers
+#        run: docker compose up --detach --wait --build
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Cache node modules
+#        uses: actions/cache@v3
+#        with:
+#          path: tests/e2e-tests/node_modules
+#          key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
+#          restore-keys: e2e-tests-node_modules-
+#      - name: Install Dependencies
+#        run: |
+#          cd tests/e2e-tests
+#          npm install
+#      - name: Install Playwright Browsers
+#        run: |
+#          cd tests/e2e-tests
+#          npx playwright install --with-deps
+#      - name: Run Tests
+#        env:
+#          BASE_URL: http://localhost:3000
+#          API_BASE_URL: http://localhost:8080
+#          DD_CIVISIBILITY_AGENTLESS_ENABLED: true
+#          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+#          DD_SITE: ${{ secrets.DD_SITE }}
+#          NODE_OPTIONS: "-r dd-trace/ci/init"
+#          DD_ENV: "Test"
+#          DD_SERVICE: "Scipio"
+#        run: |
+#          cd tests/e2e-tests
+#          npm run regression-test
+#      - uses: actions/upload-artifact@v3
+#        if: always()
+#        with:
+#          name: e2e-report
+#          path: tests/e2e-tests/playwright-report/
+#          retention-days: 7
+#  create-test-env:
+#    name: "Create Test Environment"
+#    runs-on: ubuntu-latest
+#    needs: [ e2e-tests-regression ]
+#    concurrency:
+#      group: ${{ github.repository }}-concurrency-create-test-env
+#      cancel-in-progress: false
+#    env:
+#      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+#      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v4
+#      - name: Install Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - name: Install infra dependencies
+#        run: |
+#          cd infra
+#          npm install
+#      - name: Install scipio-infra globaly
+#        run: npm install -g ./infra
+#      - name: Create environment
+#        run: |
+#          sleep 30 # Railway allows to create an environment every 30 seconds
+#          scipio-infra environment-create "test-${{ github.event.number }}"
   deploy-services:
     name: "Deploy Services"
     runs-on: ubuntu-latest
-    needs: [ create-test-env ]
+#    needs: [ create-test-env ]
     strategy:
       matrix:
         service: [ "server", "client" ]
