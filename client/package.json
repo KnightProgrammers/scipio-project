@@ -13,7 +13,7 @@
     "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
-    "@fullcalendar/daygrid": "6.1.9",
+    "@fullcalendar/daygrid": "6.1.10",
     "@fullcalendar/interaction": "6.1.9",
     "@fullcalendar/react": "6.1.9",
     "@fullcalendar/timegrid": "6.1.9",
