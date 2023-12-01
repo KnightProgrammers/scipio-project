@@ -3,6 +3,7 @@ import {
     Avatar,
     Badge,
     Button,
+    Card,
     FormItem,
     Input,
     ModalForm,
@@ -215,7 +216,7 @@ const Categories = () => {
         />
     )
 
-    if (!categories || isLoadingCategories) {
+    if (!categories) {
         return (
             <div className="flex h-full mx-auto w-0" data-tn="categories-page">
                 <Loading loading />
@@ -267,85 +268,93 @@ const Categories = () => {
                     </Button>
                 </div>
             </div>
-            <Table compact border={1}>
-                <THead>
-                    <Tr>
-                        <Th>{t(`fields.name`)}</Th>
-                        <Th className="text-center">
-                            {t(`fields.isFixedPayment`)}
-                        </Th>
-                        <Th className="text-center">{t(`fields.type`)}</Th>
-                        <Th></Th>
-                    </Tr>
-                </THead>
-                <TBody>
-                    {categories.map((c, index) => (
-                        <Tr key={index}>
-                            <Td>
-                                <div className="flex inline-flex items-center">
-                                    <Avatar
-                                        icon={<TbCategory2 />}
-                                        className="mr-2 bg-purple-500 dark:bg-purple-600"
-                                        size={32}
-                                    />
-                                    <span
-                                        className="font-bold text-lg"
-                                        data-tn={`name-category-lbl-${c.id}`}
+            <Card>
+                <Loading loading={isLoadingCategories} type="cover">
+                    <Table border={1}>
+                        <THead>
+                            <Tr>
+                                <Th>{t(`fields.name`)}</Th>
+                                <Th className="text-center">
+                                    {t(`fields.isFixedPayment`)}
+                                </Th>
+                                <Th className="text-center">
+                                    {t(`fields.type`)}
+                                </Th>
+                                <Th></Th>
+                            </Tr>
+                        </THead>
+                        <TBody>
+                            {categories.map((c, index) => (
+                                <Tr key={index}>
+                                    <Td>
+                                        <div className="flex inline-flex items-center">
+                                            <Avatar
+                                                icon={<TbCategory2 />}
+                                                className="mr-2 bg-purple-500 dark:bg-purple-600"
+                                                size={32}
+                                            />
+                                            <span
+                                                className="font-bold text-lg"
+                                                data-tn={`name-category-lbl-${c.id}`}
+                                            >
+                                                {c.name}
+                                            </span>
+                                        </div>
+                                    </Td>
+                                    <Td>
+                                        {c.isFixedPayment
+                                            ? t('messages.yes')
+                                            : t('messages.no')}
+                                    </Td>
+                                    <Td>
+                                        <Badge
+                                            className={categoryTypeColor(
+                                                c.type,
+                                            )}
+                                            content={t(
+                                                `categoryTypes.${c.type}`,
+                                            ).toUpperCase()}
+                                        />
+                                    </Td>
+                                    <Td
+                                        className="w-32 text-right"
+                                        style={{ justifyItems: 'center' }}
                                     >
-                                        {c.name}
-                                    </span>
-                                </div>
-                            </Td>
-                            <Td>
-                                {c.isFixedPayment
-                                    ? t('messages.yes')
-                                    : t('messages.no')}
-                            </Td>
-                            <Td>
-                                <Badge
-                                    className={categoryTypeColor(c.type)}
-                                    content={t(
-                                        `categoryTypes.${c.type}`,
-                                    ).toUpperCase()}
-                                />
-                            </Td>
-                            <Td
-                                className="w-32 text-right"
-                                style={{ justifyItems: 'center' }}
-                            >
-                                <Tooltip title={t('actions.edit')}>
-                                    <Button
-                                        size="sm"
-                                        shape="circle"
-                                        variant="plain"
-                                        data-tn={`edit-category-btn-${c.id}`}
-                                        icon={<HiOutlinePencilAlt />}
-                                        onClick={() => {
-                                            setIsFormOpen(true)
-                                            setSelectedCategory(c)
-                                        }}
-                                    />
-                                </Tooltip>
-                                <Tooltip title={t('actions.delete')}>
-                                    <Button
-                                        className="hover:text-red-600"
-                                        size="sm"
-                                        shape="circle"
-                                        variant="plain"
-                                        color="red"
-                                        data-tn={`delete-category-btn-${c.id}`}
-                                        icon={<HiOutlineTrash />}
-                                        onClick={() => {
-                                            setIsConfirmDeleteOpen(true)
-                                            setSelectedCategory(c)
-                                        }}
-                                    />
-                                </Tooltip>
-                            </Td>
-                        </Tr>
-                    ))}
-                </TBody>
-            </Table>
+                                        <Tooltip title={t('actions.edit')}>
+                                            <Button
+                                                size="sm"
+                                                shape="circle"
+                                                variant="plain"
+                                                data-tn={`edit-category-btn-${c.id}`}
+                                                icon={<HiOutlinePencilAlt />}
+                                                onClick={() => {
+                                                    setIsFormOpen(true)
+                                                    setSelectedCategory(c)
+                                                }}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip title={t('actions.delete')}>
+                                            <Button
+                                                className="hover:text-red-600"
+                                                size="sm"
+                                                shape="circle"
+                                                variant="plain"
+                                                color="red"
+                                                data-tn={`delete-category-btn-${c.id}`}
+                                                icon={<HiOutlineTrash />}
+                                                onClick={() => {
+                                                    setIsConfirmDeleteOpen(true)
+                                                    setSelectedCategory(c)
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </TBody>
+                    </Table>
+                </Loading>
+            </Card>
             <CategoryForm />
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}
