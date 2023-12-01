@@ -1,21 +1,4 @@
-import mongoose from 'mongoose';
-
-export const CountrySchema = new mongoose.Schema(
-	{
-		name: {
-			type: String,
-			required: true,
-		},
-		code: {
-			type: String,
-			required: true,
-		},
-		isSupported: {
-			type: Boolean,
-			default: false,
-		},
-	},
-	{ timestamps: true, skipVersioning: { dontVersionMe: true } },
-);
+import mongoose from 'mongoose'
+import { CountrySchema } from "@scipio/models";
 
 export default mongoose.model('Country', CountrySchema);
