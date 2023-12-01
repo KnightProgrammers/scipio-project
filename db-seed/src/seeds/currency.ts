@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import logger from '../helpers/logger';
 
-import { CurrencySchema } from '../../../server/src/models/currency.model';
+import { CurrencySchema } from "@scipio/models";
 import currencyList from '../fixtures/currencies.json';
 
 export default async () => {
