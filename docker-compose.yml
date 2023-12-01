@@ -20,7 +20,8 @@ services:
   scipio-server:
     container_name: scipio-server
     build:
-      context: server
+      context: .
+      dockerfile: ./server/Dockerfile
     environment:
       FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
       FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}

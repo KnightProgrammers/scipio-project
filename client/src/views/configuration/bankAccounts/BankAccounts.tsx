@@ -201,17 +201,19 @@ const BankAccounts = () => {
 
     return (
         <Container
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             data-tn="bank-accounts-page"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-            <Loading
-                loading={isFetchingUserCurrencies || isFetchingBankAccounts}
-                type="cover"
-            >
-                {bankAccountList.map((bank: any) => {
-                    return (
+            {bankAccountList.map((bank: any) => {
+                return (
+                    <Loading
+                        key={bank.id}
+                        loading={
+                            isFetchingUserCurrencies || isFetchingBankAccounts
+                        }
+                        type="cover"
+                    >
                         <Card
-                            key={bank.name}
                             data-tn={`bank-${bank.id}-card`}
                             header={
                                 <div
@@ -390,9 +392,9 @@ const BankAccounts = () => {
                                 </>
                             )}
                         </Card>
-                    )
-                })}
-            </Loading>
+                    </Loading>
+                )
+            })}
             <ModalForm
                 isOpen={isFormOpen}
                 entity={{

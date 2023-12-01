@@ -85,7 +85,7 @@ class BudgetService {
 			throw new errorCodes.FST_ERR_NOT_FOUND('Category');
 		}
 
-		let budgetCategory = await BudgetCategorySchema.findOne({
+		let budgetCategory: any = await BudgetCategorySchema.findOne({
 			budgetId,
 			categoryId
 		});

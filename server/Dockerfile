@@ -3,25 +3,21 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-
-FROM node:20-alpine AS builder
-ARG APP_ENV
-RUN npm install -g npm
-WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
-RUN npm run build
+COPY /models /app/models
+RUN cd /app/models && npm ci && npm run build
+COPY /server/package.json /server/package-lock.json /app/server/
+RUN cd /app/server && npm ci
+COPY /server/ /app/server/
+RUN cd /app/server && ls && npm run build
 
 FROM node:20-alpine AS runner
-WORKDIR /usr/app
+WORKDIR /app/server
 ARG APP_ENV
 RUN npm install -g npm
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY package.json ./
-RUN npm install --omit dev
+COPY --from=deps /app/server/node_modules /app/server/node_modules
+COPY --from=deps /app/server/dist /app/server/dist
+COPY --from=deps /app/models /app/models
+COPY /server/package.json /app/server/
 USER node
 ENV NODE_ENV="test"
 CMD ["npm", "start"]
