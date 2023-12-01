@@ -3,13 +3,13 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
 WORKDIR /app
-COPY ./models ./models
-RUN cd ./models && npm ci && npm run build
-COPY /db-seed/package.json  ./db-seed/
-COPY /db-seed/package-lock.json ./db-seed/
-RUN cd ./db-seed && npm ci
+COPY /models /app/models
+RUN cd /app/models && npm ci && npm run build
+COPY /db-seed/package.json  /app/db-seed/
+COPY /db-seed/package-lock.json /app/db-seed/
+RUN cd /app/db-seed && npm ci
 COPY ./db-seed ./db-seed
-RUN cd ./db-seed && npm run build
+RUN cd /app/db-seed && npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app/db-seed
