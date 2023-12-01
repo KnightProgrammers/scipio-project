@@ -8,7 +8,6 @@ RUN cd ./models && npm ci && npm run build
 COPY /server/package.json /server/package-lock.json ./server/
 RUN cd ./server && npm ci
 COPY /server/ ./server/
-COPY /server/node_modules ./server/node_modules
 RUN cd ./server && ls && npm run build
 
 FROM node:20-alpine AS runner
