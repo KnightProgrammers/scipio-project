@@ -207,7 +207,7 @@ jobs:
           sleep 30 # Railway allows to create an environment every 30 seconds
           scipio-infra environment-create "test-${{ github.event.number }}"
   deploy-services:
-    name: "Deploy Services"
+    name: Deploy Services ${{ matrix.service }}
     runs-on: ubuntu-latest
     needs: [ create-test-env ]
     strategy:
