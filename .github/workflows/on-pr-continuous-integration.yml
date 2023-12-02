@@ -207,15 +207,17 @@ jobs:
           sleep 30 # Railway allows to create an environment every 30 seconds
           scipio-infra environment-create "test-${{ github.event.number }}"
   deploy-services:
-    name: Deploy Services ${{ matrix.service }}
+    name: Deploy Services ${{ matrix.label }}
     runs-on: ubuntu-latest
     needs: [ create-test-env ]
     strategy:
       matrix:
         include:
-          - service: "server"
+          - key: "server"
+            label: "Server"
             path: "projects/graphql-server"
-          - service: "client"
+          - key: "client"
+            label: "Client"
             path: "client"
       fail-fast: false
     env:
@@ -236,14 +238,14 @@ jobs:
         run: npm install -g ./infra
       - name: Install railway cli
         run: npm i -g @railway/cli
-      - name: Deploy ${{ matrix.service }} service
-        run: scipio-infra deploy -s ${{ matrix.service }} -e "test-${{ github.event.number }}"
-      - name: Create Sentry release for ${{ matrix.service }}
+      - name: Deploy ${{ matrix.label }} service
+        run: scipio-infra deploy -s ${{ matrix.key }} -e "test-${{ github.event.number }}"
+      - name: Create Sentry release for ${{ matrix.key }}
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: "scipio-${{ matrix.service }}"
+          SENTRY_PROJECT: "scipio-${{ matrix.key }}"
           SENTRY_URL: https://sentry.io/
         with:
           environment: "test-${{ github.event.number }}"
