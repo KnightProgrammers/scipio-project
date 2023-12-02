@@ -1,7 +1,7 @@
 [build]
 builder = "DOCKERFILE"
-watchPatterns = ["/server/**/*"]
-dockerfilePath = "server/Dockerfile"
+watchPatterns = ["/projects/graphql-server/**/*"]
+dockerfilePath = "/projects/graphql-server/Dockerfile"
 
 [deploy]
 numReplicas = 1
