@@ -1,4 +1,4 @@
 import mongoose from 'mongoose';
-import { BankSchema } from '@scipio/models';
+import { BankSchema } from '@knightprogrammers/scpio-db-schemas';
 
 export default mongoose.model('Bank', BankSchema);

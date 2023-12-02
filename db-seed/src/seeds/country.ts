@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import logger from '../helpers/logger';
 
-import { CountrySchema } from '@scipio/models';
+import { CountrySchema } from '@knightprogrammers/scpio-db-schemas';
 import countryList from '../fixtures/countries.json';
 
 export default async () => {

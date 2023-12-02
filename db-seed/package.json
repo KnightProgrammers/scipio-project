@@ -12,7 +12,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@scipio/models": "file:../models",
+    "@knightprogrammers/scpio-db-schemas": "1.0.0",
     "dotenv": "16.3.1",
     "luxon": "3.4.4",
     "models": "file:../server/src/models",

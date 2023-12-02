@@ -11,7 +11,7 @@ import {
 	CountrySchema, CreditCardSchema,
 	CurrencySchema, SavingSchema,
 	UserSchema
-} from '@scipio/models';
+} from '@knightprogrammers/scpio-db-schemas';
 
 dotenv.config();
 

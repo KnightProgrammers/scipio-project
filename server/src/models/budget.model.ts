@@ -1,4 +1,4 @@
 import mongoose from 'mongoose';
-import { BudgetSchema } from '@scipio/models';
+import { BudgetSchema } from '@knightprogrammers/scpio-db-schemas';
 
 export default mongoose.model('Budget', BudgetSchema);

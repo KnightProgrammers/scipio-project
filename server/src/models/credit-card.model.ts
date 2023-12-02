@@ -1,4 +1,4 @@
 import mongoose from 'mongoose';
-import { CreditCardSchema } from '@scipio/models';
+import { CreditCardSchema } from '@knightprogrammers/scpio-db-schemas';
 
 export default mongoose.model('CreditCard', CreditCardSchema);
