@@ -43,7 +43,7 @@ services:
   scipio-client:
     container_name: scipio-client
     build:
-      context: client
+      context: projects/client
       args:
         VITE_ENVIRONMENT: "test"
         VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}

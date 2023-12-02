@@ -52,7 +52,7 @@ docker compose up --detach --wait --build
 
 ### Client
 
-> **Folder:** `/client`
+> **Folder:** `/projects/client`
 
 **Install Dependencies**
 
@@ -78,7 +78,7 @@ npm run start
 
 ### Server
 
-> **Folder:** `/server`
+> **Folder:** `/projects/graphql-server`
 
 **Install Dependencies**
 
@@ -114,7 +114,7 @@ MongoDB is used as Database.
 
 Backups are stored in Azure Containers data storage.
 
-> **Folder:** `/db-seed`
+> **Folder:** `/projects/db-seed`
 
 **Automatic Executions**
 
