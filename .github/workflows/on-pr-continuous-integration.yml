@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: projects/graphql-server
     env:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
@@ -33,9 +33,9 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: server/node_modules
-          key: server-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: server-node_modules-
+          path: projects/graphql-server/node_modules
+          key: graphql-server-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: graphql-server-node_modules-
       - name: Install Dependencies
         run: npm ci
       - name: Run lint
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: db-seed
+        working-directory: projects/db-seed
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -83,7 +83,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: db-seed/node_modules
+          path: projects/db-seed/node_modules
           key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
           restore-keys: db-seed-node_modules-
       - name: Install Dependencies

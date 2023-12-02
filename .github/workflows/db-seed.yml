@@ -6,6 +6,7 @@ on:
     inputs:
       environment:
         type: environment
+        description: "Environment Target"
         required: true
 
 concurrency:
@@ -17,6 +18,9 @@ jobs:
     name: "Database seed for ${{ inputs.environment }}"
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: projects/db-seed
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -24,45 +28,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Cache server node modules
-        uses: actions/cache@v3
-        with:
-          path: server/node_modules
-          key: server-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: server-node_modules-
-      - name: Install Server dependencies
-        run: |
-          cd server
-          npm ci
-      - name: Run Server build typescript
-        run:  |
-          cd server
-          npm run build
       - name: Cache DB Seed node modules
         uses: actions/cache@v3
         with:
-          path: db-seed/node_modules
+          path: projects/db-seed/node_modules
           key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
           restore-keys: db-seed-node_modules-
       - name: Install DB Seed dependencies
-        run: |
-          cd db-seed
-          npm ci
+        run:  npm ci
       - name: Run DB Seed build typescript
-        run:  |
-          cd db-seed
-          npm run build
+        run:  npm run build
       - name: Setup environment vars
         env:
           SECRETS_VARS: ${{ toJson(secrets) }}
-        run: echo "$SECRETS_VARS" > "db-seed/secrets.json"
+        run: echo "$SECRETS_VARS" > "secrets.json"
       - name: Install JSON to ENV lib
         run: npm install -g json-to-env
       - name: Generate .env file
         run: |
-          json-to-env db-seed/secrets.json db-seed/.env
-          sed -i -e 's/export //g' db-seed/.env
+          json-to-env secrets.json .env
+          sed -i -e 's/export //g' .env
       - name: Run DB Seed
-        run:  |
-          cd db-seed
-          npm run start
+        run:  npm run start
