@@ -198,7 +198,7 @@ jobs:
           cd packages/infra
           npm install
       - name: Install scipio-infra globaly
-        run: npm instvall -g ./packages/infra
+        run: npm install -g ./packages/infra
       - name: Create environment
         run: |
           sleep 30 # Railway allows to create an environment every 30 seconds
