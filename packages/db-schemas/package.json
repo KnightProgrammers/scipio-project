@@ -1,0 +1,30 @@
+{
+  "name": "@knightprogrammers/scpio-db-schemas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnightProgrammers/scipio-project.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "@knightprogrammers:registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "mongoose": "^8.0.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  }
+}
