@@ -212,7 +212,11 @@ jobs:
     needs: [ create-test-env ]
     strategy:
       matrix:
-        service: [ "server", "client" ]
+        include:
+          - service: "server"
+            path: "projects/graphql-server"
+          - service: "client"
+            path: "client"
       fail-fast: false
     env:
       RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
@@ -243,7 +247,7 @@ jobs:
           SENTRY_URL: https://sentry.io/
         with:
           environment: "test-${{ github.event.number }}"
-          working_directory: "./${{ matrix.service }}/"
+          working_directory: "./${{ matrix.path }}/"
   notify-deployment:
     name: "Notify Deployment"
     runs-on: ubuntu-latest
