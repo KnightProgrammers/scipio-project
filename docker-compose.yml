@@ -17,11 +17,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  scipio-server:
+  scipio-graphql-server:
     container_name: scipio-server
     build:
-      context: .
-      dockerfile: ./server/Dockerfile
+      context: projects/graphql-server
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     environment:
       FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
       FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
@@ -42,7 +43,7 @@ services:
   scipio-client:
     container_name: scipio-client
     build:
-      context: client
+      context: projects/client
       args:
         VITE_ENVIRONMENT: "test"
         VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
@@ -61,8 +62,9 @@ services:
   scipio-db-seed:
     container_name: scipio-db-seed
     build:
-      context: .
-      dockerfile: ./db-seed/Dockerfile
+      context: projects/db-seed
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     environment:
       MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?authSource=admin'
     depends_on:

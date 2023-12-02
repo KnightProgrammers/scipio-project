@@ -12,6 +12,7 @@ permissions:
   checks: write
   statuses: write
   contents: write
+  packages: read
   pull-requests: write
 
 
@@ -21,9 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        working-directory: projects/graphql-server
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -31,14 +30,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: server/node_modules
-          key: server-node_modules-${{hashFiles('package-lock.json')}}
-          restore-keys: server-node_modules-
+          path: projects/graphql-server/node_modules
+          key: graphql-server-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: graphql-server-node_modules-
       - name: Install Dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run lint
         run: npm run lint
   client-build-check:
@@ -46,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: client
+        working-directory: projects/client
     env:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
@@ -59,7 +62,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: client/node_modules
+          path: projects/client/node_modules
           key: client-node_modules-${{hashFiles('package-lock.json')}}
           restore-keys: client-node_modules-
       - name: Install Dependencies
@@ -73,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: db-seed
+        working-directory: projects/db-seed
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -81,14 +84,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: db-seed/node_modules
+          path: projects/db-seed/node_modules
           key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
           restore-keys: db-seed-node_modules-
       - name: Install Dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run lint
         run: npm run lint
   infra-build-check:
@@ -96,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: infra
+        working-directory: packages/infra
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -107,7 +114,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: infra/node_modules
+          path: packages/infra/node_modules
           key: infra-node_modules-${{hashFiles('package-lock.json')}}
           restore-keys: infra-node_modules-
       - name: Install Dependencies
@@ -119,13 +126,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check ]
     env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
       FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
       FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
       FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -175,9 +182,6 @@ jobs:
     environment:
       name: Staging
       url: https://staging.scipiofinances.com
-    env:
-      RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
-      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -187,16 +191,22 @@ jobs:
           node-version: 20
       - name: Install infra dependencies
         run: |
-          cd infra
+          cd packages/infra
           npm install
       - name: Install scipio-infra globaly
-        run: npm install -g ./infra
+        run: npm install -g ./packages/infra
       - name: Install railway cli
         run: npm i -g @railway/cli
       - name: Deploy server service
         run: scipio-infra deploy -s server -e staging
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
       - name: Deploy client service
         run: scipio-infra deploy -s client -e staging
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
       - name: Create Sentry release for Client
         uses: getsentry/action-release@v1
         env:
@@ -206,7 +216,7 @@ jobs:
           SENTRY_URL: https://sentry.io/
         with:
           environment: staging
-          working_directory: './client/'
+          working_directory: './projects/client/'
       - name: Create Sentry release for Server
         uses: getsentry/action-release@v1
         env:
@@ -216,5 +226,5 @@ jobs:
           SENTRY_URL: https://sentry.io/
         with:
           environment: staging
-          working_directory: './server/'
-  
+          working_directory: './projects/graphql-server/'
+
