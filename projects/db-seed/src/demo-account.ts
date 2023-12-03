@@ -8,7 +8,7 @@ import {
 	BankAccountSchema,
 	BankSchema,
 	CategorySchema,
-	CountrySchema,
+	CountrySchema, CreditCardMonthlyStatementSchema,
 	CreditCardSchema,
 	CurrencySchema, ExpenseSchema,
 	SavingSchema,
@@ -39,6 +39,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 	const CategoryModel = mongoose.model('Category', CategorySchema);
 	const CountryModel = mongoose.model('Country', CountrySchema);
 	const CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
+	const CreditCardMonthlyStatementModel = mongoose.model('CreditCardMonthlyStatement', CreditCardMonthlyStatementSchema);
 	const CurrencyModel = mongoose.model('Currency', CurrencySchema);
 	const ExpenseModel = mongoose.model('Expense', ExpenseSchema);
 	const SavingModel = mongoose.model('Saving', SavingSchema);
@@ -253,7 +254,19 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		millisecond: 0
 	})
 
-	for (let monthDiff = 12; monthDiff > 0; monthDiff--) {
+	for (let monthDiff = 0; monthDiff < 12; monthDiff++) {
+
+		let monthlyStatement = undefined;
+
+		if (monthDiff > 0) {
+			monthlyStatement = await CreditCardMonthlyStatementModel.create({
+				closeDate: billableDate.set({
+					day: 28
+				}),
+				creditCardId: creditCard1._id,
+				userId
+			})
+		}
 		for (const category of categories) {
 			const {
 				expenseRange,
@@ -261,6 +274,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 			} = category;
 
 			const creditCardId = method === 'CREDIT_CARD' ? creditCard1._id : undefined;
+			const creditCardMonthlyStatementId = method === 'CREDIT_CARD' && monthlyStatement ? monthlyStatement._id : undefined;
 
 			const currencyCode: string = category.currencies[0]  ?? 'UYU';
 
@@ -280,6 +294,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 					currencyId: currencies.find((c: any) => c.code === currencyCode )?._id ?? undefined,
 					categoryId: category.id,
 					creditCardId,
+					creditCardMonthlyStatementId,
 					userId
 				});
 				i = Math.max(28, i + increment);
