@@ -278,9 +278,9 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 
 			const currencyCode: string = category.currencies[0]  ?? 'UYU';
 
-			const increment: number = category.expenses < 0 ? Math.random() * (10 - 1) + 1 : Math.round(28 / category.expenses);
 
 			const max: number = 28;
+			const increment: number = category.expenses < 0 ? Math.random() * (10 - 1) + 1 : Math.max(Math.round(max / category.expenses), 1);
 
 			let i: number = 1;
 
@@ -297,7 +297,10 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 					creditCardMonthlyStatementId,
 					userId
 				});
-				i = Math.max(28, i + increment);
+				i += increment;
+				if (i > 28) {
+					break;
+				}
 				billableDate = billableDate.plus({day: increment});
 			}
 			billableDate = billableDate.set({day: 1});

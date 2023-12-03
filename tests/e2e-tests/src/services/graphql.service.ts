@@ -12,6 +12,7 @@ type NewExpenseInput = {
 	amount: number,
 	currencyId: string
 	categoryId: string
+	creditCardId?: string
 }
 
 type BankInput = {
@@ -32,6 +33,17 @@ type SavingInput = {
 	targetDate: string,
 	bankAccountId: string
 	status?: string
+}
+
+type CreditCardInput = {
+	label: string
+	lastFourDigits?: string
+	cardHolder?: string
+	expiration: string
+	issuer: 'mastercard' | 'visa'
+	status: 'ACTIVE' | 'BLOCKED' | 'EXPIRED'
+	creditLimitAmount: number
+	creditLimitCurrencyId: string
 }
 
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
@@ -122,6 +134,7 @@ class GraphqlService {
 					$billableDate: String!
 					$currencyId: String!
 					$categoryId: String!
+					$creditCardId: String
 				) {
 					createExpense(input: {
 						amount: $amount
@@ -129,6 +142,7 @@ class GraphqlService {
 						billableDate: $billableDate
 						currencyId: $currencyId
 						categoryId: $categoryId
+						creditCardId: $creditCardId
 					}) {
 						id
 					}
@@ -285,6 +299,39 @@ class GraphqlService {
 			}
 		}));
 		return data.updateSaving;
+	}
+
+	async createCreditCard (variables: CreditCardInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation createCreditCard(
+                    $label: String!
+                    $lastFourDigits: String
+                    $cardHolder: String
+                    $expiration: String!
+                    $issuer: CreditCardIssuer!
+                    $status: CreditCardStatus!
+                    $creditLimitAmount: Float!
+                    $creditLimitCurrencyId: String!
+                ) {
+                  createCreditCard(input: {
+                    label: $label
+                    cardHolder: $cardHolder
+                    lastFourDigits: $lastFourDigits
+                    expiration: $expiration
+                    issuer: $issuer
+                    status: $status
+                    creditLimitAmount: $creditLimitAmount
+                    creditLimitCurrencyId: $creditLimitCurrencyId
+                  }) {
+                    id
+                  }
+                }
+			`,
+			variables
+		}));
+		return data.createCreditCard;
 	}
 }
 

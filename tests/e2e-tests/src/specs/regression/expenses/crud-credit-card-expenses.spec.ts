@@ -10,6 +10,7 @@ import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { createExpense, deleteExpense } from '../../../helpers/expense.helper';
+import { DateTime } from 'luxon';
 
 let email: string;
 let password: string;
@@ -22,6 +23,7 @@ let page: Page;
 let graphqlService: GraphqlService;
 
 let categoryId: string;
+let creditCardId: string;
 const categoryName: string = `Category ${uuidv4()}`;
 
 let expenseId: string;
@@ -38,12 +40,22 @@ test.beforeAll(async ({ browser }) => {
 	const { authToken } = await signInUser(page, { email, password });
 
 	graphqlService = new GraphqlService(authToken);
+	const userCurrencies = await graphqlService.getUserCurrencies();
 	const data1 = await graphqlService.createCategories({
 		name: categoryName,
 		type: 'WANT',
 		isFixedPayment: false,
 	});
 	categoryId = data1.id;
+	const creditCard = await graphqlService.createCreditCard({
+		label: 'Platinum',
+		expiration: DateTime.now().plus({month: 8}).toFormat('MMyy'),
+		issuer: 'visa',
+		status: 'ACTIVE',
+		creditLimitAmount: 5000,
+		creditLimitCurrencyId: userCurrencies[0].id
+	});
+	creditCardId = creditCard.id;
 });
 
 test.afterAll(async () => {
@@ -54,7 +66,9 @@ test.afterAll(async () => {
 	} catch {
 		console.log('No user to be deleted');
 	} finally {
-		await graphqlService.deleteCategory(categoryId);
+		if(graphqlService) {
+			await graphqlService.deleteCategory(categoryId);
+		}
 		await page.close();
 	}
 });
@@ -75,6 +89,8 @@ test('Create Expense', async () => {
 		amount: 34.21,
 		currencyCode: DEFAULT_USER_CURRENCIES[0],
 		categoryName: categoryName,
+		type: 'CREDIT_CARD',
+		creditCardId
 	});
 	expenseId = expense.id;
 	const emptyStateContainer = page.locator(
