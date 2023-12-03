@@ -8,8 +8,10 @@ import {
 	BankAccountSchema,
 	BankSchema,
 	CategorySchema,
-	CountrySchema, CreditCardSchema,
-	CurrencySchema, SavingSchema,
+	CountrySchema, CreditCardMonthlyStatementSchema,
+	CreditCardSchema,
+	CurrencySchema, ExpenseSchema,
+	SavingSchema,
 	UserSchema
 } from '@knightprogrammers/scpio-db-schemas';
 
@@ -21,7 +23,11 @@ const config = {
 	},
 };
 
-const CURRENCY_CODES = ['USD', 'UYU']
+const CURRENCY_CODES = ['USD', 'UYU'];
+
+function randomFloatInRange (min: number = 0, max: number = 1) {
+	return Math.random() * (max - min) + min;
+}
 
 ;(async function main() {
 	logger.info('Connecting to DB');
@@ -33,7 +39,9 @@ const CURRENCY_CODES = ['USD', 'UYU']
 	const CategoryModel = mongoose.model('Category', CategorySchema);
 	const CountryModel = mongoose.model('Country', CountrySchema);
 	const CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
+	const CreditCardMonthlyStatementModel = mongoose.model('CreditCardMonthlyStatement', CreditCardMonthlyStatementSchema);
 	const CurrencyModel = mongoose.model('Currency', CurrencySchema);
+	const ExpenseModel = mongoose.model('Expense', ExpenseSchema);
 	const SavingModel = mongoose.model('Saving', SavingSchema);
 	const UserModel = mongoose.model('User', UserSchema);
 	logger.info('DB connection is up');
@@ -42,6 +50,10 @@ const CURRENCY_CODES = ['USD', 'UYU']
 	// Add Demo User
 	const currencies = await CurrencyModel.find({code: CURRENCY_CODES});
 	const country = await CountryModel.findOne({name: 'Uruguay'});
+
+	if (!currencies.length) {
+		throw new Error('There are no Currencies!');
+	}
 
 	const userExist = await UserModel.findOne({email: 'demo@scipiofinances.com'});
 
@@ -63,26 +75,28 @@ const CURRENCY_CODES = ['USD', 'UYU']
 	logger.info(`	User created with id: "${userId.toString()}"`);
 
 	const categories: any[] = [
-		{name: 'Groceries', type: 'NEED', isFixedPayment: false},
-		{name: 'Rent', type: 'NEED', isFixedPayment: false},
-		{name: 'Services', type: 'NEED', isFixedPayment: false},
-		{name: 'Self Care', type: 'NEED', isFixedPayment: false},
-		{name: 'Clothes', type: 'WANT', isFixedPayment: false},
-		{name: 'Home', type: 'NEED', isFixedPayment: false},
-		{name: 'Transportation', type: 'WANT', isFixedPayment: false},
-		{name: 'Pet', type: 'WANT', isFixedPayment: false},
-		{name: 'Entertainment', type: 'WANT', isFixedPayment: false},
-		{name: 'Health', type: 'NEED', isFixedPayment: false},
-		{name: 'Gifts', type: 'WANT', isFixedPayment: false},
-		{name: 'Gym', type: 'WANT', isFixedPayment: false},
-		{name: 'Travel', type: 'SAVE', isFixedPayment: false},
-		{name: 'Technology', type: 'WANT', isFixedPayment: false},
-		{name: 'Subscriptions', type: 'NEED', isFixedPayment: false},
+		{name: 'Groceries', type: 'NEED', isFixedPayment: false, expenses: 30, expenseRange: [100,2000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Rent', type: 'NEED', isFixedPayment: false, expenses: 1, expenseRange: 20000, currencies: ['UYU'], method: 'CASH'},
+		{name: 'Services', type: 'NEED', isFixedPayment: false, expenses: 4, expenseRange: [1200,1800], currencies: ['UYU'], method: 'CASH'},
+		{name: 'Self Care', type: 'NEED', isFixedPayment: false, expenses: 3, expenseRange: [500, 1000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Clothes', type: 'WANT', isFixedPayment: false, expenses: 2, expenseRange: [3000, 6000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Home', type: 'NEED', isFixedPayment: false, expenses: 2, expenseRange: [500, 1000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Transportation', type: 'WANT', isFixedPayment: false, expenses: 2, expenseRange: [2000, 3000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Pet', type: 'WANT', isFixedPayment: false, expenses: 1, expenseRange: [3800, 5000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Entertainment', type: 'WANT', isFixedPayment: false, expenses: -1, expenseRange: [800,6000], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Health', type: 'NEED', isFixedPayment: false, expenses: 4, expenseRange: [600,2500], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Gifts', type: 'WANT', isFixedPayment: false, expenses: -1, expenseRange: [500, 2200], currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Gym', type: 'WANT', isFixedPayment: false, expenses: 1, expenseRange: 2500, currencies: ['UYU'], method: 'CREDIT_CARD'},
+		{name: 'Travel', type: 'SAVE', isFixedPayment: false, expenses: 1, expenseRange: [100,300], currencies: ['USD'], method: 'CASH'},
+		{name: 'Technology', type: 'WANT', isFixedPayment: false, expenses: 2, expenseRange: [100, 500], currencies: ['USD'], method: 'CREDIT_CARD'},
+		{name: 'Subscriptions', type: 'NEED', isFixedPayment: false, expenses: 10, expenseRange: [8, 15], currencies: ['USD'], method: 'CREDIT_CARD'},
 	];
 
 	for (const category of categories) {
 		const newCategory = await CategoryModel.create({
-			...category,
+			name: category.name,
+			type: category.type,
+			isFixedPayment: category.isFixedPayment,
 			userId
 		});
 		category.id = newCategory._id;
@@ -178,8 +192,7 @@ const CURRENCY_CODES = ['USD', 'UYU']
 		- Blocked
 	*/
 
-	// const creditCard1: any =
-	await CreditCardModel.create({
+	const creditCard1: any = await CreditCardModel.create({
 		label: 'Platinum',
 		cardHolder: 'Demo Account',
 		lastFourDigits: parseInt((new Date()).getMilliseconds().toPrecision(4).toString().replace('.', '')), // Random
@@ -232,9 +245,67 @@ const CURRENCY_CODES = ['USD', 'UYU']
 
 	// Expenses
 
-	// Cash Expenses
+	let creditCardExpenseCounter: number = 0;
 
-	// Credit Card Expenses
+	let billableDate = DateTime.now().set({
+		day: 1,
+		hour: 0,
+		minute: 0,
+		millisecond: 0
+	});
+
+	for (let monthDiff = 0; monthDiff < 12; monthDiff++) {
+
+		let monthlyStatement = undefined;
+
+		if (monthDiff > 0) {
+			monthlyStatement = await CreditCardMonthlyStatementModel.create({
+				closeDate: billableDate.set({
+					day: 28
+				}),
+				creditCardId: creditCard1._id,
+				userId
+			});
+		}
+		for (const category of categories) {
+			const {
+				expenseRange,
+				method
+			} = category;
+
+			const creditCardId = method === 'CREDIT_CARD' ? creditCard1._id : undefined;
+			const creditCardMonthlyStatementId = method === 'CREDIT_CARD' && monthlyStatement ? monthlyStatement._id : undefined;
+
+			const currencyCode: string = category.currencies[0]  ?? 'UYU';
+
+			const increment: number = category.expenses < 0 ? Math.random() * (10 - 1) + 1 : Math.round(28 / category.expenses);
+
+			const max: number = 28;
+
+			let i: number = 1;
+
+			while(i <= max) {
+				creditCardExpenseCounter += 1;
+				await ExpenseModel.create({
+					amount: Array.isArray(expenseRange) ? randomFloatInRange(expenseRange[0], expenseRange[1]) : expenseRange,
+					description: '',
+					billableDate: billableDate.toJSDate(),
+					type: method,
+					currencyId: currencies.find((c: any) => c.code === currencyCode )?._id ?? undefined,
+					categoryId: category.id,
+					creditCardId,
+					creditCardMonthlyStatementId,
+					userId
+				});
+				i = Math.max(28, i + increment);
+				billableDate = billableDate.plus({day: increment});
+			}
+			billableDate = billableDate.set({day: 1});
+		}
+		billableDate = billableDate.set({day: 1}).minus({month: 1});
+	}
+
+	logger.info(`	Added ${creditCardExpenseCounter} expenses`);
 
 	// Budgets
 

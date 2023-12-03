@@ -511,7 +511,7 @@ const Budgets = () => {
 
     if (!budget) {
         return (
-            <Container data-tn="budgets-page">
+            <Container data-tn="budgets-page" className="bg-transparent">
                 <Loading type="cover" loading={isStarting}>
                     <div className="flex flex-col md:flex-row justify-between mb-4">
                         <h2 className="mb-2">{t('pages.budgets.header')}</h2>

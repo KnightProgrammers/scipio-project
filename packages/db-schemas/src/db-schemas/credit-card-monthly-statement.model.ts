@@ -8,7 +8,7 @@ export const CreditCardMonthlyStatementSchema = new mongoose.Schema(
 		},
 		creditCardId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
+			ref: 'CreditCard',
 			required: true,
 		},
 		userId: {

@@ -82,7 +82,16 @@
                 "title": "No Credit cards",
                 "description": "Try adding credit cards to better control your expenses"
             },
-            "addCreditCardButton": "Add a Credit card"
+            "addCreditCardButton": "Add a Credit card",
+            "detailView": {
+                "newStatementTitle": "New Monthly Statement",
+                "nextStatement": "Next Statement",
+                "newStatementButton": "Create Statement",
+                "emptyState": {
+                    "nextStatement": "No Expenses reported",
+                    "existingStatement": "No expenses for this statement"
+                }
+            }
         },
         "categories": {
             "header": "Categories",
@@ -233,6 +242,7 @@
         "edit": "Edit",
         "filter": "Filter",
         "next": "Next",
+        "open": "Open",
         "reSendEmail": "Resend Email",
         "save": "Save",
         "saving": "Saving",
@@ -245,6 +255,7 @@
         "starting": "Starting",
         "submit": "Submit",
         "submitting": "Submiting...",
+        "view": "View",
         "tryAgain": "Try again",
         "update": "Update",
         "updating": "Updating",

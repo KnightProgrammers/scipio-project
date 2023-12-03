@@ -9,6 +9,7 @@ type EmptyStateProps = {
     iconSize?: number
     children?: ReactNode
     bySearch?: boolean
+    bordered?: boolean
     'data-tn'?: string
 }
 
@@ -19,20 +20,21 @@ const EmptyState = (props: EmptyStateProps) => {
         description = '',
         children,
         iconSize = 360,
+        bordered = false,
         // bySearch = false
     } = props
 
     return (
         <Card
-            bordered
-            className={`text-center ${className}`}
+            bordered={bordered}
+            className={`text-center ${bordered ? '' : 'border-0'} ${className}`}
             bodyClass="flex flex-col items-center"
             data-tn={props['data-tn'] || 'empty-state'}
         >
             {iconSize > 0 && (
                 <DoubleSidedImage
                     src="/img/others/empty-state.svg"
-                    darkModeSrc="/img/others/empty-state-dark.svg"
+                    darkModeSrc="/img/others/empty-state.svg"
                     alt="empty state icon"
                     width={iconSize}
                     height="auto"

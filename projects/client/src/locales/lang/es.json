@@ -82,7 +82,16 @@
                 "title": "Sin Tarjetas de crédito",
                 "description": "Prueba agregando tarjetas de crédito para controlar mejor tus consumos"
             },
-            "addCreditCardButton": "Agregar Tarjeta de Crédito"
+            "addCreditCardButton": "Agregar Tarjeta de Crédito",
+            "detailView": {
+                "newStatementTitle": "Nuevo Cierre de Tarjeta",
+                "nextStatement": "Próximo Cierre",
+                "newStatementButton": "Cerrar Tarjeta",
+                "emptyState": {
+                    "nextStatement": "No hay gastos reportados",
+                    "existingStatement": "No hay gastos para este cierre"
+                }
+            }
         },
         "categories": {
             "header": "Categorías",
@@ -233,6 +242,7 @@
         "edit": "Editar",
         "filter": "Filtrar",
         "next": "Siguiente",
+        "open": "Abrir",
         "reSendEmail": "Re-enviar Email",
         "save": "Guardar",
         "saving": "Guardando",
@@ -245,6 +255,7 @@
         "starting": "Comenzando",
         "submit": "Enviar",
         "submitting": "Enviando...",
+        "view": "Ver",
         "tryAgain": "Volver a intentar",
         "update": "Actualizar",
         "updating": "Actualizando",

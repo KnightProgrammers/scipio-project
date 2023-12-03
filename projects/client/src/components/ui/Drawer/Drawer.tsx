@@ -18,6 +18,7 @@ export interface DrawerProps extends ReactModal.Props {
     showBackdrop?: boolean
     title?: string | ReactNode
     width?: string | number
+    'data-tn'?: string
 }
 
 const Drawer = (props: DrawerProps) => {
@@ -122,6 +123,7 @@ const Drawer = (props: DrawerProps) => {
                 className={classNames('drawer-content', dimensionClass)}
                 style={contentStyle}
                 initial={motionStyle}
+                data-tn={props['data-tn']}
                 animate={{
                     [placement as 'top' | 'right' | 'bottom' | 'left']: isOpen
                         ? 0
@@ -133,7 +135,7 @@ const Drawer = (props: DrawerProps) => {
                         {typeof title === 'string' ? (
                             <h4>{title}</h4>
                         ) : (
-                            <span>{title}</span>
+                            <>{title}</>
                         )}
                         {closable && renderCloseButton}
                     </div>

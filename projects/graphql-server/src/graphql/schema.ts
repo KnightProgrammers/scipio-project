@@ -153,6 +153,7 @@ const schema = `
     banks: [Bank]!
     bankAccounts: [BankAccount]!
     creditCards(statuses: [CreditCardStatus]): [CreditCard]!
+    creditCard(id: String!): CreditCard
     categories: [Category]!
     expenses(fromDate: String, toDate: String): [Expense]!
     savings(statuses: [SavingStatus]): [Saving]!

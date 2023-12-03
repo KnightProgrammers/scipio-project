@@ -72,6 +72,50 @@ export async function apiGetCreditCardListForSelect(): Promise<any[]> {
     return response.data.data.me.creditCards
 }
 
+export async function apiGetCreditCard(id: string): Promise<any[]> {
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'userCreditCard',
+            query: `
+                query userCreditCard($id: String!) { 
+                    me { 
+                        id 
+                        creditCard(id: $id) { 
+                            id
+                            monthlyStatements {
+                                id
+                                closeDate
+                                expenses {
+                                  id
+                                  billableDate
+                                  amount
+                                  description
+                                  category { id name }
+                                  currency { id code }
+                                }
+                            }
+                            expensesNextStatement {
+                                id
+                                billableDate
+                                amount
+                                description
+                                category { id name }
+                                currency { id code }
+                            }
+                        }
+                    } 
+                }
+            `,
+            variables: {
+                id,
+            },
+        },
+    })
+    return response.data.data.me.creditCard
+}
+
 export async function apiCreateCreditCard(body: CreditCardInput): Promise<any> {
     const {
         label,
@@ -222,6 +266,38 @@ export async function apiDeleteCreditCard(
             }`,
             variables: {
                 id: creditCardId,
+            },
+        },
+    })
+    return response.data
+}
+
+export async function apiCreateCreditCardMonthlyStatement(body: {
+    creditCardId: string
+    closeDate: string
+}): Promise<any> {
+    const { creditCardId, closeDate } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'createCreditCardMonthlyStatement',
+            query: `
+                mutation createCreditCardMonthlyStatement(
+                  $creditCardId: String!
+                  $closeDate: String!
+                ) {
+                  createCreditCardMonthlyStatement(
+                    creditCardId: $creditCardId, 
+                    closeDate: $closeDate
+                  ) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                creditCardId,
+                closeDate,
             },
         },
     })
