@@ -1,4 +1,5 @@
 import {
+    Badge,
     Button,
     Card,
     Checkbox,
@@ -161,9 +162,7 @@ const ExpenseTag = (props: {
     const { value = 0, budget, currencyCode, lang, country } = props
     const { t } = useTranslation()
 
-    if (!budget) return null
-
-    const budgetDiff: number = budget.limit - value
+    const budgetDiff: number = budget ? budget.limit - value : 0
 
     const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
 
@@ -176,34 +175,42 @@ const ExpenseTag = (props: {
                             {currencyCode}
                         </p>
                         <p>
-                            <small>{t('pages.expenses.labels.budget')}</small>
-                        </p>
-                        <p className="font-light">
-                            {currencyFormat(
-                                budget.limit,
-                                currencyCode,
-                                lang,
-                                country,
+                            {budget && (
+                                <small>
+                                    {t('pages.expenses.labels.budget')}
+                                </small>
                             )}
                         </p>
+                        {budget && (
+                            <p className="font-light">
+                                {currencyFormat(
+                                    budget.limit,
+                                    currencyCode,
+                                    lang,
+                                    country,
+                                )}
+                            </p>
+                        )}
                     </div>
                 </div>
                 <div className="text-right rtl:text-left">
-                    <p className="mb-2 text-lg font-bold">
+                    <p className={`${budget ? 'mb-2' : ''} text-lg font-bold`}>
                         <span>
                             {currencyFormat(value, currencyCode, lang, country)}
                         </span>
                     </p>
-                    <GrowShrinkTag
-                        inverse
-                        valuation={valuation}
-                        value={currencyFormat(
-                            budgetDiff,
-                            currencyCode,
-                            lang,
-                            country,
-                        )}
-                    />
+                    {budget && (
+                        <GrowShrinkTag
+                            inverse
+                            valuation={valuation}
+                            value={currencyFormat(
+                                budgetDiff,
+                                currencyCode,
+                                lang,
+                                country,
+                            )}
+                        />
+                    )}
                 </div>
             </div>
         </Card>
@@ -1136,10 +1143,15 @@ const Expenses = () => {
                             data-tn={`category-detail-${c.id}`}
                             header={
                                 <div className="w-full flex flex-col items-center">
-                                    <div className="w-full flex justify-between items-center mr-4">
-                                        <span className="text-md sm:text-lg lg:text-2xl font-semibold">
+                                    <div className="w-full flex justify-between items-center mr-4 mb-4">
+                                        <div className="flex items-center text-md sm:text-lg lg:text-2xl font-semibold">
                                             {c.name}
-                                        </span>
+                                            <Badge
+                                                content={c.expenses.length}
+                                                className="ml-2 border border-gray-400"
+                                                innerClass="bg-white text-gray-500"
+                                            />
+                                        </div>
                                         <Button
                                             variant="twoTone"
                                             size="sm"
@@ -1159,38 +1171,35 @@ const Expenses = () => {
                                             )}
                                         </Button>
                                     </div>
-                                    {c.budget && (
-                                        <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
-                                            {userCurrencies.map(
-                                                (
-                                                    currency: any,
-                                                    index: number,
-                                                ) => (
-                                                    <ExpenseTag
-                                                        key={index}
-                                                        value={getTotalExpenseByCurrency(
-                                                            c.expenses,
-                                                            currency.code,
-                                                        )}
-                                                        budget={c.budget.currencies.find(
-                                                            (c: any) =>
-                                                                c.currency
-                                                                    .code ===
-                                                                currency.code,
-                                                        )}
-                                                        currencyCode={
-                                                            currency.code
-                                                        }
-                                                        lang={i18n.language}
-                                                        country={
-                                                            userState.country
-                                                                ?.code || 'UY'
-                                                        }
-                                                    />
-                                                ),
-                                            )}
-                                        </div>
-                                    )}
+                                    <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
+                                        {userCurrencies.map(
+                                            (currency: any, index: number) => (
+                                                <ExpenseTag
+                                                    key={index}
+                                                    value={getTotalExpenseByCurrency(
+                                                        c.expenses,
+                                                        currency.code,
+                                                    )}
+                                                    budget={
+                                                        c.budget
+                                                            ? c.budget.currencies.find(
+                                                                  (c: any) =>
+                                                                      c.currency
+                                                                          .code ===
+                                                                      currency.code,
+                                                              )
+                                                            : null
+                                                    }
+                                                    currencyCode={currency.code}
+                                                    lang={i18n.language}
+                                                    country={
+                                                        userState.country
+                                                            ?.code || 'UY'
+                                                    }
+                                                />
+                                            ),
+                                        )}
+                                    </div>
                                 </div>
                             }
                         >

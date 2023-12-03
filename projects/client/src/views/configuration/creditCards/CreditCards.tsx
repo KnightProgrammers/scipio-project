@@ -155,11 +155,14 @@ const CreditCardDrawer = (props: {
             <div>
                 {expenses.map((e: any) => (
                     <Card key={e.id} bordered={true} className="mt-2">
-                        <small>
-                            {DateTime.fromISO(e.billableDate).toFormat(
-                                'dd/MM/yyyy',
-                            )}
-                        </small>
+                        <div className="w-full flex justify-between items-center">
+                            <small>{e.category.name}</small>
+                            <small>
+                                {DateTime.fromISO(e.billableDate).toFormat(
+                                    'dd/MM/yyyy',
+                                )}
+                            </small>
+                        </div>
                         <div className="w-full flex justify-between items-center">
                             <span>
                                 {e.description
