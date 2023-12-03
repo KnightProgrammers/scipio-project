@@ -72,7 +72,7 @@ export async function apiGetCreditCardListForSelect(): Promise<any[]> {
     return response.data.data.me.creditCards
 }
 
-export async function apiGetCreditCard(id: string): Promise<unknown[]> {
+export async function apiGetCreditCard(id: string): Promise<any[]> {
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',

@@ -135,6 +135,7 @@ const CreditCardDrawer = (props: {
     onClose: () => void
 }) => {
     const { isOpen, creditCard, onClose } = props
+    const [activeTab, setActiveTab] = useState<string>('next')
 
     const { t, i18n } = useTranslation()
 
@@ -152,7 +153,7 @@ const CreditCardDrawer = (props: {
     const ExpenseList = (props: { expenses: any }) => {
         const { expenses } = props
         return (
-            <div>
+            <>
                 {expenses.map((e: any) => (
                     <Card key={e.id} bordered={true} className="mt-2">
                         <div className="w-full flex justify-between items-center">
@@ -184,13 +185,14 @@ const CreditCardDrawer = (props: {
                         </div>
                     </Card>
                 ))}
-            </div>
+            </>
         )
     }
 
     return (
         <Drawer
             headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
+            bodyClass="overflow-hidden"
             title={
                 <div className="flex flex-col w-full divide-y">
                     <div className="grid grid-flow-col auto-cols-max gap-4 items-center mb-4">
@@ -228,25 +230,66 @@ const CreditCardDrawer = (props: {
             {!creditCardDetail || isFetchingCreditCardDetail ? (
                 <Loading loading />
             ) : (
-                <Tabs defaultValue="next">
-                    <TabList>
-                        <TabNav value="next">Next Statement</TabNav>
-                        {creditCardDetail.monthlyStatements.map((ms: any) => (
-                            <TabNav key={ms.id} value="tab2">
-                                {ms.closeDate}
-                            </TabNav>
-                        ))}
-                    </TabList>
-                    <div className="">
-                        <TabContent value="next">
-                            <ExpenseList
-                                expenses={
-                                    creditCardDetail.expensesNextStatement
-                                }
-                            />
+                <>
+                    <Tabs
+                        defaultValue="next"
+                        className="h-full overflow-hidden"
+                        onChange={(tabValue) => setActiveTab(tabValue)}
+                    >
+                        <TabList>
+                            <TabNav value="next">Next Statement</TabNav>
+                            {creditCardDetail.monthlyStatements.map(
+                                (ms: any) => (
+                                    <TabNav
+                                        key={`ms-tab-nav-${ms.id}`}
+                                        value={ms.id}
+                                    >
+                                        {DateTime.fromISO(ms.closeDate)
+                                            .setLocale(i18n.language)
+                                            .toFormat('MMMM')}
+                                    </TabNav>
+                                ),
+                            )}
+                        </TabList>
+
+                        <TabContent
+                            value="next"
+                            className={activeTab === 'next' ? 'h-full' : ''}
+                        >
+                            <div
+                                className="overflow-y-auto"
+                                style={{
+                                    height: 'calc(100% - 70px - 28px - 32px)',
+                                }}
+                            >
+                                <ExpenseList
+                                    expenses={
+                                        creditCardDetail.expensesNextStatement
+                                    }
+                                />
+                            </div>
+                            <Button block variant="solid" className="mt-4">
+                                Close Month
+                            </Button>
                         </TabContent>
-                    </div>
-                </Tabs>
+                        {creditCardDetail.monthlyStatements.map((ms: any) => (
+                            <TabContent
+                                key={`ms-content-${ms.id}`}
+                                value={ms.id}
+                                className={activeTab === ms.id ? 'h-full' : ''}
+                            >
+                                <div
+                                    className="overflow-y-auto"
+                                    style={{
+                                        height: 'calc(100% - 70px)',
+                                    }}
+                                >
+                                    <ExpenseList expenses={ms.expenses} />
+                                </div>
+                            </TabContent>
+                        ))}
+                    </Tabs>
+                </>
             )}
         </Drawer>
     )
