@@ -7,7 +7,8 @@ type ExpenseFilterType = {
 	fromDate?: DateTime
 	toDate?: DateTime
 	expenseType?: string[]
-	currency?: string[]
+	currency?: string[],
+	paymentMethod?: string[]
 }
 
 export const createExpense = async (page: Page, data: {
@@ -127,6 +128,17 @@ export const applyExpenseFilter = async (page: Page, filters: ExpenseFilterType)
 				(!isSelected && filters.currency.includes(currency))
 			) {
 				await page.locator(`div[data-tn="expense-currency-filter-${currency.toLowerCase()}-opt"]`).click();
+			}
+		}
+	}
+	if (filters.paymentMethod) {
+		for (const pmTp of ['CASH', 'CREDIT_CARD']) {
+			const isSelected: boolean = await page.locator(`div[data-tn="payment-method-filter-${pmTp.toLowerCase()}-opt"] input`).isChecked();
+			if (
+				(isSelected && !filters.paymentMethod.includes(pmTp)) ||
+				(!isSelected && filters.paymentMethod.includes(pmTp))
+			) {
+				await page.locator(`div[data-tn="payment-method-filter-${pmTp.toLowerCase()}-opt"]`).click();
 			}
 		}
 	}

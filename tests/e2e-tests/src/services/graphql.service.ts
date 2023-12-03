@@ -12,6 +12,7 @@ type NewExpenseInput = {
 	amount: number,
 	currencyId: string
 	categoryId: string
+	creditCardId?: string
 }
 
 type BankInput = {
@@ -133,6 +134,7 @@ class GraphqlService {
 					$billableDate: String!
 					$currencyId: String!
 					$categoryId: String!
+					$creditCardId: String
 				) {
 					createExpense(input: {
 						amount: $amount
@@ -140,6 +142,7 @@ class GraphqlService {
 						billableDate: $billableDate
 						currencyId: $currencyId
 						categoryId: $categoryId
+						creditCardId: $creditCardId
 					}) {
 						id
 					}

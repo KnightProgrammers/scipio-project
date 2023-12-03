@@ -34,6 +34,8 @@ test.beforeAll(async ({ browser }) => {
 	await signUpUser(page, { email, password, name });
 	const {authToken} = await signInUser(page, { email, password });
 	graphqlService = new GraphqlService(authToken);
+	const userCurrencies = await graphqlService.getUserCurrencies();
+
 	const data1 = await graphqlService.createCategories({
 		name: `Category ${uuidv4()}`,
 		type: 'WANT',
@@ -52,7 +54,14 @@ test.beforeAll(async ({ browser }) => {
 		isFixedPayment: true
 	});
 	categoryId_3 = data3.id;
-	const userCurrencies = await graphqlService.getUserCurrencies();
+	const creditCard = await graphqlService.createCreditCard({
+		label: 'Platinum',
+		expiration: DateTime.now().plus({month: 8}).toFormat('MMyy'),
+		issuer: 'visa',
+		status: 'ACTIVE',
+		creditLimitAmount: 5000,
+		creditLimitCurrencyId: userCurrencies[0].id
+	});
 	await graphqlService.createExpense({
 		amount: 456,
 		categoryId: categoryId_1,
@@ -74,6 +83,14 @@ test.beforeAll(async ({ browser }) => {
 		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[1]).id,
 		description: 'Expense #3'
 	});
+	await graphqlService.createExpense({
+		amount: 3032,
+		categoryId: categoryId_2,
+		billableDate: DateTime.fromJSDate(new Date()).toISO(),
+		currencyId: userCurrencies.find(c => c.code === DEFAULT_USER_CURRENCIES[1]).id,
+		description: 'Expense #4',
+		creditCardId: creditCard.id
+	});
 
 	const waitForExpenses = waitForRequest(page, 'userExpensesByCategory');
 	await navigateMenu(page, NAV_MENU.EXPENSES);
@@ -86,7 +103,7 @@ test.afterAll(async () => {
 		await firebaseService.auth().deleteUser(user.uid);
 		console.log(`Deleted User "${email}"`);
 	} catch {
-		console.log('No user to be deleted');
+		console.log('Error deleting user');
 	} finally {
 		await page.close();
 	}
@@ -97,7 +114,7 @@ test('Validate Summary', async () => {
 	const summaryCard2 = await page.locator(`div[data-tn="summary-card-${DEFAULT_USER_CURRENCIES[1].toLowerCase()}"] h3`).textContent();
 
 	expect(convertToNumber(summaryCard1)).toEqual(1203);
-	expect(convertToNumber(summaryCard2)).toEqual(456);
+	expect(convertToNumber(summaryCard2)).toEqual(3488);
 });
 test('Validate Details', async () => {
 	// Category 1 is present
@@ -161,10 +178,32 @@ test.describe('filters', () => {
 		});
 		// Category 1 is present
 		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
-		// Category 2 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).not.toBeVisible();
+		// Category 2 is present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is present
 		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).toBeVisible();
+	});
+	test('Filter by Payment method', async () => {
+		await applyExpenseFilter(page, {
+			fromDate: DateTime.fromJSDate(new Date()).startOf('month'),
+			toDate: DateTime.fromJSDate(new Date()).endOf('month'),
+			paymentMethod: ['CASH']
+		});
+		// Category 1 is present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
+		// Category 2 is not present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		// Category 3 is present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await applyExpenseFilter(page, {
+			paymentMethod: ['CREDIT_CARD']
+		});
+		// Category 1 is not present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		// Category 2 is present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		// Category 3 is not present
+		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
 	});
 	test('Filter by date with no results', async () => {
 		await applyExpenseFilter(page, {

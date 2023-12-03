@@ -54,7 +54,9 @@ test.afterAll(async () => {
 	} catch {
 		console.log('No user to be deleted');
 	} finally {
-		await graphqlService.deleteCategory(categoryId);
+		if(graphqlService) {
+			await graphqlService.deleteCategory(categoryId);
+		}
 		await page.close();
 	}
 });
