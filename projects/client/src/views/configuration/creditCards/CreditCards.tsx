@@ -3,6 +3,7 @@ import {
     Badge,
     Button,
     Card,
+    DatePicker,
     Drawer,
     Dropdown,
     FormItem,
@@ -40,6 +41,7 @@ import {
     apiUpdateCreditCard,
     apiDeleteCreditCard,
     apiGetCreditCard,
+    apiCreateCreditCardMonthlyStatement,
 } from '@/services/CreditCardService'
 import TabList from '@/components/ui/Tabs/TabList'
 import TabNav from '@/components/ui/Tabs/TabNav'
@@ -136,17 +138,38 @@ const CreditCardDrawer = (props: {
 }) => {
     const { isOpen, creditCard, onClose } = props
     const [activeTab, setActiveTab] = useState<string>('next')
+    const [showCreateStatementForm, setShowCreateStatementForm] =
+        useState<boolean>(false)
 
     const { t, i18n } = useTranslation()
 
     const userState = useAppSelector((state) => state.auth.user)
 
-    const { data: creditCardDetail, isFetching: isFetchingCreditCardDetail } =
-        useQuery({
-            enabled: isOpen && !!creditCard,
-            queryKey: [`user-creditCard-${creditCard?.id ?? ''}`],
-            queryFn: async () => apiGetCreditCard(creditCard.id),
-        })
+    const {
+        data: creditCardDetail,
+        isFetching: isFetchingCreditCardDetail,
+        refetch: refetchCreditCardDetail,
+    } = useQuery({
+        enabled: isOpen && !!creditCard,
+        queryKey: [`user-creditCard-${creditCard?.id ?? ''}`],
+        queryFn: async () => apiGetCreditCard(creditCard.id),
+    })
+
+    const createCreditCardMonthlyStatementMutation = useMutation({
+        mutationFn: apiCreateCreditCardMonthlyStatement,
+        onSuccess: async () => {
+            toast.push(
+                <Notification
+                    title={t('notifications.creditCard.created') || ''}
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
+                },
+            )
+            await refetchCreditCardDetail()
+        },
+    })
 
     if (!isOpen || !creditCard) return null
 
@@ -189,10 +212,178 @@ const CreditCardDrawer = (props: {
         )
     }
 
+    const CreateStatementForm = () => {
+        const [closeDate, setCloseDate] = useState<Date>(new Date())
+
+        const saving = createCreditCardMonthlyStatementMutation.isPending
+
+        return (
+            <div className="h-full flex flex-col justify-center">
+                <Loading type="cover" loading={saving}>
+                    <Card>
+                        <h3 className="mb-4">
+                            {t(
+                                'pages.creditCards.detailView.newStatementButton',
+                            )}
+                        </h3>
+                        <DatePicker
+                            inputtable
+                            locale={i18n.language}
+                            defaultValue={closeDate}
+                            inputFormat="DD/MM/YYYY"
+                            clearable={false}
+                            onChange={(newDate) =>
+                                newDate && setCloseDate(newDate)
+                            }
+                        />
+                        <div className="mt-4 grid grid-cols-2 gap-4">
+                            <Button
+                                onClick={() => {
+                                    setShowCreateStatementForm(false)
+                                    setCloseDate(new Date())
+                                }}
+                            >
+                                {t('actions.cancel')}
+                            </Button>
+                            <Button
+                                variant="solid"
+                                onClick={() => {
+                                    createCreditCardMonthlyStatementMutation.mutate(
+                                        {
+                                            creditCardId: creditCard.id,
+                                            closeDate:
+                                                DateTime.fromJSDate(
+                                                    closeDate,
+                                                ).toISO() ?? '',
+                                        },
+                                    )
+                                    setShowCreateStatementForm(false)
+                                    setCloseDate(new Date())
+                                }}
+                            >
+                                {saving
+                                    ? t('actions.saving')
+                                    : t('actions.save')}
+                            </Button>
+                        </div>
+                    </Card>
+                </Loading>
+            </div>
+        )
+    }
+
+    const DrawerContent = () => {
+        if (!creditCardDetail || isFetchingCreditCardDetail) {
+            return <Loading loading />
+        }
+
+        if (showCreateStatementForm) {
+            return <CreateStatementForm />
+        }
+
+        return (
+            <Tabs
+                value={activeTab}
+                defaultValue="next"
+                className="h-full overflow-hidden"
+                onChange={(tabValue) => setActiveTab(tabValue)}
+            >
+                <TabList>
+                    <TabNav value="next" style={{ minWidth: 'fit-content' }}>
+                        {t('pages.creditCards.detailView.nextStatement')}
+                    </TabNav>
+                    {creditCardDetail.monthlyStatements.map((ms: any) => (
+                        <TabNav
+                            key={`ms-tab-nav-${ms.id}`}
+                            value={ms.id}
+                            style={{ minWidth: 'fit-content' }}
+                        >
+                            {DateTime.fromISO(ms.closeDate)
+                                .setLocale(i18n.language)
+                                .toFormat('MMMM')}
+                        </TabNav>
+                    ))}
+                </TabList>
+
+                <TabContent
+                    value="next"
+                    className={activeTab === 'next' ? 'h-full' : ''}
+                >
+                    <div
+                        className={
+                            creditCardDetail.expensesNextStatement.length
+                                ? 'overflow-y-auto'
+                                : 'flex flex-col justify-center'
+                        }
+                        style={{
+                            height: 'calc(100% - 70px - 38px)',
+                        }}
+                    >
+                        {creditCardDetail.expensesNextStatement.length ? (
+                            <ExpenseList
+                                expenses={
+                                    creditCardDetail.expensesNextStatement
+                                }
+                            />
+                        ) : (
+                            <EmptyState bordered className="mt-4 border-0">
+                                <h4 className="text-2xl text-gray-500">
+                                    {t(
+                                        'pages.creditCards.detailView.emptyState.nextStatement',
+                                    )}
+                                </h4>
+                            </EmptyState>
+                        )}
+                    </div>
+                    <Button
+                        block
+                        variant="solid"
+                        className="mt-4"
+                        onClick={() => setShowCreateStatementForm(true)}
+                    >
+                        {t('pages.creditCards.detailView.newStatementButton')}
+                    </Button>
+                </TabContent>
+                {creditCardDetail.monthlyStatements.map((ms: any) => (
+                    <TabContent
+                        key={`ms-content-${ms.id}`}
+                        value={ms.id}
+                        className={activeTab === ms.id ? 'h-full' : ''}
+                    >
+                        <div
+                            className={
+                                ms.expenses.length
+                                    ? 'overflow-y-auto'
+                                    : 'flex flex-col justify-center'
+                            }
+                            style={{
+                                height: 'calc(100% - 70px)',
+                            }}
+                        >
+                            {ms.expenses.length ? (
+                                <ExpenseList expenses={ms.expenses} />
+                            ) : (
+                                <EmptyState bordered className="mt-4 border-0">
+                                    <h4 className="text-2xl text-gray-500">
+                                        {t(
+                                            'pages.creditCards.detailView.emptyState.existingStatement',
+                                        )}
+                                    </h4>
+                                </EmptyState>
+                            )}
+                        </div>
+                    </TabContent>
+                ))}
+            </Tabs>
+        )
+    }
+
     return (
         <Drawer
             headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
-            bodyClass="overflow-hidden"
+            bodyClass={`overflow-hidden ${
+                showCreateStatementForm ? 'bg-gray-300' : ''
+            }`}
             title={
                 <div className="flex flex-col w-full divide-y">
                     <div className="grid grid-flow-col auto-cols-max gap-4 items-center mb-4">
@@ -227,70 +418,7 @@ const CreditCardDrawer = (props: {
             onClose={onClose}
             onRequestClose={onClose}
         >
-            {!creditCardDetail || isFetchingCreditCardDetail ? (
-                <Loading loading />
-            ) : (
-                <>
-                    <Tabs
-                        defaultValue="next"
-                        className="h-full overflow-hidden"
-                        onChange={(tabValue) => setActiveTab(tabValue)}
-                    >
-                        <TabList>
-                            <TabNav value="next">Next Statement</TabNav>
-                            {creditCardDetail.monthlyStatements.map(
-                                (ms: any) => (
-                                    <TabNav
-                                        key={`ms-tab-nav-${ms.id}`}
-                                        value={ms.id}
-                                    >
-                                        {DateTime.fromISO(ms.closeDate)
-                                            .setLocale(i18n.language)
-                                            .toFormat('MMMM')}
-                                    </TabNav>
-                                ),
-                            )}
-                        </TabList>
-
-                        <TabContent
-                            value="next"
-                            className={activeTab === 'next' ? 'h-full' : ''}
-                        >
-                            <div
-                                className="overflow-y-auto"
-                                style={{
-                                    height: 'calc(100% - 70px - 28px - 32px)',
-                                }}
-                            >
-                                <ExpenseList
-                                    expenses={
-                                        creditCardDetail.expensesNextStatement
-                                    }
-                                />
-                            </div>
-                            <Button block variant="solid" className="mt-4">
-                                Close Month
-                            </Button>
-                        </TabContent>
-                        {creditCardDetail.monthlyStatements.map((ms: any) => (
-                            <TabContent
-                                key={`ms-content-${ms.id}`}
-                                value={ms.id}
-                                className={activeTab === ms.id ? 'h-full' : ''}
-                            >
-                                <div
-                                    className="overflow-y-auto"
-                                    style={{
-                                        height: 'calc(100% - 70px)',
-                                    }}
-                                >
-                                    <ExpenseList expenses={ms.expenses} />
-                                </div>
-                            </TabContent>
-                        ))}
-                    </Tabs>
-                </>
-            )}
+            <DrawerContent />
         </Drawer>
     )
 }

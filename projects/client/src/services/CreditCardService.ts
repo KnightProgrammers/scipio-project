@@ -271,3 +271,35 @@ export async function apiDeleteCreditCard(
     })
     return response.data
 }
+
+export async function apiCreateCreditCardMonthlyStatement(body: {
+    creditCardId: string
+    closeDate: string
+}): Promise<any> {
+    const { creditCardId, closeDate } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'createCreditCardMonthlyStatement',
+            query: `
+                mutation createCreditCardMonthlyStatement(
+                  $creditCardId: String!
+                  $closeDate: String!
+                ) {
+                  createCreditCardMonthlyStatement(
+                    creditCardId: $creditCardId, 
+                    closeDate: $closeDate
+                  ) {
+                    id
+                  }
+                }
+            `,
+            variables: {
+                creditCardId,
+                closeDate,
+            },
+        },
+    })
+    return response.data
+}
