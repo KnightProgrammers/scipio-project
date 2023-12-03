@@ -179,23 +179,29 @@ const BankAccounts = () => {
 
     if (bankAccountList.length === 0) {
         return (
-            <EmptyState
-                className="mt-4 bg-transparent"
-                title={t('pages.bankAccounts.emptyState.noBanks.title') || ''}
-                description={
-                    t('pages.bankAccounts.emptyState.noBanks.description') || ''
-                }
-                data-tn="empty-state-no-banks"
-            >
-                <Button
-                    variant="plain"
-                    className={`mt-4 ${textTheme}`}
-                    icon={<HiOutlineExternalLink />}
-                    onClick={() => navigate('/account/settings/banks')}
+            <Container data-tn="bank-accounts-page">
+                <EmptyState
+                    className="mt-4"
+                    title={
+                        t('pages.bankAccounts.emptyState.noBanks.title') || ''
+                    }
+                    description={
+                        t(
+                            'pages.bankAccounts.emptyState.noBanks.description',
+                        ) || ''
+                    }
+                    data-tn="empty-state-no-banks"
                 >
-                    {t('pages.bankAccounts.goToBanksSection')}
-                </Button>
-            </EmptyState>
+                    <Button
+                        variant="plain"
+                        className={`mt-4 ${textTheme}`}
+                        icon={<HiOutlineExternalLink />}
+                        onClick={() => navigate('/account/settings/banks')}
+                    >
+                        {t('pages.bankAccounts.goToBanksSection')}
+                    </Button>
+                </EmptyState>
+            </Container>
         )
     }
 

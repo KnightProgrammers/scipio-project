@@ -1,9 +1,10 @@
 {
   "name": "scipio-client",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",

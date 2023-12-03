@@ -234,12 +234,12 @@ const Categories = () => {
                 <EmptyState
                     title={t('pages.categories.emptyState.title')}
                     description={t('pages.categories.emptyState.description')}
-                    className="bg-transparent dark:bg-transparent"
                     data-tn="empty-state-no-categories"
                 >
                     <Button
-                        variant="solid"
-                        className="mt-4"
+                        variant="twoTone"
+                        className="mt-4 w-full md:w-96"
+                        size="lg"
                         icon={<HiPlus />}
                         data-tn="add-category-btn"
                         onClick={() => setIsFormOpen(true)}

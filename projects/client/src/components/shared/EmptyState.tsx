@@ -24,15 +24,14 @@ const EmptyState = (props: EmptyStateProps) => {
 
     return (
         <Card
-            bordered
-            className={`text-center ${className}`}
+            className={`text-center border-0 ${className}`}
             bodyClass="flex flex-col items-center"
             data-tn={props['data-tn'] || 'empty-state'}
         >
             {iconSize > 0 && (
                 <DoubleSidedImage
                     src="/img/others/empty-state.svg"
-                    darkModeSrc="/img/others/empty-state-dark.svg"
+                    darkModeSrc="/img/others/empty-state.svg"
                     alt="empty state icon"
                     width={iconSize}
                     height="auto"

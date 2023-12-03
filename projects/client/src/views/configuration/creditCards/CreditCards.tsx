@@ -589,12 +589,12 @@ const CreditCards = () => {
                 <EmptyState
                     title={t('pages.creditCards.emptyState.title')}
                     description={t('pages.creditCards.emptyState.description')}
-                    className="bg-transparent dark:bg-transparent"
                     data-tn="empty-state-no-credit-cards"
                 >
                     <Button
-                        variant="solid"
-                        className="mt-4"
+                        variant="twoTone"
+                        className="mt-4 w-full md:w-96"
+                        size="lg"
                         icon={<HiPlus />}
                         data-tn="add-credit-card-btn"
                         onClick={() => setIsFormOpen(true)}

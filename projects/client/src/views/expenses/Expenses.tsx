@@ -1083,7 +1083,8 @@ const Expenses = () => {
                     data-tn="empty-state-no-expenses"
                 >
                     <Button
-                        className="mt-4"
+                        className="mt-4 w-full md:w-96"
+                        size="lg"
                         variant="twoTone"
                         icon={<HiPlus />}
                         data-tn="add-expense-btn"

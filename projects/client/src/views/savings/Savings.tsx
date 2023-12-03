@@ -664,8 +664,7 @@ const Savings = () => {
                     <Button
                         variant="twoTone"
                         size="lg"
-                        className="mt-4"
-                        style={{ width: '300px' }}
+                        className="mt-4 w-full md:w-96"
                         icon={<HiPlus />}
                         data-tn="add-saving-btn"
                         onClick={() => setIsFormOpen(true)}
