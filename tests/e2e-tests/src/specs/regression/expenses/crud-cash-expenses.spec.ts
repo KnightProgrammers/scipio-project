@@ -75,6 +75,7 @@ test('Create Expense', async () => {
 		amount: 34.21,
 		currencyCode: DEFAULT_USER_CURRENCIES[0],
 		categoryName: categoryName,
+		type: 'CASH'
 	});
 	expenseId = expense.id;
 	const emptyStateContainer = page.locator(
