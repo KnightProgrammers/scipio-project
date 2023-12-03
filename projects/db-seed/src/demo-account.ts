@@ -13,7 +13,7 @@ import {
 	CurrencySchema, ExpenseSchema,
 	SavingSchema,
 	UserSchema
-} from "@knightprogrammers/scpio-db-schemas";
+} from '@knightprogrammers/scpio-db-schemas';
 
 dotenv.config();
 
@@ -252,7 +252,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		hour: 0,
 		minute: 0,
 		millisecond: 0
-	})
+	});
 
 	for (let monthDiff = 0; monthDiff < 12; monthDiff++) {
 
@@ -265,7 +265,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 				}),
 				creditCardId: creditCard1._id,
 				userId
-			})
+			});
 		}
 		for (const category of categories) {
 			const {
@@ -282,7 +282,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 
 			const max: number = 28;
 
-			let i: number = 1
+			let i: number = 1;
 
 			while(i <= max) {
 				creditCardExpenseCounter += 1;
