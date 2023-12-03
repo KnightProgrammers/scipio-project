@@ -297,7 +297,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 					creditCardMonthlyStatementId,
 					userId
 				});
-				i += increment
+				i += increment;
 				if (i > 28) {
 					break;
 				}
