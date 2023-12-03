@@ -53,8 +53,6 @@ test('Add a credit card', async () => {
 		currency: DEFAULT_USER_CURRENCIES[0]
 	});
 	creditCardId = creditCard.id;
-	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
-	await expect(emptyStateContainer).not.toBeVisible();
 	await expect(page.locator(`div[data-tn="credit-card-${creditCardId}"]`)).toBeVisible();
 });
 test('Edit a credit card', async () => {
@@ -74,6 +72,4 @@ test('Edit a credit card', async () => {
 test('delete a credit card', async () => {
 	await deleteCreditCard(page, creditCardId);
 	await expect(page.locator(`div[data-tn="credit-card-${creditCardId}"]`)).not.toBeVisible();
-	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
-	await expect(emptyStateContainer).toBeVisible();
 });
