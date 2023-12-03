@@ -7,7 +7,7 @@ import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { createExpense, deleteExpense } from '../../../helpers/expense.helper';
 import { waitForRequest } from '../../../helpers/generic.helper';
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 let email: string;
 let password: string;
