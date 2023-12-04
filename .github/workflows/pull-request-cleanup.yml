@@ -23,5 +23,7 @@ jobs:
           always-auth: true
       - name: Install scipio-infra globaly
         run: npm install -g @knightprogrammers/scipio-infra
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Delete environment
         run: scipio-infra environment-delete "test-${{ github.event.number }}"

@@ -194,6 +194,8 @@ jobs:
           always-auth: true
       - name: Install scipio-infra globaly
         run: npm install -g @knightprogrammers/scipio-infra
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install railway cli
         run: npm i -g @railway/cli
       - name: Deploy server service
