@@ -70,6 +70,17 @@ services:
     depends_on:
       scipio-db:
         condition: service_healthy
+  scipio-cron-jobs:
+    container_name: scipio-cron-jobs
+    build:
+      context: projects/cron-jobs
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    environment:
+      MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?authSource=admin'
+    depends_on:
+      scipio-db:
+        condition: service_healthy
 volumes:
   dbdata:
 networks:
