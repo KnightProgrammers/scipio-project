@@ -189,12 +189,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install infra dependencies
-        run: |
-          cd packages/infra
-          npm install
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
+          always-auth: true
       - name: Install scipio-infra globaly
-        run: npm install -g ./packages/infra
+        run: npm install -g @knightprogrammers/scipio-infra
       - name: Install railway cli
         run: npm i -g @railway/cli
       - name: Deploy server service

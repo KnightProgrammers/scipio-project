@@ -32,7 +32,9 @@ const generatePrCommentCommand = async (options) => {
 
 	let hadJobFailed = false;
 
-	for (const service of services) {
+	const SERVICES_FOR_STATUS = ['scipio-client', 'scipio-server'];
+
+	for (const service of services.filter((s) => SERVICES_FOR_STATUS.includes(s.name))) {
 		const deployment = await railwayClient.getLatestDeployment({
 			first: 1,
 			serviceId: service.id,
