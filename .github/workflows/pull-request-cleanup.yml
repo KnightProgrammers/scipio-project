@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  packages: read
+
 jobs:
   delete-test-env:
     name: "Delete Test Environment"
