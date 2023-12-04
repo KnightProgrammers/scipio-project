@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  packages: read
+
 jobs:
   delete-test-env:
     name: "Delete Test Environment"
@@ -18,11 +21,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install infra dependencies
-        run: |
-          cd packages/infra
-          npm install
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
+          always-auth: true
       - name: Install scipio-infra globaly
-        run: npm install -g ./packages/infra
+        run: npm install -g @knightprogrammers/scipio-infra
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Delete environment
         run: scipio-infra environment-delete "test-${{ github.event.number }}"

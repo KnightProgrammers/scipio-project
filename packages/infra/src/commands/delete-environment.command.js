@@ -14,7 +14,8 @@ const deleteEnvironmentCommand = async (environmentName) => {
 		({ name }) => name === environmentName,
 	);
 	if (!environment) {
-		throw new Error('Environment not found');
+		console.log('Environment already deleted.');
+		return;
 	}
 	await railwayClient.deleteEnvironment(environment.id);
 	console.log(`Environment "${environmentName}" deleted.`);

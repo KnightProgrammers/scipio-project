@@ -43,7 +43,7 @@ program
 	)
 	.addOption(
 		new Option('-s, --service <service-name>')
-			.choices(['client', 'server'])
+			.choices(['client', 'server', 'cron-jobs'])
 			.makeOptionMandatory(true),
 	)
 	.action(deployCommand);
