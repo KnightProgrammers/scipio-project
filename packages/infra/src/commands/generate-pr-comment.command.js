@@ -32,7 +32,11 @@ const generatePrCommentCommand = async (options) => {
 
 	let hadJobFailed = false;
 
-	for (const service of services) {
+	const SERVICES_FOR_STATUS = ['scipio-client', 'scipio-server'];
+
+	const filteredServices = services.filter((s) => SERVICES_FOR_STATUS.includes(s.name));
+
+	for (const service of filteredServices) {
 		const deployment = await railwayClient.getLatestDeployment({
 			first: 1,
 			serviceId: service.id,
@@ -51,7 +55,7 @@ const generatePrCommentCommand = async (options) => {
 			SUCCESS: 'Success ✅',
 		};
 
-		if (['CRASHED', 'FAILED'].includes(deployment.status)) {
+		if (!deployment || ['CRASHED', 'FAILED'].includes(deployment.status)) {
 			hadJobFailed = true;
 		}
 

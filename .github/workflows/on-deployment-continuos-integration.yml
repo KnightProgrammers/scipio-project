@@ -7,6 +7,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  packages: read
+
 jobs:
   e2e-tests-smoke:
     name: "E2E Tests - Smoke"

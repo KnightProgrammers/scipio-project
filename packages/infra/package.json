@@ -1,6 +1,6 @@
 {
-  "name": "scipio-infra",
-  "version": "1.0.0",
+  "name": "@knightprogrammers/scipio-infra",
+  "version": "1.0.1",
   "main": "src/index.js",
   "bin": {
     "scipio-infra": "./src/index.js"
@@ -12,6 +12,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .js",
     "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnightProgrammers/scipio-project.git"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "@knightprogrammers:registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
     "chalk": "5.3.0",
