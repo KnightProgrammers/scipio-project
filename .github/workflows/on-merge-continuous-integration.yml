@@ -218,6 +218,11 @@ jobs:
         with:
           environment: staging
           working_directory: './projects/client/'
+      - name: Deploy cron-jobs service
+        run: scipio-infra deploy -s cron-jobs -e staging
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
       - name: Create Sentry release for Server
         uses: getsentry/action-release@v1
         env:
