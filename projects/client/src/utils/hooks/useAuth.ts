@@ -13,6 +13,7 @@ import useQuery from './useQuery'
 import type { SignUpCredential } from '@/@types/auth'
 import { UserCredential } from '@firebase/auth'
 import { auth } from '@/services/FirebaseService'
+import * as Sentry from '@sentry/react'
 
 type Status = 'success' | 'failed'
 
@@ -38,6 +39,7 @@ function useAuth() {
             const token = await credential.user.getIdToken()
             dispatch(signInSuccess(token))
             const redirectUrl = query.get(REDIRECT_URL_KEY)
+            Sentry.setUser({ email: credential.user.email ?? undefined })
             navigate(
                 redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath,
             )
@@ -95,6 +97,7 @@ function useAuth() {
 
     const handleSignOut = () => {
         dispatch(signOutSuccess())
+        Sentry.setUser(null)
         dispatch(
             setUser({
                 id: '',
