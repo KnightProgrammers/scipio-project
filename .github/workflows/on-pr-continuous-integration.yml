@@ -181,11 +181,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Tests
-        env:
-          MONGO_URI: mongodb://root:password@localhost:27017/scipio-test?authSource=admin
         run: |
           cd projects/cron-jobs
           npm run test
+        env:
+          MONGO_DB_URI: mongodb://root:password@localhost:27017/scipio-test?authSource=admin
   e2e-tests-regression:
     name: "E2E Tests - Regression"
     runs-on: ubuntu-latest
