@@ -11,7 +11,7 @@
         "build": "dts build",
         "lint": "dts lint",
         "start": "node dist/index.js",
-        "test": "jest --detectOpenHandles"
+        "test": "jest --detectOpenHandles --forceExit"
     },
     "husky": {
         "hooks": {
@@ -46,6 +46,8 @@
         "dotenv": "16.3.1",
         "luxon": "3.4.4",
         "mongoose": "8.0.2",
-        "node-cron": "3.0.3"
+        "node-cron": "3.0.3",
+        "pino": "8.16.2",
+        "pino-pretty": "10.2.3"
     }
 }

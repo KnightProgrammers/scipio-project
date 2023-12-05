@@ -144,7 +144,52 @@ npm run start
 
 | Var                 | Type   | Required | Default Value | Description                                        |
 |---------------------|--------|----------|---------------|----------------------------------------------------|
-| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                    |
+| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
+| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
+
+------
+
+## Cron Jobs
+
+Backups are stored in Azure Containers data storage.
+
+> **Folder:** `/projects/cron-jobs`
+
+**Jobs**
+
+Environments: 
+- Credit Card Expiration:
+  - Every Day at 00:00hs
+
+**Install Dependencies**
+
+```shell
+npm install
+```
+
+**Build Project**
+
+```shell
+npm run build
+```
+
+**Start Jobs**
+
+```shell
+npm run start
+```
+
+**Tests**
+
+```shell
+npm run test
+```
+
+**Environment Vars**
+
+| Var                 | Type   | Required | Default Value | Description                                        |
+|---------------------|--------|----------|---------------|----------------------------------------------------|
+| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
 | `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
 
 ------
