@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "lib": [ "es2015" ],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceMap": true
+  }
+}

@@ -1,5 +1,10 @@
 import * as cron from 'node-cron';
+import { creditCardExpirationJob } from './jobs/credit-card-expiration.job';
 
-cron.schedule(`*/1 * * * *`, async () => {
-  console.log(`running your task...`);
+// Website to create cron expressions
+// https://crontab.cronhub.io/
+ 
+// Every Day at 00:00AM
+cron.schedule(`0 0 * * *`, async () => {
+  await creditCardExpirationJob();
 });

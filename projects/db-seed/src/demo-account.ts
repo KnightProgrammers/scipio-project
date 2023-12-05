@@ -196,7 +196,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		label: 'Platinum',
 		cardHolder: 'Demo Account',
 		lastFourDigits: parseInt((new Date()).getMilliseconds().toPrecision(4).toString().replace('.', '')), // Random
-		expiration: DateTime.now().plus({years: 3, month: 3}).toFormat('MMyy'),
+		expiration: DateTime.now().plus({years: 3, month: 3}).toJSDate(),
 		issuer: 'mastercard',
 		status: 'ACTIVE',
 		creditLimitAmount: (new Date()).getMilliseconds() * 10,
@@ -209,7 +209,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		label: 'Gold',
 		cardHolder: 'Demo Account',
 		lastFourDigits: parseInt((new Date()).getMilliseconds().toPrecision(4).toString().replace('.', '')), // Random
-		expiration: DateTime.now().plus({years: 1, month: 5}).toFormat('MMyy'),
+		expiration: DateTime.now().plus({years: 1, month: 5}).toJSDate(),
 		issuer: 'visa',
 		status: 'ACTIVE',
 		creditLimitAmount: (new Date()).getMilliseconds() * 10,
@@ -221,7 +221,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		label: 'Platinum',
 		cardHolder: 'Demo Account',
 		lastFourDigits: parseInt((new Date()).getMilliseconds().toPrecision(4).toString().replace('.', '')), // Random
-		expiration: DateTime.now().minus({month: 8}).toFormat('MMyy'),
+		expiration: DateTime.now().minus({month: 8}).toJSDate(),
 		issuer: 'mastercard',
 		status: 'EXPIRED',
 		creditLimitAmount: (new Date()).getMilliseconds() * 10,
@@ -233,7 +233,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		label: 'Stolen',
 		cardHolder: 'Demo Account',
 		lastFourDigits: parseInt((new Date()).getMilliseconds().toPrecision(4).toString().replace('.', '')), // Random
-		expiration: DateTime.now().plus({years: 3, month: 3}).toFormat('MMyy'),
+		expiration: DateTime.now().plus({years: 3, month: 3}).toJSDate(),
 		issuer: 'visa',
 		status: 'BLOCKED',
 		creditLimitAmount: (new Date()).getMilliseconds() * 100,
