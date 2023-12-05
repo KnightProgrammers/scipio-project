@@ -175,8 +175,8 @@ jobs:
         run: |
           cd projects/cron-jobs
           npm ci
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Tests
         env:
           MONGO_URI: mongodb://root:password@localhost:27017/scipio-test?authSource=admin
