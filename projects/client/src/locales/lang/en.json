@@ -409,6 +409,7 @@
     "savingStatus": {
         "IN_PROGRESS": "Active",
         "COMPLETED": "Completed",
+        "EXPIRED": "Expired",
         "NOT_CONCLUDED": "No Concluded"
     },
     "expensePaymentType": {

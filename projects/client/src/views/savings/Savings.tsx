@@ -58,7 +58,7 @@ import { SelectFieldItem } from '@/components/ui/Form'
 import { apiGetUserBankAccountList } from '@/services/BankAccountService'
 import { BiSearch } from 'react-icons/bi'
 
-const SAVING_STATUSES = ['IN_PROGRESS', 'COMPLETED', 'NOT_CONCLUDED']
+const SAVING_STATUSES = ['IN_PROGRESS', 'EXPIRED', 'COMPLETED', 'NOT_CONCLUDED']
 
 const BankTag = (props: { saving: any }) => {
     const { saving } = props
@@ -82,63 +82,53 @@ const BankTag = (props: { saving: any }) => {
     )
 }
 
-const isSavingExpire = (saving: any) => {
-    return (
-        saving.status === 'IN_PROGRESS' &&
-        DateTime.fromISO(saving.targetDate).diffNow('days').days < 0
-    )
-}
-
 const SavingExpiration = (props: { saving: any }) => {
     const { saving } = props
     const { status, targetDate } = saving
 
     const { t } = useTranslation()
 
-    if (status === 'COMPLETED') {
-        return (
-            <Alert
-                showIcon
-                type="success"
-                className="mt-2"
-                customIcon={<HiCheckCircle />}
-            >
-                {t('pages.savings.labels.completed')}
-            </Alert>
-        )
-    }
-
-    if (status === 'NOT_CONCLUDED') {
-        return (
-            <Alert
-                showIcon
-                type="danger"
-                className="mt-2"
-                customIcon={<HiXCircle />}
-            >
-                {t('pages.savings.labels.noCompleted')}
-            </Alert>
-        )
-    }
-
-    if (isSavingExpire(saving)) {
-        return (
-            <Alert
-                showIcon
-                type="danger"
-                className="mt-2"
-                customIcon={<HiFire />}
-            >
-                <b>{t('pages.savings.labels.expiredOn')}:</b>{' '}
-                {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
-            </Alert>
-        )
+    const CONF: any = {
+        COMPLETED: {
+            alertType: 'success',
+            icon: <HiCheckCircle />,
+            body: t('pages.savings.labels.completed'),
+        },
+        NOT_CONCLUDED: {
+            alertType: 'danger',
+            icon: <HiXCircle />,
+            body: t('pages.savings.labels.noCompleted'),
+        },
+        EXPIRED: {
+            alertType: 'danger',
+            icon: <HiFire />,
+            body: (
+                <>
+                    <b>{t('pages.savings.labels.expiredOn')}:</b>{' '}
+                    {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
+                </>
+            ),
+        },
+        IN_PROGRESS: {
+            alertType: 'info',
+            icon: <LuTimer />,
+            body: (
+                <>
+                    <b>{t('pages.savings.labels.expiration')}:</b>{' '}
+                    {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
+                </>
+            ),
+        },
     }
 
     return (
-        <Alert showIcon type="info" className="mt-2" customIcon={<LuTimer />}>
-            <b>{t('pages.savings.labels.expiration')}:</b>{' '}
-            {DateTime.fromISO(targetDate).toFormat('dd/MM/yyyy')}
+        <Alert
+            showIcon
+            type={CONF[status].alertType}
+            className="mt-2"
+            customIcon={CONF[status].icon}
+        >
+            {CONF[status].body}
         </Alert>
     )
 }
