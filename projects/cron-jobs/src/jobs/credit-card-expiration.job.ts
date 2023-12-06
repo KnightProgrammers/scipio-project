@@ -10,7 +10,7 @@ export const creditCardExpirationJob = async (
   limit: number = 100
 ): Promise<void> => {
   const logger = getLogger('[CreditCardExpiration] ');
-  const dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
+  await mongoose.connect(process.env.MONGO_DB_URI || '');
   const CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
   try {
     logger.info('Starting job');
@@ -32,6 +32,7 @@ export const creditCardExpirationJob = async (
   } catch (e: any) {
     logger.debug(e);
     logger.error('Error expiring credit cards');
+  } finally {
+    await mongoose.connection.close();
   }
-  await dbConnection.disconnect();
 };

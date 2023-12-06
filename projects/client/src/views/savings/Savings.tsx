@@ -708,11 +708,12 @@ const Savings = () => {
                     </Button>
                 </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <Card bodyClass="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredSavings.map((s: any) => (
                     <Card
                         key={s.id}
                         clickable
+                        bordered
                         bodyClass="flex flex-col justify-between h-full"
                         data-tn={`saving-card-${s.id}`}
                         header={
@@ -830,7 +831,7 @@ const Savings = () => {
                         </div>
                     </Card>
                 ))}
-            </div>
+            </Card>
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}
                 type="danger"

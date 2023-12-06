@@ -10,7 +10,7 @@ export const savingExpirationJob = async (
   limit: number = 100
 ): Promise<void> => {
   const logger = getLogger('[SavingExpiration] ');
-  const dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
+  await mongoose.connect(process.env.MONGO_DB_URI || '');
   const SavingModel = mongoose.model('Saving', SavingSchema);
   try {
     logger.info('Starting job');
@@ -30,6 +30,7 @@ export const savingExpirationJob = async (
   } catch (e: any) {
     logger.debug(e);
     logger.error('Error expiring savings');
+  } finally {
+    await mongoose.connection.close();
   }
-  await dbConnection.disconnect();
 };
