@@ -346,7 +346,7 @@ const Categories = () => {
                         value={searchByName}
                         className="md:w-64"
                         size="sm"
-                        placeholder="Search"
+                        placeholder={t('placeholders.searchByName')}
                         prefix={<HiOutlineSearch className="text-lg" />}
                         onChange={(e: any) => setSearchByName(e.target.value)}
                     />
@@ -398,7 +398,7 @@ const Categories = () => {
                         value={searchByName}
                         className="md:w-64"
                         size="sm"
-                        placeholder="Search"
+                        placeholder={t('placeholders.searchByName')}
                         prefix={<HiOutlineSearch className="text-lg" />}
                         onChange={(e: any) => setSearchByName(e.target.value)}
                     />
