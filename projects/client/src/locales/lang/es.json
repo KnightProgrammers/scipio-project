@@ -355,6 +355,7 @@
         }
     },
     "placeholders": {
+        "all": "Todos",
         "country": "Selecciona un pais",
         "currentMonth": "Mes actual",
         "lastMonth": "Mes anterior",

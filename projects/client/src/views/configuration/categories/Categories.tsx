@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ConfirmDialog, Container, Loading } from '@/components/shared'
 import {
     Avatar,
@@ -11,10 +12,15 @@ import {
     Table,
     Tooltip,
 } from '@/components/ui'
-import { HiOutlinePencilAlt, HiOutlineTrash, HiPlus } from 'react-icons/hi'
+import {
+    HiCheck,
+    HiOutlinePencilAlt,
+    HiOutlineSearch,
+    HiOutlineTrash,
+    HiPlus,
+} from 'react-icons/hi'
 import EmptyState from '@/components/shared/EmptyState'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
 import * as Yup from 'yup'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import { TbCategory2 } from 'react-icons/tb'
@@ -28,8 +34,104 @@ import {
     apiGetCategoryList,
     apiUpdateCategory,
 } from '@/services/CategoryService'
+import {
+    components,
+    ControlProps,
+    OptionProps,
+    SingleValue,
+} from 'react-select'
+
+const { Control } = components
 
 const { Tr, Td, Th, TBody, THead } = Table
+
+const CategoryTableFilter = (props: {
+    value: string
+    onChange: (val: string) => void
+}) => {
+    const { value, onChange } = props
+
+    const { t } = useTranslation()
+
+    const options: Option[] = [
+        { label: t('placeholders.all'), value: '', color: 'bg-gray-500' },
+        {
+            label: t('categoryTypes.NEED'),
+            value: 'NEED',
+            color: 'bg-indigo-500',
+        },
+        {
+            label: t('categoryTypes.WANT'),
+            value: 'WANT',
+            color: 'bg-yellow-500',
+        },
+        {
+            label: t('categoryTypes.SAVE'),
+            value: 'SAVE',
+            color: 'bg-green-500',
+        },
+    ]
+
+    type Option = {
+        value: string
+        label: string
+        color: string
+    }
+    const CustomSelectOption = ({
+        innerProps,
+        label,
+        data,
+        isSelected,
+    }: OptionProps<Option>) => {
+        return (
+            <div
+                className={`flex items-center justify-between p-2 cursor-pointer ${
+                    isSelected
+                        ? 'bg-gray-100 dark:bg-gray-500'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-600'
+                }`}
+                {...innerProps}
+            >
+                <div className="flex items-center gap-2">
+                    <Badge innerClass={data.color} />
+                    <span>{label}</span>
+                </div>
+                {isSelected && <HiCheck className="text-emerald-500 text-xl" />}
+            </div>
+        )
+    }
+
+    const CustomControl = ({ children, ...props }: ControlProps<Option>) => {
+        const selected = props.getValue()[0]
+        return (
+            <Control {...props}>
+                {selected && (
+                    <Badge
+                        className="ltr:ml-4 rtl:mr-4"
+                        innerClass={selected.color}
+                    />
+                )}
+                {children}
+            </Control>
+        )
+    }
+
+    return (
+        <Select<Option>
+            options={options}
+            size="sm"
+            className="md:w-64"
+            components={{
+                Option: CustomSelectOption,
+                Control: CustomControl,
+            }}
+            value={options.filter((option) => option.value === value)}
+            onChange={(selected: SingleValue<Option>) =>
+                onChange(selected?.value ?? '')
+            }
+        />
+    )
+}
 
 const Categories = () => {
     const [isFormOpen, setIsFormOpen] = useState(false)
@@ -38,6 +140,8 @@ const Categories = () => {
     )
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
         useState<boolean>(false)
+    const [searchByName, setSearchByName] = useState<string>('')
+    const [filterByType, setFilterByType] = useState<string>('')
 
     const { t } = useTranslation()
 
@@ -224,13 +328,33 @@ const Categories = () => {
         )
     }
 
-    if (categories.length === 0) {
+    const filteredCategories: any[] = categories
+        .filter((c: any) =>
+            c.name.toLowerCase().includes(searchByName.toLowerCase()),
+        )
+        .filter((c: any) => (filterByType ? c.type === filterByType : true))
+
+    if (filteredCategories.length === 0) {
         return (
             <Container data-tn="categories-page">
                 <div className="lg:flex items-center justify-between mb-4">
                     <h2>{t('pages.categories.header')}</h2>
                 </div>
                 <CategoryForm />
+                <div className="grid grid-cols-2 md:flex items-center gap-4 mb-4">
+                    <Input
+                        value={searchByName}
+                        className="md:w-64"
+                        size="sm"
+                        placeholder="Search"
+                        prefix={<HiOutlineSearch className="text-lg" />}
+                        onChange={(e: any) => setSearchByName(e.target.value)}
+                    />
+                    <CategoryTableFilter
+                        value={filterByType}
+                        onChange={(val: string) => setFilterByType(val)}
+                    />
+                </div>
                 <EmptyState
                     title={t('pages.categories.emptyState.title')}
                     description={t('pages.categories.emptyState.description')}
@@ -269,6 +393,20 @@ const Categories = () => {
                 </div>
             </div>
             <Card>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:flex items-center gap-4 mb-4">
+                    <Input
+                        value={searchByName}
+                        className="md:w-64"
+                        size="sm"
+                        placeholder="Search"
+                        prefix={<HiOutlineSearch className="text-lg" />}
+                        onChange={(e: any) => setSearchByName(e.target.value)}
+                    />
+                    <CategoryTableFilter
+                        value={filterByType}
+                        onChange={(val: string) => setFilterByType(val)}
+                    />
+                </div>
                 <Loading loading={isLoadingCategories} type="cover">
                     <Table border={1}>
                         <THead>
@@ -284,7 +422,7 @@ const Categories = () => {
                             </Tr>
                         </THead>
                         <TBody>
-                            {categories.map((c, index) => (
+                            {filteredCategories.map((c, index) => (
                                 <Tr key={index}>
                                     <Td>
                                         <div className="flex inline-flex items-center">
