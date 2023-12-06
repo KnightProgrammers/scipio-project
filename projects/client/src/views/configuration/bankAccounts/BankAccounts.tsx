@@ -206,134 +206,154 @@ const BankAccounts = () => {
     }
 
     return (
-        <Container
-            data-tn="bank-accounts-page"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-            {bankAccountList.map((bank: any) => {
-                return (
-                    <Loading
-                        key={bank.id}
-                        loading={
-                            isFetchingUserCurrencies || isFetchingBankAccounts
-                        }
-                        type="cover"
-                    >
-                        <Card
-                            data-tn={`bank-${bank.id}-card`}
-                            header={
-                                <div
-                                    className="flex inline-flex items-center w-full"
-                                    style={{ overflow: 'hidden' }}
-                                >
-                                    <Avatar
-                                        src={bank.icon && bank.icon}
-                                        icon={!bank.icon && <HiLibrary />}
-                                        className={`mr-2 ${bgTheme} dark:${bgTheme}`}
-                                        size={32}
-                                    />
-                                    <span
-                                        className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
-                                    >
-                                        {bank.name}
-                                    </span>
-                                </div>
+        <Container data-tn="bank-accounts-page">
+            <Card bodyClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {bankAccountList.map((bank: any) => {
+                    return (
+                        <Loading
+                            key={bank.id}
+                            loading={
+                                isFetchingUserCurrencies ||
+                                isFetchingBankAccounts
                             }
-                            className="flex flex-col justify-between"
-                            footerClass=""
-                            footer={
-                                <Button
-                                    variant="twoTone"
-                                    block={true}
-                                    icon={<HiPlus />}
-                                    data-tn="add-bank-account-btn"
-                                    color={`${themeColor}`}
-                                    onClick={() => {
-                                        setSelectedBank(bank)
-                                        setIsFormOpen(true)
-                                    }}
-                                >
-                                    {t('pages.bankAccounts.addAccountButton')}
-                                </Button>
-                            }
+                            type="cover"
                         >
-                            {bank.bankAccounts.length === 0 ? (
-                                <EmptyState
-                                    description={t(
-                                        'pages.bankAccounts.emptyState.noAccounts.description',
-                                    )}
-                                    iconSize={0}
-                                />
-                            ) : (
-                                <>
-                                    {bank.bankAccounts.map((a: any) => (
-                                        <Card
-                                            key={a.id}
-                                            bordered
-                                            data-tn={`bank-account-${a.id}`}
-                                            className="my-2 w-full relative"
+                            <Card
+                                bordered
+                                data-tn={`bank-${bank.id}-card`}
+                                header={
+                                    <div
+                                        className="flex inline-flex items-center w-full"
+                                        style={{ overflow: 'hidden' }}
+                                    >
+                                        <Avatar
+                                            src={bank.icon && bank.icon}
+                                            icon={!bank.icon && <HiLibrary />}
+                                            className={`mr-2 ${bgTheme} dark:${bgTheme}`}
+                                            size={32}
+                                        />
+                                        <span
+                                            className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
                                         >
-                                            <Dropdown
-                                                className="absolute right-4 top-2"
-                                                placement="middle-end-top"
-                                                renderTitle={
-                                                    <EllipsisButton data-tn="dropdown-bank-account-btn" />
-                                                }
+                                            {bank.name}
+                                        </span>
+                                    </div>
+                                }
+                                className="flex flex-col justify-between"
+                                footerClass=""
+                                footer={
+                                    <Button
+                                        variant="twoTone"
+                                        block={true}
+                                        icon={<HiPlus />}
+                                        data-tn="add-bank-account-btn"
+                                        color={`${themeColor}`}
+                                        onClick={() => {
+                                            setSelectedBank(bank)
+                                            setIsFormOpen(true)
+                                        }}
+                                    >
+                                        {t(
+                                            'pages.bankAccounts.addAccountButton',
+                                        )}
+                                    </Button>
+                                }
+                            >
+                                {bank.bankAccounts.length === 0 ? (
+                                    <EmptyState
+                                        description={t(
+                                            'pages.bankAccounts.emptyState.noAccounts.description',
+                                        )}
+                                        iconSize={0}
+                                    />
+                                ) : (
+                                    <>
+                                        {bank.bankAccounts.map((a: any) => (
+                                            <Card
+                                                key={a.id}
+                                                bordered
+                                                data-tn={`bank-account-${a.id}`}
+                                                className="my-2 w-full relative"
                                             >
-                                                <Dropdown.Item
-                                                    eventKey="edit"
-                                                    data-tn="edit-bank-account-btn"
-                                                    onClick={() => {
-                                                        setSelectedBank(bank)
-                                                        setSelectedBankAccount(
-                                                            a,
-                                                        )
-                                                        setIsFormOpen(true)
-                                                    }}
+                                                <Dropdown
+                                                    className="absolute right-4 top-2"
+                                                    placement="middle-end-top"
+                                                    renderTitle={
+                                                        <EllipsisButton data-tn="dropdown-bank-account-btn" />
+                                                    }
                                                 >
-                                                    <IconText
-                                                        className="text-sm font-semibold w-full"
-                                                        icon={
-                                                            <HiOutlinePencilAlt />
-                                                        }
+                                                    <Dropdown.Item
+                                                        eventKey="edit"
+                                                        data-tn="edit-bank-account-btn"
+                                                        onClick={() => {
+                                                            setSelectedBank(
+                                                                bank,
+                                                            )
+                                                            setSelectedBankAccount(
+                                                                a,
+                                                            )
+                                                            setIsFormOpen(true)
+                                                        }}
                                                     >
-                                                        {t('actions.edit')}
-                                                    </IconText>
-                                                </Dropdown.Item>
-                                                <Dropdown.Item
-                                                    eventKey="delete"
-                                                    data-tn="delete-bank-account-btn"
-                                                    disabled={a.savings.length}
-                                                    onClick={() => {
-                                                        setSelectedBank(bank)
-                                                        setSelectedBankAccount(
-                                                            a,
-                                                        )
-                                                        setIsConfirmDeleteOpen(
-                                                            true,
-                                                        )
-                                                    }}
-                                                >
-                                                    {a.savings.length ? (
-                                                        <Tooltip
-                                                            title={
+                                                        <IconText
+                                                            className="text-sm font-semibold w-full"
+                                                            icon={
+                                                                <HiOutlinePencilAlt />
+                                                            }
+                                                        >
+                                                            {t('actions.edit')}
+                                                        </IconText>
+                                                    </Dropdown.Item>
+                                                    <Dropdown.Item
+                                                        eventKey="delete"
+                                                        data-tn="delete-bank-account-btn"
+                                                        disabled={
+                                                            a.savings.length
+                                                        }
+                                                        onClick={() => {
+                                                            setSelectedBank(
+                                                                bank,
+                                                            )
+                                                            setSelectedBankAccount(
+                                                                a,
+                                                            )
+                                                            setIsConfirmDeleteOpen(
+                                                                true,
+                                                            )
+                                                        }}
+                                                    >
+                                                        {a.savings.length ? (
+                                                            <Tooltip
+                                                                title={
+                                                                    <IconText
+                                                                        className="text-yellow-400"
+                                                                        icon={
+                                                                            <PiWarningOctagonBold
+                                                                                size={
+                                                                                    64
+                                                                                }
+                                                                            />
+                                                                        }
+                                                                    >
+                                                                        {t(
+                                                                            'pages.bankAccounts.tooltips.warnHasSavings',
+                                                                        )}
+                                                                    </IconText>
+                                                                }
+                                                                placement="left"
+                                                            >
                                                                 <IconText
-                                                                    className="text-yellow-400"
+                                                                    className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
                                                                     icon={
-                                                                        <PiWarningOctagonBold
-                                                                            size={
-                                                                                64
-                                                                            }
-                                                                        />
+                                                                        <HiOutlineTrash />
                                                                     }
                                                                 >
                                                                     {t(
-                                                                        'pages.bankAccounts.tooltips.warnHasSavings',
+                                                                        'actions.delete',
                                                                     )}
                                                                 </IconText>
-                                                            }
-                                                            placement="left"
-                                                        >
+                                                            </Tooltip>
+                                                        ) : (
                                                             <IconText
                                                                 className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
                                                                 icon={
@@ -344,63 +364,54 @@ const BankAccounts = () => {
                                                                     'actions.delete',
                                                                 )}
                                                             </IconText>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <IconText
-                                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                            icon={
-                                                                <HiOutlineTrash />
-                                                            }
-                                                        >
-                                                            {t(
-                                                                'actions.delete',
-                                                            )}
-                                                        </IconText>
-                                                    )}
-                                                </Dropdown.Item>
-                                            </Dropdown>
-                                            <div className="w-full flex items-center">
-                                                <div
-                                                    className="font-light italic text-xs w-full"
-                                                    data-tn="bank-account-name"
-                                                >
-                                                    {a.accountName ||
-                                                        t(
-                                                            'pages.bankAccounts.defaultLabel',
                                                         )}
+                                                    </Dropdown.Item>
+                                                </Dropdown>
+                                                <div className="w-full flex items-center">
+                                                    <div
+                                                        className="font-light italic text-xs w-full"
+                                                        data-tn="bank-account-name"
+                                                    >
+                                                        {a.accountName ||
+                                                            t(
+                                                                'pages.bankAccounts.defaultLabel',
+                                                            )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="flex grid grid-cols-2">
-                                                <div className="my-1">
-                                                    <span className="font-bold">
-                                                        <CopyButton
-                                                            data-tn="bank-account-number"
-                                                            text={
-                                                                a.accountNumber
-                                                            }
-                                                        />
-                                                    </span>
+                                                <div className="flex grid grid-cols-2">
+                                                    <div className="my-1">
+                                                        <span className="font-bold">
+                                                            <CopyButton
+                                                                data-tn="bank-account-number"
+                                                                text={
+                                                                    a.accountNumber
+                                                                }
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        className="my-1 text-right"
+                                                        data-tn="bank-account-balance"
+                                                    >
+                                                        {currencyFormat(
+                                                            a.accountBalance,
+                                                            a.accountCurrency
+                                                                .code,
+                                                            i18n.language,
+                                                            userState.country
+                                                                ?.code,
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    className="my-1 text-right"
-                                                    data-tn="bank-account-balance"
-                                                >
-                                                    {currencyFormat(
-                                                        a.accountBalance,
-                                                        a.accountCurrency.code,
-                                                        i18n.language,
-                                                        userState.country?.code,
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </Card>
-                                    ))}
-                                </>
-                            )}
-                        </Card>
-                    </Loading>
-                )
-            })}
+                                            </Card>
+                                        ))}
+                                    </>
+                                )}
+                            </Card>
+                        </Loading>
+                    )
+                })}
+            </Card>
             <ModalForm
                 isOpen={isFormOpen}
                 entity={{
