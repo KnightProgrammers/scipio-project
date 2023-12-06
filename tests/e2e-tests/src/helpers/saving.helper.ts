@@ -45,7 +45,7 @@ export const createSaving = async (page: Page, data: {
 		minute: 0,
 		second: 0,
 		millisecond:0,
-	}).toISO());
+	}).toISO({includeOffset: false}));
 	expect(foundSaving.name).toEqual(name);
 	expect(foundSaving.targetAmount).toEqual(targetAmount);
 	expect(foundSaving.bankAccount.label).toEqual(bankAccountName);
@@ -98,7 +98,7 @@ export const updateSaving = async (page: Page, savingId: string, data: {
 		minute: 0,
 		second: 0,
 		millisecond:0,
-	}).toISO());
+	}).toISO({includeOffset: false}));
 	expect(foundSaving.name).toEqual(name);
 	expect(foundSaving.targetAmount).toEqual(targetAmount);
 	expect(foundSaving.bankAccount.label).toEqual(bankAccountName);
@@ -125,7 +125,7 @@ export const deleteSaving = async (page: Page, savingId: string) => {
 export const setSavingFilters = async (page: Page, filters: SavingFilterType) => {
 	await page.locator('button[data-tn="open-saving-filter-btn"]').click();
 	if (filters.statuses) {
-		for (const savingStatus of ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']) {
+		for (const savingStatus of ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED', 'EXPIRED']) {
 			const isSelected: boolean = await page.locator(`div[data-tn="saving-status-filter-${savingStatus.toLowerCase()}-opt"] input`).isChecked();
 			if (
 				(isSelected && !filters.statuses.includes(savingStatus)) ||

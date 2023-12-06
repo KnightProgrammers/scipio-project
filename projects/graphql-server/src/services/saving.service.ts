@@ -1,5 +1,6 @@
 import SavingSchema from '@/models/saving.model';
 import { ObjectId } from '@fastify/mongodb';
+import { DateTime } from 'luxon';
 
 export type SAVING_STATUS_TYPE = 'IN_PROGRESS'|'COMPLETED'|'NOT_CONCLUDED'|'EXPIRED'
 
@@ -34,11 +35,17 @@ class SavingService {
 		} = data;
 		let saving = null;
 
+		let newStatus: SAVING_STATUS_TYPE = status;
+
+		if (DateTime.fromJSDate(targetDate).toMillis() < DateTime.now().toMillis()) {
+			newStatus = 'EXPIRED';
+		}
+
 		try {
 			saving = await SavingSchema.create({
 				name,
 				description,
-				status,
+				status: newStatus,
 				targetDate,
 				targetAmount,
 				currencyId,
@@ -66,9 +73,15 @@ class SavingService {
 
 		if (!saving) return null;
 
+		let newStatus: SAVING_STATUS_TYPE = status;
+
+		if (DateTime.fromJSDate(targetDate).toMillis() < DateTime.now().toMillis()) {
+			newStatus = 'EXPIRED';
+		}
+
 		saving.name = name;
 		saving.description = description;
-		saving.status = status;
+		saving.status = newStatus;
 		saving.targetDate = targetDate;
 		saving.targetAmount = targetAmount;
 		saving.bankAccountId = new ObjectId(bankAccountId);

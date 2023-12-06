@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 
 export const ExpenseQueryResolver = {
 	billableDate: (expense: any) => {
-		return DateTime.fromJSDate(expense.billableDate).toISO();
+		return DateTime.fromJSDate(expense.billableDate).toISO({includeOffset: false});
 	},
 	category: async (expense: any, params: any, ctx: any) => {
 		return CategoryService.findOne(expense.categoryId, ctx.auth._id);

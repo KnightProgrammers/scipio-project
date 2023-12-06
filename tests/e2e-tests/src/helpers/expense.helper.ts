@@ -59,7 +59,9 @@ export const createExpense = async (page: Page, data: {
 	expect(foundCategory).toBeTruthy();
 	const foundExpense = foundCategory.expenses.find(e => e.id === newExpense.id);
 	expect(foundExpense).toBeTruthy();
-	expect(foundExpense.billableDate).toEqual(DateTime.fromJSDate(billableDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}).toISO());
+	expect(foundExpense.billableDate).toEqual(
+		DateTime.fromJSDate(billableDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}).toISO({includeOffset: false})
+	);
 	expect(foundExpense.description).toEqual(description);
 	expect(foundExpense.amount).toEqual(amount);
 	expect(foundExpense.currency.code).toEqual(currencyCode);
