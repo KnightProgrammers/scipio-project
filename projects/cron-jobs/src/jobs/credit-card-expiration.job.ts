@@ -32,5 +32,7 @@ export const creditCardExpirationJob = async (
   } catch (e: any) {
     logger.debug(e);
     logger.error('Error expiring credit cards');
+  } finally {
+    await mongoose.connection.close();
   }
 };

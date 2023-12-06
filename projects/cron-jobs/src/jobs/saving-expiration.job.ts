@@ -30,5 +30,7 @@ export const savingExpirationJob = async (
   } catch (e: any) {
     logger.debug(e);
     logger.error('Error expiring savings');
+  } finally {
+    await mongoose.connection.close();
   }
 };
