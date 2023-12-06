@@ -125,7 +125,7 @@ export const deleteSaving = async (page: Page, savingId: string) => {
 export const setSavingFilters = async (page: Page, filters: SavingFilterType) => {
 	await page.locator('button[data-tn="open-saving-filter-btn"]').click();
 	if (filters.statuses) {
-		for (const savingStatus of ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']) {
+		for (const savingStatus of ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED', 'EXPIRED']) {
 			const isSelected: boolean = await page.locator(`div[data-tn="saving-status-filter-${savingStatus.toLowerCase()}-opt"] input`).isChecked();
 			if (
 				(isSelected && !filters.statuses.includes(savingStatus)) ||
