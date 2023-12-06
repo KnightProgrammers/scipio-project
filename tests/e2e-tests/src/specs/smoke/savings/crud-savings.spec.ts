@@ -85,7 +85,7 @@ test('Create Saving', async () => {
 	await waitForSavings;
 	const saving: any = await createSaving(page, {
 		name: savingName,
-		targetDate: DateTime.now().toJSDate(),
+		targetDate: DateTime.now().plus({month: 8}).toJSDate(),
 		targetAmount: 3000,
 		bankAccountName: 'Bank Account #1'
 	});

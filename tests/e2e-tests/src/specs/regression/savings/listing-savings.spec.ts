@@ -143,7 +143,7 @@ test.describe('filters', () => {
 		).toBeVisible();
 		await expect(
 			page.locator(`div.card[data-tn="saving-card-${savingExpiredId}"]`),
-		).toBeVisible();
+		).not.toBeVisible();
 		await expect(
 			page.locator(`div.card[data-tn="saving-card-${savingCompletedId}"]`),
 		).not.toBeVisible();
@@ -185,9 +185,26 @@ test.describe('filters', () => {
 			page.locator(`div.card[data-tn="saving-card-${savingNotConcludedId}"]`),
 		).toBeVisible();
 	});
+	test('Filter by status - Only expired', async () => {
+		await setSavingFilters(page, {
+			statuses: ['EXPIRED']
+		});
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingActiveId}"]`),
+		).not.toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingExpiredId}"]`),
+		).toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingCompletedId}"]`),
+		).not.toBeVisible();
+		await expect(
+			page.locator(`div.card[data-tn="saving-card-${savingNotConcludedId}"]`),
+		).not.toBeVisible();
+	});
 	test('Filter by status - All', async () => {
 		await setSavingFilters(page, {
-			statuses: ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']
+			statuses: ['IN_PROGRESS', 'EXPIRED', 'NOT_CONCLUDED', 'COMPLETED']
 		});
 		await expect(
 			page.locator(`div.card[data-tn="saving-card-${savingActiveId}"]`),
@@ -207,7 +224,7 @@ test.describe('filters', () => {
 test.describe('search', () => {
 	test.beforeAll(async () => {
 		await setSavingFilters(page, {
-			statuses: ['IN_PROGRESS', 'NOT_CONCLUDED', 'COMPLETED']
+			statuses: ['IN_PROGRESS', 'EXPIRED', 'NOT_CONCLUDED', 'COMPLETED']
 		});
 	});
 	test('Search - All status - One coincidence', async () => {
