@@ -45,7 +45,7 @@ export const createSaving = async (page: Page, data: {
 		minute: 0,
 		second: 0,
 		millisecond:0,
-	}).toISO());
+	}).toISO({includeOffset: false}));
 	expect(foundSaving.name).toEqual(name);
 	expect(foundSaving.targetAmount).toEqual(targetAmount);
 	expect(foundSaving.bankAccount.label).toEqual(bankAccountName);
@@ -98,7 +98,7 @@ export const updateSaving = async (page: Page, savingId: string, data: {
 		minute: 0,
 		second: 0,
 		millisecond:0,
-	}).toISO());
+	}).toISO({includeOffset: false}));
 	expect(foundSaving.name).toEqual(name);
 	expect(foundSaving.targetAmount).toEqual(targetAmount);
 	expect(foundSaving.bankAccount.label).toEqual(bankAccountName);
