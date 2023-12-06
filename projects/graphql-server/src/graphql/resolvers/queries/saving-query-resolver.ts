@@ -11,6 +11,6 @@ export const SavingQueryResolver = {
 		return CurrencyService.findOne(saving.currencyId);
 	},
 	targetDate: async (saving: any) => {
-		return DateTime.fromJSDate(saving.targetDate).toISO();
+		return DateTime.fromJSDate(saving.targetDate).toISO({includeOffset: false});
 	}
 };
