@@ -6,12 +6,14 @@ import getLogger from '../helpers/logger';
 
 dotenv.config();
 
+let connection: mongoose.Connection;
+
 export const savingExpirationJob = async (
   limit: number = 100
 ): Promise<void> => {
   const logger = getLogger('[SavingExpiration] ');
-  await mongoose.connect(process.env.MONGO_DB_URI || '');
-  const SavingModel = mongoose.model('Saving', SavingSchema);
+  connection = mongoose.createConnection(process.env.MONGO_DB_URI || '');
+  const SavingModel = connection.model('Saving', SavingSchema);
   try {
     logger.info('Starting job');
     const savings: any[] = await SavingModel.find({
@@ -31,6 +33,6 @@ export const savingExpirationJob = async (
     logger.debug(e);
     logger.error('Error expiring savings');
   } finally {
-    await mongoose.connection.close();
+    await connection.close();
   }
 };
