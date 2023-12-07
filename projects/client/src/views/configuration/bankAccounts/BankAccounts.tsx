@@ -30,12 +30,10 @@ import { useTranslation } from 'react-i18next'
 import useThemeClass from '@/utils/hooks/useThemeClass'
 import {
     HiLibrary,
-    HiOutlineExternalLink,
     HiOutlinePencilAlt,
     HiOutlineTrash,
     HiPlus,
 } from 'react-icons/hi'
-import { useNavigate } from 'react-router-dom'
 import { useConfig } from '@/components/ui/ConfigProvider'
 import { Field, FormikErrors, FormikTouched } from 'formik'
 import { apiGetUserCurrencies } from '@/services/AccountService'
@@ -47,6 +45,11 @@ import { useAppSelector } from '@/store'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { MdOutlineAttachMoney } from 'react-icons/md'
 import { PiWarningOctagonBold } from 'react-icons/pi'
+import {
+    apiCreateBank,
+    apiDeleteBank,
+    apiUpdateBank,
+} from '@/services/BankService'
 
 const BankAccounts = () => {
     const [selectedBankAccount, setSelectedBankAccount] = useState<
@@ -55,10 +58,11 @@ const BankAccounts = () => {
     const [selectedBank, setSelectedBank] = useState<BankDataType | undefined>(
         undefined,
     )
-    const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
-    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
+    const [isAccountFormOpen, setIsAccountFormOpen] = useState<boolean>(false)
+    const [isAccountConfirmDeleteOpen, setIsAccountConfirmDeleteOpen] =
         useState<boolean>(false)
-    const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false)
+    const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
 
     const userState = useAppSelector((state) => state.auth.user)
 
@@ -82,6 +86,16 @@ const BankAccounts = () => {
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
+    }
+
+    const onBankFormClose = () => {
+        setSelectedBank(undefined)
+        setIsFormOpen(false)
+    }
+
+    const onBankDeleteConfirmClose = () => {
+        setSelectedBank(undefined)
+        setIsDeleteOpen(false)
     }
 
     const createBankAccountMutation = useMutation({
@@ -111,10 +125,33 @@ const BankAccounts = () => {
         },
     })
 
+    const createBankMutation = useMutation({
+        mutationFn: apiCreateBank,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.bank.created') || '')
+        },
+        onSettled: onBankFormClose,
+    })
+
+    const updateBankMutation = useMutation({
+        mutationFn: apiUpdateBank,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.bank.updated') || '')
+        },
+        onSettled: onBankFormClose,
+    })
+
+    const deleteBankMutation = useMutation({
+        mutationFn: apiDeleteBank,
+        onSuccess: async () => {
+            await onMutationSuccess(t('notifications.bank.deleted') || '')
+        },
+        onSettled: onBankDeleteConfirmClose,
+    })
+
     const { t, i18n } = useTranslation()
     const { themeColor } = useConfig()
     const { textTheme, bgTheme } = useThemeClass()
-    const navigate = useNavigate()
 
     const validationSchema = Yup.object().shape({
         accountNumber: Yup.string().required(t('validations.required') || ''),
@@ -122,15 +159,13 @@ const BankAccounts = () => {
         accountCurrency: Yup.string().required(t('validations.required') || ''),
     })
 
-    const onFormClose = () => {
-        setIsFormOpen(false)
+    const onAccountFormClose = () => {
+        setIsAccountFormOpen(false)
         setSelectedBank(undefined)
         setSelectedBankAccount(undefined)
-        setIsSaving(false)
     }
 
-    const onFormSubmit = async (data: any) => {
-        setIsSaving(true)
+    const onAccountFormSubmit = async (data: any) => {
         const currency = userCurrencies?.find(
             (c) => c.id === data.accountCurrency,
         )
@@ -157,20 +192,20 @@ const BankAccounts = () => {
                 }
             }
         }
-        onFormClose()
+        onAccountFormClose()
     }
 
-    const onDeleteConfirmClose = () => {
-        setIsConfirmDeleteOpen(false)
+    const onAccountDeleteConfirmClose = () => {
+        setIsAccountConfirmDeleteOpen(false)
         setSelectedBank(undefined)
         setSelectedBankAccount(undefined)
     }
 
-    const onDelete = async () => {
+    const onAccountDelete = async () => {
         if (selectedBankAccount) {
             deleteBankAccountMutation.mutate(selectedBankAccount.id)
         }
-        onDeleteConfirmClose()
+        onAccountDeleteConfirmClose()
     }
 
     if (!bankAccountList) {
@@ -180,26 +215,81 @@ const BankAccounts = () => {
     if (bankAccountList.length === 0) {
         return (
             <Container data-tn="bank-accounts-page">
+                <div className="lg:flex items-center justify-between mb-4 my-2">
+                    <h2>{t('pages.bankAccounts.header')}</h2>
+                </div>
                 <EmptyState
                     className="mt-4"
-                    title={
-                        t('pages.bankAccounts.emptyState.noBanks.title') || ''
-                    }
-                    description={
-                        t(
-                            'pages.bankAccounts.emptyState.noBanks.description',
-                        ) || ''
-                    }
+                    title={t('pages.banks.emptyState.title') || ''}
+                    description={t('pages.banks.emptyState.description') || ''}
                     data-tn="empty-state-no-banks"
                 >
                     <Button
-                        variant="plain"
-                        className={`mt-4 ${textTheme}`}
-                        icon={<HiOutlineExternalLink />}
-                        onClick={() => navigate('/account/settings/banks')}
+                        variant="twoTone"
+                        size="lg"
+                        className="mt-4 w-full md:w-96"
+                        icon={<HiPlus />}
+                        data-tn="add-bank-btn"
+                        onClick={() => setIsFormOpen(true)}
                     >
-                        {t('pages.bankAccounts.goToBanksSection')}
+                        {t('pages.banks.newBankAction')}
                     </Button>
+                    <ModalForm
+                        isOpen={isFormOpen}
+                        entity={
+                            selectedBank || {
+                                name: '',
+                            }
+                        }
+                        title={
+                            selectedBank
+                                ? t('pages.banks.form.editTitle')
+                                : t('pages.banks.form.newTitle')
+                        }
+                        validationSchema={Yup.object().shape({
+                            name: Yup.string().required(
+                                t('validations.required') || '',
+                            ),
+                        })}
+                        fields={(
+                            errors: FormikErrors<any>,
+                            touched: FormikTouched<any>,
+                        ) => (
+                            <>
+                                <FormItem
+                                    asterisk
+                                    label={t('fields.name') || 'Name'}
+                                    invalid={
+                                        (errors.name && touched.name) as boolean
+                                    }
+                                    errorMessage={errors.name?.toString()}
+                                >
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="name"
+                                        placeholder={t('fields.name')}
+                                        component={Input}
+                                    />
+                                </FormItem>
+                            </>
+                        )}
+                        isSaving={
+                            createBankMutation.isPending ||
+                            updateBankMutation.isPending
+                        }
+                        onClose={onBankFormClose}
+                        onSubmit={(values: any) => {
+                            if (!selectedBank) {
+                                createBankMutation.mutate(values)
+                            } else {
+                                updateBankMutation.mutate({
+                                    ...selectedBank,
+                                    ...values,
+                                })
+                            }
+                        }}
+                    />
                 </EmptyState>
             </Container>
         )
@@ -207,6 +297,21 @@ const BankAccounts = () => {
 
     return (
         <Container data-tn="bank-accounts-page">
+            <div className="lg:flex items-center justify-between mb-4 my-2">
+                <h2>{t('pages.bankAccounts.header')}</h2>
+                <div className="flex flex-col lg:flex-row lg:items-center">
+                    <Button
+                        variant="solid"
+                        size="sm"
+                        className="lg:ml-2 my-2"
+                        icon={<HiPlus />}
+                        data-tn="add-bank-btn"
+                        onClick={() => setIsFormOpen(true)}
+                    >
+                        {t('pages.banks.newBankAction')}
+                    </Button>
+                </div>
+            </div>
             <Card bodyClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {bankAccountList.map((bank: any) => {
                     return (
@@ -222,21 +327,104 @@ const BankAccounts = () => {
                                 bordered
                                 data-tn={`bank-${bank.id}-card`}
                                 header={
-                                    <div
-                                        className="flex inline-flex items-center w-full"
-                                        style={{ overflow: 'hidden' }}
-                                    >
-                                        <Avatar
-                                            src={bank.icon && bank.icon}
-                                            icon={!bank.icon && <HiLibrary />}
-                                            className={`mr-2 ${bgTheme} dark:${bgTheme}`}
-                                            size={32}
-                                        />
-                                        <span
-                                            className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+                                    <div className="flex inline-flex items-center w-full">
+                                        <div className="flex inline-flex items-center w-full">
+                                            <Avatar
+                                                src={bank.icon && bank.icon}
+                                                icon={
+                                                    !bank.icon && <HiLibrary />
+                                                }
+                                                className={`mr-2 ${bgTheme} dark:${bgTheme}`}
+                                                size={32}
+                                            />
+                                            <span
+                                                className={`font-bold text-lg ${textTheme} dark:${textTheme}`}
+                                            >
+                                                {bank.name}
+                                            </span>
+                                        </div>
+                                        <Dropdown
+                                            placement="middle-end-top"
+                                            renderTitle={
+                                                <EllipsisButton data-tn="dropdown-bank-btn" />
+                                            }
                                         >
-                                            {bank.name}
-                                        </span>
+                                            <Dropdown.Item
+                                                eventKey="edit"
+                                                data-tn="edit-bank-btn"
+                                                onClick={() => {
+                                                    setSelectedBank(bank)
+                                                    setIsFormOpen(true)
+                                                }}
+                                            >
+                                                <IconText
+                                                    className="text-sm font-semibold w-full"
+                                                    icon={
+                                                        <HiOutlinePencilAlt />
+                                                    }
+                                                >
+                                                    {t('actions.edit')}
+                                                </IconText>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                eventKey="delete"
+                                                data-tn="delete-bank-btn"
+                                                disabled={
+                                                    bank.bankAccounts.length
+                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        !bank.bankAccounts
+                                                            .length
+                                                    ) {
+                                                        setSelectedBank(bank)
+                                                        setIsDeleteOpen(true)
+                                                    }
+                                                }}
+                                            >
+                                                {bank.bankAccounts.length ? (
+                                                    <Tooltip
+                                                        title={
+                                                            <IconText
+                                                                className="text-yellow-400"
+                                                                icon={
+                                                                    <PiWarningOctagonBold
+                                                                        size={
+                                                                            64
+                                                                        }
+                                                                    />
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    'pages.banks.tooltips.warnHasAccounts',
+                                                                )}
+                                                            </IconText>
+                                                        }
+                                                        placement="left"
+                                                    >
+                                                        <IconText
+                                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                            icon={
+                                                                <HiOutlineTrash />
+                                                            }
+                                                        >
+                                                            {t(
+                                                                'actions.delete',
+                                                            )}
+                                                        </IconText>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <IconText
+                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                        icon={
+                                                            <HiOutlineTrash />
+                                                        }
+                                                    >
+                                                        {t('actions.delete')}
+                                                    </IconText>
+                                                )}
+                                            </Dropdown.Item>
+                                        </Dropdown>
                                     </div>
                                 }
                                 className="flex flex-col justify-between"
@@ -250,7 +438,7 @@ const BankAccounts = () => {
                                         color={`${themeColor}`}
                                         onClick={() => {
                                             setSelectedBank(bank)
-                                            setIsFormOpen(true)
+                                            setIsAccountFormOpen(true)
                                         }}
                                     >
                                         {t(
@@ -261,6 +449,7 @@ const BankAccounts = () => {
                             >
                                 {bank.bankAccounts.length === 0 ? (
                                     <EmptyState
+                                        bordered
                                         description={t(
                                             'pages.bankAccounts.emptyState.noAccounts.description',
                                         )}
@@ -292,7 +481,9 @@ const BankAccounts = () => {
                                                             setSelectedBankAccount(
                                                                 a,
                                                             )
-                                                            setIsFormOpen(true)
+                                                            setIsAccountFormOpen(
+                                                                true,
+                                                            )
                                                         }}
                                                     >
                                                         <IconText
@@ -311,15 +502,20 @@ const BankAccounts = () => {
                                                             a.savings.length
                                                         }
                                                         onClick={() => {
-                                                            setSelectedBank(
-                                                                bank,
-                                                            )
-                                                            setSelectedBankAccount(
-                                                                a,
-                                                            )
-                                                            setIsConfirmDeleteOpen(
-                                                                true,
-                                                            )
+                                                            if (
+                                                                !a.savings
+                                                                    .length
+                                                            ) {
+                                                                setSelectedBank(
+                                                                    bank,
+                                                                )
+                                                                setSelectedBankAccount(
+                                                                    a,
+                                                                )
+                                                                setIsAccountConfirmDeleteOpen(
+                                                                    true,
+                                                                )
+                                                            }
                                                         }}
                                                     >
                                                         {a.savings.length ? (
@@ -413,7 +609,7 @@ const BankAccounts = () => {
                 })}
             </Card>
             <ModalForm
-                isOpen={isFormOpen}
+                isOpen={isAccountFormOpen}
                 entity={{
                     ...selectedBankAccount,
                     accountCurrency: selectedBankAccount?.accountCurrency.id,
@@ -532,26 +728,102 @@ const BankAccounts = () => {
                         </FormItem>
                     </>
                 )}
-                isSaving={isSaving}
-                onClose={onFormClose}
-                onSubmit={onFormSubmit}
+                isSaving={
+                    updateBankAccountMutation.isPending ||
+                    createBankAccountMutation.isPending
+                }
+                onClose={onAccountFormClose}
+                onSubmit={onAccountFormSubmit}
             />
             <ConfirmDialog
-                isOpen={isConfirmDeleteOpen}
+                isOpen={isAccountConfirmDeleteOpen}
                 type="danger"
                 title={t('pages.bankAccounts.deleteConfirmation.title')}
                 data-tn="confirm-delete-bank-account-dialog"
                 confirmButtonColor="red-600"
                 confirmText={t('actions.delete')}
                 cancelText={t('actions.cancel')}
-                onClose={onDeleteConfirmClose}
-                onRequestClose={onDeleteConfirmClose}
-                onCancel={onDeleteConfirmClose}
-                onConfirm={onDelete}
+                onClose={onAccountDeleteConfirmClose}
+                onRequestClose={onAccountDeleteConfirmClose}
+                onCancel={onAccountDeleteConfirmClose}
+                onConfirm={onAccountDelete}
             >
                 <p>
                     {t('pages.bankAccounts.deleteConfirmation.description', {
                         accountNumber: selectedBankAccount?.accountNumber,
+                    })}
+                </p>
+            </ConfirmDialog>
+            <ModalForm
+                isOpen={isFormOpen}
+                entity={
+                    selectedBank || {
+                        name: '',
+                    }
+                }
+                title={
+                    selectedBank
+                        ? t('pages.banks.form.editTitle')
+                        : t('pages.banks.form.newTitle')
+                }
+                validationSchema={Yup.object().shape({
+                    name: Yup.string().required(
+                        t('validations.required') || '',
+                    ),
+                })}
+                fields={(
+                    errors: FormikErrors<any>,
+                    touched: FormikTouched<any>,
+                ) => (
+                    <>
+                        <FormItem
+                            label={t('fields.name') || 'Name'}
+                            invalid={(errors.name && touched.name) as boolean}
+                            errorMessage={errors.name?.toString()}
+                        >
+                            <Field
+                                type="text"
+                                autoComplete="off"
+                                name="name"
+                                placeholder={t('fields.name')}
+                                component={Input}
+                            />
+                        </FormItem>
+                    </>
+                )}
+                isSaving={
+                    createBankMutation.isPending || updateBankMutation.isPending
+                }
+                onClose={onBankFormClose}
+                onSubmit={(values: any) => {
+                    if (!selectedBank?.id) {
+                        createBankMutation.mutate(values)
+                    } else {
+                        updateBankMutation.mutate({
+                            ...selectedBank,
+                            ...values,
+                        })
+                    }
+                }}
+            />
+            <ConfirmDialog
+                isOpen={isDeleteOpen}
+                type="danger"
+                title={t('pages.banks.deleteConfirmation.title')}
+                confirmButtonColor="red-600"
+                confirmText={t('actions.delete')}
+                cancelText={t('actions.cancel')}
+                data-tn="confirm-delete-dialog"
+                onClose={onBankDeleteConfirmClose}
+                onRequestClose={onBankDeleteConfirmClose}
+                onCancel={onBankDeleteConfirmClose}
+                onConfirm={() =>
+                    selectedBank && deleteBankMutation.mutate(selectedBank.id)
+                }
+            >
+                <p>
+                    {t('pages.banks.deleteConfirmation.description', {
+                        name: selectedBank?.name,
                     })}
                 </p>
             </ConfirmDialog>

@@ -21,6 +21,7 @@ const config = {
 	db: {
 		uri: process.env.MONGO_DB_URI || '',
 	},
+	firebaseId: process.env.USER_FIREBASE_ID || ''
 };
 
 const CURRENCY_CODES = ['USD', 'UYU'];
@@ -66,7 +67,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		name: 'Demo Account',
 		email: 'demo@scipiofinances.com',
 		avatar: null,
-		firebaseId: 'zfSV2tiQlBerX9fCAFz8MXM0NRi2',
+		firebaseId: config.firebaseId,
 		currencies,
 		country,
 		lang: 'en'

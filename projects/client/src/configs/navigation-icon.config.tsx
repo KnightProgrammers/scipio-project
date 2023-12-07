@@ -1,5 +1,4 @@
 import {
-    HiBriefcase,
     HiOutlineCreditCard,
     HiOutlineHome,
     HiLibrary,
@@ -20,7 +19,6 @@ const navigationIcon: NavigationIcons = {
     configuration: <HiOutlineAdjustments />,
     creditCards: <HiOutlineCreditCard />,
     bankAccounts: <HiLibrary />,
-    jobs: <HiBriefcase />,
     incomes: <RiHandCoinLine />,
     categories: <TbCategory2 />,
 }

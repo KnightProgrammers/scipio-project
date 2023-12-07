@@ -34,18 +34,12 @@ export const protectedRoutes = [
         path: '/incomes',
         component: lazy(() => import('@/views/incomes')),
         authority: [],
-        meta: {
-            header: 'pages.incomes.header',
-        },
     },
     {
         key: 'bankAccounts',
         path: '/conf/bank-accounts',
         component: lazy(() => import('@/views/configuration/bankAccounts')),
         authority: [],
-        meta: {
-            header: 'pages.bankAccounts.header',
-        },
     },
     {
         key: 'creditCards',
@@ -61,15 +55,6 @@ export const protectedRoutes = [
         path: '/conf/categories',
         component: lazy(() => import('@/views/configuration/categories')),
         authority: [],
-    },
-    {
-        key: 'jobs',
-        path: '/conf/jobs',
-        component: lazy(() => import('@/views/configuration/jobs')),
-        authority: [],
-        meta: {
-            header: 'pages.jobs.header',
-        },
     },
     {
         key: 'account.settings',

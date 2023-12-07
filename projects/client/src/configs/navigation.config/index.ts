@@ -86,16 +86,6 @@ const navigationConfig: NavigationTree[] = [
                 type: NAV_ITEM_TYPE_ITEM,
                 subMenu: [],
             },
-            {
-                key: 'jobs',
-                path: '/conf/jobs',
-                title: 'Jobs',
-                translateKey: 'nav.configurationItems.jobs',
-                icon: 'jobs',
-                type: NAV_ITEM_TYPE_ITEM,
-                subMenu: [],
-                hidden: true,
-            },
         ],
     },
 ]

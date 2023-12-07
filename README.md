@@ -190,7 +190,8 @@ npm run test
 | Var                 | Type   | Required | Default Value | Description                                        |
 |---------------------|--------|----------|---------------|----------------------------------------------------|
 | `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
-| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
+| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` |
+| `USER_FIREBASE_ID`  | String | `true`   |  `""`         | Firebase ID of the demo user                       |
 
 ------
 

@@ -3,11 +3,11 @@ import { signInUser } from '../../../../helpers/auth.helper';
 import { getDefaultUserData } from '../../../../config';
 import {
 	openCreditCardDetailView
-} from "../../../../helpers/credit-card.helper";
+} from '../../../../helpers/credit-card.helper';
 import { waitForRequest } from '../../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
-import { DateTime } from "luxon";
-import GraphqlService from "../../../../services/graphql.service";
+import { DateTime } from 'luxon';
+import GraphqlService from '../../../../services/graphql.service';
 
 
 let email: string;

@@ -1,19 +1,18 @@
 import { test, Page, expect } from '@playwright/test';
-import firebaseService from '../../../services/firebase.service';
-import { signUpUser, signInUser } from '../../../helpers/auth.helper';
+import firebaseService from '../../../../services/firebase.service';
+import { signUpUser, signInUser } from '../../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { goToProfileTab, goToUserProfile } from '../../../helpers/profile.helper';
 import {
 	createBank, deleteBank
-} from '../../../helpers/bank.helper';
-import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
+} from '../../../../helpers/bank.helper';
+import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 import {
 	createBankAccount,
 	deleteBankAccount,
 	editBankAccount,
 	openEditBankAccountForm
-} from '../../../helpers/bank-account.helper';
-import { waitForRequest } from '../../../helpers/generic.helper';
+} from '../../../../helpers/bank-account.helper';
+import { waitForRequest } from '../../../../helpers/generic.helper';
 
 
 let email: string;
@@ -65,24 +64,10 @@ test('bank account list without banks', async () => {
 	await expect(emptyStateContainer).toBeVisible();
 });
 test('bank account list with banks', async () => {
-	await goToUserProfile(page);
-	await goToProfileTab(page, 'banks');
 	const bank = await createBank(page, {
 		name: bankName
 	});
 	bankId = bank.id;
-	const waitForBankAccounts = waitForRequest(page, 'userBankAccounts');
-	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
-	const bankAccountsRequest = await waitForBankAccounts;
-	const bankAccountsResponse = await bankAccountsRequest.response();
-	const { data: { me: { banks } } } = await bankAccountsResponse.json();
-	expect(banks).toHaveLength(1);
-	expect(banks[0]).toEqual({
-		bankAccounts: [],
-		id: bankId,
-		name: bankName,
-		icon: null
-	});
 	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]');
 	await expect(emptyStateContainer).not.toBeVisible();
 	const bankCardLocator = page.locator(`div[data-tn="bank-${bankId}-card"]`);
@@ -115,10 +100,8 @@ test('create bank account', async () => {
 	)).toHaveText(bankAccount.accountNumber);
 });
 test('cannot delete a bank with at least one account', async () => {
-	await goToUserProfile(page);
-	await goToProfileTab(page, 'banks');
-	await expect(page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`)).toHaveClass(/cursor-not-allowed/);
-	await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
+	await page.locator(`div[data-tn="bank-${bankId}-card"] button[data-tn="dropdown-bank-btn"]`).click();
+	await expect(page.locator(`div[data-tn="bank-${bankId}-card"] li[data-tn="delete-bank-btn"]`)).toHaveClass(/menu-item-disabled/);
 });
 test('validate editable fields', async () => {
 	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
@@ -147,7 +130,5 @@ test('delete bank account', async () => {
 });
 
 test('delete bank without bank accounts', async () => {
-	await goToUserProfile(page);
-	await goToProfileTab(page, 'banks');
 	await deleteBank(page, bankId);
 });
