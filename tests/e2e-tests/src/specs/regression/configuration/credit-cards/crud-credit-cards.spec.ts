@@ -46,6 +46,17 @@ test.afterAll(async () => {
 	}
 });
 
+test('Empty state', async () => {
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	const creditCardsRequest = await waitForCreditCards;
+	const creditCardsResponse = await creditCardsRequest.response();
+	const {data} = await creditCardsResponse.json();
+	expect(data.me.creditCards).toEqual([]);
+
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
+	await expect(emptyStateContainer).toBeVisible();
+});
 test('Add a credit card', async () => {
 	const creditCard = await createCreditCard(page, {
 		label: 'Visa Black',
@@ -61,17 +72,6 @@ test('Add a credit card', async () => {
 	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
 	await expect(emptyStateContainer).not.toBeVisible();
 	await expect(page.locator(`div[data-tn="credit-card-${creditCardId}"]`)).toBeVisible();
-});
-test('Empty state', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	const creditCardsRequest = await waitForCreditCards;
-	const creditCardsResponse = await creditCardsRequest.response();
-	const {data} = await creditCardsResponse.json();
-	expect(data.me.creditCards).toEqual([]);
-
-	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
-	await expect(emptyStateContainer).toBeVisible();
 });
 test('Edit a credit card', async () => {
 	await openEditCreditCardForm(page, creditCardId);
