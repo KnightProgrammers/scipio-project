@@ -1,16 +1,16 @@
 import { test, Page } from '@playwright/test';
-import { signInUser } from '../../../helpers/auth.helper';
-import { getDefaultUserData } from '../../../config';
-import { createBank, deleteBank } from '../../../helpers/bank.helper';
-import { goToProfileTab, goToUserProfile } from '../../../helpers/profile.helper';
+import { signInUser } from '../../../../helpers/auth.helper';
+import { getDefaultUserData } from '../../../../config';
+import { createBank, deleteBank } from '../../../../helpers/bank.helper';
+import { goToProfileTab, goToUserProfile } from '../../../../helpers/profile.helper';
 import { v4 as uuidv4 } from 'uuid';
 import {
 	createBankAccount,
 	deleteBankAccount,
 	editBankAccount,
 	openEditBankAccountForm
-} from '../../../helpers/bank-account.helper';
-import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
+} from '../../../../helpers/bank-account.helper';
+import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 
 
 let email: string;
@@ -40,15 +40,13 @@ test.afterAll(async () => {
 });
 
 test('create bank', async () => {
-	await goToUserProfile(page);
-	await goToProfileTab(page, 'banks');
+	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
 	const bank = await createBank(page, {
 		name: bankName
 	});
 	bankId = bank.id;
 });
 test('add bank-account to the bank', async () => {
-	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
 	bankAccount = await createBankAccount(page, bankId, {
 		accountName: 'Caja de Ahorros',
 		accountNumber: '12345678',

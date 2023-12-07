@@ -1,6 +1,5 @@
 import { test, Page, expect } from '@playwright/test';
 import { signInUser } from '../../../../helpers/auth.helper';
-import { goToUserProfile } from '../../../../helpers/profile.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { getDefaultUserData } from '../../../../config';
 import {
@@ -11,7 +10,7 @@ import {
 	openEditBankForm
 } from '../../../../helpers/bank.helper';
 import { waitForRequest } from '../../../../helpers/generic.helper';
-import { NAV_MENU, navigateMenu } from "../../../../helpers/nav-menu.helper";
+import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 
 
 let email: string;
