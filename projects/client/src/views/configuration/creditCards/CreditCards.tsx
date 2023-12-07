@@ -178,7 +178,12 @@ const CreditCardDrawer = (props: {
         return (
             <>
                 {expenses.map((e: any) => (
-                    <Card key={e.id} bordered={true} className="mt-2">
+                    <Card
+                        key={e.id}
+                        bordered
+                        className="mt-2"
+                        data-tn={`expense-item-${e.id}`}
+                    >
                         <div className="w-full flex justify-between items-center">
                             <small>{e.category.name}</small>
                             <small>
@@ -232,12 +237,14 @@ const CreditCardDrawer = (props: {
                             defaultValue={closeDate}
                             inputFormat="DD/MM/YYYY"
                             clearable={false}
+                            data-tn="close-date-input"
                             onChange={(newDate) =>
                                 newDate && setCloseDate(newDate)
                             }
                         />
                         <div className="mt-4 grid grid-cols-2 gap-4">
                             <Button
+                                data-tn="cancel-btn"
                                 onClick={() => {
                                     setShowCreateStatementForm(false)
                                     setCloseDate(new Date())
@@ -247,6 +254,7 @@ const CreditCardDrawer = (props: {
                             </Button>
                             <Button
                                 variant="solid"
+                                data-tn="save-btn"
                                 onClick={() => {
                                     createCreditCardMonthlyStatementMutation.mutate(
                                         {
@@ -289,7 +297,11 @@ const CreditCardDrawer = (props: {
                 onChange={(tabValue) => setActiveTab(tabValue)}
             >
                 <TabList>
-                    <TabNav value="next" style={{ minWidth: 'fit-content' }}>
+                    <TabNav
+                        value="next"
+                        style={{ minWidth: 'fit-content' }}
+                        data-tn="next-statement"
+                    >
                         {t('pages.creditCards.detailView.nextStatement')}
                     </TabNav>
                     {creditCardDetail.monthlyStatements.map((ms: any) => (
@@ -297,6 +309,7 @@ const CreditCardDrawer = (props: {
                             key={`ms-tab-nav-${ms.id}`}
                             value={ms.id}
                             style={{ minWidth: 'fit-content' }}
+                            data-tn={`statement-${ms.id}`}
                         >
                             {DateTime.fromISO(ms.closeDate)
                                 .setLocale(i18n.language)
@@ -339,6 +352,7 @@ const CreditCardDrawer = (props: {
                         block
                         variant="solid"
                         className="mt-4"
+                        data-tn="new-statement-button"
                         onClick={() => setShowCreateStatementForm(true)}
                     >
                         {t('pages.creditCards.detailView.newStatementButton')}
