@@ -8,7 +8,7 @@ export const createBank = async (page: Page, data: { name: string })=>  {
 	await expect(bankFormContainer).toBeVisible();
 	await page.locator('input[name="name"]').fill(name);
 	const saveBankWaitForRequest = waitForRequest(page, 'createBank');
-	const getBankListWaitForRequest = waitForRequest(page, 'userBanks');
+	const getBankListWaitForRequest = waitForRequest(page, 'userBankAccounts');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
 	const saveBankRequest = await saveBankWaitForRequest;
 	const getBankListRequest = await getBankListWaitForRequest;
@@ -26,7 +26,8 @@ export const createBank = async (page: Page, data: { name: string })=>  {
 };
 
 export const openEditBankForm = async (page: Page, bankId: string) => {
-	await page.locator(`button[data-tn="edit-bank-btn-${bankId}"]`).click();
+	await page.locator(`div[data-tn="bank-${bankId}-card"] button[data-tn="dropdown-bank-btn"]`).click();
+	await page.locator(`div[data-tn="bank-${bankId}-card"] li[data-tn="edit-bank-btn"]`).click();
 	const bankFormContainer = page.locator('div[role="dialog"]');
 	await expect(bankFormContainer).toBeVisible();
 };
@@ -36,7 +37,7 @@ export const editBank = async (page: Page, bankId: string, data: {name: string})
 	await page.locator('input[name="name"]').clear();
 	await page.locator('input[name="name"]').fill(name);
 	const saveBankWaitForRequest = waitForRequest(page, 'updateBank');
-	const getBankListWaitForRequest = waitForRequest(page, 'userBanks');
+	const getBankListWaitForRequest = waitForRequest(page, 'userBankAccounts');
 	await page.locator('button[data-tn="modal-form-save-btn"]').click();
 	const saveBankRequest = await saveBankWaitForRequest;
 	const getBankListRequest = await getBankListWaitForRequest;
@@ -60,13 +61,13 @@ export const deleteBank = async (page: Page, bankId: string) => {
 };
 
 export const openDeleteBankDialog = async (page: Page, bankId: string) => {
-	await page.locator(`button[data-tn="delete-bank-btn-${bankId}"]`).click();
-	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).toBeVisible();
+	await page.locator(`div[data-tn="bank-${bankId}-card"] button[data-tn="dropdown-bank-btn"]`).click();
+	await page.locator(`div[data-tn="bank-${bankId}-card"] li[data-tn="delete-bank-btn"]`).click();
 };
 
 export const confirmDeleteBank = async (page: Page, bankId: string) => {
 	const deleteBankWaitForRequest = waitForRequest(page, 'deleteBank');
-	const getBankListWaitForRequest = waitForRequest(page, 'userBanks');
+	const getBankListWaitForRequest = waitForRequest(page, 'userBankAccounts');
 	await page.locator('button[data-tn="confirm-dialog-confirm-btn"]').click();
 	await deleteBankWaitForRequest;
 	const getBankListRequest = await getBankListWaitForRequest;

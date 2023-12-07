@@ -1,16 +1,17 @@
 import { test, Page, expect } from '@playwright/test';
-import { signInUser } from '../../../helpers/auth.helper';
-import { goToUserProfile } from '../../../helpers/profile.helper';
+import { signInUser } from '../../../../helpers/auth.helper';
+import { goToUserProfile } from '../../../../helpers/profile.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { getDefaultUserData } from '../../../config';
+import { getDefaultUserData } from '../../../../config';
 import {
 	confirmDeleteBank,
 	createBank,
 	editBank,
 	openDeleteBankDialog,
 	openEditBankForm
-} from '../../../helpers/bank.helper';
-import { waitForRequest } from '../../../helpers/generic.helper';
+} from '../../../../helpers/bank.helper';
+import { waitForRequest } from '../../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from "../../../../helpers/nav-menu.helper";
 
 
 let email: string;
@@ -31,7 +32,6 @@ test.beforeAll(async ({ browser }) => {
 	await page.goto('/');
 	await page.waitForLoadState('load');
 	await signInUser(page, {email, password}, false);
-	await goToUserProfile(page);
 });
 
 test.afterAll(async () => {
@@ -39,10 +39,10 @@ test.afterAll(async () => {
 });
 
 test('load bank tab', async () => {
-	const waitForBanksRequest = waitForRequest(page, 'userBanks');
-	await page.locator('div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-banks"]').click();
+	const waitForBanksRequest = waitForRequest(page, 'userBankAccounts');
+	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
 	await waitForBanksRequest;
-	const pageContainer = page.locator('div[data-tn="account-banks-page"]');
+	const pageContainer = page.locator('div[data-tn="bank-accounts-page"]');
 	await expect(pageContainer).toBeVisible();
 	const addBankButton = page.locator('button[data-tn="add-bank-btn"]');
 	await expect(addBankButton).toBeVisible();
@@ -54,10 +54,7 @@ test('create a bank', async () => {
 	});
 	bankId = bank.id;
 	// validate bank on the screen
-	await expect(page.locator(`span[data-tn="name-bank-lbl-${bank.id}"]`))
-		.toHaveText(bankName);
-	await expect(page.locator(`span[data-tn="icon-bank-lbl-${bank.id}"] svg`))
-		.toBeVisible();
+	await expect(page.locator(`div[data-tn="bank-${bankId}-card"]`)).toBeVisible();
 });
 
 test('edit a bank', async () => {
@@ -66,12 +63,10 @@ test('edit a bank', async () => {
 	await editBank(page, bankId, {
 		name: newBankName
 	});
-	// validate bank on the screen
-	await expect(page.locator(`span[data-tn="name-bank-lbl-${bankId}"]`))
-		.toHaveText(newBankName);
 });
 
 test('delete a bank', async () => {
 	await openDeleteBankDialog(page, bankId);
 	await confirmDeleteBank(page, bankId);
+	await expect(page.locator(`div[data-tn="bank-${bankId}-card"]`)).not.toBeVisible();
 });

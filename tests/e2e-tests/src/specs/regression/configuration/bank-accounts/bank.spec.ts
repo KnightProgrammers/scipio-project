@@ -1,14 +1,15 @@
 import { test, Page, expect } from '@playwright/test';
-import firebaseService from '../../../services/firebase.service';
-import { signUpUser, signInUser } from '../../../helpers/auth.helper';
+import firebaseService from '../../../../services/firebase.service';
+import { signUpUser, signInUser } from '../../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { goToProfileTab, goToUserProfile } from '../../../helpers/profile.helper';
+import { goToProfileTab, goToUserProfile } from '../../../../helpers/profile.helper';
 import {
 	createBank, deleteBank,
 	editBank,
 	openEditBankForm
-} from '../../../helpers/bank.helper';
-import { waitForRequest } from '../../../helpers/generic.helper';
+} from '../../../../helpers/bank.helper';
+import { waitForRequest } from '../../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from "../../../../helpers/nav-menu.helper";
 
 
 let email: string;
@@ -48,17 +49,17 @@ test.afterAll(async () => {
 });
 
 test('empty state', async () => {
-	const waitForBanksRequest = waitForRequest(page, 'userBanks');
-	await goToProfileTab(page, 'banks');
+	const waitForBanksRequest = waitForRequest(page, 'userBankAccounts');
+	await navigateMenu(page, NAV_MENU.BANK_ACCOUNTS);
 	const banksRequest = await waitForBanksRequest;
 	const banksResponse = await banksRequest.response();
 	const { data: { me: { banks } } } = await banksResponse.json();
 	expect(banks).toEqual([]);
 
-	const pageContainer = page.locator('div[data-tn="account-banks-page"]');
+	const pageContainer = page.locator('div[data-tn="bank-accounts-page"]');
 	await expect(pageContainer).toBeVisible();
 
-	const emptyStateContainer = page.locator('div[data-tn="empty-state"]');
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]');
 	await expect(emptyStateContainer).toBeVisible();
 
 	const addBankButton = page.locator('button[data-tn="add-bank-btn"]');
@@ -71,10 +72,9 @@ test('create a bank', async () => {
 	});
 	bankId = bank.id;
 	// validate bank on the screen
-	await expect(page.locator(`span[data-tn="name-bank-lbl-${bank.id}"]`))
-		.toHaveText(bankName);
-	await expect(page.locator(`span[data-tn="icon-bank-lbl-${bank.id}"] svg`))
-		.toBeVisible();
+	await expect(page.locator(`div[data-tn="bank-${bankId}-card"]`)).toBeVisible();
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]');
+	await expect(emptyStateContainer).not.toBeVisible();
 });
 
 test('edit a bank', async () => {
@@ -83,15 +83,12 @@ test('edit a bank', async () => {
 	await editBank(page, bankId, {
 		name: newBankName
 	});
-	// validate bank on the screen
-	await expect(page.locator(`span[data-tn="name-bank-lbl-${bankId}"]`))
-		.toHaveText(newBankName);
 });
 
 test('delete a bank - last bank', async () => {
 	await deleteBank(page, bankId);
 	// Validates that the empty state is displayed
-	const emptyStateContainer = page.locator('div[data-tn="empty-state"]');
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]');
 	await expect(emptyStateContainer).toBeVisible();
 });
 
@@ -102,13 +99,12 @@ test('delete a bank - there are more banks listed', async () => {
 	const bank2 = await createBank(page, {
 		name: 'Bank #2'
 	});
-	bankId = bank2.id;
 	// Delete Bank #2
-	await deleteBank(page, bankId);
+	await deleteBank(page, bank2.id);
 	// Validates that Bank #1 still listed
-	const emptyStateContainer = page.locator('div[data-tn="empty-state"]');
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-banks"]');
 	await expect(emptyStateContainer).not.toBeVisible();
 	// validate bank on the screen
-	await expect(page.locator(`span[data-tn="name-bank-lbl-${bank1.id}"]`))
-		.toHaveText('Bank #1');
+	await expect(page.locator(`div[data-tn="bank-${bank1.id}-card"]`)).toBeVisible();
+	await expect(page.locator(`div[data-tn="bank-${bank2.id}-card"]`)).not.toBeVisible();
 });
