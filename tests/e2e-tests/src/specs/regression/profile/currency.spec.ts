@@ -24,6 +24,8 @@ test.beforeAll(async ({ browser }) => {
 	console.log(`Creating account for user with email: "${email}"`);
 	await signUpUser(page, { email, password, name });
 	await signInUser(page, { email, password });
+	// Wait until the save of the profile is completed
+	await page.waitForTimeout(5000);
 	await goToUserProfile(page);
 });
 

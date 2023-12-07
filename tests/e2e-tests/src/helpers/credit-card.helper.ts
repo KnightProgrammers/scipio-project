@@ -1,5 +1,6 @@
 import { expect, Page } from '@playwright/test';
 import { waitForRequest } from './generic.helper';
+import { DateTime } from 'luxon';
 
 export const createCreditCard = async (page: Page, data: {
 	label: string
@@ -156,4 +157,34 @@ export const confirmDeleteCreditCard = async (page: Page, creditCardId: string) 
 	expect(foundNewCreditCard).toBeFalsy();
 
 	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
+};
+
+export const openCreditCardDetailView = async (page: Page, creditCardId: string) => {
+	const waitForCreditCardRequest = waitForRequest(page, 'userCreditCard');
+	await page.locator(`div[data-tn="credit-card-${creditCardId}"] div.card-body`).click();
+	const creditCardRequest = await waitForCreditCardRequest;
+	// Wait for the drawer animation
+	await page.waitForTimeout(2000);
+	const requestData: any = await creditCardRequest.postDataJSON();
+	expect(requestData.variables.id).toBe(creditCardId);
+	const response = await creditCardRequest.response();
+	const { data: { me: { creditCard } } } = await response.json();
+	expect(creditCard.id).toBe(creditCardId);
+};
+
+export const createMonthlyStatement = async (page:Page, closeDate: Date): Promise<string> => {
+	await page.locator('div[data-tn="credit-card-detail-drawer"] button[data-tn="new-statement-button"]').click();
+	await page.locator('div[data-tn="credit-card-detail-drawer"] input[data-tn="close-date-input"]').fill(DateTime.fromJSDate(closeDate).toFormat('dd/MM/yyyy'));
+	const waitForCreateCreditCardMonthlyStatement = waitForRequest(page, 'createCreditCardMonthlyStatement');
+	const waitForCreditCardRequest = waitForRequest(page, 'userCreditCard');
+	await page.locator('div[data-tn="credit-card-detail-drawer"] button[data-tn="save-btn"]').click();
+	const newStatementRequest = await waitForCreateCreditCardMonthlyStatement;
+	await waitForCreditCardRequest;
+	const newStatementResponse = await newStatementRequest.response();
+	const {
+		data: {
+			createCreditCardMonthlyStatement: { id },
+		},
+	} = await newStatementResponse.json();
+	return id;
 };

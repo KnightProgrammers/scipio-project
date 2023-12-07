@@ -1,16 +1,16 @@
 import { expect, Page, test } from '@playwright/test';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
-import { DEFAULT_USER_CURRENCIES, signInUser, signUpUser } from '../../../helpers/auth.helper';
-import firebaseService from '../../../services/firebase.service';
-import { waitForRequest } from '../../../helpers/generic.helper';
-import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
+import { DEFAULT_USER_CURRENCIES, signInUser, signUpUser } from '../../../../helpers/auth.helper';
+import firebaseService from '../../../../services/firebase.service';
+import { waitForRequest } from '../../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 import {
 	createCreditCard,
 	deleteCreditCard,
 	editCreditCard,
 	openEditCreditCardForm
-} from '../../../helpers/credit-card.helper';
+} from '../../../../helpers/credit-card.helper';
 
 let email: string;
 let password: string;
@@ -46,17 +46,6 @@ test.afterAll(async () => {
 	}
 });
 
-test('Empty state', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	const creditCardsRequest = await waitForCreditCards;
-	const creditCardsResponse = await creditCardsRequest.response();
-	const {data} = await creditCardsResponse.json();
-	expect(data.me.creditCards).toEqual([]);
-
-	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
-	await expect(emptyStateContainer).toBeVisible();
-});
 test('Add a credit card', async () => {
 	const creditCard = await createCreditCard(page, {
 		label: 'Visa Black',
@@ -72,6 +61,17 @@ test('Add a credit card', async () => {
 	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
 	await expect(emptyStateContainer).not.toBeVisible();
 	await expect(page.locator(`div[data-tn="credit-card-${creditCardId}"]`)).toBeVisible();
+});
+test('Empty state', async () => {
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	const creditCardsRequest = await waitForCreditCards;
+	const creditCardsResponse = await creditCardsRequest.response();
+	const {data} = await creditCardsResponse.json();
+	expect(data.me.creditCards).toEqual([]);
+
+	const emptyStateContainer = page.locator('div[data-tn="empty-state-no-credit-cards"]');
+	await expect(emptyStateContainer).toBeVisible();
 });
 test('Edit a credit card', async () => {
 	await openEditCreditCardForm(page, creditCardId);
