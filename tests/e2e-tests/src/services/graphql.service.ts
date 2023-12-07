@@ -333,6 +333,22 @@ class GraphqlService {
 		}));
 		return data.createCreditCard;
 	}
+
+	async deleteCreditCard(id: string) {
+		return graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation deleteCreditCard(
+                    $id: String!
+                ) {
+                  deleteCreditCard(id: $id)
+                }
+            `,
+			variables: {
+				id
+			},
+		});
+	}
 }
 
 export default GraphqlService;
