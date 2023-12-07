@@ -66,7 +66,5 @@ test('delete bank account', async () => {
 	await deleteBankAccount(page, bankId, bankAccount.id);
 });
 test('delete bank', async () => {
-	await goToUserProfile(page);
-	await goToProfileTab(page, 'banks');
 	await deleteBank(page, bankId);
 });
