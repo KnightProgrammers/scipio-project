@@ -39,6 +39,8 @@ test.beforeAll(async ({ browser }) => {
 	await signUpUser(page, { email, password, name });
 	const { authToken } = await signInUser(page, { email, password });
 
+	// Wait until the save of the profile is completed
+	await page.waitForTimeout(5000);
 	graphqlService = new GraphqlService(authToken);
 	const userCurrencies = await graphqlService.getUserCurrencies();
 	const data1 = await graphqlService.createCategories({
