@@ -187,7 +187,7 @@ const BankAccounts = () => {
                         accountBalance: data.accountBalance,
                         accountBankId: selectedBank.id,
                         accountCurrencyId:
-                        selectedBankAccount.accountCurrency.id,
+                            selectedBankAccount.accountCurrency.id,
                     })
                 }
             }
@@ -369,9 +369,14 @@ const BankAccounts = () => {
                                             <Dropdown.Item
                                                 eventKey="delete"
                                                 data-tn="delete-bank-btn"
-                                                disabled={bank.bankAccounts.length}
+                                                disabled={
+                                                    bank.bankAccounts.length
+                                                }
                                                 onClick={() => {
-                                                    if (!bank.bankAccounts.length) {
+                                                    if (
+                                                        !bank.bankAccounts
+                                                            .length
+                                                    ) {
                                                         setSelectedBank(bank)
                                                         setIsDeleteOpen(true)
                                                     }
@@ -415,9 +420,7 @@ const BankAccounts = () => {
                                                             <HiOutlineTrash />
                                                         }
                                                     >
-                                                        {t(
-                                                            'actions.delete',
-                                                        )}
+                                                        {t('actions.delete')}
                                                     </IconText>
                                                 )}
                                             </Dropdown.Item>
@@ -499,7 +502,10 @@ const BankAccounts = () => {
                                                             a.savings.length
                                                         }
                                                         onClick={() => {
-                                                            if (!a.savings.length) {
+                                                            if (
+                                                                !a.savings
+                                                                    .length
+                                                            ) {
                                                                 setSelectedBank(
                                                                     bank,
                                                                 )
