@@ -2,7 +2,6 @@ import { test, Page } from '@playwright/test';
 import { signInUser } from '../../../../helpers/auth.helper';
 import { getDefaultUserData } from '../../../../config';
 import { createBank, deleteBank } from '../../../../helpers/bank.helper';
-import { goToProfileTab, goToUserProfile } from '../../../../helpers/profile.helper';
 import { v4 as uuidv4 } from 'uuid';
 import {
 	createBankAccount,
