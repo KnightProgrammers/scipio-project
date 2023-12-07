@@ -53,7 +53,6 @@ const Banks = () => {
     } = useQuery({
         queryKey: ['user-banks'],
         queryFn: apiGetBankList,
-        suspense: true,
     })
 
     const onMutationSuccess = async (title: string) => {
