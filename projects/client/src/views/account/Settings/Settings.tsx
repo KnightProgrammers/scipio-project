@@ -11,7 +11,6 @@ import { useQuery } from '@tanstack/react-query'
 const Profile = lazy(() => import('./components/Profile'))
 const Password = lazy(() => import('./components/Password'))
 const Currency = lazy(() => import('./components/Currency'))
-const Banks = lazy(() => import('./components/Banks'))
 
 const { TabNav, TabList } = Tabs
 
@@ -25,7 +24,6 @@ const settingsMenu: Record<
     profile: { label: 'pages.settings.tabs.profile', path: 'profile' },
     password: { label: 'pages.settings.tabs.password', path: 'password' },
     currency: { label: 'pages.settings.tabs.currency', path: 'currency' },
-    banks: { label: 'pages.settings.tabs.banks', path: 'banks' },
 }
 
 const Settings = () => {
@@ -50,7 +48,6 @@ const Settings = () => {
     const { data, isFetching: isFetchingProfile } = useQuery({
         queryKey: ['user-profile'],
         queryFn: apiGetUserProfile,
-        suspense: true,
     })
 
     useEffect(() => {
@@ -88,7 +85,6 @@ const Settings = () => {
                             ))}
                         {currentTab === 'password' && <Password />}
                         {currentTab === 'currency' && <Currency />}
-                        {currentTab === 'banks' && <Banks />}
                     </Suspense>
                 </div>
             </AdaptableCard>

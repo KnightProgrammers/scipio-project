@@ -203,8 +203,7 @@
             "tabs": {
                 "profile": "Profile",
                 "password": "Password",
-                "currency": "Currencies",
-                "banks": "Banks"
+                "currency": "Currencies"
             },
             "sections": {
                 "general": {
@@ -222,30 +221,6 @@
                 "currency": {
                     "title": "Favorite Currencies",
                     "desc": "Filter all the available currency for the one that you will use"
-                },
-                "banks": {
-                    "title": "Banks",
-                    "desc": "Manage the banks that you're going to associate with accounts and credit cards",
-                    "newBankAction": "Add new bank",
-                    "form": {
-                        "newTitle": "New Bank",
-                        "editTitle": "Edit Bank"
-                    },
-                    "emptyState": {
-                        "title": "No banks yet",
-                        "description": "Create a new bank to associate accounts and credit-cards to it"
-                    },
-                    "deleteConfirmation": {
-                        "title": "Delete Bank",
-                        "description": "Are you sure you want to delete the bank \"{{name}}?\""
-                    },
-                    "notifications": {
-                        "confirmDelete": "Bank successfully deleted!"
-                    },
-                    "tooltips": {
-                        "accounts": "Bank accounts",
-                        "warnHasAccounts": "The bank has bank accounts associated, delete them first"
-                    }
                 }
             }
         },

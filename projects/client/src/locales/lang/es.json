@@ -204,7 +204,6 @@
                 "profile": "Perfil",
                 "password": "Contraseña",
                 "currency": "Monedas",
-                "banks": "Bancos"
             },
             "sections": {
                 "general": {
@@ -222,30 +221,6 @@
                 "currency": {
                     "title": "Monedas Favoritas",
                     "desc": "Filtre todas las monedas disponibles por las que realmente usará"
-                },
-                "banks": {
-                    "title": "Bancos",
-                    "desc": "Gestione los bancos a los que asociará cuentas y tarjetas de crédito",
-                    "newBankAction": "Agregar banco",
-                    "form": {
-                        "newTitle": "Nuevo Banco",
-                        "editTitle": "Editar Banco"
-                    },
-                    "emptyState": {
-                        "title": "No hay bancos todavía",
-                        "description": "Create un nuevo banco para asociarle cuentas y tarjetas de crédito"
-                    },
-                    "deleteConfirmation": {
-                        "title": "Eliminar Banco",
-                        "description": "Está seguro que desea eliminar el banco \"{{name}}\"?"
-                    },
-                    "notifications": {
-                        "confirmDelete": "Banco eliminado exitosamente"
-                    },
-                    "tooltips": {
-                        "accounts": "Cuentas de Bancos",
-                        "warnHasAccounts": "El banco tiene cuentas asociadas, eliminelos antes de continuar"
-                    }
                 }
             }
         },
