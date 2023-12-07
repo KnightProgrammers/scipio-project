@@ -369,17 +369,57 @@ const BankAccounts = () => {
                                             <Dropdown.Item
                                                 eventKey="delete"
                                                 data-tn="delete-bank-btn"
+                                                disabled={bank.bankAccounts.length}
                                                 onClick={() => {
-                                                    setSelectedBank(bank)
-                                                    setIsDeleteOpen(true)
+                                                    if (!bank.bankAccounts.length) {
+                                                        setSelectedBank(bank)
+                                                        setIsDeleteOpen(true)
+                                                    }
                                                 }}
                                             >
-                                                <IconText
-                                                    className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                    icon={<HiOutlineTrash />}
-                                                >
-                                                    {t('actions.delete')}
-                                                </IconText>
+                                                {bank.bankAccounts.length ? (
+                                                    <Tooltip
+                                                        title={
+                                                            <IconText
+                                                                className="text-yellow-400"
+                                                                icon={
+                                                                    <PiWarningOctagonBold
+                                                                        size={
+                                                                            64
+                                                                        }
+                                                                    />
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    'pages.banks.tooltips.warnHasAccounts',
+                                                                )}
+                                                            </IconText>
+                                                        }
+                                                        placement="left"
+                                                    >
+                                                        <IconText
+                                                            className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                            icon={
+                                                                <HiOutlineTrash />
+                                                            }
+                                                        >
+                                                            {t(
+                                                                'actions.delete',
+                                                            )}
+                                                        </IconText>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <IconText
+                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                        icon={
+                                                            <HiOutlineTrash />
+                                                        }
+                                                    >
+                                                        {t(
+                                                            'actions.delete',
+                                                        )}
+                                                    </IconText>
+                                                )}
                                             </Dropdown.Item>
                                         </Dropdown>
                                     </div>
@@ -459,15 +499,17 @@ const BankAccounts = () => {
                                                             a.savings.length
                                                         }
                                                         onClick={() => {
-                                                            setSelectedBank(
-                                                                bank,
-                                                            )
-                                                            setSelectedBankAccount(
-                                                                a,
-                                                            )
-                                                            setIsAccountConfirmDeleteOpen(
-                                                                true,
-                                                            )
+                                                            if (!a.savings.length) {
+                                                                setSelectedBank(
+                                                                    bank,
+                                                                )
+                                                                setSelectedBankAccount(
+                                                                    a,
+                                                                )
+                                                                setIsAccountConfirmDeleteOpen(
+                                                                    true,
+                                                                )
+                                                            }
                                                         }}
                                                     >
                                                         {a.savings.length ? (
