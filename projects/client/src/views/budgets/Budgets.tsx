@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
 import { ConfirmDialog, Container, Loading } from '@/components/shared'
 import EmptyState from '@/components/shared/EmptyState'
-import { Alert, Button, Input, Select, Spinner, Table } from '@/components/ui'
+import {
+    Alert,
+    Button,
+    Card,
+    Input,
+    Select,
+    Spinner,
+    Table,
+} from '@/components/ui'
 import { useTranslation } from 'react-i18next'
 import { HiOutlineRocketLaunch } from 'react-icons/hi2'
 import { BiSave, BiTrash } from 'react-icons/bi'
@@ -344,6 +352,7 @@ const BudgetRow = (props: {
                                 variant="plain"
                                 size="sm"
                                 icon={<BiTrash />}
+                                className="hover:text-red-500 hover:dark:text-red-500"
                                 data-tn="delete-budget-item"
                                 onClick={() => {
                                     if (newItem.id) {
@@ -555,128 +564,141 @@ const Budgets = () => {
             <div className="flex flex-col md:flex-row justify-between mb-4 relative">
                 <h2 className="mb-2">{t('pages.budgets.header')}</h2>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="lg:col-span-2"></div>
-                <FormItem layout="horizontal" label={t('fields.currency')}>
-                    <Select
-                        placeholder={t('fields.currency')}
-                        id="currency-select"
-                        defaultValue={selectedCurrencies.map((c: string) => ({
-                            label: c,
-                            value: c,
-                        }))}
-                        isDisabled={false}
-                        isClearable={false}
-                        isLoading={false}
-                        size="sm"
-                        isMulti={true}
-                        defaultInputValue=""
-                        options={
-                            userCurrencies?.map((c: any) => ({
-                                label: c.code,
-                                value: c.code,
-                            })) ?? []
-                        }
-                        onChange={(newValue: MultiValue<any>) => {
-                            handleCurrenciesChange(
-                                (newValue as any[]).map((nv: any) => nv.label),
-                            )
-                        }}
-                    />
-                </FormItem>
-            </div>
-            <Table className="w-full h-full">
-                <THead>
-                    <Tr>
-                        <Th>{t('fields.category')}</Th>
-                        {selectedCurrencies.map((c: string) => (
-                            <Th key={`currency-head-colum-${c.toLowerCase()}`}>
-                                {c}
-                            </Th>
-                        ))}
-                        <Th></Th>
-                    </Tr>
-                </THead>
-                <TBody>
-                    {budget.items.map((item: any) => (
-                        <BudgetRow
-                            key={`budget-row-${item.id}`}
-                            budgetId={budget.id}
-                            budgetItem={item}
-                            categoryList={remainingCategories}
-                            currencies={selectedCurrencies}
-                            onRefetch={handleOnRefetch}
-                        />
-                    ))}
-                    {showNewItemRow && (
-                        <BudgetRow
-                            budgetId={budget.id}
-                            budgetItem={getDefaultBudgetItem(
-                                selectedCurrencies,
+            <Card>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <FormItem layout="horizontal">
+                        <Select
+                            isMulti
+                            placeholder={t('fields.currency')}
+                            id="currency-select"
+                            defaultValue={selectedCurrencies.map(
+                                (c: string) => ({
+                                    label: c,
+                                    value: c,
+                                }),
                             )}
-                            categoryList={remainingCategories}
-                            currencies={selectedCurrencies}
-                            onRefetch={handleOnRefetch}
+                            isDisabled={false}
+                            isClearable={false}
+                            isLoading={false}
+                            size="sm"
+                            classNames={{
+                                multiValue: () =>
+                                    `text-purple-600 dark:text-purple-300`,
+                                multiValueRemove: () =>
+                                    `text-purple-600 dark:text-purple-300`,
+                            }}
+                            defaultInputValue=""
+                            options={
+                                userCurrencies?.map((c: any) => ({
+                                    label: c.code,
+                                    value: c.code,
+                                })) ?? []
+                            }
+                            onChange={(newValue: MultiValue<any>) => {
+                                handleCurrenciesChange(
+                                    (newValue as any[]).map(
+                                        (nv: any) => nv.label,
+                                    ),
+                                )
+                            }}
                         />
-                    )}
-                    {!budget.items.length && !showNewItemRow && (
+                    </FormItem>
+                </div>
+                <Table className="w-full h-full">
+                    <THead>
                         <Tr>
-                            <Td colSpan={selectedCurrencies.length + 2}>
-                                <Alert
-                                    showIcon
-                                    className="justify-center"
-                                    type="info"
-                                    data-tn="budget-without-items"
+                            <Th>{t('fields.category')}</Th>
+                            {selectedCurrencies.map((c: string) => (
+                                <Th
+                                    key={`currency-head-colum-${c.toLowerCase()}`}
                                 >
-                                    {t('pages.budgets.emptyState.noItems')}
-                                </Alert>
-                            </Td>
+                                    {c}
+                                </Th>
+                            ))}
+                            <Th></Th>
                         </Tr>
-                    )}
-                </TBody>
-                <TFoot>
-                    {!!remainingCategories.length && (
-                        <Tr>
-                            <Td colSpan={selectedCurrencies.length + 2}>
-                                <Button
-                                    variant="twoTone"
-                                    className="w-80"
-                                    disabled={!remainingCategories.length}
-                                    icon={<HiPlus />}
-                                    data-tn="add-budget-item-btn"
-                                    onClick={addNewBudgetItem}
-                                >
-                                    {t('pages.budgets.addBudgetItem')}
-                                </Button>
-                            </Td>
-                        </Tr>
-                    )}
-                    <Loading
-                        asElement={'tr'}
-                        type="cover"
-                        loading={isLoadingBudget}
-                        data-tn={`budget-totals-row`}
-                    >
-                        <Td>
-                            <b>{t('placeholders.total')}:</b>
-                        </Td>
-                        {selectedCurrencies.map((c: string) => (
-                            <Td
-                                key={`currency-colum-${c}`}
-                                data-tn={`budget-total-${c.toLowerCase()}`}
-                            >
-                                {currencyFormat(
-                                    totalByCurrency[c] ?? 0,
-                                    c,
-                                    i18n.language,
-                                    userState.country?.code || 'UY',
-                                )}
-                            </Td>
+                    </THead>
+                    <TBody>
+                        {budget.items.map((item: any) => (
+                            <BudgetRow
+                                key={`budget-row-${item.id}`}
+                                budgetId={budget.id}
+                                budgetItem={item}
+                                categoryList={remainingCategories}
+                                currencies={selectedCurrencies}
+                                onRefetch={handleOnRefetch}
+                            />
                         ))}
-                        <Td></Td>
-                    </Loading>
-                </TFoot>
-            </Table>
+                        {showNewItemRow && (
+                            <BudgetRow
+                                budgetId={budget.id}
+                                budgetItem={getDefaultBudgetItem(
+                                    selectedCurrencies,
+                                )}
+                                categoryList={remainingCategories}
+                                currencies={selectedCurrencies}
+                                onRefetch={handleOnRefetch}
+                            />
+                        )}
+                        {!budget.items.length && !showNewItemRow && (
+                            <Tr>
+                                <Td colSpan={selectedCurrencies.length + 2}>
+                                    <Alert
+                                        showIcon
+                                        className="justify-center"
+                                        type="info"
+                                        data-tn="budget-without-items"
+                                    >
+                                        {t('pages.budgets.emptyState.noItems')}
+                                    </Alert>
+                                </Td>
+                            </Tr>
+                        )}
+                    </TBody>
+                    <TFoot>
+                        {!!remainingCategories.length && (
+                            <Tr>
+                                <Td colSpan={selectedCurrencies.length + 2}>
+                                    <Button
+                                        variant="twoTone"
+                                        className="w-80"
+                                        disabled={!remainingCategories.length}
+                                        icon={<HiPlus />}
+                                        data-tn="add-budget-item-btn"
+                                        onClick={addNewBudgetItem}
+                                    >
+                                        {t('pages.budgets.addBudgetItem')}
+                                    </Button>
+                                </Td>
+                            </Tr>
+                        )}
+                        <Loading
+                            asElement={'tr'}
+                            type="cover"
+                            loading={isLoadingBudget}
+                            data-tn={`budget-totals-row`}
+                        >
+                            <Td>
+                                <b>{t('placeholders.total')}:</b>
+                            </Td>
+                            {selectedCurrencies.map((c: string) => (
+                                <Td
+                                    key={`currency-colum-${c}`}
+                                    data-tn={`budget-total-${c.toLowerCase()}`}
+                                >
+                                    {currencyFormat(
+                                        totalByCurrency[c] ?? 0,
+                                        c,
+                                        i18n.language,
+                                        userState.country?.code || 'UY',
+                                    )}
+                                </Td>
+                            ))}
+                            <Td></Td>
+                        </Loading>
+                    </TFoot>
+                </Table>
+            </Card>
         </Container>
     )
 }
