@@ -1,15 +1,15 @@
 import { test, Page, expect } from '@playwright/test';
 import { DateTime } from 'luxon';
-import { DEFAULT_USER_CURRENCIES, signInUser } from '../../../helpers/auth.helper';
-import { getDefaultUserData } from '../../../config';
+import { DEFAULT_USER_CURRENCIES, signInUser } from '../../../../helpers/auth.helper';
+import { getDefaultUserData } from '../../../../config';
 import {
 	createCreditCard,
 	deleteCreditCard,
 	editCreditCard,
 	openEditCreditCardForm
-} from '../../../helpers/credit-card.helper';
-import { waitForRequest } from '../../../helpers/generic.helper';
-import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
+} from '../../../../helpers/credit-card.helper';
+import { waitForRequest } from '../../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 
 
 let email: string;
