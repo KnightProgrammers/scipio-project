@@ -40,6 +40,19 @@ class CreditCardMonthlyStatementService {
 		if (!id || !userId) return null;
 		return CreditCardMonthlyStatementSchema.findOne({ _id: id, userId });
 	}
+
+	static async findOldestStatement(creditCardId: string, userId: string, queryDate: Date) {
+		return CreditCardMonthlyStatementSchema
+			.find({ 
+				creditCardId, 
+				userId,
+				closeDate: {
+					$gte: queryDate
+				}
+			})
+			.sort({closeDate: 1})
+			.limit(1);
+	}
 }
 
 export default CreditCardMonthlyStatementService;

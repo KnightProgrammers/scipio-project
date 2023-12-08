@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import ExpenseModel from '@/models/expense.model';
+import CreditCardMonthlyStatementService from '@/services/credit-card-monthly-statement.service';
 
 interface ExpenseInput {
 	amount: number,
@@ -121,8 +122,15 @@ class ExpenseService {
 
 		let type: string = 'CASH';
 
+		let creditCardMonthlyStatementId = undefined;
+
 		if (creditCardId) {
 			type = 'CREDIT_CARD';
+
+			const credtiCardStatements: any[] = await CreditCardMonthlyStatementService.findOldestStatement(creditCardId, userId, billableDate);
+			if (credtiCardStatements.length) {
+				creditCardMonthlyStatementId = credtiCardStatements[0]._id;
+			}
 		}
 
 		return ExpenseModel.create({
@@ -133,6 +141,7 @@ class ExpenseService {
 			currencyId,
 			categoryId,
 			creditCardId,
+			creditCardMonthlyStatementId,
 			userId,
 			isDeleted: false
 		});
