@@ -81,6 +81,11 @@ services:
     depends_on:
       scipio-db:
         condition: service_healthy
+  scipio-mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - '8025:8025'
+      - '1025:1025'
 volumes:
   dbdata:
 networks:
