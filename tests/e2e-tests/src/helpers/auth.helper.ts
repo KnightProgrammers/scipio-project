@@ -6,7 +6,6 @@ import { expect, Page } from '@playwright/test';
 import { API_BASE_URL } from '../config';
 import { waitForRequest } from './generic.helper';
 import { DEFAULT_CURRENCIES } from './profile.helper';
-import exp = require('node:constants');
 
 dotenv.config();
 

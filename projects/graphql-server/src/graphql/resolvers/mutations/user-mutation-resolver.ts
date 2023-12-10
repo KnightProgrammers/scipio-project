@@ -3,9 +3,9 @@ import UserService from '@/services/user.service';
 import { errorCodes } from 'fastify';
 import CountryModel from '@/models/country.model';
 import firebaseService from '@/services/firebase.service';
-import i18n from "@/locales";
-import { EmailQueue } from "@/queues/email.queue";
-import { config } from "@/config";
+import i18n from '@/locales';
+import { EmailQueue } from '@/queues/email.queue';
+import { config } from '@/config';
 
 export const UserMutationResolver = {
 	setUserCurrencies: async (root: any, params: { currencyIds: string[] }, context: any) => {

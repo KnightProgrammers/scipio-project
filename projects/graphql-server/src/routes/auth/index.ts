@@ -2,8 +2,8 @@ import { Type } from '@sinclair/typebox';
 import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
 import { EmailQueue } from '@/queues/email.queue';
-import i18n from "@/locales";
-import UserService from "@/services/user.service";
+import i18n from '@/locales';
+import UserService from '@/services/user.service';
 
 export const ForgotPasswordBody = Type.Object({
 	email: Type.Required(Type.String({ format: 'email' })),
