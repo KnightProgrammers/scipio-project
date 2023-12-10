@@ -27,5 +27,6 @@ RUN npm install -g npm
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY package.json ./
+COPY ./fixtures ./fixtures
 USER node
 CMD ["npm", "start"]

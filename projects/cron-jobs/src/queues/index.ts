@@ -1,9 +1,12 @@
 import Redis from 'ioredis';
 import { emailWorker } from './workers/email.worker';
 
-const connection = new Redis('redis://default:password@localhost:6379', {
-	maxRetriesPerRequest: null
-});
+const connection = new Redis(
+	process.env.REDIS_URI || 'redis://default:password@localhost:6379',
+	{
+		maxRetriesPerRequest: null
+	}
+);
 
 export class Queues {
 	static async init() {
