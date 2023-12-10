@@ -7,4 +7,7 @@ export const config = {
 	db: {
 		uri: process.env.MONGO_DB_URI || ''
 	},
+	redis: {
+		uri: process.env.REDIS_URI || ''
+	}
 };
