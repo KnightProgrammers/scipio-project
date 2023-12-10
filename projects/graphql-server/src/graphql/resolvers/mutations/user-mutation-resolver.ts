@@ -38,7 +38,7 @@ export const UserMutationResolver = {
 		const user = await UserService.findById(context.auth._id);
 		user.name = name;
 		if (!user.lang) {
-			await i18n.changeLanguage(lang || 'en');
+			await i18n.changeLanguage(lang.toLowerCase() || 'en');
 			await EmailQueue.sendEmail({
 				type: 'welcome-email',
 				recipients: user.email,
@@ -55,10 +55,10 @@ export const UserMutationResolver = {
 		if (!user.country) {
 			user.country = country;
 		}
-		await firebaseService.auth().updateUser(user.firebaseId, {
+		firebaseService.auth().updateUser(user.firebaseId, {
 			displayName: name
 		});
-		await user.save();
+		user.save();
 		return user;
 	}
 };
