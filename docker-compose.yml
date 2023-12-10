@@ -39,6 +39,7 @@ services:
       REDIS_URI: 'redis://default:password@scipio-redis:6379'
       PORT: '8080'
       NODE_ENV: 'test'
+      WEB_URL: 'http://localhost:3000'
     ports:
       - '8080:8080'
     depends_on:
@@ -90,12 +91,18 @@ services:
     environment:
       MONGO_DB_URI: 'mongodb://root:password@scipio-db:27017/scipio-test?authSource=admin'
       REDIS_URI: 'redis://default:password@scipio-redis:6379'
+      EMAIL_SENDER: 'no-reply@scipiofinances.com'
+      EMAIL_AUTH_DOMAIN: 'scipio-mailhog'
+      EMAIL_AUTH_PORT: '1025'
+      EMAIL_AUTH_USER: 'user'
+      EMAIL_AUTH_PASS: 'password'
     depends_on:
       scipio-db:
         condition: service_healthy
       scipio-redis:
         condition: service_healthy
   scipio-mailhog:
+    container_name: scipio-mailhog
     image: mailhog/mailhog:latest
     ports:
       - '8025:8025'

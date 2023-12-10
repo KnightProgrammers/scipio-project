@@ -102,6 +102,7 @@ npm run dev
 | `MONGO_DB_URI`          | String  | `true`   |               | Database connection string                            |
 | `REDIS_URI`             | String  | `true`   |               | Redis connection string                               |
 | `NODE_ENV`              | String  | `false`  |               | Indicates the environment where the server is running | 
+| `WEB_URL`               | String  | `true`   |               | Url to the client's public url                        | 
 
 ------
 
@@ -147,6 +148,7 @@ npm run start
 |---------------------|--------|----------|---------------|----------------------------------------------------|
 | `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
 | `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` | 
+| `USER_FIREBASE_ID`  | String | `true`   |  `""`         | Firebase ID of the demo user                       |
 
 ------
 
@@ -188,12 +190,16 @@ npm run test
 
 **Environment Vars**
 
-| Var                | Type   | Required | Default Value | Description                                        |
-|--------------------|--------|----------|---------------|----------------------------------------------------|
-| `MONGO_DB_URI`     | String | `true`   |               | Database connection string                         |
-| `REDIS_URI`        | String | `true`   |               | Redis connection string                            |
-| `LOG_LEVEL`        | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` |
-| `USER_FIREBASE_ID` | String | `true`   |  `""`         | Firebase ID of the demo user                       |
+| Var                 | Type   | Required | Default Value | Description                                        |
+|---------------------|--------|----------|---------------|----------------------------------------------------|
+| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
+| `REDIS_URI`         | String | `true`   |               | Redis connection string                            |
+| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` |
+| `EMAIL_SENDER`      | String | `true`   |               | Email address that send the emails                 |
+| `EMAIL_AUTH_DOMAIN` | String | `true`   |               | Domain of the smtp server                          |
+| `EMAIL_AUTH_PORT`   | String | `true`   |               | Port of the smtp server                            |
+| `EMAIL_AUTH_USER`   | String | `true`   |               | User credentials                                   |
+| `EMAIL_AUTH_PASS`   | String | `true`   |               | User credentials                                   |
 
 ------
 
