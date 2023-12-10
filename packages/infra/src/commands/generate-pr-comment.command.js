@@ -32,7 +32,7 @@ const generatePrCommentCommand = async (options) => {
 
 	let hadJobFailed = false;
 
-	const SERVICES_FOR_STATUS = ['scipio-client', 'scipio-server'];
+	const SERVICES_FOR_STATUS = ['scipio-client', 'scipio-server', 'scipio-cron-jobs'];
 
 	const filteredServices = services.filter((s) => SERVICES_FOR_STATUS.includes(s.name));
 
@@ -51,7 +51,7 @@ const generatePrCommentCommand = async (options) => {
 			CRASHED: 'Crashed ❌',
 			FAILED: 'Failed ❌',
 			REMOVED: 'Removed 🗑️',
-			SKIPPED: 'Skipped 🧸',
+			SKIPPED: 'Success ✅',
 			SUCCESS: 'Success ✅',
 		};
 
