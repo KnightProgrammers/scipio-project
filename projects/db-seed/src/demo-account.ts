@@ -59,8 +59,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 	const userExist = await UserModel.findOne({email: 'demo@scipiofinances.com'});
 
 	if (userExist) {
-		// throw new Error('Demo account already created!');
-		await userExist.deleteOne(); // TODO: Temporal remove before deploying it
+		throw new Error('Demo account already created!');
 	}
 
 	const { _id: userId } = await UserModel.create({
