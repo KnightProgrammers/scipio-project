@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "lib": [ "es2015" ],
+    "target": "es2016",
+    "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": false,
-    "rootDir": "./src",
+    "skipLibCheck": true,
     "outDir": "./dist",
-    "sourceMap": true
-  }
+    "rootDir": "./src",
+    "resolveJsonModule": true,
+    "allowArbitraryExtensions": false,
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
