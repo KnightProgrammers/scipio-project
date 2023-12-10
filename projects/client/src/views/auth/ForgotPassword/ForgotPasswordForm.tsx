@@ -9,8 +9,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
 import { useTranslation } from 'react-i18next'
-import { auth } from '@/services/FirebaseService'
-import { sendPasswordResetEmail } from 'firebase/auth'
+import { apiForgotPassword } from '@/services/AuthService'
 
 interface ForgotPasswordFormProps extends CommonProps {
     signInUrl?: string
@@ -39,8 +38,9 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
     ) => {
         setSubmitting(true)
         try {
-            await sendPasswordResetEmail(auth, values.email, {
-                url: window.location.origin,
+            await apiForgotPassword({
+                email: values.email,
+                baseUrl: window.location.origin,
             })
             setSubmitting(false)
             setEmailSent(true)
@@ -107,6 +107,7 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                                 loading={isSubmitting}
                                 variant="solid"
                                 type="submit"
+                                data-tn="send-email-btn"
                             >
                                 {emailSent
                                     ? t('actions.reSendEmail')

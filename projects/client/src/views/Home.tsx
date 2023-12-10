@@ -2,7 +2,10 @@ import { Container } from '@/components/shared'
 
 const Home = () => {
     return (
-        <Container className="flex h-full items-center justify-center">
+        <Container
+            className="flex h-full items-center justify-center"
+            data-tn="home-page"
+        >
             <img
                 src="/img/others/home.svg"
                 alt="welcome"

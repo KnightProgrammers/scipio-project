@@ -1,0 +1,16 @@
+{
+    "emails": {
+        "welcome": {
+            "subject": "Bienvenido/a a Scipio",
+            "userHi": "Hola, {{name}}",
+            "welcomeHeader": "Bienvenido/a a Scipio",
+            "labelCta": "Configurar tu account"
+        },
+        "forgotPassword": {
+            "subject": "Restablecer Contraseña",
+            "title": "Restablecer Contraseña",
+            "description": "Siga este enlace para restablecer su contraseña. Si no solicitó restablecer su contraseña, puede ignorar este correo electrónico.",
+            "labelCta": "Restablecer Contraseña"
+        }
+    }
+}

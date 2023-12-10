@@ -105,3 +105,8 @@ export const welcomeUser = async (page: Page, data: { lang: string, country: str
 	await nextBtn.click();
 	await waitForSetUserCurrenciesRequest;
 };
+
+export const logoutUser = async (page: Page) => {
+	await page.locator('div[data-tn="user-profile"]').click();
+	await page.locator('li[data-tn="sign-out"]').click();
+};

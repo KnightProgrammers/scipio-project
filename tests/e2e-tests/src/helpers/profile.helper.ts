@@ -8,7 +8,7 @@ export const goToUserProfile = async (page: Page) => {
 	await page.locator('li.menu-item[data-tn="profile-settings"]').click();
 };
 
-export type ProfileTab = 'profile' | 'password' | 'currency' | 'banks'
+export type ProfileTab = 'profile' | 'password' | 'currency'
 
 export const goToProfileTab = async (page: Page, tabName: ProfileTab) => {
 	await page.locator(`div[data-tn="account-settings-page"] div.tab-nav[data-tn="profile-tab-${tabName}"]`).click();

@@ -8,3 +8,14 @@ export async function apiSignUp(data: SignUpCredential) {
         data,
     })
 }
+
+export async function apiForgotPassword(data: {
+    email: string
+    baseUrl: string
+}) {
+    return ApiService.fetchData<any>({
+        url: '/auth/forgot-password',
+        method: 'post',
+        data,
+    })
+}

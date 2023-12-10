@@ -1,0 +1,16 @@
+{
+    "emails": {
+        "welcome": {
+            "subject": "Welcome to Scipio",
+            "userHi": "Hi, {{name}}",
+            "welcomeHeader": "Welcome to Scipio",
+            "labelCta": "Setup your account"
+        },
+        "forgotPassword": {
+            "subject": "Reset Password",
+            "title": "Reset Password",
+            "description": "Follow this link to reset your password. If you didn't ask to reset your password, you can ignore this email.",
+            "labelCta": "Reset Password"
+        }
+    }
+}
