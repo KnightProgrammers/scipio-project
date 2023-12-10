@@ -6,6 +6,7 @@ import { expect, Page } from '@playwright/test';
 import { API_BASE_URL } from '../config';
 import { waitForRequest } from './generic.helper';
 import { DEFAULT_CURRENCIES } from './profile.helper';
+import exp = require("node:constants");
 
 dotenv.config();
 
@@ -105,3 +106,8 @@ export const welcomeUser = async (page: Page, data: { lang: string, country: str
 	await nextBtn.click();
 	await waitForSetUserCurrenciesRequest;
 };
+
+export const logoutUser = async (page: Page) => {
+	await page.locator('div[data-tn="user-profile"]').click();
+	await page.locator('li[data-tn="sign-out"]').click();
+}
