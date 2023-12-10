@@ -29,8 +29,8 @@ const LANG_CONFIG: any[] = [
 			}
 		}
 	},
-
-	{
+	// Disabled because: https://github.com/mailhog/MailHog/issues/107
+	/*{
 		name: 'ES',
 		expects: {
 			welcomeEmail: {
@@ -40,7 +40,7 @@ const LANG_CONFIG: any[] = [
 				subject: 'Restablecer Contraseña',
 			}
 		}
-	}
+	}*/
 ];
 
 for (const lang of LANG_CONFIG) {
