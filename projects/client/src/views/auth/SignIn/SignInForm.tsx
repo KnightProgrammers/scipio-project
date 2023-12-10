@@ -162,7 +162,10 @@ const SignInForm = (props: SignInFormProps) => {
                                         >
                                             {t('fields.rememberMe')}
                                         </Field>
-                                        <ActionLink to={forgotPasswordUrl}>
+                                        <ActionLink
+                                            to={forgotPasswordUrl}
+                                            data-tn="forgot-password-link"
+                                        >
                                             {t(
                                                 'pages.auth.signIn.forgotPassword',
                                             )}

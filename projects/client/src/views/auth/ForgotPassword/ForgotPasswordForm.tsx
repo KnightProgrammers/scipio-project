@@ -107,6 +107,7 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                                 loading={isSubmitting}
                                 variant="solid"
                                 type="submit"
+                                data-tn="send-email-btn"
                             >
                                 {emailSent
                                     ? t('actions.reSendEmail')
