@@ -3,6 +3,9 @@ import UserService from '@/services/user.service';
 import { errorCodes } from 'fastify';
 import CountryModel from '@/models/country.model';
 import firebaseService from '@/services/firebase.service';
+import i18n from "@/locales";
+import { EmailQueue } from "@/queues/email.queue";
+import { config } from "@/config";
 
 export const UserMutationResolver = {
 	setUserCurrencies: async (root: any, params: { currencyIds: string[] }, context: any) => {
@@ -34,14 +37,28 @@ export const UserMutationResolver = {
 		}
 		const user = await UserService.findById(context.auth._id);
 		user.name = name;
+		if (!user.lang) {
+			await i18n.changeLanguage(lang || 'en');
+			await EmailQueue.sendEmail({
+				type: 'welcome-email',
+				recipients: user.email,
+				subject: i18n.t('emails.welcome.subject'),
+				fields: {
+					user_hi: i18n.t('emails.welcome.userHi', { name }),
+					welcome_header: i18n.t('emails.welcome.welcomeHeader'),
+					label_cta: i18n.t('emails.welcome.labelCta'),
+					link_cta: config.app.webUrl
+				}
+			});
+		}
 		user.lang = lang;
 		if (!user.country) {
 			user.country = country;
 		}
-		firebaseService.auth().updateUser(user.firebaseId, {
+		await firebaseService.auth().updateUser(user.firebaseId, {
 			displayName: name
 		});
-		user.save();
+		await user.save();
 		return user;
 	}
 };

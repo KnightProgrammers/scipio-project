@@ -1,6 +1,14 @@
 import { Type } from '@sinclair/typebox';
 import firebaseApp from '@/services/firebase.service';
 import UserSchema from '@/models/user.model';
+import { EmailQueue } from '@/queues/email.queue';
+import i18n from "@/locales";
+import UserService from "@/services/user.service";
+
+export const ForgotPasswordBody = Type.Object({
+	email: Type.Required(Type.String({ format: 'email' })),
+	baseUrl: Type.Required(Type.String()),
+});
 
 export const UserRegistration = Type.Object({
 	name: Type.Required(Type.String()),
@@ -53,6 +61,48 @@ const auth: any = async (fastify: any): Promise<void> => {
 				country: null,
 			});
 		},
+	);
+	fastify.post(
+		'/forgot-password',
+		{
+			schema: {
+				body: ForgotPasswordBody,
+				response: {
+					204: {},
+				},
+			},
+		},
+		async function (request: any, reply: any){
+			const {
+				email,
+				baseUrl
+			} = request.body;
+			const user = await UserService.findByEmail(email);
+			if (!user) {
+				reply.status(204).send();
+			}
+			try {
+				const passwordResetLink = await firebaseApp.auth().generatePasswordResetLink(email);
+				const passwordResetUrl = new URL(passwordResetLink);
+				const redirectionUrl = new URL(baseUrl);
+				redirectionUrl.pathname = '/reset-password';
+				redirectionUrl.search = passwordResetUrl.search;
+				await i18n.changeLanguage(user.lang || 'en');
+				await EmailQueue.sendEmail({
+					type: 'reset-password-email',
+					recipients: email,
+					subject: i18n.t('emails.forgotPassword.subject'),
+					fields: {
+						title: i18n.t('emails.forgotPassword.title'),
+						description: i18n.t('emails.forgotPassword.description'),
+						label_cta: i18n.t('emails.forgotPassword.labelCta'),
+						link_cta: redirectionUrl.toString()
+					}
+				});
+			} finally {
+				reply.status(204).send();
+			}
+		}
 	);
 };
 
