@@ -100,6 +100,7 @@ npm run dev
 | `FIREBASE_PRIVATE_KEY`  | String  | `true`   |               | Firebase Credential                                   |
 | `FIREBASE_PROJECT_ID`   | String  | `true`   |               | Firebase Credential                                   |
 | `MONGO_DB_URI`          | String  | `true`   |               | Database connection string                            |
+| `REDIS_URI`             | String  | `true`   |               | Redis connection string                               |
 | `NODE_ENV`              | String  | `false`  |               | Indicates the environment where the server is running | 
 
 ------
@@ -187,11 +188,12 @@ npm run test
 
 **Environment Vars**
 
-| Var                 | Type   | Required | Default Value | Description                                        |
-|---------------------|--------|----------|---------------|----------------------------------------------------|
-| `MONGO_DB_URI`      | String | `true`   |               | Database connection string                         |
-| `LOG_LEVEL`         | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` |
-| `USER_FIREBASE_ID`  | String | `true`   |  `""`         | Firebase ID of the demo user                       |
+| Var                | Type   | Required | Default Value | Description                                        |
+|--------------------|--------|----------|---------------|----------------------------------------------------|
+| `MONGO_DB_URI`     | String | `true`   |               | Database connection string                         |
+| `REDIS_URI`        | String | `true`   |               | Redis connection string                            |
+| `LOG_LEVEL`        | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error` |
+| `USER_FIREBASE_ID` | String | `true`   |  `""`         | Firebase ID of the demo user                       |
 
 ------
 
