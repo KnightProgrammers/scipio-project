@@ -9,8 +9,6 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
 import { useTranslation } from 'react-i18next'
-import { auth } from '@/services/FirebaseService'
-import { sendPasswordResetEmail } from 'firebase/auth'
 import { apiForgotPassword } from '@/services/AuthService'
 
 interface ForgotPasswordFormProps extends CommonProps {
