@@ -282,6 +282,9 @@ jobs:
           - key: "client"
             label: "Client"
             path: "projects/client"
+          - key: "cron-jobs"
+            label: "Cron Jobs"
+            path: "projects/cron-jobs"
       fail-fast: false
     steps:
       - name: Check out repository code
@@ -304,16 +307,6 @@ jobs:
         env:
           RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-      - name: Create Sentry release for ${{ matrix.key }}
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: "scipio-${{ matrix.key }}"
-          SENTRY_URL: https://sentry.io/
-        with:
-          environment: "test-${{ github.event.number }}"
-          working_directory: "./${{ matrix.path }}/"
   notify-deployment:
     name: "Notify Deployment"
     runs-on: ubuntu-latest
