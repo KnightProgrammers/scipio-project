@@ -1,5 +1,4 @@
 import {
-    Badge,
     Button,
     Card,
     Checkbox,
@@ -25,7 +24,6 @@ import {
     SegmentItemOption,
 } from '@/components/shared'
 import { DateTime } from 'luxon'
-import Collapsible from '@/components/shared/Collapsible'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
     apiCreateExpense,
@@ -39,8 +37,8 @@ import {
     HiOutlineTrash,
     HiOutlineTrendingDown,
     HiOutlineTrendingUp,
-    HiPlus
-} from "react-icons/hi";
+    HiPlus,
+} from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
 import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
@@ -66,13 +64,14 @@ import {
     flexRender,
     getCoreRowModel,
     getExpandedRowModel,
+    getFilteredRowModel,
     Row,
     useReactTable,
 } from '@tanstack/react-table'
 import Tr from '@/components/ui/Table/Tr'
 import TBody from '@/components/ui/Table/TBody'
 import Td from '@/components/ui/Table/Td'
-import classNames from "classnames";
+import classNames from 'classnames'
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -93,18 +92,16 @@ type ExpenseFilter = {
     currencies: string[]
 }
 
-const GrowShrink = ({ value }: {
-    value: number
-}) => {
+const GrowShrink = ({ value }: { value: number }) => {
     return (
         <span className="flex items-center rounded-full gap-1">
             <span
                 className={classNames(
                     'rounded-full p-1',
                     value > 0 &&
-                    'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100',
+                        'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100',
                     value < 0 &&
-                    'text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20'
+                        'text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20',
                 )}
             >
                 {value > 0 && <HiOutlineTrendingUp />}
@@ -115,10 +112,10 @@ const GrowShrink = ({ value }: {
                 className={classNames(
                     'font-semibold',
                     value > 0 && 'text-emerald-600',
-                    value < 0 && 'text-red-600'
+                    value < 0 && 'text-red-600',
                 )}
             >
-                {value !== 0 ?Math.abs(value).toFixed(2) : '- - -'}
+                {value !== 0 ? Math.abs(value).toFixed(2) : '- - -'}
             </span>
         </span>
     )
@@ -211,14 +208,12 @@ const ExpenseTag = (props: {
     lang: string
     country: string
 }) => {
-    const { value = 0, budget, currencyCode, lang, country } = props
+    const { value = 0, budget, currencyCode } = props
 
     return (
         <Card bordered bodyClass="py-2 w-52 flex">
             <p className="px-1">{currencyCode}</p>
-            <GrowShrink
-                value={budget - value}
-            />
+            <GrowShrink value={budget - value} />
         </Card>
     )
 }
@@ -1016,10 +1011,14 @@ const Expenses = () => {
             {
                 id: 'expander',
                 header: () => null,
+                enableGlobalFilter: true,
+                enableColumnFilter: true,
+                filterFn: 'hasExpenses',
                 cell: ({ row }) => (
                     <>
                         {row.getCanExpand() ? (
                             <button
+                                data-tn="collapsible-toggle-btn"
                                 className="text-lg"
                                 {...{ onClick: row.getToggleExpandedHandler() }}
                             >
@@ -1042,8 +1041,8 @@ const Expenses = () => {
                 id: 'metrics',
                 header: () => null,
                 cell: ({ row }) => {
-                    const category = row.original;
-                    if (!userCurrencies) return ;
+                    const category = row.original
+                    if (!userCurrencies) return
                     return (
                         <div className="w-full gap-4 hidden sm:max-lg:flex-col sm:flex">
                             {userCurrencies.map(
@@ -1097,7 +1096,7 @@ const Expenses = () => {
                 ),
             },
         ],
-        [userCurrencies],
+        [userCurrencies, i18n.language, userState.country?.code],
     )
 
     const renderSubComponent = ({ row }: { row: Row<any> }) => {
@@ -1169,55 +1168,58 @@ const Expenses = () => {
         )
     }
 
-    // TODO: Implement filtering
-    /*const newCategories = categories ? categories
-        .filter((c: any) => {
-            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
-                if (c.isFixedPayment) {
-                    return expenseFilter.expenseType === 'FIXED_EXPENSE'
-                } else {
-                    return expenseFilter.expenseType === 'VARIABLE_EXPENSE'
+    const expensesFilter = (expenses: any[]) => {
+        return expenses
+            .filter((e: any) => {
+                if (expenseFilter && expenseFilter.paymentMethod !== 'ALL') {
+                    return expenseFilter.paymentMethod === e.type
                 }
-            }
-            return true
-        })
-        .map((c: any) => {
-            if (
-                expenseFilter &&
-                (expenseFilter.currencies || expenseFilter.paymentMethod)
-            ) {
-                return {
-                    ...c,
-                    expenses: c.expenses
-                        .filter((e: any) => {
-                            if (
-                                expenseFilter &&
-                                expenseFilter.paymentMethod !== 'ALL'
-                            ) {
-                                return expenseFilter.paymentMethod === e.type
-                            }
-                            return true
-                        })
-                        .filter((e: any) =>
-                            expenseFilter.currencies.includes(e.currency.id),
-                        ),
-                }
-            }
-            return c
-        }) : [];
-
-    const filteredCategories = newCategories.filter((c: any) => c.expenses.length)*/
-
+                return true
+            })
+            .filter((e: any) =>
+                expenseFilter.currencies.includes(e.currency.id),
+            )
+    }
     const table = useReactTable({
         defaultColumn: {
             size: 100,
         },
         data: categories && userCurrencies ? categories : [],
         columns,
-        getRowCanExpand: () => true,
+        state: {
+            columnFilters: [
+                {
+                    id: 'expander',
+                    value: expenseFilter,
+                },
+            ],
+            globalFilter: expenseFilter,
+        },
         getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        filterFns: {
+            hasExpenses: (row: Row<any>) =>
+                expensesFilter(row.original.expenses).length > 0,
+        },
+        getRowCanExpand: () => true,
+        globalFilterFn: (row) => {
+            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
+                if (row.original.isFixedPayment) {
+                    return expenseFilter.expenseType === 'FIXED_EXPENSE'
+                } else {
+                    return expenseFilter.expenseType === 'VARIABLE_EXPENSE'
+                }
+            }
+            return true
+        },
+        getColumnCanGlobalFilter: () => true,
+        enableGlobalFilter: true,
+        enableFilters: true,
         getExpandedRowModel: getExpandedRowModel(),
+        autoResetAll: false,
     })
+
+    const rows = table.getFilteredRowModel().flatRows
 
     if (!categories || !userCurrencies || !creditCards) {
         return (
@@ -1249,7 +1251,7 @@ const Expenses = () => {
             return uc
         })
 
-    if (!categories.length) {
+    if (!rows.length) {
         return (
             <Container>
                 <div className="flex flex-col md:flex-row justify-between mb-4">
@@ -1312,13 +1314,15 @@ const Expenses = () => {
                 <Card className="mt-4">
                     <Table>
                         <TBody>
-                            {table.getRowModel().rows.map((row) => {
+                            {rows.map((row: any) => {
                                 return (
-                                    <Fragment key={row.id}>
-                                        <Tr>
+                                    <Fragment key={row.original.id}>
+                                        <Tr
+                                            data-tn={`category-row-${row.original.id}`}
+                                        >
                                             {row
                                                 .getVisibleCells()
-                                                .map((cell) => {
+                                                .map((cell: any) => {
                                                     return (
                                                         <td key={cell.id}>
                                                             {flexRender(
