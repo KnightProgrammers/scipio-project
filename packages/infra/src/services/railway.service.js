@@ -159,7 +159,7 @@ class RailwayService {
                     projectId: $projectId
                     environmentId: $environmentId
                     serviceId: $serviceId
-                    unrendered: true
+                    unrendered: false
                   )
               }
             `,
@@ -169,7 +169,7 @@ class RailwayService {
 				environmentId,
 			},
 		});
-		return result.data.variables;
+		return Object.fromEntries(Object.entries(result.data.variables).filter(([key]) => !key.startsWith('RAILWAY_')))
 	}
 
 	async upsertServiceVariablesInBulk({
