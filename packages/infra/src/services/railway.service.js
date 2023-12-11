@@ -169,7 +169,7 @@ class RailwayService {
 				environmentId,
 			},
 		});
-		return Object.fromEntries(Object.entries(result.data.variables).filter(([key]) => !key.startsWith('RAILWAY_')));
+		return result.data.variables;
 	}
 
 	async upsertServiceVariablesInBulk({
