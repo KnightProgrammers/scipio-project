@@ -32,9 +32,19 @@ const generatePrCommentCommand = async (options) => {
 
 	let hadJobFailed = false;
 
-	const SERVICES_FOR_STATUS = ['scipio-client', 'scipio-server', 'scipio-cron-jobs'];
+	const SERVICES_FOR_STATUS = {
+		'scipio-client': {
+			hasUrl: true
+		},
+		'scipio-server': {
+			hasUrl: true
+		},
+		'scipio-cron-jobs': {
+			hasUrl: false
+		}
+	};
 
-	const filteredServices = services.filter((s) => SERVICES_FOR_STATUS.includes(s.name));
+	const filteredServices = services.filter((s) => Object.keys(SERVICES_FOR_STATUS).includes(s.name));
 
 	for (const service of filteredServices) {
 		const deployment = await railwayClient.getLatestDeployment({
@@ -60,9 +70,11 @@ const generatePrCommentCommand = async (options) => {
 		}
 
 		content += ` - **Status:** ${DEPLOY_STATUS_LABEL[deployment.status]} `;
-		content += '\n';
-		content += ` - **Url:** [${service.name}-${environmentName}.up.railway.app 🔗]`;
-		content += `(https://${service.name}-${environmentName}.up.railway.app)`;
+		if (SERVICES_FOR_STATUS[service.name].hasUrl) {
+			content += '\n';
+			content += ` - **Url:** [${service.name}-${environmentName}.up.railway.app 🔗]`;
+			content += `(https://${service.name}-${environmentName}.up.railway.app)`;
+		}
 	}
 
 	fs.writeFileSync('./pr-comment.md', content);

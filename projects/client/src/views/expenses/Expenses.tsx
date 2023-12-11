@@ -1,5 +1,4 @@
 import {
-    Badge,
     Button,
     Card,
     Checkbox,
@@ -11,6 +10,7 @@ import {
     Input,
     ModalForm,
     Segment,
+    Table,
 } from '@/components/ui'
 import {
     AdaptableCard,
@@ -24,7 +24,6 @@ import {
     SegmentItemOption,
 } from '@/components/shared'
 import { DateTime } from 'luxon'
-import Collapsible from '@/components/shared/Collapsible'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
     apiCreateExpense,
@@ -32,14 +31,21 @@ import {
     apiGetExpenseList,
 } from '@/services/ExpenseService'
 import currencyFormat from '@/utils/currencyFormat'
-import { HiOutlineCreditCard, HiOutlineTrash, HiPlus } from 'react-icons/hi'
+import {
+    HiOutlineCheck,
+    HiOutlineCreditCard,
+    HiOutlineTrash,
+    HiOutlineTrendingDown,
+    HiOutlineTrendingUp,
+    HiPlus,
+} from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
 import { apiGetUserCurrenciesWithExpenses } from '@/services/AccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { SelectFieldItem } from '@/components/ui/Form'
@@ -52,6 +58,20 @@ import useThemeClass from '@/utils/hooks/useThemeClass'
 import { apiGetCreditCardListForSelect } from '@/services/CreditCardService'
 import { PiMoneyBold } from 'react-icons/pi'
 import { useNavigate } from 'react-router-dom'
+import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi2'
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getExpandedRowModel,
+    getFilteredRowModel,
+    Row,
+    useReactTable,
+} from '@tanstack/react-table'
+import Tr from '@/components/ui/Table/Tr'
+import TBody from '@/components/ui/Table/TBody'
+import Td from '@/components/ui/Table/Td'
+import classNames from 'classnames'
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -72,147 +92,122 @@ type ExpenseFilter = {
     currencies: string[]
 }
 
+const GrowShrink = ({ value }: { value: number }) => {
+    return (
+        <span className="flex items-center rounded-full gap-1">
+            <span
+                className={classNames(
+                    'rounded-full p-1',
+                    value > 0 &&
+                        'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100',
+                    value < 0 &&
+                        'text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20',
+                )}
+            >
+                {value > 0 && <HiOutlineTrendingUp />}
+                {value < 0 && <HiOutlineTrendingDown />}
+                {value === 0 && <HiOutlineCheck />}
+            </span>
+            <span
+                className={classNames(
+                    'font-semibold',
+                    value > 0 && 'text-emerald-600',
+                    value < 0 && 'text-red-600',
+                )}
+            >
+                {value !== 0 ? Math.abs(value).toFixed(2) : '- - -'}
+            </span>
+        </span>
+    )
+}
+
 const ExpensesSummary = (props: {
     userCurrencies: any[]
     countryCode: string
 }) => {
     const { t, i18n } = useTranslation()
     return (
-        <div>
-            <p className="mb-4">{t('pages.expenses.headers.summary')}</p>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {props.userCurrencies.map((currency: any) => {
-                    const total: number = currency.expenses.reduce(
-                        (acc: number, e: any) => acc + e.amount,
-                        0,
-                    )
-                    if (!total) return null
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {props.userCurrencies.map((currency: any) => {
+                const total: number = currency.expenses.reduce(
+                    (acc: number, e: any) => acc + e.amount,
+                    0,
+                )
+                if (!total) return null
 
-                    const budgetDiff = currency.budget - total
+                const budgetDiff = currency.budget - total
 
-                    const valuation =
-                        budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
+                const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
 
-                    return (
-                        <Card
-                            key={currency.id}
-                            data-tn={`summary-card-${currency.code.toLowerCase()}`}
-                        >
-                            <div className="flex items-center justify-between my-2">
-                                <div className="flex items-center gap-3">
-                                    <div>
-                                        <p className="font-bold text-4xl text-purple-500 dark:text-purple-500">
-                                            {currency.code}
-                                        </p>
-                                        <p>
-                                            <small>
-                                                {t(
-                                                    'pages.expenses.labels.budget',
-                                                )}
-                                            </small>
-                                        </p>
-                                        <p className="font-light">
-                                            {currencyFormat(
-                                                currency.budget,
-                                                currency.code,
-                                                i18n.language,
-                                                props.countryCode,
-                                            )}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right rtl:text-left">
-                                    <h3 className="mb-2">
-                                        <span>
-                                            {currencyFormat(
-                                                total,
-                                                currency.code,
-                                                i18n.language,
-                                                props.countryCode,
-                                            )}
-                                        </span>
-                                    </h3>
-                                    <GrowShrinkTag
-                                        inverse
-                                        valuation={valuation}
-                                        value={currencyFormat(
-                                            budgetDiff,
+                return (
+                    <Card
+                        key={currency.id}
+                        data-tn={`summary-card-${currency.code.toLowerCase()}`}
+                    >
+                        <div className="flex items-center justify-between my-2">
+                            <div className="flex items-center gap-3">
+                                <div>
+                                    <p className="font-bold text-4xl text-purple-500 dark:text-purple-500">
+                                        {currency.code}
+                                    </p>
+                                    <p>
+                                        <small>
+                                            {t('pages.expenses.labels.budget')}
+                                        </small>
+                                    </p>
+                                    <p className="font-light">
+                                        {currencyFormat(
+                                            currency.budget,
                                             currency.code,
                                             i18n.language,
                                             props.countryCode,
                                         )}
-                                    />
+                                    </p>
                                 </div>
                             </div>
-                        </Card>
-                    )
-                })}
-            </div>
+                            <div className="text-right rtl:text-left">
+                                <h3 className="mb-2">
+                                    <span>
+                                        {currencyFormat(
+                                            total,
+                                            currency.code,
+                                            i18n.language,
+                                            props.countryCode,
+                                        )}
+                                    </span>
+                                </h3>
+                                <GrowShrinkTag
+                                    inverse
+                                    valuation={valuation}
+                                    value={currencyFormat(
+                                        budgetDiff,
+                                        currency.code,
+                                        i18n.language,
+                                        props.countryCode,
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </Card>
+                )
+            })}
         </div>
     )
 }
 
 const ExpenseTag = (props: {
     value: number
-    budget: any
+    budget: number
     currencyCode: string
     lang: string
     country: string
 }) => {
-    const { value = 0, budget, currencyCode, lang, country } = props
-    const { t } = useTranslation()
-
-    const budgetDiff: number = budget ? budget.limit - value : 0
-
-    const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
+    const { value = 0, budget, currencyCode } = props
 
     return (
-        <Card bordered bodyClass="py-2" className="w-full">
-            <div className="flex items-center justify-between my-2">
-                <div className="flex items-center gap-3">
-                    <div>
-                        <p className="font-bold text-xl text-purple-500 dark:text-purple-500">
-                            {currencyCode}
-                        </p>
-                        <p>
-                            {budget && (
-                                <small>
-                                    {t('pages.expenses.labels.budget')}
-                                </small>
-                            )}
-                        </p>
-                        {budget && (
-                            <p className="font-light">
-                                {currencyFormat(
-                                    budget.limit,
-                                    currencyCode,
-                                    lang,
-                                    country,
-                                )}
-                            </p>
-                        )}
-                    </div>
-                </div>
-                <div className="text-right rtl:text-left">
-                    <p className={`${budget ? 'mb-2' : ''} text-lg font-bold`}>
-                        <span>
-                            {currencyFormat(value, currencyCode, lang, country)}
-                        </span>
-                    </p>
-                    {budget && (
-                        <GrowShrinkTag
-                            inverse
-                            valuation={valuation}
-                            value={currencyFormat(
-                                budgetDiff,
-                                currencyCode,
-                                lang,
-                                country,
-                            )}
-                        />
-                    )}
-                </div>
-            </div>
+        <Card bordered bodyClass="py-2 w-52 flex">
+            <p className="px-1">{currencyCode}</p>
+            <GrowShrink value={budget - value} />
         </Card>
     )
 }
@@ -950,8 +945,8 @@ const Expenses = () => {
         toast.push(<Notification title={title} type="success" />, {
             placement: 'top-center',
         })
-        getExpenses()
-        getUserCurrencies()
+        await getUserCurrencies()
+        await getExpenses()
     }
 
     const onDeleteConfirmClose = () => {
@@ -1005,6 +1000,221 @@ const Expenses = () => {
         })
     }
 
+    const columns = useMemo<ColumnDef<any>[]>(
+        () => [
+            {
+                id: 'expander',
+                header: () => null,
+                enableGlobalFilter: true,
+                enableColumnFilter: true,
+                filterFn: 'hasExpenses',
+                cell: ({ row }) => (
+                    <>
+                        {row.getCanExpand() ? (
+                            <button
+                                data-tn="collapsible-toggle-btn"
+                                className="text-lg"
+                                {...{ onClick: row.getToggleExpandedHandler() }}
+                            >
+                                {row.getIsExpanded() ? (
+                                    <HiOutlineChevronDown />
+                                ) : (
+                                    <HiOutlineChevronRight />
+                                )}
+                            </button>
+                        ) : null}
+                    </>
+                ),
+                subCell: () => null,
+            },
+            {
+                header: 'Name',
+                accessorKey: 'name',
+            },
+            {
+                id: 'metrics',
+                header: () => null,
+                cell: ({ row }) => {
+                    const category = row.original
+                    if (!userCurrencies) return
+                    return (
+                        <div className="w-full gap-4 hidden sm:max-lg:flex-col sm:flex">
+                            {userCurrencies.map(
+                                (currency: any, index: number) => (
+                                    <ExpenseTag
+                                        key={index}
+                                        value={getTotalExpenseByCurrency(
+                                            category.expenses,
+                                            currency.code,
+                                        )}
+                                        budget={
+                                            category.budget
+                                                ? category.budget.currencies.find(
+                                                      (c: any) =>
+                                                          c.currency.code ===
+                                                          currency.code,
+                                                  ).limit
+                                                : 0
+                                        }
+                                        currencyCode={currency.code}
+                                        lang={i18n.language}
+                                        country={
+                                            userState.country?.code || 'UY'
+                                        }
+                                    />
+                                ),
+                            )}
+                        </div>
+                    )
+                },
+            },
+            {
+                id: 'actions',
+                header: () => null,
+                cell: ({ row }) => (
+                    <>
+                        <Button
+                            variant="twoTone"
+                            size="sm"
+                            icon={<HiPlus />}
+                            data-tn={`add-expense-cat-${row.original.id}-btn`}
+                            onClick={() => {
+                                setIsFormOpen(true)
+                                setSelectedExpense({
+                                    categoryId: row.original.id,
+                                    billableDate: DateTime.now().toISO(),
+                                })
+                            }}
+                        ></Button>
+                    </>
+                ),
+            },
+        ],
+        [userCurrencies, i18n.language, userState.country?.code],
+    )
+
+    const renderSubComponent = ({ row }: { row: Row<any> }) => {
+        const category: any = row.original
+        return (
+            <ul>
+                {category.expenses.map((item: any) => (
+                    <li
+                        key={item.id}
+                        className="py-2 px-4 flex flex-col w-full items-center card-border my-2 rounded-lg relative"
+                        data-tn={`expense-container-${item.id}`}
+                    >
+                        <div className="w-full flex">
+                            <div className="flex items-center">
+                                <ExpenseTypeIcon expense={item} />
+                                <span className="font-light text-current ml-2">
+                                    {DateTime.fromISO(
+                                        item.billableDate,
+                                    ).toFormat('dd/MM/yyyy')}
+                                </span>
+                            </div>
+
+                            <Dropdown
+                                className="absolute right-2 top-1"
+                                placement="middle-end-top"
+                                renderTitle={
+                                    <EllipsisButton data-tn="dropdown-expense-btn" />
+                                }
+                            >
+                                <Dropdown.Item
+                                    eventKey="delete"
+                                    data-tn="delete-expense-btn"
+                                    onClick={() => {
+                                        setIsConfirmDeleteOpen(true)
+                                        setSelectedExpense(item)
+                                    }}
+                                >
+                                    <IconText
+                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                        icon={<HiOutlineTrash />}
+                                    >
+                                        {t('actions.delete')}
+                                    </IconText>
+                                </Dropdown.Item>
+                            </Dropdown>
+                        </div>
+                        <div className="w-full grid grid-cols-2 items-center">
+                            <p className="text-lg">
+                                {item.description
+                                    ? item.description
+                                    : t('pages.expenses.genericDescription', {
+                                          billableDate: DateTime.fromISO(
+                                              item.billableDate,
+                                          ).toFormat('dd/MM/yyyy'),
+                                      })}
+                            </p>
+                            <span className="text-right font-bold">
+                                {currencyFormat(
+                                    item.amount,
+                                    item.currency.code,
+                                    i18n.language,
+                                    userState.country?.code,
+                                )}
+                            </span>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        )
+    }
+
+    const expensesFilter = (expenses: any[]) => {
+        return expenses
+            .filter((e: any) => {
+                if (expenseFilter && expenseFilter.paymentMethod !== 'ALL') {
+                    return expenseFilter.paymentMethod === e.type
+                }
+                return true
+            })
+            .filter((e: any) =>
+                expenseFilter.currencies.includes(e.currency.id),
+            )
+    }
+    const table = useReactTable({
+        defaultColumn: {
+            size: 100,
+        },
+        data: categories && userCurrencies ? categories : [],
+        columns,
+        state: {
+            columnFilters: [
+                {
+                    id: 'expander',
+                    value: expenseFilter,
+                },
+            ],
+            globalFilter: expenseFilter,
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        filterFns: {
+            hasExpenses: (row: Row<any>) =>
+                expensesFilter(row.original.expenses).length > 0,
+        },
+        getRowCanExpand: () => true,
+        globalFilterFn: (row) => {
+            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
+                if (row.original.isFixedPayment) {
+                    return expenseFilter.expenseType === 'FIXED_EXPENSE'
+                } else {
+                    return expenseFilter.expenseType === 'VARIABLE_EXPENSE'
+                }
+            }
+            return true
+        },
+        getColumnCanGlobalFilter: () => true,
+        enableGlobalFilter: true,
+        enableFilters: true,
+        getExpandedRowModel: getExpandedRowModel(),
+        autoResetAll: false,
+    })
+
+    const rows = table.getFilteredRowModel().flatRows
+
     if (!categories || !userCurrencies || !creditCards) {
         return (
             <Container className="h-full">
@@ -1012,42 +1222,6 @@ const Expenses = () => {
             </Container>
         )
     }
-
-    const newCategories = categories
-        .filter((c: any) => {
-            if (expenseFilter && expenseFilter.expenseType !== 'ALL') {
-                if (c.isFixedPayment) {
-                    return expenseFilter.expenseType === 'FIXED_EXPENSE'
-                } else {
-                    return expenseFilter.expenseType === 'VARIABLE_EXPENSE'
-                }
-            }
-            return true
-        })
-        .map((c: any) => {
-            if (
-                expenseFilter &&
-                (expenseFilter.currencies || expenseFilter.paymentMethod)
-            ) {
-                return {
-                    ...c,
-                    expenses: c.expenses
-                        .filter((e: any) => {
-                            if (
-                                expenseFilter &&
-                                expenseFilter.paymentMethod !== 'ALL'
-                            ) {
-                                return expenseFilter.paymentMethod === e.type
-                            }
-                            return true
-                        })
-                        .filter((e: any) =>
-                            expenseFilter.currencies.includes(e.currency.id),
-                        ),
-                }
-            }
-            return c
-        })
 
     const userCurrenciesFiltered = userCurrencies
         .filter((uc: any) =>
@@ -1070,11 +1244,8 @@ const Expenses = () => {
             }
             return uc
         })
-    const filteredCategories = newCategories.filter(
-        (c: any) => c.expenses.length,
-    )
 
-    if (!filteredCategories.length) {
+    if (!rows.length) {
         return (
             <Container>
                 <div className="flex flex-col md:flex-row justify-between mb-4">
@@ -1133,154 +1304,51 @@ const Expenses = () => {
                     userCurrencies={userCurrenciesFiltered}
                     countryCode={userState.country?.code || 'UY'}
                 />
-                <div className="mt-4">
-                    <p className="mb-4">{t('pages.expenses.headers.detail')}</p>
-                    {filteredCategories.map((c: any) => (
-                        <Collapsible
-                            key={c.id}
-                            collapsibleClassName="my-4"
-                            headerClassName=""
-                            data-tn={`category-detail-${c.id}`}
-                            header={
-                                <div className="w-full flex flex-col items-center">
-                                    <div className="w-full flex justify-between items-center mr-4 mb-4">
-                                        <div className="flex items-center text-md sm:text-lg lg:text-2xl font-semibold">
-                                            {c.name}
-                                            <Badge
-                                                content={c.expenses.length}
-                                                className="ml-2 border border-gray-400"
-                                                innerClass="bg-white text-gray-500"
-                                            />
-                                        </div>
-                                        <Button
-                                            variant="twoTone"
-                                            size="sm"
-                                            icon={<HiPlus />}
-                                            data-tn={`add-expense-cat-${c.id}-btn`}
-                                            onClick={() => {
-                                                setIsFormOpen(true)
-                                                setSelectedExpense({
-                                                    categoryId: c.id,
-                                                    billableDate:
-                                                        DateTime.now().toISO(),
-                                                })
-                                            }}
-                                        >
-                                            {t(
-                                                'pages.expenses.addExpenseButton',
-                                            )}
-                                        </Button>
-                                    </div>
-                                    <div className="w-full pb-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mr-4">
-                                        {userCurrencies.map(
-                                            (currency: any, index: number) => (
-                                                <ExpenseTag
-                                                    key={index}
-                                                    value={getTotalExpenseByCurrency(
-                                                        c.expenses,
-                                                        currency.code,
-                                                    )}
-                                                    budget={
-                                                        c.budget
-                                                            ? c.budget.currencies.find(
-                                                                  (c: any) =>
-                                                                      c.currency
-                                                                          .code ===
-                                                                      currency.code,
-                                                              )
-                                                            : null
-                                                    }
-                                                    currencyCode={currency.code}
-                                                    lang={i18n.language}
-                                                    country={
-                                                        userState.country
-                                                            ?.code || 'UY'
-                                                    }
-                                                />
-                                            ),
-                                        )}
-                                    </div>
-                                </div>
-                            }
-                        >
-                            <ul>
-                                {c.expenses.map((item: any) => (
-                                    <li
-                                        key={item.id}
-                                        className="py-2 px-4 flex flex-col w-full items-center card-border my-2 rounded-lg relative"
-                                        data-tn={`expense-container-${item.id}`}
-                                    >
-                                        <div className="w-full flex">
-                                            <div className="flex items-center">
-                                                <ExpenseTypeIcon
-                                                    expense={item}
-                                                />
-                                                <span className="font-light text-current ml-2">
-                                                    {DateTime.fromISO(
-                                                        item.billableDate,
-                                                    ).toFormat('dd/MM/yyyy')}
-                                                </span>
-                                            </div>
 
-                                            <Dropdown
-                                                className="absolute right-2 top-1"
-                                                placement="middle-end-top"
-                                                renderTitle={
-                                                    <EllipsisButton data-tn="dropdown-expense-btn" />
-                                                }
-                                            >
-                                                <Dropdown.Item
-                                                    eventKey="delete"
-                                                    data-tn="delete-expense-btn"
-                                                    onClick={() => {
-                                                        setIsConfirmDeleteOpen(
-                                                            true,
-                                                        )
-                                                        setSelectedExpense(item)
-                                                    }}
+                <Card className="mt-4">
+                    <Table>
+                        <TBody>
+                            {rows.map((row: any) => {
+                                return (
+                                    <Fragment key={row.original.id}>
+                                        <Tr
+                                            data-tn={`category-row-${row.original.id}`}
+                                        >
+                                            {row
+                                                .getVisibleCells()
+                                                .map((cell: any) => {
+                                                    return (
+                                                        <td key={cell.id}>
+                                                            {flexRender(
+                                                                cell.column
+                                                                    .columnDef
+                                                                    .cell,
+                                                                cell.getContext(),
+                                                            )}
+                                                        </td>
+                                                    )
+                                                })}
+                                        </Tr>
+                                        {row.getIsExpanded() && (
+                                            <Tr>
+                                                <Td
+                                                    colSpan={
+                                                        row.getVisibleCells()
+                                                            .length
+                                                    }
                                                 >
-                                                    <IconText
-                                                        className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
-                                                        icon={
-                                                            <HiOutlineTrash />
-                                                        }
-                                                    >
-                                                        {t('actions.delete')}
-                                                    </IconText>
-                                                </Dropdown.Item>
-                                            </Dropdown>
-                                        </div>
-                                        <div className="w-full grid grid-cols-2 items-center">
-                                            <p className="text-lg">
-                                                {item.description
-                                                    ? item.description
-                                                    : t(
-                                                          'pages.expenses.genericDescription',
-                                                          {
-                                                              billableDate:
-                                                                  DateTime.fromISO(
-                                                                      item.billableDate,
-                                                                  ).toFormat(
-                                                                      'dd/MM/yyyy',
-                                                                  ),
-                                                          },
-                                                      )}
-                                            </p>
-                                            <span className="text-right font-bold">
-                                                {currencyFormat(
-                                                    item.amount,
-                                                    item.currency.code,
-                                                    i18n.language,
-                                                    userState.country?.code,
-                                                )}
-                                            </span>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Collapsible>
-                    ))}
-                </div>
+                                                    {renderSubComponent({
+                                                        row,
+                                                    })}
+                                                </Td>
+                                            </Tr>
+                                        )}
+                                    </Fragment>
+                                )
+                            })}
+                        </TBody>
+                    </Table>
+                </Card>
             </Loading>
             <ConfirmDialog
                 isOpen={isConfirmDeleteOpen}

@@ -18,7 +18,7 @@ const createEnvironment = async (name) => {
 		targetEnv = await railwayClient.createEnvironment({
 			name: environmentName,
 			sourceEnvironmentId: stagingEnv.id,
-			ephemeral: true,
+			ephemeral: false,
 		});
 		const services = await railwayClient.getServices();
 		await Promise.all(

@@ -84,7 +84,7 @@ test('Create Expense', async () => {
 		'div[data-tn="empty-state-no-expenses"]',
 	);
 	await expect(emptyStateContainer).not.toBeVisible();
-	await page.locator('button[data-tn="collapsible-toggle-btn"]').click();
+	await page.locator(`tr[data-tn="category-row-${categoryId}"] button[data-tn="collapsible-toggle-btn"]`).click();
 	await expect(
 		page.locator(`li[data-tn="expense-container-${expenseId}"]`),
 	).toBeVisible();
