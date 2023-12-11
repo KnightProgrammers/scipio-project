@@ -5,7 +5,9 @@
                 "title": "Bienvenido!",
                 "subtitle": "Por favor ingrese sus credenciales para continuar!",
                 "forgotPassword": "Olvidó su contraseña?",
-                "footer": "No tienes cuenta?"
+                "footer": "No tienes cuenta?",
+                "signInWithEmail": "O inicia sesión con tu email",
+                "signInWithGoogle": "Inicia sesión con Google"
             },
             "signUp": {
                 "title": "Registrate",

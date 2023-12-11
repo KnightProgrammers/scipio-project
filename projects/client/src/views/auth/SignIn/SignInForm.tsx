@@ -96,12 +96,12 @@ const SignInForm = (props: SignInFormProps) => {
                     loading={loadingWithProvider}
                     onClick={() => onSignInWithGoogle()}
                 >
-                    <span>Sign in with Google</span>
+                    <span>{t('pages.auth.signIn.signInWithGoogle')}</span>
                 </Button>
             </div>
             {!loadingWithProvider && (
                 <>
-                    <Divider label="Or sign in with email" />
+                    <Divider label={t('pages.auth.signIn.signInWithEmail')} />
                     {message && (
                         <Alert showIcon className="mb-4 mt-4" type="danger">
                             <>{message}</>
