@@ -121,11 +121,11 @@ test('Validate Summary', async () => {
 });
 test('Validate Details', async () => {
 	// Category 1 is present
-	await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
+	await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).toBeVisible();
 	// Category 2 is present
-	await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+	await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 	// Category 3 is not present
-	await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+	await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 });
 test.describe('filters', () => {
 	test.afterEach(async () => {
@@ -137,11 +137,11 @@ test.describe('filters', () => {
 			toDate: DateTime.fromJSDate(new Date()).minus({month: 1}).endOf('month')
 		});
 		// Category 1 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).not.toBeVisible();
 		// Category 2 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).not.toBeVisible();
 		// Category 3 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).toBeVisible();
 	});
 	test('Filter by Expense Type', async () => {
 		await applyExpenseFilter(page, {
@@ -149,21 +149,21 @@ test.describe('filters', () => {
 			expenseType: ['FIXED_EXPENSE']
 		});
 		// Category 1 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).not.toBeVisible();
 		// Category 2 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).toBeVisible();
 
 		await applyExpenseFilter(page, {
 			expenseType: ['VARIABLE_EXPENSE']
 		});
 		// Category 1 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).toBeVisible();
 		// Category 2 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).not.toBeVisible();
 		// Category 3 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 	});
 	test('Filter by Currency', async () => {
 		await applyExpenseFilter(page, {
@@ -171,20 +171,20 @@ test.describe('filters', () => {
 			currency: [DEFAULT_USER_CURRENCIES[0]]
 		});
 		// Category 1 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).not.toBeVisible();
 		// Category 2 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 		await applyExpenseFilter(page, {
 			currency: [DEFAULT_USER_CURRENCIES[1]]
 		});
 		// Category 1 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).toBeVisible();
 		// Category 2 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).toBeVisible();
 	});
 	test('Filter by Payment method', async () => {
 		await applyExpenseFilter(page, {
@@ -193,20 +193,20 @@ test.describe('filters', () => {
 			paymentMethod: ['CASH']
 		});
 		// Category 1 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).toBeVisible();
 		// Category 2 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 		await applyExpenseFilter(page, {
 			paymentMethod: ['CREDIT_CARD']
 		});
 		// Category 1 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).not.toBeVisible();
 		// Category 2 is present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).toBeVisible();
 		// Category 3 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 	});
 	test('Filter by date with no results', async () => {
 		await applyExpenseFilter(page, {
@@ -214,11 +214,11 @@ test.describe('filters', () => {
 			toDate: DateTime.fromJSDate(new Date()).minus({month: 2}).endOf('month')
 		});
 		// Category 1 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_1}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_1}"]`)).not.toBeVisible();
 		// Category 2 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_2}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_2}"]`)).not.toBeVisible();
 		// Category 3 is not present
-		await expect(page.locator(`div[data-tn="category-detail-${categoryId_3}"]`)).not.toBeVisible();
+		await expect(page.locator(`tr[data-tn="category-row-${categoryId_3}"]`)).not.toBeVisible();
 		const emptyStateContainer = page.locator(
 			'div[data-tn="empty-state-no-expenses"]',
 		);
