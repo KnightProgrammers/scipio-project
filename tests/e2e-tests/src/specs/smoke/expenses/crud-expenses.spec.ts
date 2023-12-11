@@ -94,7 +94,6 @@ test('Create Expense Credit Card', async () => {
 		creditCardId
 	});
 	expenseId = expense.id;
-	await page.locator(`tr[data-tn="category-row-${categoryId}"] button[data-tn="collapsible-toggle-btn"]`).click();
 	await expect(
 		page.locator(`li[data-tn="expense-container-${expenseId}"]`),
 	).toBeVisible();
