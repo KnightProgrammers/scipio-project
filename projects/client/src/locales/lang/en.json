@@ -5,7 +5,9 @@
                 "title": "Welcome back!",
                 "subtitle": "Please enter your credentials to sign in!",
                 "forgotPassword": "Forgot Password?",
-                "footer": "Don't have an account yet?"
+                "footer": "Don't have an account yet?",
+                "signInWithEmail": "Or sign in with email",
+                "signInWithGoogle": "Sign in with Google"
             },
             "signUp": {
                 "title": "Sign Up",
