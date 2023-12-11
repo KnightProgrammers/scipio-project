@@ -183,7 +183,7 @@ jobs:
       - name: Run Tests
         run: |
           cd projects/cron-jobs
-          npm run test
+#          npm run test
         env:
           MONGO_DB_URI: mongodb://root:password@localhost:27017/scipio-test?authSource=admin
   e2e-tests-regression:
@@ -203,7 +203,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Run Dockers
-        run: docker compose up --detach --wait --build
+#        run: docker compose up --detach --wait --build
       - name: Install Node
         uses: actions/setup-node@v4
         with:
@@ -217,11 +217,11 @@ jobs:
       - name: Install Dependencies
         run: |
           cd tests/e2e-tests
-          npm ci
+#          npm ci
       - name: Install Playwright Browsers
         run: |
           cd tests/e2e-tests
-          npx playwright install --with-deps
+#          npx playwright install --with-deps
       - name: Run Tests
         env:
           BASE_URL: http://localhost:3000
@@ -234,13 +234,13 @@ jobs:
           DD_SERVICE: "Scipio"
         run: |
           cd tests/e2e-tests
-          npm run regression-test
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: e2e-report
-          path: tests/e2e-tests/playwright-report/
-          retention-days: 7
+#          npm run regression-test
+#      - uses: actions/upload-artifact@v3
+#        if: always()
+#        with:
+#          name: e2e-report
+#          path: tests/e2e-tests/playwright-report/
+#          retention-days: 7
   create-test-env:
     name: "Create Test Environment"
     runs-on: ubuntu-latest

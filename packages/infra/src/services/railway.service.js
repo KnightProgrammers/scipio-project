@@ -159,7 +159,7 @@ class RailwayService {
                     projectId: $projectId
                     environmentId: $environmentId
                     serviceId: $serviceId
-                    unrendered: false
+                    unrendered: true
                   )
               }
             `,
