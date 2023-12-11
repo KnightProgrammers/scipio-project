@@ -45,13 +45,13 @@ const GrowShrinkTag = forwardRef<HTMLDivElement, GrowShrinkTagProps>(
                         valuation < 0 &&
                         (inverse ? <HiArrowUp /> : <HiArrowDown />)}
                 </span>
-                {
-                    !!value && <span>
+                {!!value && (
+                    <span>
                         {prefix}
-                            {value}
-                            {suffix}
+                        {value}
+                        {suffix}
                     </span>
-                }
+                )}
             </Tag>
         )
     },
