@@ -202,7 +202,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Run Dockers
+#      - name: Run Dockers
 #        run: docker compose up --detach --wait --build
       - name: Install Node
         uses: actions/setup-node@v4
