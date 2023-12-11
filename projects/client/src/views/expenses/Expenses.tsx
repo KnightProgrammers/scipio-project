@@ -127,76 +127,70 @@ const ExpensesSummary = (props: {
 }) => {
     const { t, i18n } = useTranslation()
     return (
-        <div>
-            <p className="mb-4">{t('pages.expenses.headers.summary')}</p>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {props.userCurrencies.map((currency: any) => {
-                    const total: number = currency.expenses.reduce(
-                        (acc: number, e: any) => acc + e.amount,
-                        0,
-                    )
-                    if (!total) return null
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {props.userCurrencies.map((currency: any) => {
+                const total: number = currency.expenses.reduce(
+                    (acc: number, e: any) => acc + e.amount,
+                    0,
+                )
+                if (!total) return null
 
-                    const budgetDiff = currency.budget - total
+                const budgetDiff = currency.budget - total
 
-                    const valuation =
-                        budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
+                const valuation = budgetDiff > 0 ? 1 : budgetDiff < 0 ? -1 : 0
 
-                    return (
-                        <Card
-                            key={currency.id}
-                            data-tn={`summary-card-${currency.code.toLowerCase()}`}
-                        >
-                            <div className="flex items-center justify-between my-2">
-                                <div className="flex items-center gap-3">
-                                    <div>
-                                        <p className="font-bold text-4xl text-purple-500 dark:text-purple-500">
-                                            {currency.code}
-                                        </p>
-                                        <p>
-                                            <small>
-                                                {t(
-                                                    'pages.expenses.labels.budget',
-                                                )}
-                                            </small>
-                                        </p>
-                                        <p className="font-light">
-                                            {currencyFormat(
-                                                currency.budget,
-                                                currency.code,
-                                                i18n.language,
-                                                props.countryCode,
-                                            )}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right rtl:text-left">
-                                    <h3 className="mb-2">
-                                        <span>
-                                            {currencyFormat(
-                                                total,
-                                                currency.code,
-                                                i18n.language,
-                                                props.countryCode,
-                                            )}
-                                        </span>
-                                    </h3>
-                                    <GrowShrinkTag
-                                        inverse
-                                        valuation={valuation}
-                                        value={currencyFormat(
-                                            budgetDiff,
+                return (
+                    <Card
+                        key={currency.id}
+                        data-tn={`summary-card-${currency.code.toLowerCase()}`}
+                    >
+                        <div className="flex items-center justify-between my-2">
+                            <div className="flex items-center gap-3">
+                                <div>
+                                    <p className="font-bold text-4xl text-purple-500 dark:text-purple-500">
+                                        {currency.code}
+                                    </p>
+                                    <p>
+                                        <small>
+                                            {t('pages.expenses.labels.budget')}
+                                        </small>
+                                    </p>
+                                    <p className="font-light">
+                                        {currencyFormat(
+                                            currency.budget,
                                             currency.code,
                                             i18n.language,
                                             props.countryCode,
                                         )}
-                                    />
+                                    </p>
                                 </div>
                             </div>
-                        </Card>
-                    )
-                })}
-            </div>
+                            <div className="text-right rtl:text-left">
+                                <h3 className="mb-2">
+                                    <span>
+                                        {currencyFormat(
+                                            total,
+                                            currency.code,
+                                            i18n.language,
+                                            props.countryCode,
+                                        )}
+                                    </span>
+                                </h3>
+                                <GrowShrinkTag
+                                    inverse
+                                    valuation={valuation}
+                                    value={currencyFormat(
+                                        budgetDiff,
+                                        currency.code,
+                                        i18n.language,
+                                        props.countryCode,
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </Card>
+                )
+            })}
         </div>
     )
 }
