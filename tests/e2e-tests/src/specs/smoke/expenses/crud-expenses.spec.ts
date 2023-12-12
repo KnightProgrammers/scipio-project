@@ -128,6 +128,7 @@ test('Create Bank Account Expense', async () => {
 		description: 'Expense 1',
 		amount: 34.21,
 		categoryName: categoryName,
+		currencyCode: DEFAULT_USER_CURRENCIES[0],
 		type: 'BANK_ACCOUNT',
 		bankAccountId
 	});
