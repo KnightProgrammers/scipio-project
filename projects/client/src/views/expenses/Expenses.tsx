@@ -252,7 +252,9 @@ const ExpenseForm = (props: {
         if (selectedType === 'BANK_ACCOUNT') {
             onFormSubmit({
                 ...data,
-                currencyId: bankAccounts.find((ba) => ba.id === data.bankAccountId).currency.id
+                currencyId: bankAccounts.find(
+                    (ba) => ba.id === data.bankAccountId,
+                ).currency.id,
             })
         } else {
             onFormSubmit(data)
@@ -447,7 +449,9 @@ const ExpenseForm = (props: {
                         <FormItem
                             asterisk
                             label={t('fields.currency') || ''}
-                            invalid={!!errors.currencyId || !!touched.currencyId}
+                            invalid={
+                                !!errors.currencyId || !!touched.currencyId
+                            }
                             errorMessage={errors.currencyId?.toString()}
                         >
                             <Field
