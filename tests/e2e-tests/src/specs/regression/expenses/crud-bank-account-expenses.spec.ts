@@ -10,7 +10,6 @@ import GraphqlService from '../../../services/graphql.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { createExpense, deleteExpense } from '../../../helpers/expense.helper';
-import { DateTime } from 'luxon';
 
 let email: string;
 let password: string;
