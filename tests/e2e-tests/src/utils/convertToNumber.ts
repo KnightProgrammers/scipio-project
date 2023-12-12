@@ -1,7 +1,8 @@
 export function convertToNumber(currency: string) {
-	let regex = /[^\d.-]/g;
+	const regex: RegExp = /[^\d.-]/g;
+	let text:string = currency;
 	if (currency[currency.length - 3] === ',') {
-		regex = /[^\d,-]/g;
+		text = currency.replace(',', '.')
 	}
-	return parseFloat(currency.replace(regex, ''));
+	return parseFloat(text.replace(regex, ''));
 }
