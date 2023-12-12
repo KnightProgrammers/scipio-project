@@ -176,6 +176,7 @@ const schema = `
     
     createBankAccount(input: NewBankAccountInput!): BankAccount!
     updateBankAccount(id: String!, input: EditBankAccountInput!): BankAccount!
+    updateBankAccountBalance(id: String!, balance: Float!): BankAccount!
     deleteBankAccount(id: String!): Boolean!
     
     createCreditCard(input: CreditCardInput!): CreditCard!

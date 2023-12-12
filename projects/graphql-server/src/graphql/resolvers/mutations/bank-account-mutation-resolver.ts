@@ -45,6 +45,13 @@ export const BankAccountMutation = {
 			accountBalance: balance
 		});
 	},
+	updateBankAccountBalance: async (root: any, params: {id: string, balance: number}, context: any)=> {
+		const bankAccount = await BankAccountService.findOne(params.id, context.auth._id);
+		if (!bankAccount) {
+			throw new errorCodes.FST_ERR_NOT_FOUND('Bank Account');
+		}
+		return BankAccountService.updateBalance(params.id, context.auth._id, params.balance);
+	},
 	deleteBankAccount: async (root: any, params: {id: string}, context: any) => {
 		const {id} = params;
 		const bankAccount = await BankAccountService.findOne(id, context.auth);
