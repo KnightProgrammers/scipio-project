@@ -75,6 +75,13 @@ class BankAccountService {
 
 		return bankAccount;
 	}
+	static async updateBalance(id: string, userId: string, balance: number) {
+		const bankAccount = await this.findOne(id, userId);
+		if (!bankAccount) return null;
+		bankAccount.accountBalance = balance;
+		await bankAccount.save();
+		return bankAccount;
+	}
 	static async delete(id: string, user: any) {
 		const bankAccount = await this.findOne(id, user);
 
@@ -86,8 +93,8 @@ class BankAccountService {
 		return bankAccount;
 	}
 
-	static async findOne(id: string, user: any) {
-		const bankAccount = await BankAccountSchema.findOne({ _id: id, accountUserId: user });
+	static async findOne(id: string, accountUserId: any) {
+		const bankAccount = await BankAccountSchema.findOne({ _id: id, accountUserId });
 		if (!bankAccount) return null;
 		return bankAccount;
 	}

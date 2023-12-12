@@ -163,6 +163,38 @@ export async function apiUpdateBankAccount(body: {
     return response.data
 }
 
+export async function apiUpdateBankAccountBalance(body: {
+    id: string
+    accountBalance: number
+}): Promise<BankAccountDataType> {
+    const { id, accountBalance } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'updateBankAccountBalance',
+            query: `
+                mutation updateBankAccountBalance(
+                    $id: String!
+                    $balance: Float!
+                ) {
+                    updateBankAccountBalance(
+                        id: $id, 
+                        balance: $balance
+                    ) {
+                        id
+                    }
+                }
+            `,
+            variables: {
+                id,
+                balance: accountBalance,
+            },
+        },
+    })
+    return response.data
+}
+
 export async function apiDeleteBankAccount(
     bankAccountId: string,
 ): Promise<boolean> {
