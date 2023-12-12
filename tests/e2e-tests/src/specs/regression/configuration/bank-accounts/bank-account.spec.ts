@@ -11,7 +11,7 @@ import {
 	deleteBankAccount,
 	editBankAccount, editBankAccountBalance,
 	openEditBankAccountForm
-} from "../../../../helpers/bank-account.helper";
+} from '../../../../helpers/bank-account.helper';
 import { waitForRequest } from '../../../../helpers/generic.helper';
 import { convertToNumber } from '../../../../utils/convertToNumber';
 
@@ -124,16 +124,17 @@ test('edit bank account', async () => {
 	)).toHaveText('87654321');
 });
 test('update bank account balance', async () => {
-	const balanceSelector = page.locator(
+	const oldBalance: string = await page.locator(
 		`div[data-tn="bank-account-${bankAccount.id}"] div[data-tn="bank-account-balance"]`
-	);
-	const oldBalance: string = await balanceSelector.textContent()
-	console.log({oldBalance})
+	).textContent();
 	expect(convertToNumber(oldBalance)).toEqual(876.3);
 	await editBankAccountBalance(page, bankId, bankAccount.id, {
 		accountBalance: 1991.13
 	});
-	const newBalance: string = await balanceSelector.textContent()
+	await page.waitForTimeout(2000);
+	const newBalance: string = await page.locator(
+		`div[data-tn="bank-account-${bankAccount.id}"] div[data-tn="bank-account-balance"]`
+	).textContent();
 	expect(convertToNumber(newBalance)).toEqual(1991.13);
 });
 test('delete bank account', async () => {
