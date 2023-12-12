@@ -9,6 +9,7 @@ interface ExpenseInput {
 	currencyId: string,
 	categoryId: string,
 	creditCardId?: string,
+	bankAccountId?: string,
 }
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
@@ -117,7 +118,8 @@ class ExpenseService {
 			description = '',
 			currencyId,
 			categoryId,
-			creditCardId
+			creditCardId,
+			bankAccountId
 		} = data;
 
 		let type: string = 'CASH';
@@ -133,6 +135,10 @@ class ExpenseService {
 			}
 		}
 
+		if (bankAccountId) {
+			type = 'BANK_ACCOUNT';
+		}
+
 		return ExpenseModel.create({
 			amount,
 			billableDate,
@@ -142,6 +148,7 @@ class ExpenseService {
 			categoryId,
 			creditCardId,
 			creditCardMonthlyStatementId,
+			bankAccountId,
 			userId,
 			isDeleted: false
 		});

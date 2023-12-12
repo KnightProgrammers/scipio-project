@@ -86,6 +86,7 @@ const schema = `
   enum ExpenseType {
     CASH
     CREDIT_CARD
+    BANK_ACCOUNT
   }
   
   type Expense {
@@ -98,6 +99,8 @@ const schema = `
     type: ExpenseType!
     creditCard: CreditCard
     creditCardId: String
+    bankAccount: BankAccount
+    bankAccountId: String
   }
   
   enum SavingStatus {
@@ -248,6 +251,7 @@ const schema = `
     currencyId: String!
     categoryId: String!
     creditCardId: String
+    bankAccountId: String
   }
   
   input SavingInput {

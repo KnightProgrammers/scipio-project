@@ -1,6 +1,7 @@
 import CategoryService from '@/services/category.service';
 import CreditCardService from '@/services/credit-card-service';
 import CurrencyService from '@/services/currency.service';
+import BankAccountService from '@/services/bank-account.service';
 import { DateTime } from 'luxon';
 
 export const ExpenseQueryResolver = {
@@ -15,5 +16,8 @@ export const ExpenseQueryResolver = {
 	},
 	creditCard: async (expense: any, params: any, ctx: any) => {
 		return CreditCardService.findOne(expense.creditCardId, ctx.auth._id);
+	},
+	bankAccount: async (expense: any, params: any, ctx: any) => {
+		return BankAccountService.findOne(expense.bankAccountId, ctx.auth._id);
 	}
 };
