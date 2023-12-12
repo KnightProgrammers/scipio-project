@@ -12,13 +12,14 @@ type ExpenseFilterType = {
 }
 
 export const createExpense = async (page: Page, data: {
-	type: 'CASH' | 'CREDIT_CARD'
+	type: 'CASH' | 'CREDIT_CARD'| 'BANK_ACCOUNT'
 	billableDate?: Date
 	description?: string
 	amount: number,
-	currencyCode: string
+	currencyCode?: string
 	categoryName: string
 	creditCardId?: string
+	bankAccountId?: string
 })=>  {
 	const {
 		type = 'CASH',
@@ -27,7 +28,8 @@ export const createExpense = async (page: Page, data: {
 		amount,
 		currencyCode,
 		categoryName,
-		creditCardId
+		creditCardId,
+		bankAccountId
 	} = data;
 	await page.locator('button[data-tn="add-expense-btn"]').click();
 	const expenseFormContainer = page.locator('div[role="dialog"]');
@@ -36,12 +38,18 @@ export const createExpense = async (page: Page, data: {
 	await page.locator('input[data-tn="billable-date-input"]').fill(DateTime.fromJSDate(billableDate).toFormat('dd/MM/yyyy'));
 	await page.locator('input[name="description"]').fill(description);
 	await page.locator('input[name="amount"]').fill(amount.toString());
-	await page.locator('#currency-select input.select__input').fill(currencyCode);
-	await page.keyboard.press('Enter');
+	if (type !== 'BANK_ACCOUNT') {
+		await page.locator('#currency-select input.select__input').fill(currencyCode);
+		await page.keyboard.press('Enter');
+	}
 	await page.locator('#category-select input.select__input').fill(categoryName);
 	await page.keyboard.press('Enter');
 	if (creditCardId) {
 		await page.locator('#credit-card-select input.select__input').fill(creditCardId);
+		await page.keyboard.press('Enter');
+	}
+	if (bankAccountId) {
+		await page.locator('#bank-account-select input.select__input').fill(bankAccountId);
 		await page.keyboard.press('Enter');
 	}
 	const saveExpenseWaitForRequest = waitForRequest(page, 'createExpense');
@@ -134,7 +142,7 @@ export const applyExpenseFilter = async (page: Page, filters: ExpenseFilterType)
 		}
 	}
 	if (filters.paymentMethod) {
-		for (const pmTp of ['CASH', 'CREDIT_CARD']) {
+		for (const pmTp of ['CASH', 'CREDIT_CARD', 'BANK_ACCOUNT']) {
 			const isSelected: boolean = await page.locator(`div[data-tn="payment-method-filter-${pmTp.toLowerCase()}-opt"] input`).isChecked();
 			if (
 				(isSelected && !filters.paymentMethod.includes(pmTp)) ||

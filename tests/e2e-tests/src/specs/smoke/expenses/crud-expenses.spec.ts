@@ -21,6 +21,8 @@ let graphqlService: GraphqlService;
 let expenseId: string;
 let categoryId: string;
 let creditCardId: string;
+let bankId: string;
+let bankAccountId: string;
 const categoryName: string = `Category ${uuidv4()}`;
 
 test.beforeAll(async ({ browser }) => {
@@ -50,11 +52,26 @@ test.beforeAll(async ({ browser }) => {
 		creditLimitCurrencyId: userCurrencies[0].id
 	});
 	creditCardId = creditCard.id;
+	const bank = await graphqlService.createBank({
+		name: 'Bank #1'
+	});
+	bankId = bank.id;
+	const bankAccount: any = await graphqlService.createBankAccount({
+		label: 'Bank Account #1',
+		accountNumber: '012346789',
+		balance: 2000,
+		bankId: bankId,
+		currencyId: userCurrencies[0].id,
+	});
+	bankAccountId = bankAccount.id;
 });
 
 test.afterAll(async () => {
 	if(graphqlService) {
 		await graphqlService.deleteCategory(categoryId);
+		await graphqlService.deleteCreditCard(creditCardId);
+		await graphqlService.deleteBankAccount(bankAccountId);
+		await graphqlService.deleteBank(bankId);
 	}
 	await page.close();
 });
@@ -100,6 +117,28 @@ test('Create Expense Credit Card', async () => {
 });
 
 test('Delete Expense Credit Card', async () => {
+	await deleteExpense(page, expenseId, categoryName);
+	await expect(
+		page.locator(`li[data-tn="expense-container-${expenseId}"]`),
+	).not.toBeVisible();
+});
+
+test('Create Bank Account Expense', async () => {
+	const expense = await createExpense(page, {
+		description: 'Expense 1',
+		amount: 34.21,
+		categoryName: categoryName,
+		currencyCode: DEFAULT_USER_CURRENCIES[0],
+		type: 'BANK_ACCOUNT',
+		bankAccountId
+	});
+	expenseId = expense.id;
+	await expect(
+		page.locator(`li[data-tn="expense-container-${expenseId}"]`),
+	).toBeVisible();
+});
+
+test('Delete Bank Account Expense', async () => {
 	await deleteExpense(page, expenseId, categoryName);
 	await expect(
 		page.locator(`li[data-tn="expense-container-${expenseId}"]`),

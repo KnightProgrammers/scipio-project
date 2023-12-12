@@ -416,6 +416,7 @@
     },
     "expensePaymentType": {
         "CASH": "Efectivo",
-        "CREDIT_CARD": "Tarjeta de Crédito"
+        "CREDIT_CARD": "Tarjeta de Crédito",
+        "BANK_ACCOUNT": "Cuenta de Banco"
     }
 }

@@ -416,6 +416,7 @@
     },
     "expensePaymentType": {
         "CASH": "Cash",
-        "CREDIT_CARD": "Credit Card"
+        "CREDIT_CARD": "Credit Card",
+        "BANK_ACCOUNT": "Cuenta de Banco"
     }
 }

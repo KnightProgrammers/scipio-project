@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import ExpenseModel from '@/models/expense.model';
 import CreditCardMonthlyStatementService from '@/services/credit-card-monthly-statement.service';
+import BankAccountService from '@/services/bank-account.service';
 
 interface ExpenseInput {
 	amount: number,
@@ -9,6 +10,7 @@ interface ExpenseInput {
 	currencyId: string,
 	categoryId: string,
 	creditCardId?: string,
+	bankAccountId?: string,
 }
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
@@ -117,7 +119,8 @@ class ExpenseService {
 			description = '',
 			currencyId,
 			categoryId,
-			creditCardId
+			creditCardId,
+			bankAccountId
 		} = data;
 
 		let type: string = 'CASH';
@@ -127,10 +130,20 @@ class ExpenseService {
 		if (creditCardId) {
 			type = 'CREDIT_CARD';
 
-			const credtiCardStatements: any[] = await CreditCardMonthlyStatementService.findOldestStatement(creditCardId, userId, billableDate);
-			if (credtiCardStatements.length) {
-				creditCardMonthlyStatementId = credtiCardStatements[0]._id;
+			const creditCardStatements: any[] = await CreditCardMonthlyStatementService.findOldestStatement(creditCardId, userId, billableDate);
+			if (creditCardStatements.length) {
+				creditCardMonthlyStatementId = creditCardStatements[0]._id;
 			}
+		}
+
+		if (bankAccountId) {
+			type = 'BANK_ACCOUNT';
+			const bankAccount = await BankAccountService.findOne(bankAccountId, userId);
+			if (!bankAccount) {
+				return null;
+			  }
+			const newBalance: number = bankAccount.accountBalance - amount;
+			await BankAccountService.updateBalance(bankAccountId, userId, newBalance);
 		}
 
 		return ExpenseModel.create({
@@ -142,15 +155,25 @@ class ExpenseService {
 			categoryId,
 			creditCardId,
 			creditCardMonthlyStatementId,
+			bankAccountId,
 			userId,
 			isDeleted: false
 		});
 	}
-	static async delete(id: string, user: any) {
-		const category = await this.findOne(id, user);
-		if (!category) return null;
-		category.isDeleted = true;
-		return category.save();
+	static async delete(id: string, userId: string) {
+		const expense = await this.findOne(id, userId);
+		if (!expense) return null;
+
+		if (expense.type === 'BANK_ACCOUNT' && expense.bankAccountId) {
+			const bankAccount = await BankAccountService.findOne(expense.bankAccountId.toString(), userId);
+			if (!bankAccount) {
+				return null;
+			}
+			const newBalance: number = bankAccount.accountBalance + expense.amount;
+			await BankAccountService.updateBalance(expense.bankAccountId.toString(), userId, newBalance);
+		}
+		expense.isDeleted = true;
+		return expense.save();
 	}
 	static async findOne(id: string, userId: any) {
 		return ExpenseModel.findOne({ _id: id, userId, isDeleted: false });

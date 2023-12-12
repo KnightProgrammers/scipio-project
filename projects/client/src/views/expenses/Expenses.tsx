@@ -32,6 +32,7 @@ import {
 } from '@/services/ExpenseService'
 import currencyFormat from '@/utils/currencyFormat'
 import {
+    HiLibrary,
     HiOutlineCheck,
     HiOutlineCreditCard,
     HiOutlineTrash,
@@ -72,6 +73,7 @@ import Tr from '@/components/ui/Table/Tr'
 import TBody from '@/components/ui/Table/TBody'
 import Td from '@/components/ui/Table/Td'
 import classNames from 'classnames'
+import { apiGetUserBankAccountList } from '@/services/BankAccountService'
 
 const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
     const total = expenses
@@ -82,7 +84,7 @@ const getTotalExpenseByCurrency = (expenses: any[], currencyCode: string) => {
 }
 
 type EXPENSE_TYPE = 'FIXED_EXPENSE' | 'VARIABLE_EXPENSE'
-type PAYMENT_METHOD_TYPE = 'CASH' | 'CREDIT_CARD'
+type PAYMENT_METHOD_TYPE = 'CASH' | 'CREDIT_CARD' | 'BANK_ACCOUNT'
 
 type ExpenseFilter = {
     fromDate: Date
@@ -218,6 +220,7 @@ const ExpenseForm = (props: {
     userCurrencies: any[]
     categories: any[]
     creditCards: any[]
+    bankAccounts: any[]
     onFormClose: () => void
     onFormSubmit: (value: any) => void
     isSaving: boolean
@@ -228,6 +231,7 @@ const ExpenseForm = (props: {
         userCurrencies,
         categories,
         creditCards,
+        bankAccounts,
         isSaving,
         onFormClose,
         onFormSubmit,
@@ -245,7 +249,16 @@ const ExpenseForm = (props: {
 
     const handleSubmit = (data: any) => {
         setSelectedType(undefined)
-        onFormSubmit(data)
+        if (selectedType === 'BANK_ACCOUNT') {
+            onFormSubmit({
+                ...data,
+                currencyId: bankAccounts.find(
+                    (ba) => ba.id === data.bankAccountId,
+                ).currency.id,
+            })
+        } else {
+            onFormSubmit(data)
+        }
     }
 
     const EXPENSE_TYPES = [
@@ -256,6 +269,10 @@ const ExpenseForm = (props: {
         {
             label: 'CREDIT_CARD',
             icon: <HiOutlineCreditCard />,
+        },
+        {
+            label: 'BANK_ACCOUNT',
+            icon: <HiLibrary />,
         },
     ]
 
@@ -322,10 +339,17 @@ const ExpenseForm = (props: {
     const validationSchema = Yup.object().shape({
         billableDate: Yup.string().required(t('validations.required') || ''),
         amount: Yup.string().required(t('validations.required') || ''),
-        currencyId: Yup.string().required(t('validations.required') || ''),
+        currencyId:
+            selectedType !== 'BANK_ACCOUNT'
+                ? Yup.string().required(t('validations.required') || '')
+                : Yup.string(),
         categoryId: Yup.string().required(t('validations.required') || ''),
         creditCardId:
             selectedType === 'CREDIT_CARD'
+                ? Yup.string().required(t('validations.required') || '')
+                : Yup.string(),
+        bankAccountId:
+            selectedType === 'BANK_ACCOUNT'
                 ? Yup.string().required(t('validations.required') || '')
                 : Yup.string(),
     })
@@ -340,6 +364,9 @@ const ExpenseForm = (props: {
             subLabel += `- ${creditCard.cardHolder}`
         }
         return `${creditCard.label} ${subLabel}`
+    }
+    function generateBankAccountLabel(bankAccount: any): string {
+        return `${bankAccount.bank.name} - ${bankAccount.accountNumber} (${bankAccount.currency.code})`
     }
 
     return (
@@ -418,28 +445,32 @@ const ExpenseForm = (props: {
                             }
                         />
                     </FormItem>
-                    <FormItem
-                        asterisk
-                        label={t('fields.currency') || ''}
-                        invalid={!!errors.currencyId || !!touched.currencyId}
-                        errorMessage={errors.currencyId?.toString()}
-                    >
-                        <Field
-                            type="text"
-                            autoComplete="off"
-                            name="currencyId"
-                            placeholder={t('fields.currency')}
-                            options={userCurrencies.map((c) => ({
-                                value: c.id,
-                                label: `${c.code} - ${t(
-                                    `currencies.${c.code}`,
-                                )}`,
-                            }))}
-                            className="currency-select"
-                            id="currency-select"
-                            component={SelectFieldItem}
-                        />
-                    </FormItem>
+                    {selectedType !== 'BANK_ACCOUNT' && (
+                        <FormItem
+                            asterisk
+                            label={t('fields.currency') || ''}
+                            invalid={
+                                !!errors.currencyId || !!touched.currencyId
+                            }
+                            errorMessage={errors.currencyId?.toString()}
+                        >
+                            <Field
+                                type="text"
+                                autoComplete="off"
+                                name="currencyId"
+                                placeholder={t('fields.currency')}
+                                options={userCurrencies.map((c) => ({
+                                    value: c.id,
+                                    label: `${c.code} - ${t(
+                                        `currencies.${c.code}`,
+                                    )}`,
+                                }))}
+                                className="currency-select"
+                                id="currency-select"
+                                component={SelectFieldItem}
+                            />
+                        </FormItem>
+                    )}
                     <FormItem
                         asterisk
                         label={t('fields.category') || ''}
@@ -484,6 +515,31 @@ const ExpenseForm = (props: {
                             />
                         </FormItem>
                     )}
+                    {selectedType === 'BANK_ACCOUNT' && (
+                        <FormItem
+                            asterisk
+                            label={t('fields.bankAccount') || ''}
+                            invalid={
+                                !!errors.bankAccountId ||
+                                !!touched.bankAccountId
+                            }
+                            errorMessage={errors.bankAccountId?.toString()}
+                        >
+                            <Field
+                                type="text"
+                                autoComplete="off"
+                                name="bankAccountId"
+                                placeholder={t('fields.bankAccount')}
+                                options={bankAccounts.map((ba: any) => ({
+                                    value: ba.id,
+                                    label: generateBankAccountLabel(ba),
+                                }))}
+                                className="bank-account-select"
+                                id="bank-account-select"
+                                component={SelectFieldItem}
+                            />
+                        </FormItem>
+                    )}
                 </>
             )}
             isSaving={isSaving}
@@ -510,7 +566,11 @@ const ExpenseFilter = (props: {
     const { t } = useTranslation()
 
     const EXPENSE_TYPES: EXPENSE_TYPE[] = ['FIXED_EXPENSE', 'VARIABLE_EXPENSE']
-    const PAYMENT_METHODS: PAYMENT_METHOD_TYPE[] = ['CASH', 'CREDIT_CARD']
+    const PAYMENT_METHODS: PAYMENT_METHOD_TYPE[] = [
+        'CASH',
+        'CREDIT_CARD',
+        'BANK_ACCOUNT',
+    ]
 
     const [expenseTypes, setExpenseTypes] =
         useState<EXPENSE_TYPE[]>(EXPENSE_TYPES)
@@ -852,14 +912,20 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
         icon = <HiOutlineCreditCard className="text-lg" />
     }
 
-    const cursorClassName: string =
-        expense.type === 'CREDIT_CARD' ? 'cursor-pointer' : 'cursor-default'
+    const cursorClassName: string = ['CREDIT_CARD', 'BANK_ACCOUNT'].includes(
+        expense.type,
+    )
+        ? 'cursor-pointer'
+        : 'cursor-default'
 
     const handleClick = () => {
         if (expense.type === 'CREDIT_CARD') {
             navigate(
                 `/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`,
             )
+        }
+        if (expense.type === 'BANK_ACCOUNT') {
+            navigate('/conf/bank-accounts')
         }
     }
 
@@ -939,6 +1005,11 @@ const Expenses = () => {
     const { data: creditCards } = useQuery({
         queryKey: ['user-credit-cards-for-select'],
         queryFn: apiGetCreditCardListForSelect,
+    })
+
+    const { data: bankAccounts } = useQuery({
+        queryKey: ['user-bank-accounts-for-select'],
+        queryFn: apiGetUserBankAccountList,
     })
 
     const onMutationSuccess = async (title: string) => {
@@ -1215,7 +1286,7 @@ const Expenses = () => {
 
     const rows = table.getFilteredRowModel().flatRows
 
-    if (!categories || !userCurrencies || !creditCards) {
+    if (!categories || !userCurrencies || !creditCards || !bankAccounts) {
         return (
             <Container className="h-full">
                 <Loading loading />
@@ -1277,6 +1348,7 @@ const Expenses = () => {
                     categories={categories}
                     userCurrencies={userCurrencies}
                     creditCards={creditCards}
+                    bankAccounts={bankAccounts}
                     isSaving={createExpenseMutation.isPending}
                     onFormClose={onFormClose}
                     onFormSubmit={onFormSubmit}
@@ -1383,6 +1455,7 @@ const Expenses = () => {
                 categories={categories}
                 userCurrencies={userCurrencies}
                 creditCards={creditCards}
+                bankAccounts={bankAccounts}
                 isSaving={createExpenseMutation.isPending}
                 onFormClose={onFormClose}
                 onFormSubmit={onFormSubmit}

@@ -93,8 +93,8 @@ class BankAccountService {
 		return bankAccount;
 	}
 
-	static async findOne(id: string, accountUserId: any) {
-		const bankAccount = await BankAccountSchema.findOne({ _id: id, accountUserId });
+	static async findOne(id: string, userId: any) {
+		const bankAccount = await BankAccountSchema.findOne({ _id: id, accountUserId: userId });
 		if (!bankAccount) return null;
 		return bankAccount;
 	}

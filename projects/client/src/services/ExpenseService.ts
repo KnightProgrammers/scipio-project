@@ -36,6 +36,9 @@ export async function apiGetExpenseList({
                         creditCard {
                             id
                         }
+                        bankAccount {
+                            id
+                        }
                       }
                       budget {
                         id
@@ -63,7 +66,8 @@ export async function apiCreateExpense(data: {
     billableDate: string
     currencyId: string
     categoryId: string
-    creditCardId: string
+    creditCardId?: string
+    bankAccountId?: string
 }) {
     const response = await BaseService.request({
         url: '/graphql',
@@ -78,6 +82,7 @@ export async function apiCreateExpense(data: {
                     $currencyId: String!
                     $categoryId: String!
                     $creditCardId: String
+                    $bankAccountId: String
                 ) {
                     createExpense(input: {
                         amount: $amount
@@ -86,6 +91,7 @@ export async function apiCreateExpense(data: {
                         currencyId: $currencyId
                         categoryId: $categoryId
                         creditCardId: $creditCardId
+                        bankAccountId: $bankAccountId
                     }) {
                         id
                     }

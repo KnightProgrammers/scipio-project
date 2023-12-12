@@ -17,7 +17,7 @@ export const ExpenseSchema = new mongoose.Schema(
 		type: {
 			type: String,
 			required: true,
-			enum : ['CASH', 'CREDIT_CARD'],
+			enum : ['CASH', 'CREDIT_CARD', 'BANK_ACCOUNT'],
 			default: 'CASH'
 		},
 		currencyId: {
@@ -35,6 +35,10 @@ export const ExpenseSchema = new mongoose.Schema(
 		creditCardId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'CreditCard',
+		},
+		bankAccountId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'BankAccount',
 		},
 		creditCardMonthlyStatementId: {
 			type: mongoose.Schema.Types.ObjectId,
