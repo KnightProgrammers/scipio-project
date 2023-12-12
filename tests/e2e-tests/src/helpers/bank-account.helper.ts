@@ -69,6 +69,21 @@ export const editBankAccount = async (page: Page, bankId: string, bankAccountId:
 	return foundUpdatedBankAccount;
 };
 
+export const editBankAccountBalance = async (page: Page, bankId: string, bankAccountId: string, data: {accountBalance: number}) => {
+	await page.locator(
+		`div[data-tn="bank-account-${bankAccountId}"] div[data-tn="bank-account-balance"]`
+	).click();
+	const {accountBalance} = data;
+	const formLocator = page.locator('div[role="dialog"]');
+	await expect(formLocator).toBeVisible();
+	await page.locator('input[name="accountBalance"]').fill(accountBalance.toString());
+	const saveBankAccountWaitForRequest = waitForRequest(page, 'updateBankAccountBalance');
+	const getBankAccountListWaitForRequest = waitForRequest(page, 'userBankAccounts');
+	await page.locator('button[data-tn="modal-form-save-btn"]').click();
+	await saveBankAccountWaitForRequest;
+	await getBankAccountListWaitForRequest;
+};
+
 export const deleteBankAccount = async (page: Page, bankId: string, bankAccountId: string) => {
 	await openDeleteBankAccountDialog(page, bankAccountId);
 	await confirmDeleteBankAccount(page, bankId, bankAccountId);

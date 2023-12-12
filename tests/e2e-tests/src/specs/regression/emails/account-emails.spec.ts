@@ -66,7 +66,6 @@ for (const lang of LANG_CONFIG) {
 				const user = await  firebaseService.auth().getUserByEmail(email);
 				if (user) {
 					await firebaseService.auth().deleteUser(user.uid);
-					console.log(`Deleted User "${email}"`);
 				}
 			} catch {
 				console.log('No user to be deleted');

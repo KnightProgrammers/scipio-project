@@ -9,10 +9,11 @@ import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 import {
 	createBankAccount,
 	deleteBankAccount,
-	editBankAccount,
+	editBankAccount, editBankAccountBalance,
 	openEditBankAccountForm
 } from '../../../../helpers/bank-account.helper';
 import { waitForRequest } from '../../../../helpers/generic.helper';
+import { convertToNumber } from '../../../../utils/convertToNumber';
 
 
 let email: string;
@@ -35,7 +36,6 @@ test.beforeAll(async ({ browser }) => {
 	page = await browser.newPage();
 	await page.goto('/');
 	await page.waitForLoadState('load');
-	console.log(`Creating account for user with email: "${email}"`);
 	await signUpUser(page, { email, password, name });
 	await signInUser(page, { email, password });
 });
@@ -44,7 +44,6 @@ test.afterAll(async () => {
 	try {
 		const user = await  firebaseService.auth().getUserByEmail(email);
 		await firebaseService.auth().deleteUser(user.uid);
-		console.log(`Deleted User "${email}"`);
 	} catch {
 		console.log('No user to be deleted');
 	} finally {
@@ -123,6 +122,20 @@ test('edit bank account', async () => {
 	await expect(page.locator(
 		`div[data-tn="bank-account-${bankAccount.id}"] span[data-tn="bank-account-number"]`
 	)).toHaveText('87654321');
+});
+test('update bank account balance', async () => {
+	const oldBalance: string = await page.locator(
+		`div[data-tn="bank-account-${bankAccount.id}"] div[data-tn="bank-account-balance"]`
+	).textContent();
+	expect(convertToNumber(oldBalance)).toEqual(876.3);
+	await editBankAccountBalance(page, bankId, bankAccount.id, {
+		accountBalance: 1991.13
+	});
+	await page.waitForTimeout(2000);
+	const newBalance: string = await page.locator(
+		`div[data-tn="bank-account-${bankAccount.id}"] div[data-tn="bank-account-balance"]`
+	).textContent();
+	expect(convertToNumber(newBalance)).toEqual(1991.13);
 });
 test('delete bank account', async () => {
 	await deleteBankAccount(page, bankId, bankAccount.id);

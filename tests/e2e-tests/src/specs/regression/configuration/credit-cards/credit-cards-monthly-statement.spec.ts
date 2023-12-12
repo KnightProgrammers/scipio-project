@@ -35,7 +35,6 @@ test.beforeAll(async ({ browser }) => {
 	page = await browser.newPage();
 	await page.goto('/');
 	await page.waitForLoadState('load');
-	console.log(`Creating account for user with email: "${email}"`);
 	await signUpUser(page, { email, password, name });
 	const {authToken} = await signInUser(page, { email, password });
 	graphqlService = new GraphqlService(authToken);
@@ -112,7 +111,6 @@ test.afterAll(async () => {
 	try {
 		const user = await  firebaseService.auth().getUserByEmail(email);
 		await firebaseService.auth().deleteUser(user.uid);
-		console.log(`Deleted User "${email}"`);
 	} catch {
 		console.log('No user to be deleted');
 	} finally {
