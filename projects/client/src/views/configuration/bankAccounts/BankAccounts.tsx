@@ -24,6 +24,7 @@ import {
     apiCreateBankAccount,
     apiUpdateBankAccount,
     apiDeleteBankAccount,
+    apiUpdateBankAccountBalance,
 } from '@/services/BankAccountService'
 import EmptyState from '@/components/shared/EmptyState'
 import { useTranslation } from 'react-i18next'
@@ -63,6 +64,8 @@ const BankAccounts = () => {
         useState<boolean>(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false)
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
+    const [isFormUpdateBalanceOpen, setIsFormUpdateBalanceOpen] =
+        useState<boolean>(false)
 
     const userState = useAppSelector((state) => state.auth.user)
 
@@ -109,6 +112,15 @@ const BankAccounts = () => {
 
     const updateBankAccountMutation = useMutation({
         mutationFn: apiUpdateBankAccount,
+        onSuccess: async () => {
+            await onMutationSuccess(
+                t('notifications.bankAccount.updated') || '',
+            )
+        },
+    })
+
+    const updateBankAccountBalanceMutation = useMutation({
+        mutationFn: apiUpdateBankAccountBalance,
         onSuccess: async () => {
             await onMutationSuccess(
                 t('notifications.bankAccount.updated') || '',
@@ -586,8 +598,16 @@ const BankAccounts = () => {
                                                         </span>
                                                     </div>
                                                     <div
-                                                        className="my-1 text-right"
+                                                        className="my-1 text-right cursor-pointer"
                                                         data-tn="bank-account-balance"
+                                                        onClick={() => {
+                                                            setSelectedBankAccount(
+                                                                a,
+                                                            )
+                                                            setIsFormUpdateBalanceOpen(
+                                                                true,
+                                                            )
+                                                        }}
                                                     >
                                                         {currencyFormat(
                                                             a.accountBalance,
@@ -804,6 +824,54 @@ const BankAccounts = () => {
                             ...values,
                         })
                     }
+                }}
+            />
+            <ModalForm
+                isOpen={isFormUpdateBalanceOpen}
+                entity={selectedBankAccount || {}}
+                title={t('pages.bankAccounts.form.editTitle')}
+                validationSchema={Yup.object().shape({
+                    accountBalance: Yup.number().required(
+                        t('validations.required') || '',
+                    ),
+                })}
+                fields={(
+                    errors: FormikErrors<any>,
+                    touched: FormikTouched<any>,
+                ) => (
+                    <>
+                        <FormItem
+                            asterisk
+                            label={
+                                t('pages.bankAccounts.fields.accountBalance') ||
+                                'AccountBalance'
+                            }
+                            invalid={
+                                (errors.accountBalance &&
+                                    touched.accountBalance) as boolean
+                            }
+                            errorMessage={errors.accountBalance?.toString()}
+                        >
+                            <Field
+                                type="number"
+                                autoComplete="off"
+                                name="accountBalance"
+                                placeholder={t(
+                                    'pages.bankAccounts.fields.accountBalance',
+                                )}
+                                component={Input}
+                            />
+                        </FormItem>
+                    </>
+                )}
+                isSaving={updateBankAccountBalanceMutation.isPending}
+                onClose={() => setIsFormUpdateBalanceOpen(false)}
+                onSubmit={async (values: any) => {
+                    await updateBankAccountBalanceMutation.mutateAsync({
+                        id: selectedBankAccount?.id ?? '',
+                        accountBalance: values.accountBalance,
+                    })
+                    setIsFormUpdateBalanceOpen(false)
                 }}
             />
             <ConfirmDialog
