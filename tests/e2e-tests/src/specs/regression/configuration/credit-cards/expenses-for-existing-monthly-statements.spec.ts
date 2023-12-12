@@ -6,7 +6,6 @@ import firebaseService from '../../../../services/firebase.service';
 import { waitForRequest } from '../../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
 import {
-	createMonthlyStatement,
 	openCreditCardDetailView,
 } from '../../../../helpers/credit-card.helper';
 import GraphqlService from '../../../../services/graphql.service';
@@ -18,8 +17,10 @@ let name: string;
 let graphqlService: GraphqlService;
 
 let creditCardId: string;
-let statementId: string;
+let categoryId: string;
+let currencyId: string;
 
+const monthlyStatementIds: string[] = [];
 const expenseIds: string[] = [];
 
 test.describe.configure({ mode: 'serial' });
@@ -44,16 +45,16 @@ test.beforeAll(async ({ browser }) => {
 
 	const userCurrencies: any[] = await graphqlService.getUserCurrencies();
 
-	const currencyId = userCurrencies[0].id;
+	currencyId = userCurrencies[0].id;
 
 	const category = await graphqlService.createCategories({
 		name: `Category ${uuidv4()}`,
 		type: 'WANT',
 		isFixedPayment: false
 	});
-	const categoryId = category.id;
+	categoryId = category.id;
 
-	const creditCard1 = await graphqlService.createCreditCard({
+	const creditCard = await graphqlService.createCreditCard({
 		label: 'Platinum',
 		expiration: DateTime.now().plus({month: 8}).toFormat('MMyy'),
 		issuer: 'visa',
@@ -61,37 +62,36 @@ test.beforeAll(async ({ browser }) => {
 		creditLimitAmount: 5000,
 		creditLimitCurrencyId: userCurrencies[0].id
 	});
-	creditCardId = creditCard1.id;
+	creditCardId = creditCard.id;
 
-	const creditCard2 = await graphqlService.createCreditCard({
-		label: 'Gold',
-		expiration: DateTime.now().plus({month: 8}).toFormat('MMyy'),
-		issuer: 'mastercard',
-		status: 'ACTIVE',
-		creditLimitAmount: 5000,
-		creditLimitCurrencyId: userCurrencies[0].id
-	});
+	const statementsConf: any[] = [
+		{
+			closeDate: DateTime.fromJSDate(new Date()).minus({month: 1}).toISO({ includeOffset: false }), // Last Month
+		},
+		{
+			closeDate: DateTime.fromJSDate(new Date()).minus({month: 2}).toISO({ includeOffset: false }), // Two months ago
+		}
+	];
+
+	for (const conf of statementsConf) {
+		const monthlyStatement = await graphqlService.createCreditCardMonthlyStatement({
+			closeDate: conf.closeDate,
+			creditCardId,
+		});
+		monthlyStatementIds.push(monthlyStatement.id);
+	}
+
+
 
 	const expensesConf = [
 		{
-			billableDate: DateTime.fromJSDate(new Date()).plus({day: 1}).toISO({ includeOffset: false }), // Tomorrow
-			creditCardId: creditCard1.id
+			billableDate: DateTime.fromJSDate(new Date()).toISO({ includeOffset: false }) // Today
 		},
 		{
-			billableDate: DateTime.fromJSDate(new Date()).toISO({ includeOffset: false }), // Today
-			creditCardId: creditCard1.id
+			billableDate: DateTime.fromJSDate(new Date()).minus({month: 1, day: 5}).toISO({ includeOffset: false }) // Last Month
 		},
 		{
-			billableDate: DateTime.fromJSDate(new Date()).minus({day: 1}).toISO({ includeOffset: false }), // Yesterday
-			creditCardId: creditCard1.id
-		},
-		{
-			billableDate: DateTime.fromJSDate(new Date()).minus({day: 1}).toISO({ includeOffset: false }), // Yesterday
-			creditCardId: creditCard2.id
-		},
-		{
-			billableDate: DateTime.fromJSDate(new Date()).minus({day: 1}).toISO({ includeOffset: false }), // Yesterday
-			creditCardId: undefined // Cash expense
+			billableDate: DateTime.fromJSDate(new Date()).minus({month: 2, day: 10}).toISO({ includeOffset: false }) // Two months ago
 		}
 	];
 
@@ -101,8 +101,8 @@ test.beforeAll(async ({ browser }) => {
 			categoryId: categoryId,
 			billableDate: conf.billableDate,
 			currencyId: currencyId,
-			creditCardId: conf.creditCardId,
-			description: 'Expense #1'
+			creditCardId: creditCardId,
+			description: 'Expense for statement'
 		});
 		expenseIds.push(expense.id);
 	}
@@ -120,7 +120,7 @@ test.afterAll(async () => {
 	}
 });
 
-test('`Next Statement` tab - List of expenses', async () => {
+test('Today\'s expense has no statement', async () => {
 	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
 	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
 	await waitForCreditCards;
@@ -130,45 +130,14 @@ test('`Next Statement` tab - List of expenses', async () => {
 	).toBeVisible();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
-	).toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
-	).toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
-	).not.toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
-	).not.toBeVisible();
-});
-test('Create Statement', async () => {
-	// Create a Statement with a close date for today
-	statementId = await createMonthlyStatement(page, new Date());
-});
-test('`Next Statement` tab - After statement Creation', async () => {
-	const isNextStatementSelected: string = await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="next-statement"]`).getAttribute('aria-selected');
-	expect(isNextStatementSelected).toEqual('true');
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
-	).toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).not.toBeVisible();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).not.toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
-	).not.toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
-	).not.toBeVisible();
 });
-test('New statement tab - List of expenses', async () => {
-	const newStatementTab = page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${statementId}"]`);
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('false');
-	await newStatementTab.click();
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('true');
+
+test('One month ago expense on the last month statement', async () => {
+	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[0]}"]`).click();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
@@ -177,11 +146,18 @@ test('New statement tab - List of expenses', async () => {
 	).toBeVisible();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+	).not.toBeVisible();
+});
+
+test('Two months ago expense on the two months ago statement', async () => {
+	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[1]}"]`).click();
+	await expect(
+		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+	).not.toBeVisible();
+	await expect(
+		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+	).not.toBeVisible();
+	await expect(
+		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
-	).not.toBeVisible();
-	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
-	).not.toBeVisible();
 });

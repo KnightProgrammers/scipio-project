@@ -46,6 +46,11 @@ type CreditCardInput = {
 	creditLimitCurrencyId: string
 }
 
+type NewCreditCardMonthlyStatementInput = {
+	creditCardId: string
+	closeDate: string
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -151,6 +156,27 @@ class GraphqlService {
 			variables
 		});
 		return data.createExpense;
+	}
+
+	async createCreditCardMonthlyStatement(variables: NewCreditCardMonthlyStatementInput) {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation createCreditCardMonthlyStatement(
+                  $creditCardId: String!
+                  $closeDate: String!
+                ) {
+                  createCreditCardMonthlyStatement(
+                    creditCardId: $creditCardId,
+                    closeDate: $closeDate
+                  ) {
+                    id
+                  }
+                }
+			`,
+			variables
+		});
+		return data.createCreditCardMonthlyStatement;
 	}
 
 	async getUserCurrencies () {
