@@ -8,7 +8,7 @@ import { creditCardExpirationJob } from '../jobs/credit-card-expiration.job';
 
 dotenv.config();
 
-let dbConnection: any;
+let dbConnection: mongoose.Connection;
 
 let CreditCardModel: any;
 
@@ -35,8 +35,8 @@ const creditCards: any[] = [];
 describe('CreditCardExpiration Job', () => {
 	beforeAll(async () => {
 		// Start Mongo DB collection
-		dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
-		CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
+		dbConnection = mongoose.createConnection(process.env.MONGO_DB_URI || '');
+		CreditCardModel = dbConnection.model('CreditCard', CreditCardSchema);
 		// Reset Database
 		await CreditCardModel.deleteMany();
 		// 1 Credit Card status="Active"
@@ -57,12 +57,12 @@ describe('CreditCardExpiration Job', () => {
 			DateTime.now().minus({ month: 8 }).toJSDate()
 		);
 		creditCards.push(creditCard3);
-		await dbConnection.disconnect();
+		await dbConnection.close();
 	});
 	test('Set status `EXPIRED` when the expiration is older than today', async () => {
 		await creditCardExpirationJob();
-		dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
-		CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
+		dbConnection = mongoose.createConnection(process.env.MONGO_DB_URI || '');
+		CreditCardModel = dbConnection.model('CreditCard', CreditCardSchema);
 		const creditCard1Updated: any = await CreditCardModel.findOne({
 			_id: creditCards[0]._id,
 		});
@@ -79,7 +79,8 @@ describe('CreditCardExpiration Job', () => {
 	afterAll(async () => {
 		try {
 			// Reset Database
-			await mongoose.connection.dropDatabase();
+			await dbConnection.dropDatabase();
+			await dbConnection.close();
 		} catch (e: any) {
 			console.log(e);
 		}
