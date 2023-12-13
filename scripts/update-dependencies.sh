@@ -7,6 +7,7 @@ declare -A projects=(
     ["client"]="/projects/client"
     ["infra-lib"]="/packages/infra"
     ["db-schemas-lib"]="/packages/db-schemas"
+    ["e2e-tests"]="/tests/e2e-tests"
 )
 
 # Get root directory
