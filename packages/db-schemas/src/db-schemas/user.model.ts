@@ -22,6 +22,10 @@ export const UserSchema = new mongoose.Schema(
 		},
 		country: CountrySchema,
 		currencies: [CurrencySchema],
+		isTest: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true, skipVersioning: { dontVersionMe: true } },
 );
