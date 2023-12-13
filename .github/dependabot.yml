@@ -7,19 +7,27 @@ updates:
       interval: "weekly"
   # Maintain Server dependencies for npm
   - package-ecosystem: "npm"
-    directory: "/server"
+    directory: "/projects/graphql-server"
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
-    directory: "/client"
+    directory: "/projects/client"
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
-    directory: "/infra"
+    directory: "/projects/cron-jobs"
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
-    directory: "/db-seed"
+    directory: "/projects/db-seed"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "npm"
+    directory: "/packages/infra"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "npm"
+    directory: "/packages/db-schemas"
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
@@ -28,14 +36,18 @@ updates:
       interval: "monthly"
   # Maintain Server dependencies for Composer
   - package-ecosystem: "docker"
-    directory: "/server"
+    directory: "/projects/graphql-server"
     schedule:
       interval: "weekly"
   - package-ecosystem: "docker"
-    directory: "/client"
+    directory: "/projects/client"
     schedule:
       interval: "weekly"
   - package-ecosystem: "docker"
-    directory: "/db-seed"
+    directory: "/projects/db-seed"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/projects/cron-jobs"
     schedule:
       interval: "weekly"
