@@ -1,4 +1,4 @@
-import { combineReducers, CombinedState, AnyAction, Reducer } from 'redux'
+import { combineReducers, Action, Reducer } from 'redux'
 import auth, { AuthState } from './slices/auth'
 import base, { BaseState } from './slices/base'
 import locale, { LocaleState } from './slices/locale/localeSlice'
@@ -6,18 +6,17 @@ import theme, { ThemeState } from './slices/theme/themeSlice'
 import darkMode, { DarkModeState } from './slices/darkMode/darkModeSlice'
 import RtkQueryService from '@/services/RtkQueryService'
 
-export type RootState = CombinedState<{
-    auth: CombinedState<AuthState>
-    base: CombinedState<BaseState>
+export type RootState = {
+    auth: AuthState
+    base: BaseState
     locale: LocaleState
     theme: ThemeState
     darkMode: DarkModeState
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     [RtkQueryService.reducerPath]: any
-}>
+}
 
 export interface AsyncReducers {
-    [key: string]: Reducer<any, AnyAction>
+    [key: string]: Reducer<any, Action>
 }
 
 const staticReducers = {
@@ -31,7 +30,7 @@ const staticReducers = {
 
 const rootReducer =
     (asyncReducers?: AsyncReducers) =>
-    (state: RootState, action: AnyAction) => {
+    (state: RootState, action: Action) => {
         const combinedReducer = combineReducers({
             ...staticReducers,
             ...asyncReducers,
