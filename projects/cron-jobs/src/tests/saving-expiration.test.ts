@@ -8,7 +8,7 @@ import { savingExpirationJob } from '../jobs/saving-expiration.job';
 
 dotenv.config();
 
-let dbConnection: any;
+let dbConnection: mongoose.Connection;
 
 let SavingModel: any;
 
@@ -30,8 +30,8 @@ const savings: any[] = [];
 describe('SavingExpiration Job', () => {
 	beforeAll(async () => {
 		// Start Mongo DB collection
-		dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
-		SavingModel = mongoose.model('Saving', SavingSchema);
+		dbConnection = mongoose.createConnection(process.env.MONGO_DB_URI || '');
+		SavingModel = dbConnection.model('Saving', SavingSchema);
 		// Reset Database
 		await SavingModel.deleteMany();
 		// 1 Saving status="IN_PROGRESS"
@@ -52,12 +52,12 @@ describe('SavingExpiration Job', () => {
 			DateTime.now().minus({ month: 8 }).toJSDate()
 		);
 		savings.push(saving3);
-		await dbConnection.disconnect();
+		await dbConnection.close();
 	});
 	test('Set status `EXPIRED` when the targetDate is older than today', async () => {
 		await savingExpirationJob();
-		dbConnection = await mongoose.connect(process.env.MONGO_DB_URI || '');
-		SavingModel = mongoose.model('Saving', SavingSchema);
+		dbConnection = mongoose.createConnection(process.env.MONGO_DB_URI || '');
+		SavingModel = dbConnection.model('Saving', SavingSchema);
 		const saving1Updated: any = await SavingModel.findOne({
 			_id: savings[0]._id,
 		});
@@ -74,7 +74,8 @@ describe('SavingExpiration Job', () => {
 	afterAll(async () => {
 		try {
 			// Reset Database
-			await mongoose.connection.dropDatabase();
+			await dbConnection.dropDatabase();
+			await dbConnection.close();
 		} catch (e: any) {
 			console.log(e);
 		}
