@@ -19,7 +19,7 @@
     "@fastify/sensible": "5.5.0",
     "@fastify/type-provider-typebox": "3.5.0",
     "@immobiliarelabs/fastify-sentry": "7.1.1",
-    "@knightprogrammers/scpio-db-schemas": "1.1.0",
+    "@knightprogrammers/scpio-db-schemas": "1.2.0",
     "@sentry/node": "7.84.0",
     "@sentry/profiling-node": "1.2.6",
     "@sinclair/typebox": "0.31.28",
