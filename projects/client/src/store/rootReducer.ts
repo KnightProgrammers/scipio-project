@@ -29,8 +29,7 @@ const staticReducers = {
 }
 
 const rootReducer =
-    (asyncReducers?: AsyncReducers) =>
-    (state: RootState, action: Action) => {
+    (asyncReducers?: AsyncReducers) => (state: RootState, action: Action) => {
         const combinedReducer = combineReducers({
             ...staticReducers,
             ...asyncReducers,
