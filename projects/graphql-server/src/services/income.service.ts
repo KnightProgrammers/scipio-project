@@ -29,8 +29,7 @@ class IncomeService {
 				incomeDate: {
 					$gte: formattedFromDate.toJSDate(),
 					$lte: formattedToDate.toJSDate()
-				},
-				isDeleted: false
+				}
 			})
 			.sort({ incomeDate: -1 });
 	}
