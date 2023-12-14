@@ -8,5 +8,6 @@ export { CreditCardSchema } from "./db-schemas/credit-card.model";
 export { CreditCardMonthlyStatementSchema } from "./db-schemas/credit-card-monthly-statement.model";
 export { CurrencySchema } from "./db-schemas/currency.model";
 export { ExpenseSchema } from "./db-schemas/expense.model";
+export { IncomeSchema } from "./db-schemas/income.model";
 export { SavingSchema } from "./db-schemas/saving.model";
 export { UserSchema } from "./db-schemas/user.model";
