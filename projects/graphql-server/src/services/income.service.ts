@@ -44,7 +44,7 @@ class IncomeService {
 		if (!bankAccount) {
 			return null;
 		}
-		const newBalance: number = bankAccount.accountBalance - amount;
+		const newBalance: number = bankAccount.accountBalance + amount;
 		await BankAccountService.updateBalance(bankAccountId, userId, newBalance);
 
 		const currency = await CurrencyService.findByCode(bankAccount.accountCurrency.code);
@@ -69,7 +69,7 @@ class IncomeService {
 		if (!bankAccount) {
 			return false;
 		}
-		const newBalance: number = bankAccount.accountBalance + income.amount;
+		const newBalance: number = bankAccount.accountBalance - income.amount;
 		await BankAccountService.updateBalance(income.bankAccountId.toString(), userId, newBalance);
 		await income.deleteOne();
 		return true;
