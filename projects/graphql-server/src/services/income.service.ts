@@ -79,3 +79,5 @@ class IncomeService {
 		return IncomeModel.findOne({ _id: id, userId });
 	}
 }
+
+export default IncomeService;
