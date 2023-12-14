@@ -7,7 +7,7 @@ export async function apiGetIncomeList({
     fromDate?: string
     toDate?: string
 }) {
-    const {data} = await BaseService.request({
+    const { data } = await BaseService.request({
         url: '/graphql',
         method: 'POST',
         data: {
@@ -94,7 +94,7 @@ export async function apiDeleteIncome(incomeId: string) {
         method: 'POST',
         data: {
             operationName: 'deleteIncome',
-            query: `mutation deletIncome($id: String!) {
+            query: `mutation deleteIncome($id: String!) {
               deleteIncome(id: $id)
             }`,
             variables: {

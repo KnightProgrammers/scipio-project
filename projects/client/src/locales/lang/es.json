@@ -171,7 +171,8 @@
             "deleteConfirmation": {
                 "title": "Eliminar Ingreso",
                 "description": "Está seguro que desea eliminar el ingreso?"
-            }
+            },
+            "filterTitle": "Filtro de Ingresos"
         },
         "profile": {
             "appearance": "Tema"
@@ -348,6 +349,10 @@
             "created": "Gasto creado correctamente",
             "deleted": "Gasto eliminado correctamente"
         },
+        "incomes": {
+            "created": "Ingreso creado correctamente",
+            "deleted": "Ingreso eliminado correctamente"
+        },
         "saving": {
             "created": "Ahorro creado correctamente",
             "updated": "Ahorro actualizado correctamente",
@@ -369,6 +374,8 @@
         "country": "Selecciona un pais",
         "currentMonth": "Mes actual",
         "lastMonth": "Mes anterior",
+        "currentYear": "Año actual",
+        "lastYear": "Año anterior",
         "other": "Otro",
         "searchByName": "Buscar por Nombre",
         "total": "Total"
