@@ -7,7 +7,7 @@ type IncomeInput = {
 	amount: number,
 	incomeDate: string,
 	description?: string,
-	bankAccountId?: string,
+	bankAccountId: string,
 }
 
 export const IncomeMutation = {

@@ -7,7 +7,7 @@ interface IncomeInput {
 	amount: number,
 	incomeDate: Date,
 	description?: string,
-	bankAccountId?: string,
+	bankAccountId: string,
 }
 
 const parseFilterDate = (stringDate: string | undefined, defaultDay: number) => {
@@ -38,8 +38,8 @@ class IncomeService {
 		const {
 			amount,
 			incomeDate,
-			description = '',
-			bankAccountId
+			bankAccountId,
+			description = ''
 		} = data;
 		const bankAccount = await BankAccountService.findOne(bankAccountId, userId);
 		if (!bankAccount) {
