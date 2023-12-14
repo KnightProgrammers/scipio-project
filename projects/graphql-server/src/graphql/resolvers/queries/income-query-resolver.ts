@@ -3,13 +3,13 @@ import BankAccountService from '@/services/bank-account.service';
 import { DateTime } from 'luxon';
 
 export const IncomeQueryResolver = {
-	incomeDate: (expense: any) => {
-		return DateTime.fromJSDate(expense.incomeDate).toISO({includeOffset: false});
+	incomeDate: (income: any) => {
+		return DateTime.fromJSDate(income.incomeDate).toISO({includeOffset: false});
 	},
-	currency: async (expense: any) => {
-		return CurrencyService.findOne(expense.currencyId);
+	currency: async (income: any) => {
+		return CurrencyService.findOne(income.currencyId);
 	},
-	bankAccount: async (expense: any, params: any, ctx: any) => {
-		return BankAccountService.findOne(expense.bankAccountId, ctx.auth._id);
+	bankAccount: async (income: any, params: any, ctx: any) => {
+		return BankAccountService.findOne(income.bankAccountId, ctx.auth._id);
 	}
 };
