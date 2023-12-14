@@ -8,17 +8,19 @@ import { apiCreateIncome, apiGetIncomeList } from '@/services/IncomeService'
 import { apiGetUserBankAccountList } from '@/services/BankAccountService'
 import currencyFormat from '@/utils/currencyFormat'
 import { ConfirmDialog, Container, Loading } from '@/components/shared'
+import DatePicker from '@/components/ui/DatePicker'
+import { SelectFieldItem } from '@/components/ui/Form'
 import EmptyState from '@/components/shared/EmptyState'
 import {
     HiLibrary,
     HiOutlineCheck,
     HiOutlineCreditCard,
     HiOutlineTrash,
-    HiOutlineTrendingDown,
-    HiOutlineTrendingUp,
     HiPlus,
 } from 'react-icons/hi'
+import { MdOutlineAttachMoney } from 'react-icons/md'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
+import * as Yup from 'yup'
 import {
     Avatar,
     Badge,
@@ -36,6 +38,137 @@ type IncomeFilterType = {
     fromDate: Date
     toDate: Date
     currencies: string[]
+}
+
+const IncomeForm = (props: {
+    isOpen: boolean
+    isSaving: boolean
+    bankAccounts: any[]
+    onFormClose: () => void
+    onFormSubmit: (data: any) => Promise<void>
+}) => {
+    const {
+        isOpen,
+        isSaving,
+        bankAccounts,
+        onFormClose,
+        onFormSubmit,
+    } = props
+
+    const { t, i18n } = useTranslation()
+
+    const validationSchema = Yup.object().shape({
+        description: Yup.string().required(t('validations.required') || ''),
+        incomeDate: Yup.string().required(t('validations.required') || ''),
+        bankAccountId: Yup.string().required(t('validations.required') || ''),
+    })
+
+    return (
+        <ModalForm
+            isOpen={isOpen}
+            entity={{
+                incomeDate: DateTime.now().toISO(),
+            }}
+            title={t('pages.incomes.form.newTitle')}
+            validationSchema={validationSchema}
+            fields={(
+                errors: FormikErrors<any>,
+                touched: FormikTouched<any>,
+            ) => (
+                <>
+                    <FormItem
+                        asterisk
+                        label={t(`fields.description`) || ''}
+                        invalid={!!errors.description || !!touched.description}
+                        errorMessage={errors.description?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="description"
+                            placeholder={t(`fields.description`)}
+                            component={Input}
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t(`fields.targetDate`) || ''}
+                        invalid={!!errors.incomeDate || !!touched.incomeDate}
+                        errorMessage={errors.incomeDate?.toString()}
+                    >
+                        <Field name="incomeDate" placeholder="DD/MM/YYYY">
+                            {({ field, form }: FieldProps) => (
+                                <DatePicker
+                                    inputtable
+                                    inputtableBlurClose={false}
+                                    inputFormat="DD/MM/YYYY"
+                                    defaultValue={new Date()}
+                                    locale={i18n.language}
+                                    clearable={false}
+                                    data-tn="income-date-input"
+                                    onChange={(value: Date | null) => {
+                                        const d = value
+                                            ? DateTime.fromJSDate(value)
+                                            : DateTime.now()
+                                        form.setFieldValue(
+                                            field.name,
+                                            d.toISO(),
+                                        )
+                                    }}
+                                />
+                            )}
+                        </Field>
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t(`fields.amount`) || ''}
+                        invalid={
+                            !!errors.amount || !!touched.amount
+                        }
+                        errorMessage={errors.amount?.toString()}
+                    >
+                        <Field
+                            type="number"
+                            autoComplete="off"
+                            name="amount"
+                            placeholder={t(`fields.amount`)}
+                            component={Input}
+                            prefix={
+                                <MdOutlineAttachMoney className="text-xl" />
+                            }
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t('fields.bankAccount') || ''}
+                        invalid={
+                            !!errors.bankAccountId || !!touched.bankAccountId
+                        }
+                        errorMessage={errors.bankAccountId?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="bankAccountId"
+                            placeholder={t('fields.bankAccount')}
+                            options={bankAccounts.map((ba: any) => ({
+                                value: ba.id,
+                                label: `${ba.bank.name} - ${
+                                    ba.label ? `${ba.label}/` : ''
+                                }${ba.accountNumber} (${ba.currency.code})`,
+                            }))}
+                            className="bank-account-select"
+                            id="bank-account-select"
+                            component={SelectFieldItem}
+                        />
+                    </FormItem>
+                </>
+            )}
+            isSaving={isSaving}
+            onClose={onFormClose}
+            onSubmit={onFormSubmit}
+        />
+    )
 }
 
 const Incomes = () => {
@@ -97,32 +230,37 @@ const Incomes = () => {
         setSelectedIncome(undefined)
     }
 
-    const deleteExpenseMutation = useMutation({
+    const deleteIncomeMutation = useMutation({
         mutationFn: apiCreateIncome,
         onSuccess: async () => {
-            await onMutationSuccess(t('notifications.expenses.deleted') || '')
+            await onMutationSuccess(t('notifications.incomes.deleted') || '')
         },
     })
 
-    const createExpenseMutation = useMutation({
+    const createIncomeMutation = useMutation({
         mutationFn: apiCreateIncome,
         onSuccess: async () => {
-            await onMutationSuccess(t('notifications.expenses.created') || '')
+            await onMutationSuccess(t('notifications.incomes.created') || '')
         },
     })
 
     const onDelete = () => {
         if (selectedIncome) {
-            deleteExpenseMutation.mutate(selectedIncome.id)
+            deleteIncomeMutation.mutate(selectedIncome.id)
             onDeleteConfirmClose()
         }
+    }
+    
+    const onFormSubmit = async (value: any) => {
+        await createIncomeMutation.mutateAsync(value)
+        onFormClose()
     }
 
     if (!incomes || !bankAccounts) {
         return (
-            <div className="flex h-full mx-auto w-0" data-tn="incomes-page">
+            <Container className="h-full" data-tn="incomes-page">
                 <Loading loading />
-            </div>
+            </Container>
         )
     }
 
@@ -148,16 +286,28 @@ const Incomes = () => {
                         {t('pages.incomes.addIncomeButton')}
                     </Button>
                 </EmptyState>
+                <IncomeForm
+                    isOpen={isFormOpen}
+                    isSaving={createIncomeMutation.isPending}
+                    bankAccounts={bankAccounts}
+                    onFormSubmit={onFormSubmit}
+                    onFormClose={onFormClose}
+                />
             </Container>
         )
     }
 
     return <Container data-tn="incomes-page">
-
         <Loading type="cover" loading={isLoadingIncomes || isLoadingBankAccounts}>
             HOla
         </Loading>
-
+        <IncomeForm
+            isOpen={isFormOpen}
+            isSaving={createIncomeMutation.isPending}
+            bankAccounts={bankAccounts}
+            onFormSubmit={onFormSubmit}
+            onFormClose={onFormClose}
+        />
         <ConfirmDialog
             isOpen={isConfirmDeleteOpen}
             type="danger"

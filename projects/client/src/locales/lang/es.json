@@ -164,6 +164,13 @@
             "emptyState": {
                 "title": "No se encontraron ingresos",
                 "description": "Intenta ajustar el filtro o agregar ingresos"
+            },
+            "form": {
+                "newTitle": "Nuevo Ingreso"
+            },
+            "deleteConfirmation": {
+                "title": "Eliminar Ingreso",
+                "description": "Está seguro que desea eliminar el ingreso?"
             }
         },
         "profile": {

@@ -164,6 +164,13 @@
             "emptyState": {
                 "title": "No incomes were found",
                 "description": "Try changing the filter to show results or adding a new income"
+            },
+            "form": {
+                "newTitle": "New Income"
+            },
+            "deleteConfirmation": {
+                "title": "Delete Income",
+                "description": "Are you sure you want to delete the income?"
             }
         },
         "profile": {
