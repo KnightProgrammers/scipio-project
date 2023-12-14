@@ -42,16 +42,16 @@ class IncomeService {
 			bankAccountId
 		} = data;
 		const bankAccount = await BankAccountService.findOne(bankAccountId, userId);
-        if (!bankAccount) {
-            return null;
-        }
-        const newBalance: number = bankAccount.accountBalance - amount;
-        await BankAccountService.updateBalance(bankAccountId, userId, newBalance);
+		if (!bankAccount) {
+			return null;
+		}
+		const newBalance: number = bankAccount.accountBalance - amount;
+		await BankAccountService.updateBalance(bankAccountId, userId, newBalance);
 
-        const currency = await CurrencyService.findByCode(bankAccount.accountCurrency.code);
-        if (!currency) {
-            return null;
-        }
+		const currency = await CurrencyService.findByCode(bankAccount.accountCurrency.code);
+		if (!currency) {
+			return null;
+		}
 
 		return IncomeModel.create({
 			amount,
@@ -67,13 +67,13 @@ class IncomeService {
 		if (!income) return false;
 
 		const bankAccount = await BankAccountService.findOne(income.bankAccountId.toString(), userId);
-        if (!bankAccount) {
-            return false;
-        }
-        const newBalance: number = bankAccount.accountBalance + income.amount;
-        await BankAccountService.updateBalance(income.bankAccountId.toString(), userId, newBalance);
-		await income.deleteOne()
-        return true;
+		if (!bankAccount) {
+			return false;
+		}
+		const newBalance: number = bankAccount.accountBalance + income.amount;
+		await BankAccountService.updateBalance(income.bankAccountId.toString(), userId, newBalance);
+		await income.deleteOne();
+		return true;
 	}
 	static async findOne(id: string, userId: any) {
 		return IncomeModel.findOne({ _id: id, userId });
