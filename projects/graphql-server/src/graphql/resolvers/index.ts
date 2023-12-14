@@ -7,9 +7,10 @@ import {
 	CreditCardQueryResolver,
 	CreditCardMonthlyStatementQueryResolver,
 	CurrencyQueryResolver,
+	IncomeQueryResolver,
 	ExpenseQueryResolver,
 	SavingQueryResolver,
-	UserQueryResolver
+	UserQueryResolver,
 } from '@/graphql/resolvers/queries';
 
 import Mutation from '@/graphql/resolvers/mutations';
@@ -31,6 +32,7 @@ const resolvers = {
 	CreditCard: CreditCardQueryResolver,
 	CreditCardMonthlyStatement: CreditCardMonthlyStatementQueryResolver,
 	Expense: ExpenseQueryResolver,
+	Income: IncomeQueryResolver,
 	Saving: SavingQueryResolver,
 	User: UserQueryResolver,
 	Mutation

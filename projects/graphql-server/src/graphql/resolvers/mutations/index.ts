@@ -5,6 +5,7 @@ import { CategoryMutation } from '@/graphql/resolvers/mutations/category-mutatio
 import { CreditCardMutationResolver } from '@/graphql/resolvers/mutations/credit-card-mutation-resolver';
 import { CreditCardMonthlyStatementMutationResolver } from '@/graphql/resolvers/mutations/credit-card-monthly-statement-mutation-resolver';
 import { ExpenseMutation } from '@/graphql/resolvers/mutations/expense-mutation-resolver';
+import { IncomeMutation } from '@/graphql/resolvers/mutations/income-mutation-resolver';
 import { SavingMutation } from '@/graphql/resolvers/mutations/saving-mutation-resolver';
 import { UserMutationResolver } from '@/graphql/resolvers/mutations/user-mutation-resolver';
 
@@ -16,6 +17,7 @@ export default  {
 	...CreditCardMutationResolver,
 	...CreditCardMonthlyStatementMutationResolver,
 	...ExpenseMutation,
+	...IncomeMutation,
 	...SavingMutation,
 	...UserMutationResolver,
 };

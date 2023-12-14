@@ -7,6 +7,7 @@ import { CreditCardQueryResolver } from '@/graphql/resolvers/queries/credit-card
 import { CreditCardMonthlyStatementQueryResolver } from '@/graphql/resolvers/queries/credit-card-monhtly-statement-query-resolver';
 import { CurrencyQueryResolver } from '@/graphql/resolvers/queries/currency-query-resolver';
 import { ExpenseQueryResolver } from '@/graphql/resolvers/queries/expense-query-resolver';
+import { IncomeQueryResolver } from '@/graphql/resolvers/queries/income-query-resolver';
 import { SavingQueryResolver } from '@/graphql/resolvers/queries/saving-query-resolver';
 import { UserQueryResolver } from '@/graphql/resolvers/queries/user-query-resolver';
 
@@ -20,6 +21,7 @@ export {
 	CreditCardMonthlyStatementQueryResolver,
 	CurrencyQueryResolver,
 	ExpenseQueryResolver,
+	IncomeQueryResolver,
 	SavingQueryResolver,
 	UserQueryResolver,
 };

@@ -3,6 +3,7 @@ import BankService from '@/services/bank.service';
 import CreditCardService, { CREDIT_CARD_STATUS_TYPE } from '@/services/credit-card-service';
 import CategoryService from '@/services/category.service';
 import ExpenseService from '@/services/expense.service';
+import IncomeService from '@/services/income.service';
 import SavingService, { SAVING_STATUS_TYPE } from '@/services/saving.service';
 import BankAccountService from '@/services/bank-account.service';
 import BudgetService from '@/services/budget.service';
@@ -44,5 +45,8 @@ export const UserQueryResolver = {
 	budget: async (user: any) => {
 		const budgets: any[] = await BudgetService.findAllByUserId(user._id);
 		return budgets.length > 0 ? budgets[0] : null;
-	}
+	},
+	incomes: async (user: any, params: {fromDate?: string, toDate?: string}) => {
+		return IncomeService.getAll(user._id, params.fromDate, params.toDate);
+	},
 };
