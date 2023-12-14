@@ -159,10 +159,12 @@
             }
         },
         "incomes": {
-            "header": "Incomes"
-        },
-        "jobs": {
-            "header": "Jobs"
+            "header": "Incomes",
+            "addIncomeButton": "Add Income",
+            "emptyState": {
+                "title": "No incomes were found",
+                "description": "Try changing the filter to show results or adding a new income"
+            }
         },
         "profile": {
             "appearance": "Appearance"

@@ -49,7 +49,6 @@ const navigationConfig: NavigationTree[] = [
         icon: 'incomes',
         type: NAV_ITEM_TYPE_ITEM,
         subMenu: [],
-        hidden: true,
     },
     {
         key: 'configuration',

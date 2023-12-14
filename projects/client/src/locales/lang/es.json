@@ -159,10 +159,12 @@
             }
         },
         "incomes": {
-            "header": "Ingresos"
-        },
-        "jobs": {
-            "header": "Trabajos"
+            "header": "Ingresos",
+            "addIncomeButton": "Agregar Ingreso",
+            "emptyState": {
+                "title": "No se encontraron ingresos",
+                "description": "Intenta ajustar el filtro o agregar ingresos"
+            }
         },
         "profile": {
             "appearance": "Tema"
