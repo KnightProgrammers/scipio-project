@@ -11,7 +11,7 @@ type IncomeInput = {
 }
 
 export const IncomeMutation = {
-	createExpense: async (root: any, params: { input: IncomeInput }, context: any) => {
+	createIncome: async (root: any, params: { input: IncomeInput }, context: any) => {
 		const userId = context.auth._id;
 		const {
 			amount,
@@ -40,7 +40,7 @@ export const IncomeMutation = {
 			bankAccountId
 		});
 	},
-	deleteExpense: async (root: any, params: {id: string}, context: any) => {
+	deleteIncome: async (root: any, params: {id: string}, context: any) => {
 		const {id} = params;
 		return IncomeService.delete(id, context.auth._id);
 	},
