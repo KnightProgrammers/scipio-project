@@ -3,14 +3,18 @@ import dotenv from 'dotenv';
 import logger from './helpers/logger';
 import { DateTime } from 'luxon';
 
-
 import {
 	BankAccountSchema,
-	BankSchema, BudgetCategorySchema, BudgetSchema,
+	BankSchema,
+	BudgetCategorySchema,
+	BudgetSchema,
 	CategorySchema,
-	CountrySchema, CreditCardMonthlyStatementSchema,
+	CountrySchema,
+	CreditCardMonthlyStatementSchema,
 	CreditCardSchema,
-	CurrencySchema, ExpenseSchema,
+	CurrencySchema,
+	ExpenseSchema,
+	IncomeSchema,
 	SavingSchema,
 	UserSchema
 } from '@knightprogrammers/scpio-db-schemas';
@@ -45,6 +49,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 	const CreditCardMonthlyStatementModel = mongoose.model('CreditCardMonthlyStatement', CreditCardMonthlyStatementSchema);
 	const CurrencyModel = mongoose.model('Currency', CurrencySchema);
 	const ExpenseModel = mongoose.model('Expense', ExpenseSchema);
+	const IncomeModel = mongoose.model('Income', IncomeSchema);
 	const SavingModel = mongoose.model('Saving', SavingSchema);
 	const UserModel = mongoose.model('User', UserSchema);
 	logger.info('DB connection is up');
@@ -61,8 +66,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 	const userExist = await UserModel.findOne({email: 'demo@scipiofinances.com'});
 
 	if (userExist) {
-		// throw new Error('Demo account already created!');
-		await userExist.deleteOne(); // TODO: Temporal remove before deploying it
+		throw new Error('Demo account already created!');
 	}
 
 	const { _id: userId } = await UserModel.create({
@@ -120,7 +124,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		});
 	}
 
-	logger.info('	Added budget');
+	logger.info(`	Added ${categories.length} budgets`);
 
 
 
@@ -330,7 +334,23 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 
 	logger.info(`	Added ${creditCardExpenseCounter} expenses`);
 
-	// Budgets
+	// Incomes
+
+	let incomeDate = DateTime.now().startOf('year').plus({day: 5});
+	const bankAccount = bankAccounts[0];
+	for (let i = 0; i < 12; i++) {
+		await IncomeModel.create({
+			amount: 4000,
+			description: 'Salary',
+			incomeDate: incomeDate.toISO({includeOffset: false}),
+			currencyId: bankAccount.accountCurrency._id,
+			bankAccountId: bankAccount._id,
+			userId
+		});
+		incomeDate = incomeDate.plus({month: 1});
+	}
+
+	logger.info('	Added 14 incomes');
 
 	logger.info('-----------------');
 	await dbConnection.disconnect();
