@@ -264,7 +264,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create environment
         run: |
-          sleep 30 # Railway allows to create an environment every 30 seconds
           scipio-infra environment-create "test-${{ github.event.number }}"
         env:
           RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}

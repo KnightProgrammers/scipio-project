@@ -1,3 +1,6 @@
+/**
+ * A class representing a Railway Service.
+ */
 class RailwayService {
 	authToken;
 	projectId;
@@ -7,6 +10,17 @@ class RailwayService {
 		this.projectId = projectId;
 	}
 
+	/**
+	 * Executes a query to the specified GraphQL endpoint with the given query and variables.
+	 *
+	 * @param {Object} options - The options for the query execution.
+	 * @param {string} options.query - The GraphQL query to be executed.
+	 * @param {Object} options.variables - The variables to be passed along with the query.
+	 *
+	 * @returns {Promise<Object>} - A promise that resolves with the response data from the GraphQL endpoint.
+	 *
+	 * @throws {Error} - If there are any errors returned from the GraphQL endpoint.
+	 */
 	async _executeQuery({ query, variables }) {
 		const result = await fetch('https://backboard.railway.app/graphql/v2', {
 			method: 'POST',

@@ -3,6 +3,14 @@ import RailwayService from '../services/railway.service.js';
 
 const railwayClient = new RailwayService(process.env.RAILWAY_PROJECT_ID);
 
+/**
+ * Deletes an environment.
+ *
+ * @async
+ * @function deleteEnvironmentCommand
+ * @param {string} environmentName - The name of the environment to delete.
+ * @returns {Promise<void>} - A promise that resolves when the environment is deleted.
+ */
 const deleteEnvironmentCommand = async (environmentName) => {
 	console.log(
 		figlet.textSync('Delete Envitonment', {

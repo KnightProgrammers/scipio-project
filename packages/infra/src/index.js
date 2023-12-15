@@ -28,6 +28,8 @@ console.log('\n\n');
 
 const version = process.env.npm_package_version;
 
+
+
 program
 	.name('scipio-infra')
 	.description('CLI deploy Scipio application on Railway')

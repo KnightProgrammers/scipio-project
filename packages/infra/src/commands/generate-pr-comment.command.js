@@ -5,6 +5,14 @@ import RailwayService from '../services/railway.service.js';
 
 const railwayClient = new RailwayService(process.env.RAILWAY_PROJECT_ID);
 
+/**
+ * Generates a Pull Request comment with deployment status information for a specific environment.
+ *
+ * @async
+ * @param {object} options - The options for generating the PR comment.
+ * @param {string} options.environment - The name of the environment.
+ * @throws {Error} - If the environment is not found or if the deployment failed.
+ */
 const generatePrCommentCommand = async (options) => {
 	console.log(
 		figlet.textSync('Generate PR Comment', {
