@@ -5,6 +5,18 @@ import waitForDeployToFinish from '../helpers/wait-for-deploy.js';
 
 const railwayClient = new RailwayService(process.env.RAILWAY_PROJECT_ID);
 
+/**
+ * Deploys a service to the specified environment.
+ *
+ * @param {Object} options - The options for deploying the service.
+ * @param {string} options.service - The name of the service to deploy.
+ * @param {string} options.environment - The name of the environment to deploy to.
+ *
+ * @throws {Error} If the specified environment is not found.
+ * @throws {Error} If the Railway command fails.
+ *
+ * @returns {Promise<void>} A promise that resolves when the deployment is complete.
+ */
 const deployCommand = async (options) => {
 	console.log(
 		figlet.textSync(`Deploy ${options.service}`, {

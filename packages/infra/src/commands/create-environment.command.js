@@ -1,7 +1,14 @@
 import figlet from 'figlet';
 import RailwayService from '../services/railway.service.js';
+import delay from '../helpers/delay.js';
 
 const railwayClient = new RailwayService(process.env.RAILWAY_PROJECT_ID);
+/**
+ * Creates an Environment
+ *
+ * @param {string} name - The name of the environment to create
+ * @returns {Promise<void>} - A promise that resolves when the environment is created
+ */
 const createEnvironment = async (name) => {
 	console.log(
 		figlet.textSync('Create Envitonment', {
@@ -15,26 +22,14 @@ const createEnvironment = async (name) => {
 	let targetEnv = environments.find(({ name }) => name === environmentName);
 
 	if (!targetEnv) {
-		targetEnv = await railwayClient.createEnvironment({
+		// Delay 30 seconds
+		// Railway allows to create an environment every 30 seconds
+		await delay(30_000);
+		await railwayClient.createEnvironment({
 			name: environmentName,
 			sourceEnvironmentId: stagingEnv.id,
 			ephemeral: false,
 		});
-		const services = await railwayClient.getServices();
-		await Promise.all(
-			services.map(async (service) => {
-				const serviceVariables =
-					await railwayClient.getServiceVariables({
-						serviceId: service.id,
-						environmentId: stagingEnv.id,
-					});
-				await railwayClient.upsertServiceVariablesInBulk({
-					serviceId: service.id,
-					environmentId: targetEnv.id,
-					variables: serviceVariables,
-				});
-			}),
-		);
 		console.log(`Environment "${environmentName}" successfully created`);
 	} else {
 		console.log('Environment already exist');
