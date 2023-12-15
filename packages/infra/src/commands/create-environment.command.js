@@ -1,6 +1,6 @@
 import figlet from 'figlet';
 import RailwayService from '../services/railway.service.js';
-import delay from "../helpers/delay.js";
+import delay from '../helpers/delay.js';
 
 const railwayClient = new RailwayService(process.env.RAILWAY_PROJECT_ID);
 /**
