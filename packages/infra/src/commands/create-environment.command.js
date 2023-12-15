@@ -22,14 +22,14 @@ const createEnvironment = async (name) => {
 	let targetEnv = environments.find(({ name }) => name === environmentName);
 
 	if (!targetEnv) {
+		// Delay 30 seconds
+		// Railway allows to create an environment every 30 seconds
+		await delay(30_000);
 		await railwayClient.createEnvironment({
 			name: environmentName,
 			sourceEnvironmentId: stagingEnv.id,
 			ephemeral: false,
 		});
-		// Delay 30 seconds
-		// Railway allows to create an environment every 30 seconds
-		await delay(30_000);
 		console.log(`Environment "${environmentName}" successfully created`);
 	} else {
 		console.log('Environment already exist');
