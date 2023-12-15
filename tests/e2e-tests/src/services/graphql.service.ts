@@ -52,6 +52,13 @@ type NewCreditCardMonthlyStatementInput = {
 	closeDate: string
 }
 
+type IncomeInput = {
+	amount: number
+	description?: string
+	incomeDate: string
+	bankAccountId: string
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -371,6 +378,47 @@ class GraphqlService {
                     $id: String!
                 ) {
                   deleteCreditCard(id: $id)
+                }
+            `,
+			variables: {
+				id
+			},
+		});
+	}
+
+	async createIncome (variables: IncomeInput) {
+		const { data } = await graphQLClient(({
+			authToken: this.authToken,
+			query: `
+                mutation createIncome(
+					$amount: Float!
+					$description: String
+					$incomeDate: String!
+					$bankAccountId: String!
+				) {
+					createIncome(input: {
+						amount: $amount
+						description: $description
+						incomeDate: $incomeDate
+						bankAccountId: $bankAccountId
+                  }) {
+                    id
+                  }
+                }
+			`,
+			variables
+		}));
+		return data.createIncome;
+	}
+
+	async deleteIncome (id: string) {
+		return graphQLClient({
+			authToken: this.authToken,
+			query: `
+                mutation deleteIncome(
+                    $id: String!
+                ) {
+                  deleteIncome(id: $id)
                 }
             `,
 			variables: {

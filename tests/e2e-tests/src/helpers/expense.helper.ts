@@ -10,7 +10,6 @@ type ExpenseFilterType = {
 	currency?: string[],
 	paymentMethod?: string[]
 }
-
 export const createExpense = async (page: Page, data: {
 	type: 'CASH' | 'CREDIT_CARD'| 'BANK_ACCOUNT'
 	billableDate?: Date
@@ -103,8 +102,6 @@ export const confirmDeleteExpense = async (page: Page, expenseId: string, catego
 
 	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
 };
-
-
 export const applyExpenseFilter = async (page: Page, filters: ExpenseFilterType) => {
 	await page.locator('button[data-tn="open-expense-filter-btn"]').click();
 	if (filters.fromDate) {
