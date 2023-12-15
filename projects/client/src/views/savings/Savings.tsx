@@ -137,8 +137,11 @@ function SavingStatus(props: { saving: any }) {
     const { saving } = props
     const { status, bankAccount, targetAmount } = saving
 
+    const bankAccountBalance: number =
+        bankAccount.balance > 0 ? bankAccount.balance : 0
+
     const percentage: number = Math.round(
-        (bankAccount.balance / targetAmount) * 100,
+        (bankAccountBalance / targetAmount) * 100,
     )
 
     if (status === 'COMPLETED' || percentage >= 100) {
