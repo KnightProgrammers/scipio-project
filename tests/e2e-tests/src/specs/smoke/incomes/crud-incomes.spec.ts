@@ -4,10 +4,7 @@ import { getDefaultUserData } from '../../../config';
 
 import GraphqlService from '../../../services/graphql.service';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
-import { v4 as uuidv4 } from 'uuid';
-import { createExpense, deleteExpense } from '../../../helpers/expense.helper';
 import { waitForRequest } from '../../../helpers/generic.helper';
-import { DateTime } from 'luxon';
 import { createIncome, deleteIncome } from '../../../helpers/income.helper';
 
 let email: string;
