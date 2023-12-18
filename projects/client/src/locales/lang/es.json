@@ -280,6 +280,7 @@
         "confirmPassword": "Repetir Contraseña",
         "country": "Pais",
         "creditCard": "Tarjeta de Crédito",
+        "creditCardStatus": "Estado de Tarjeta de Crédito",
         "creditLimitAmount": "Limite de Crédito",
         "currency": "Moneda",
         "currentPassword": "Contraseña Actual",
