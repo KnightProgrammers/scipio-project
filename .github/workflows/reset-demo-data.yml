@@ -1,0 +1,76 @@
+name: DB Seed
+
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  packages: read
+
+jobs:
+  deploy-services:
+    name: Reset Demo Data - Env ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.key }}
+    strategy:
+      matrix:
+        include:
+          - key: "staging"
+            name: "Staging"
+          - key: "production"
+            name: "Production"
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
+      - name: Setup environment vars
+        env:
+          SECRETS_VARS: ${{ toJson(secrets) }}
+        run: echo "$SECRETS_VARS" > "secrets.json"
+      - name: Install JSON to ENV lib
+        run: npm install -g json-to-env
+      - name: Generate .env file
+        run: |
+          json-to-env secrets.json projects/data-cleaner/.env
+          sed -i -e 's/export //g' projects/data-cleaner/.env
+          json-to-env secrets.json projects/db-seed/.env
+          sed -i -e 's/export //g' projects/db-seed/.env
+      - name: Install Data Cleaner dependencies
+        run: |
+          cd projects/data-cleaner
+          npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Data Cleaner build typescript
+        run: |
+          cd projects/data-cleaner
+          npm run build
+      - name: Run Data Cleaner
+        run: |
+          cd projects/data-cleaner
+          npm run start
+      - name: Install DB Seed dependencies
+        run: |
+          cd projects/db-seed
+          npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run DB Seed build typescript
+        run: |
+          cd projects/db-seed
+          npm run build
+      - name: Run DB Seed Generate Demo
+        run: |
+          cd projects/db-seed
+          npm run gen-demo
