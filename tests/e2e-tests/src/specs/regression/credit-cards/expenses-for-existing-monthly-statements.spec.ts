@@ -1,14 +1,14 @@
 import { expect, Page, test } from '@playwright/test';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
-import { signInUser, signUpUser } from '../../../../helpers/auth.helper';
-import firebaseService from '../../../../services/firebase.service';
-import { waitForRequest } from '../../../../helpers/generic.helper';
-import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
+import { signInUser, signUpUser } from '../../../helpers/auth.helper';
+import firebaseService from '../../../services/firebase.service';
+import { waitForRequest } from '../../../helpers/generic.helper';
+import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import {
 	openCreditCardDetailView,
-} from '../../../../helpers/credit-card.helper';
-import GraphqlService from '../../../../services/graphql.service';
+} from '../../../helpers/credit-card.helper';
+import GraphqlService from '../../../services/graphql.service';
 
 let email: string;
 let password: string;

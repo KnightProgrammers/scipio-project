@@ -1,19 +1,19 @@
 import { test, Page, expect } from '@playwright/test';
-import firebaseService from '../../../../services/firebase.service';
-import { signUpUser, signInUser } from '../../../../helpers/auth.helper';
+import firebaseService from '../../../services/firebase.service';
+import { signUpUser, signInUser } from '../../../helpers/auth.helper';
 import { v4 as uuidv4 } from 'uuid';
 import {
 	createBank, deleteBank
-} from '../../../../helpers/bank.helper';
-import { NAV_MENU, navigateMenu } from '../../../../helpers/nav-menu.helper';
+} from '../../../helpers/bank.helper';
+import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import {
 	createBankAccount,
 	deleteBankAccount,
 	editBankAccount, editBankAccountBalance,
 	openEditBankAccountForm
-} from '../../../../helpers/bank-account.helper';
-import { waitForRequest } from '../../../../helpers/generic.helper';
-import { convertToNumber } from '../../../../utils/convertToNumber';
+} from '../../../helpers/bank-account.helper';
+import { waitForRequest } from '../../../helpers/generic.helper';
+import { convertToNumber } from '../../../utils/convertToNumber';
 
 
 let email: string;
