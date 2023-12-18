@@ -24,7 +24,7 @@
     "@sentry/profiling-node": "1.2.6",
     "@sinclair/typebox": "0.31.28",
     "bullmq": "4.15.2",
-    "fastify": "4.25.0",
+    "fastify": "4.25.1",
     "fastify-cli": "5.9.0",
     "fastify-plugin": "4.5.1",
     "firebase-admin": "12.0.0",
