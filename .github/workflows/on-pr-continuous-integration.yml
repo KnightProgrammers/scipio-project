@@ -175,10 +175,38 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run lint
         run: npm run lint
+  data-cleaner-build-check:
+    name: "Data Clean Up - Build Check"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/data-cleaner
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
+          always-auth: true
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path:  projects/data-cleaner/node_modules
+          key: data-cleaner-node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: data-cleaner-node_modules-
+      - name: Install Dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run lint
+        run: npm run lint
   integration-tests-regression:
     name: "Integration Tests - Regression"
     runs-on: ubuntu-latest
-    needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check, cron-jobs-build-check, e2e-tests-build-check ]
+    needs: [ server-build-check, client-build-check, db-seed-build-check, infra-build-check, cron-jobs-build-check, e2e-tests-build-check, data-cleaner-build-check ]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4

@@ -76,6 +76,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 		firebaseId: config.firebaseId,
 		currencies,
 		country,
+		isTest: true,
 		lang: 'en'
 	});
 
