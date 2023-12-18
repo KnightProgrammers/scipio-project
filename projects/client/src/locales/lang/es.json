@@ -212,7 +212,7 @@
             }
         },
         "settings": {
-            "header": "Configuraciones",
+            "header": "Cuenta",
             "tabs": {
                 "profile": "Perfil",
                 "password": "Contraseña",
@@ -396,7 +396,8 @@
         "expenses": "Gastos",
         "savings": "Ahorros",
         "incomes": "Ingresos",
-        "profile": "Perfil",
+        "budgets": "Presupuesto",
+        "profile": "Cuenta",
         "configuration": "Configuración",
         "configurationItems": {
             "bankAccounts": "Cuentas de Bancos",

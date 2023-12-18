@@ -212,7 +212,7 @@
             }
         },
         "settings": {
-            "header": "Settings",
+            "header": "Account",
             "tabs": {
                 "profile": "Profile",
                 "password": "Password",
@@ -395,8 +395,9 @@
         },
         "expenses": "Expenses",
         "savings": "Savings",
+        "budgets": "Budgets",
         "incomes": "Incomes",
-        "profile": "Profile",
+        "profile": "Account",
         "configuration": "Configuration",
         "configurationItems": {
             "bankAccounts": "Bank Accounts",
