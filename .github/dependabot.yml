@@ -31,6 +31,10 @@ updates:
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
+    directory: "/packages/data-cleaner"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "npm"
     directory: "/tests/e2e-tests"
     schedule:
       interval: "monthly"
