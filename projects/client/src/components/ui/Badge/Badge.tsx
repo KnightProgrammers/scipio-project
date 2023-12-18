@@ -8,6 +8,7 @@ export interface BadgeProps extends CommonProps {
     content?: string | number
     innerClass?: string
     maxCount?: number
+    enabled?: boolean
 }
 
 const Badge = forwardRef<HTMLElement, BadgeProps>((props, ref) => {
@@ -18,6 +19,7 @@ const Badge = forwardRef<HTMLElement, BadgeProps>((props, ref) => {
         content,
         innerClass,
         maxCount = 99,
+        enabled = true,
         ...rest
     } = props
 
@@ -33,14 +35,16 @@ const Badge = forwardRef<HTMLElement, BadgeProps>((props, ref) => {
                     className={classNames('badge-wrapper', className)}
                     {...rest}
                 >
-                    <span
-                        className={classNames(badgeClass, 'badge-inner')}
-                        style={badgeStyle}
-                    >
-                        {typeof content === 'number' && content > maxCount
-                            ? `${maxCount}+`
-                            : content}
-                    </span>
+                    {enabled && (
+                        <span
+                            className={classNames(badgeClass, 'badge-inner')}
+                            style={badgeStyle}
+                        >
+                            {typeof content === 'number' && content > maxCount
+                                ? `${maxCount}+`
+                                : content}
+                        </span>
+                    )}
                     {children}
                 </span>
             )

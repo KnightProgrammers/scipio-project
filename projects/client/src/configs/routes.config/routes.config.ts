@@ -46,9 +46,6 @@ export const protectedRoutes = [
         path: '/conf/credit-cards',
         component: lazy(() => import('@/views/configuration/creditCards')),
         authority: [],
-        meta: {
-            header: 'pages.creditCards.header',
-        },
     },
     {
         key: 'categories',

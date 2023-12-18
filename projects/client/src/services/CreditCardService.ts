@@ -12,17 +12,19 @@ type CreditCardInput = {
     creditLimitCurrencyId: string
 }
 
-export async function apiGetCreditCardList(): Promise<any[]> {
+export async function apiGetCreditCardList(query: {
+    statuses: string[]
+}): Promise<any[]> {
     const response = await BaseService.request({
         url: '/graphql',
         method: 'POST',
         data: {
             operationName: 'userCreditCards',
             query: `
-                query userCreditCards { 
+                query userCreditCards($statuses: [CreditCardStatus]) { 
                     me {
                         id
-                        creditCards {
+                        creditCards(statuses: $statuses) {
                           id
                           label
                           cardHolder
@@ -39,7 +41,9 @@ export async function apiGetCreditCardList(): Promise<any[]> {
                     }
                 }
             `,
-            variables: {},
+            variables: {
+                statuses: query.statuses,
+            },
         },
     })
     return response.data.data.me.creditCards

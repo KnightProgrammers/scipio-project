@@ -3,23 +3,27 @@ import {
     Badge,
     Button,
     Card,
+    Checkbox,
     DatePicker,
     Drawer,
     Dropdown,
     FormItem,
     Input,
     ModalForm,
+    Segment,
     Select,
     Tabs,
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
 import {
+    AdaptableCard,
     ConfirmDialog,
     Container,
     EllipsisButton,
     FormCustomFormatInput,
     IconText,
     Loading,
+    SegmentItemOption,
 } from '@/components/shared'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiPlus } from 'react-icons/hi'
 import { useTranslation } from 'react-i18next'
@@ -48,6 +52,9 @@ import TabNav from '@/components/ui/Tabs/TabNav'
 import TabContent from '@/components/ui/Tabs/TabContent'
 import { DateTime } from 'luxon'
 import { useAppSelector } from '@/store'
+import { LuFilter } from 'react-icons/lu'
+
+const CREDIT_CARD_STATUSES = ['ACTIVE', 'BLOCKED', 'EXPIRED']
 
 function limit(val: string, max: string) {
     if (val.length === 1 && val[0] > max[0]) {
@@ -129,6 +136,119 @@ const CardIcon = (props: { cardIssuer: string }) => {
         default:
             return <Avatar icon={<BsCreditCard2Front />} size="lg" />
     }
+}
+
+const CreditCardFilter = (props: {
+    defaultValue: any
+    onFilter: (activeFilters: any) => void
+}) => {
+    const { defaultValue, onFilter } = props
+
+    const [isOpen, setIsOpen] = useState(false)
+    const [statuses, setStatuses] = useState<string[]>(defaultValue.statuses)
+
+    const { t } = useTranslation()
+
+    const isFilterApplied: boolean =
+        defaultValue.statuses.length !== CREDIT_CARD_STATUSES.length
+
+    const onDrawerClose = () => {
+        setIsOpen(false)
+    }
+
+    return (
+        <>
+            <Badge enabled={isFilterApplied}>
+                <Button
+                    variant="default"
+                    size="sm"
+                    data-tn="open-saving-filter-btn"
+                    className="p-2 ml-2"
+                    icon={<LuFilter />}
+                    onClick={() => setIsOpen(true)}
+                />
+            </Badge>
+            <Drawer
+                title={
+                    <div>
+                        <h4 className="mb-2">
+                            {t('pages.creditCards.filterTitle')}
+                        </h4>
+                    </div>
+                }
+                isOpen={isOpen}
+                placement="right"
+                headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
+                footer={
+                    <div className="text-right w-full grid grid-cols-2">
+                        <Button
+                            size="sm"
+                            className="mr-1"
+                            onClick={() => onDrawerClose()}
+                        >
+                            {t('actions.cancel')}
+                        </Button>
+                        <Button
+                            size="sm"
+                            className="ml-1"
+                            variant="solid"
+                            data-tn="apply-credit-card-filter-btn"
+                            onClick={() => {
+                                onFilter({ statuses })
+                                onDrawerClose()
+                            }}
+                        >
+                            {t('actions.filter')}
+                        </Button>
+                    </div>
+                }
+                onClose={() => setIsOpen(false)}
+                onRequestClose={() => setIsOpen(false)}
+            >
+                <AdaptableCard bordered className="mt-2">
+                    <p className="mb-2 font-bold">
+                        {t('fields.creditCardStatus')}{' '}
+                    </p>
+                    <Segment
+                        value={statuses}
+                        selectionType="multiple"
+                        onChange={(val) => setStatuses(val as string[])}
+                    >
+                        <div className="flex flex-col gap-2 w-full py-2">
+                            {CREDIT_CARD_STATUSES.map((item: string) => (
+                                <Segment.Item key={item} value={item}>
+                                    {({ active, onSegmentItemClick }) => {
+                                        return (
+                                            <SegmentItemOption
+                                                hoverable
+                                                active={active}
+                                                className="w-full py-2"
+                                                customCheck={<></>}
+                                                data-tn={`credit-card-status-filter-${item.toLowerCase()}-opt`}
+                                                onSegmentItemClick={
+                                                    onSegmentItemClick
+                                                }
+                                            >
+                                                <Checkbox
+                                                    readOnly
+                                                    checked={active}
+                                                />
+                                                <span className="text-sm">
+                                                    {t(
+                                                        `creditCardStatus.${item}`,
+                                                    )}
+                                                </span>
+                                            </SegmentItemOption>
+                                        )
+                                    }}
+                                </Segment.Item>
+                            ))}
+                        </div>
+                    </Segment>
+                </AdaptableCard>
+            </Drawer>
+        </>
+    )
 }
 
 const CreditCardDrawer = (props: {
@@ -445,6 +565,9 @@ const CreditCards = () => {
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =
         useState<boolean>(false)
     const [showCreditCardInfo, setShowCreditCardInfo] = useState<boolean>(false)
+    const [filters, setFilters] = useState({
+        statuses: ['ACTIVE'],
+    })
 
     const { t } = useTranslation()
 
@@ -460,7 +583,8 @@ const CreditCards = () => {
         refetch: refetchCreditCards,
     } = useQuery({
         queryKey: ['user-credit-cards'],
-        queryFn: apiGetCreditCardList,
+        queryFn: async () =>
+            apiGetCreditCardList({ statuses: filters.statuses }),
     })
 
     const onMutationSuccess = async (title: string) => {
@@ -557,6 +681,15 @@ const CreditCards = () => {
             status: 'ACTIVE',
         }
     }, [selectedCreditCard])
+
+    const onFilterChange = (newFilters: any) => {
+        setFilters(() => {
+            setTimeout(() => {
+                refetchCreditCards()
+            }, 100)
+            return newFilters
+        })
+    }
 
     const CreditCardForm = () => (
         <ModalForm
@@ -773,6 +906,17 @@ const CreditCards = () => {
     if (creditCardList.length === 0) {
         return (
             <Container data-tn="credit-cards-page">
+                <div className="lg:flex items-center justify-between mb-4 my-2">
+                    <h2>{t('pages.creditCards.header')}</h2>
+                    <div className="flex flex-col lg:flex-row lg:items-center">
+                        <div className="flex my-2">
+                            <CreditCardFilter
+                                defaultValue={filters}
+                                onFilter={onFilterChange}
+                            />
+                        </div>
+                    </div>
+                </div>
                 <CreditCardForm />
                 <EmptyState
                     title={t('pages.creditCards.emptyState.title')}
@@ -795,6 +939,17 @@ const CreditCards = () => {
     }
     return (
         <Container data-tn="credit-cards-page">
+            <div className="lg:flex items-center justify-between mb-4 my-2">
+                <h2>{t('pages.creditCards.header')}</h2>
+                <div className="flex flex-col lg:flex-row lg:items-center">
+                    <div className="flex my-2">
+                        <CreditCardFilter
+                            defaultValue={filters}
+                            onFilter={onFilterChange}
+                        />
+                    </div>
+                </div>
+            </div>
             <Loading loading={isFetchingCreditCards} type="cover">
                 <Card bodyClass="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {creditCardList.map((c) => (

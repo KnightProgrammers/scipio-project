@@ -280,6 +280,7 @@
         "confirmPassword": "Confirm Password",
         "country": "Country",
         "creditCard": "Credit Card",
+        "creditCardStatus": "Credit Card Status",
         "creditLimitAmount": "Credit Limit",
         "currency": "Currency",
         "currentPassword": "Current Password",

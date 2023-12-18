@@ -2,6 +2,10 @@ import { expect, Page } from '@playwright/test';
 import { waitForRequest } from './generic.helper';
 import { DateTime } from 'luxon';
 
+type CreditCardFilterType = {
+	statuses: string[]
+}
+
 export const createCreditCard = async (page: Page, data: {
 	label: string
 	cardHolder: string
@@ -187,4 +191,20 @@ export const createMonthlyStatement = async (page:Page, closeDate: Date): Promis
 		},
 	} = await newStatementResponse.json();
 	return id;
+};
+
+export const setCreditCardFilters = async (page: Page, filters: CreditCardFilterType) => {
+	await page.locator('button[data-tn="open-saving-filter-btn"]').click();
+	if (filters.statuses) {
+		for (const savingStatus of ['ACTIVE', 'BLOCKED', 'EXPIRED']) {
+			const isSelected: boolean = await page.locator(`div[data-tn="credit-card-status-filter-${savingStatus.toLowerCase()}-opt"] input`).isChecked();
+			if (
+				(isSelected && !filters.statuses.includes(savingStatus)) ||
+				(!isSelected && filters.statuses.includes(savingStatus))
+			) {
+				await page.locator(`div[data-tn="credit-card-status-filter-${savingStatus.toLowerCase()}-opt"]`).click();
+			}
+		}
+	}
+	await page.locator('button[data-tn="apply-credit-card-filter-btn"]').click();
 };
