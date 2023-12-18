@@ -114,8 +114,6 @@ MongoDB is used as Database.
 
 ## DB Seed
 
-Backups are stored in Azure Containers data storage.
-
 > **Folder:** `/projects/db-seed`
 
 **Automatic Executions**
@@ -153,8 +151,6 @@ npm run start
 ------
 
 ## Cron Jobs
-
-Backups are stored in Azure Containers data storage.
 
 > **Folder:** `/projects/cron-jobs`
 
@@ -200,6 +196,38 @@ npm run test
 | `EMAIL_AUTH_PORT`   | String | `true`   |               | Port of the smtp server                            |
 | `EMAIL_AUTH_USER`   | String | `true`   |               | User credentials                                   |
 | `EMAIL_AUTH_PASS`   | String | `true`   |               | User credentials                                   |
+
+------
+
+## Data Clean Up
+
+> **Folder:** `/projects/data-cleaner`
+
+**Install Dependencies**
+
+```shell
+npm install
+```
+
+**Build Project**
+
+```shell
+npm run build
+```
+
+**Start Jobs**
+
+```shell
+npm run start
+```
+
+**Environment Vars**
+
+| Var                      | Type   | Required | Default Value | Description                                                             |
+|--------------------------|--------|----------|---------------|-------------------------------------------------------------------------|
+| `MONGO_DB_URI`           | String | `true`   |               | Database connection string                                              |
+| `WHITELIST_FIREBASE_IDS` | String |          |               | List of firebase Ids (separated with commas) that should not be cleaned | 
+| `LOG_LEVEL`              | String | `false`  | `info`        | Available values: `debug`, `info`, `warn`, `error`                      |
 
 ------
 
