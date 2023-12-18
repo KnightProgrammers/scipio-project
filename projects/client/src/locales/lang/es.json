@@ -100,6 +100,7 @@
                 "newTitle": "Nueva Tarjeta de Crédito",
                 "editTitle": "Editar Tarjeta de Crédito"
             },
+            "filterTitle": "Filtro de Tarjetas de Crédito",
             "deleteConfirmation": {
                 "title": "Eliminar Tarjeta de Crédito",
                 "description": "Está seguro que desea eliminar la tarjeta de crédito?"
