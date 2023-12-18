@@ -231,7 +231,7 @@ jobs:
         run: |
           cd tests/e2e-tests
           npm run regression-test
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-report
