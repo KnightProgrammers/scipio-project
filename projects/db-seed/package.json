@@ -17,7 +17,7 @@
     "luxon": "3.4.4",
     "mongoose": "8.0.3",
     "pino": "8.17.0",
-    "pino-pretty": "10.2.3",
+    "pino-pretty": "10.3.0",
     "typescript": "5.3.3"
   },
   "devDependencies": {
