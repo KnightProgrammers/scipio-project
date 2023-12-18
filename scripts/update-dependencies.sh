@@ -4,6 +4,7 @@ declare -A projects=(
     ["graphql-server"]="/projects/graphql-server"
     ["db-seed"]="/projects/db-seed"
     ["cron-jobs"]="/projects/cron-jobs"
+    ["data-cleaner"]="/projects/data-cleaner"
     ["client"]="/projects/client"
     ["infra-lib"]="/packages/infra"
     ["db-schemas-lib"]="/packages/db-schemas"
