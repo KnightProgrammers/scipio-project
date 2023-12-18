@@ -3,5 +3,10 @@
         "name": "Uruguay",
         "code": "UY",
         "isSupported": true
+    },
+    {
+        "name": "Argentina",
+        "code": "AR",
+        "isSupported": true
     }
 ]
