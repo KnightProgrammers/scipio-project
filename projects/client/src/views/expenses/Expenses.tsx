@@ -1377,7 +1377,7 @@ const Expenses = () => {
                     countryCode={userState.country?.code || 'UY'}
                 />
 
-                <Card className="mt-4">
+                <Card className="mt-4" bodyClass="p-0">
                     <Table>
                         <TBody>
                             {rows.map((row: any) => {

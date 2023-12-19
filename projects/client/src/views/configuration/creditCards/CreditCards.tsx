@@ -163,7 +163,7 @@ const CreditCardFilter = (props: {
                     variant="default"
                     size="sm"
                     data-tn="open-saving-filter-btn"
-                    className="p-2 ml-2"
+                    className="p-2"
                     icon={<LuFilter />}
                     onClick={() => setIsOpen(true)}
                 />
@@ -939,7 +939,7 @@ const CreditCards = () => {
     }
     return (
         <Container data-tn="credit-cards-page">
-            <div className="lg:flex items-center justify-between mb-4 my-2">
+            <div className="flex items-center justify-between mb-4 my-2">
                 <h2>{t('pages.creditCards.header')}</h2>
                 <div className="flex flex-col lg:flex-row lg:items-center">
                     <div className="flex my-2">
@@ -956,7 +956,6 @@ const CreditCards = () => {
                         <Card
                             key={c.id}
                             bordered
-                            className="my-4"
                             bodyClass="p-0"
                             data-tn={`credit-card-${c.id}`}
                             header={
