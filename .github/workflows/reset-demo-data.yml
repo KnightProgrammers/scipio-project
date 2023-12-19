@@ -49,7 +49,7 @@ jobs:
           cd projects/data-cleaner
           npm run start
         env:
-          MONGO_URI: ${{ secrets.MONGO_DB_URI }}
+          MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
           LOG_LEVEL: "info"
           WHITELIST_FIREBASE_IDS: ${{ secrets.WHITELIST_FIREBASE_IDS }}
       - name: Install DB Seed dependencies
@@ -67,6 +67,6 @@ jobs:
           cd projects/db-seed
           npm run gen-demo
         env:
-          MONGO_URI: ${{ secrets.MONGO_DB_URI }}
+          MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
           LOG_LEVEL: "info"
           USER_FIREBASE_ID: ${{ secrets.USER_FIREBASE_ID }}
