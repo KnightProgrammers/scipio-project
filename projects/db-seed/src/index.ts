@@ -4,15 +4,21 @@ import logger from './helpers/logger';
 import countrySeed from './seeds/country';
 import currencySeed from './seeds/currency';
 
-dotenv.config();
-
-const config = {
-	db: {
-		uri: process.env.MONGO_DB_URI || '',
-	},
-}
+console.log(process.env.MONGO_DB_URI)
 
 ;(async function main() {
+
+	console.log(process.env.MONGO_DB_URI)
+
+	dotenv.config();
+	
+	const config = {
+		db: {
+			uri: process.env.MONGO_DB_URI || '',
+		},
+	}
+	console.log(process.env.MONGO_DB_URI)
+
 	logger.info('Connecting to DB');
 	logger.info(config.db.uri);
 
