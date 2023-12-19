@@ -32,11 +32,11 @@ jobs:
         id: set-url-variables
         run: |
           case "${{ github.event.deployment.environment }}" in
-          production) echo "Environment Production"
+          Production) echo "Environment Production"
             echo "BASE_URL=https://scipio-client-production.up.railway.app" >> $GITHUB_ENV
             echo "API_BASE_URL=https://scipio-server-production.up.railway.app" >> $GITHUB_ENV
             ;;
-          staging) echo "Environment Staging"
+          Staging) echo "Environment Staging"
             echo "BASE_URL=https://staging.scipiofinances.com" >> $GITHUB_ENV
             echo "API_BASE_URL=https://staging-api.scipiofinances.com" >> $GITHUB_ENV
             ;;

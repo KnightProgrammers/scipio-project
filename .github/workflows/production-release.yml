@@ -25,7 +25,7 @@ jobs:
     name: "Deploy Services"
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: Production
       url: https://scipio-client-production.up.railway.app
     steps:
       - name: Verify if Tag exist

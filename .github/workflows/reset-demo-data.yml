@@ -21,9 +21,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - key: "staging"
+          - key: "Staging"
             name: "Staging"
-          - key: "production"
+          - key: "Production"
             name: "Production"
     steps:
       - name: Check out repository code
