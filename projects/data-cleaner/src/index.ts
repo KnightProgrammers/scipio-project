@@ -42,12 +42,12 @@ const config = {
 	const UserModel = mongoose.model('User', UserSchema);
 	logger.info('DB connection is up');
 	// Find test users that are not in the whitelist
-	const allowedFirebaseIds: string[] = config.whitelist.firebaseIds;
+	const allowedFirebaseIds: string[] = config.whitelist.firebaseIds.filter((e: string) => e.length);
 	const testUsers = await UserModel.find({isTest: true, firebaseId: {'$nin': allowedFirebaseIds}});
 	// For Each user remove related data
 	for (const testUser of testUsers) {
 		const userId = testUser._id;
-		console.log(`	User: ${testUser.email}`);
+		logger.info(`	User: ${testUser.email}`);
 		await ExpenseModel.deleteMany({userId});
 		await IncomeModel.deleteMany({userId});
 		await SavingModel.deleteMany({userId});

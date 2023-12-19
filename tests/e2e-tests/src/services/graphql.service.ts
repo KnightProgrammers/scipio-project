@@ -59,6 +59,17 @@ type IncomeInput = {
 	bankAccountId: string
 }
 
+type BudgetItemLimitInput = {
+	currencyCode: string
+	limit: number
+}
+
+type BudgetItemInput = {
+	budgetId: string
+	categoryId: string
+	'currencies': BudgetItemLimitInput[]
+}
+
 const graphQLClient = async (request: {authToken: string, query: string, variables?: any}) => {
 	const {
 		authToken,
@@ -425,6 +436,61 @@ class GraphqlService {
 				id
 			},
 		});
+	}
+
+	async getBudget() {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
+				query userBudget {
+					me {
+						id
+						budget {
+							id
+						}
+					}
+				}
+			`
+		});
+		return data.me.budget;
+	}
+
+	async createBudget() {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
+				mutation createBudget {
+					createBudget {
+						id
+					}
+				}
+			`,
+			variables: {},
+		});
+		return data.createBudget;
+	}
+
+	async upsertBudgetItem(variables: BudgetItemInput) {
+		const { data } = await graphQLClient({
+			authToken: this.authToken,
+			query: `
+				mutation upsertBudgetItem(
+					$budgetId: String!
+					$categoryId: String!
+					$currencies:  [BudgetItemCurrencyInput]!
+				) {
+					upsertBudgetItem(input: {
+						budgetId: $budgetId,
+						categoryId: $categoryId
+						currencies: $currencies
+					}) {
+						id
+					}
+				}
+			`,
+			variables,
+		});
+		return data.upsertBudgetItem;
 	}
 }
 
