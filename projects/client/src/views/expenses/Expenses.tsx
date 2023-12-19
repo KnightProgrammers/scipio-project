@@ -1377,13 +1377,14 @@ const Expenses = () => {
                     countryCode={userState.country?.code || 'UY'}
                 />
 
-                <Card className="mt-4">
+                <Card className="mt-4 p-0">
                     <Table>
                         <TBody>
                             {rows.map((row: any) => {
                                 return (
                                     <Fragment key={row.original.id}>
                                         <Tr
+                                            style={{ padding: 0 }}
                                             data-tn={`category-row-${row.original.id}`}
                                         >
                                             {row
