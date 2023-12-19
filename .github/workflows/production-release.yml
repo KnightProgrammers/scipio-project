@@ -1,0 +1,92 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Version to be Deployed'
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  checks: write
+  statuses: write
+  contents: write
+  packages: read
+  pull-requests: write
+
+jobs:
+  
+  deploy-services:
+    name: "Deploy Services"
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://scipio-client-production.up.railway.app
+    steps:
+      - name: Verify if Tag exist
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: "${{ inputs.tags }}"
+            })
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tags }}
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@knightprogrammers'
+          always-auth: true
+      - name: Install scipio-infra globaly
+        run: npm install -g @knightprogrammers/scipio-infra
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install railway cli
+        run: npm i -g @railway/cli
+      - name: Deploy server service
+        run: scipio-infra deploy -s server -e production
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+      - name: Deploy client service
+        run: scipio-infra deploy -s client -e production
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+      - name: Deploy cron-jobs service
+        run: scipio-infra deploy -s cron-jobs -e production
+        env:
+          RAILWAY_USER_TOKEN: ${{ secrets.RAILWAY_USER_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+      - name: Create Sentry release for Client
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "scipio-finances"
+          SENTRY_PROJECT: ${{ secrets.SENTRY_CLIENT_PROJECT }}
+          SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+          working_directory: './projects/client/'
+      - name: Create Sentry release for Server
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "scipio-finances"
+          SENTRY_PROJECT: ${{ secrets.SENTRY_SERVER_PROJECT }}
+          SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+          working_directory: './projects/graphql-server/'
+
