@@ -956,7 +956,6 @@ const CreditCards = () => {
                         <Card
                             key={c.id}
                             bordered
-                            className="my-4"
                             bodyClass="p-0"
                             data-tn={`credit-card-${c.id}`}
                             header={
