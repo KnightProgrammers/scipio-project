@@ -45,15 +45,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run DB Seed build typescript
         run:  npm run build
-      - name: Setup environment vars
-        env:
-          SECRETS_VARS: ${{ toJson(secrets) }}
-        run: echo "$SECRETS_VARS" > "secrets.json"
-      - name: Install JSON to ENV lib
-        run: npm install -g json-to-env
-      - name: Generate .env file
-        run: |
-          json-to-env secrets.json .env
-          sed -i -e 's/export //g' .env
       - name: Run DB Seed
         run:  npm run start
+        env:
+          MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
+          LOG_LEVEL: "info"
+          USER_FIREBASE_ID: ${{ secrets.USER_FIREBASE_ID }}

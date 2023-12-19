@@ -15,7 +15,6 @@ const config = {
 ;(async function main() {
 	logger.info('Connecting to DB');
 	logger.info(config.db.uri);
-
 	const dbConnection = await mongoose.connect(config.db.uri);
 	logger.info('DB connection is up');
 	logger.info('-----------------');
