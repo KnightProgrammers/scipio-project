@@ -44,6 +44,7 @@ jobs:
             echo "BASE_URL=https://scipio-client-test-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
             echo "API_BASE_URL=https://scipio-server-test-${{ github.event.workflow_run.pull_requests[0].number }}.up.railway.app" >> $GITHUB_ENV
             ;;
+          esac
         shell: bash
       - name: Install Node
         uses: actions/setup-node@v4

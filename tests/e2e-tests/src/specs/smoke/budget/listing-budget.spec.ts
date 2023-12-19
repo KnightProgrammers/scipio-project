@@ -5,11 +5,14 @@ import { getDefaultUserData } from '../../../config';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { convertToNumber } from '../../../utils/convertToNumber';
+import GraphqlService from '../../../services/graphql.service';
 
 let email: string;
 let password: string;
 
 test.describe.configure({ mode: 'serial' });
+
+let graphqlService: GraphqlService;
 
 let page: Page;
 
@@ -22,7 +25,48 @@ test.beforeAll(async ({ browser }) => {
 	page = await browser.newPage();
 	await page.goto('/');
 	await page.waitForLoadState('load');
-	await signInUser(page, { email, password }, false);
+	const { authToken } = await signInUser(page, {email, password}, false);
+
+	graphqlService = new GraphqlService(authToken);
+	// Wait until the save of the profile is completed
+	await page.waitForTimeout(5000);
+
+	const budget = await graphqlService.getBudget();
+	if (!budget) {
+		const category1 = await graphqlService.createCategories({
+			name: 'Category #1',
+			type: 'NEED',
+			isFixedPayment: false
+		});
+		const category2 = await graphqlService.createCategories({
+			name: 'Category #2',
+			type: 'NEED',
+			isFixedPayment: false
+		});
+		const category3 = await graphqlService.createCategories({
+			name: 'Category #3',
+			type: 'WANT',
+			isFixedPayment: false
+		});
+		const newBudget = await graphqlService.createBudget();
+		const budgetId: string = newBudget.id;
+		for (const categoryId of [category1.id, category2.id, category3.id]) {
+			await graphqlService.upsertBudgetItem({
+				budgetId,
+				categoryId,
+				currencies: [
+					{
+						currencyCode: DEFAULT_USER_CURRENCIES[0],
+						limit: 200
+					},
+					{
+						currencyCode: DEFAULT_USER_CURRENCIES[1],
+						limit: 200
+					}
+				]
+			});
+		}
+	}
 });
 
 test.afterAll(async () => {
