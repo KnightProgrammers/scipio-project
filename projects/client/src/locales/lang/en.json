@@ -117,7 +117,9 @@
                 "emptyState": {
                     "nextStatement": "No Expenses reported",
                     "existingStatement": "No expenses for this statement"
-                }
+                },
+                "pendingPayment": "Statement has no payment",
+                "payStatementAction": "Pay Statement"
             }
         },
         "categories": {
@@ -271,7 +273,8 @@
         "tryAgain": "Try again",
         "update": "Update",
         "updating": "Updating",
-        "viewDetail": "View Detail"
+        "viewDetail": "View Detail",
+        "viewMovements": "View Movements"
     },
     "fields": {
         "amount": "Amount",
@@ -338,9 +341,13 @@
             "deleted": "Budget successfully deleted"
         },
         "creditCard": {
-            "created": "Credit card successfully created",
-            "updated": "Credit card successfully updated",
-            "deleted": "Credit card successfully deleted"
+            "created": "Credit Card successfully created",
+            "updated": "Credit Card successfully updated",
+            "deleted": "Credit Card successfully deleted"
+        },
+        "creditCardStatement": {
+            "closed": "Credit Card Statement successfully closed",
+            "paid": "Credit Card Statement successfully paid"
         },
         "category": {
             "created": "Category successfully created",
@@ -375,9 +382,11 @@
         "all": "All",
         "country": "Select a country",
         "currentMonth": "Current month",
-        "lastMonth": "Last Month",
         "currentYear": "Current year",
+        "expenses": "Expenses",
+        "lastMonth": "Last Month",
         "lastYear": "Last year",
+        "payment": "Payment",
         "other": "Other",
         "searchByName": "Search by Name",
         "total": "Total"
@@ -437,5 +446,10 @@
         "CASH": "Cash",
         "CREDIT_CARD": "Credit Card",
         "BANK_ACCOUNT": "Cuenta de Banco"
+    },
+    "creditCardStatementPaymentType": {
+        "TOTAL": "Total",
+        "PARTIAL": "Partial",
+        "MINIMUM": "Minimum"
     }
 }

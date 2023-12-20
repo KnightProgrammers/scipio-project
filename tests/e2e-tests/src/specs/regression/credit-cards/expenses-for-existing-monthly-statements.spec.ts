@@ -27,8 +27,6 @@ test.describe.configure({ mode: 'serial' });
 
 let page: Page;
 
-const CREDIT_CARD_STATEMENT_DRAWER_LOCATOR: string = 'div[data-tn="credit-card-detail-drawer"]';
-
 test.beforeAll(async ({ browser }) => {
 	email = `test-${uuidv4()}@automation.com`;
 	password = `password-${uuidv4()}`;
@@ -105,6 +103,15 @@ test.beforeAll(async ({ browser }) => {
 		});
 		expenseIds.push(expense.id);
 	}
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	await waitForCreditCards;
+	await openCreditCardDetailView(page, creditCardId);
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
+});
+
+test.afterEach(async () => {
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
 });
 
 test.afterAll(async () => {
@@ -119,43 +126,39 @@ test.afterAll(async () => {
 });
 
 test('Today\'s expense has no statement', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	await waitForCreditCards;
-	await openCreditCardDetailView(page, creditCardId);
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).not.toBeVisible();
 });
 
 test('One month ago expense on the last month statement', async () => {
-	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[0]}"]`).click();
+	await page.locator(`div[data-tn="statement-card-${monthlyStatementIds[0]}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).not.toBeVisible();
 });
 
 test('Two months ago expense on the two months ago statement', async () => {
-	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[1]}"]`).click();
+	await page.locator(`div[data-tn="statement-card-${monthlyStatementIds[1]}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).toBeVisible();
 });

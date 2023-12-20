@@ -26,8 +26,6 @@ test.describe.configure({ mode: 'serial' });
 
 let page: Page;
 
-const CREDIT_CARD_STATEMENT_DRAWER_LOCATOR: string = 'div[data-tn="credit-card-detail-drawer"]';
-
 test.beforeAll(async ({ browser }) => {
 	email = `test-${uuidv4()}@automation.com`;
 	password = `password-${uuidv4()}`;
@@ -105,6 +103,10 @@ test.beforeAll(async ({ browser }) => {
 		});
 		expenseIds.push(expense.id);
 	}
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	await waitForCreditCards;
+	await openCreditCardDetailView(page, creditCardId);
 });
 
 test.afterAll(async () => {
@@ -118,68 +120,63 @@ test.afterAll(async () => {
 	}
 });
 
-test('`Next Statement` tab - List of expenses', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	await waitForCreditCards;
-	await openCreditCardDetailView(page, creditCardId);
+test('`Next Statement` card - List of expenses', async () => {
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[3]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[4]}"]`)
 	).not.toBeVisible();
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
 });
 test('Create Statement', async () => {
 	// Create a Statement with a close date for today
 	statementId = await createMonthlyStatement(page, new Date());
 });
-test('`Next Statement` tab - After statement Creation', async () => {
-	const isNextStatementSelected: string = await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="next-statement"]`).getAttribute('aria-selected');
-	expect(isNextStatementSelected).toEqual('true');
+test('`Next Statement` card - After statement Creation', async () => {
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[3]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[4]}"]`)
 	).not.toBeVisible();
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
 });
 test('New statement tab - List of expenses', async () => {
-	const newStatementTab = page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${statementId}"]`);
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('false');
-	await newStatementTab.click();
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('true');
+	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[1]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[1]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[2]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[2]}"]`)
 	).toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[3]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[3]}"]`)
 	).not.toBeVisible();
 	await expect(
-		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[4]}"]`)
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[4]}"]`)
 	).not.toBeVisible();
 });
