@@ -11,6 +11,7 @@ import {
 	CategorySchema,
 	CountrySchema,
 	CreditCardMonthlyStatementSchema,
+	CreditCardStatementPaymentSchema,
 	CreditCardSchema,
 	CurrencySchema,
 	ExpenseSchema,
@@ -47,6 +48,7 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 	const CountryModel = mongoose.model('Country', CountrySchema);
 	const CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
 	const CreditCardMonthlyStatementModel = mongoose.model('CreditCardMonthlyStatement', CreditCardMonthlyStatementSchema);
+	const CreditCardStatementPaymentModel = mongoose.model('CreditCardStatementPayment', CreditCardStatementPaymentSchema);
 	const CurrencyModel = mongoose.model('Currency', CurrencySchema);
 	const ExpenseModel = mongoose.model('Expense', ExpenseSchema);
 	const IncomeModel = mongoose.model('Income', IncomeSchema);
@@ -283,6 +285,11 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 
 		let monthlyStatement = undefined;
 
+		const creditCardTotalExpense: any = {
+			'USD': 0,
+			'UYU': 0
+		};
+
 		if (monthDiff > 0) {
 			monthlyStatement = await CreditCardMonthlyStatementModel.create({
 				closeDate: billableDate.set({
@@ -311,8 +318,10 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 
 			while(i <= max) {
 				creditCardExpenseCounter += 1;
+				const amount: number = Array.isArray(expenseRange) ? randomFloatInRange(expenseRange[0], expenseRange[1]) : expenseRange;
+				creditCardTotalExpense[currencyCode] += amount;
 				await ExpenseModel.create({
-					amount: Array.isArray(expenseRange) ? randomFloatInRange(expenseRange[0], expenseRange[1]) : expenseRange,
+					amount,
 					description: '',
 					billableDate: billableDate.toJSDate(),
 					type: method,
@@ -329,6 +338,20 @@ function randomFloatInRange (min: number = 0, max: number = 1) {
 				billableDate = billableDate.plus({day: increment});
 			}
 			billableDate = billableDate.set({day: 1});
+		}
+		if (monthlyStatement) {
+			await CreditCardStatementPaymentModel.create({
+				paymentDate: billableDate.set({
+					day: 28
+				}),
+				creditCardMonthlyStatementId: monthlyStatement._id,
+				userId,
+				currencies: currencies.map((currency: any) => ({
+					amount: creditCardTotalExpense[currency.code],
+					currency,
+					type: 'TOTAL'
+				}))
+			});
 		}
 		billableDate = billableDate.set({day: 1}).minus({month: 1});
 	}

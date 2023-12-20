@@ -6,6 +6,7 @@ export { CategorySchema } from "./db-schemas/category.model";
 export { CountrySchema } from "./db-schemas/country.model";
 export { CreditCardSchema } from "./db-schemas/credit-card.model";
 export { CreditCardMonthlyStatementSchema } from "./db-schemas/credit-card-monthly-statement.model";
+export { CreditCardStatementPaymentSchema } from './db-schemas/credit-card-statement-payment.model';
 export { CurrencySchema } from "./db-schemas/currency.model";
 export { ExpenseSchema } from "./db-schemas/expense.model";
 export { IncomeSchema } from "./db-schemas/income.model";
