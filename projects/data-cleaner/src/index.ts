@@ -8,9 +8,12 @@ import {
 	BudgetSchema,
 	CategorySchema,
 	CreditCardMonthlyStatementSchema,
+	CreditCardStatementPaymentSchema,
 	CreditCardSchema,
 	ExpenseSchema,
-	IncomeSchema, SavingSchema, UserSchema
+	IncomeSchema,
+	SavingSchema,
+	UserSchema
 } from '@knightprogrammers/scpio-db-schemas';
 
 dotenv.config();
@@ -36,6 +39,7 @@ const config = {
 	const CategoryModel = mongoose.model('Category', CategorySchema);
 	const CreditCardModel = mongoose.model('CreditCard', CreditCardSchema);
 	const CreditCardMonthlyStatementModel = mongoose.model('CreditCardMonthlyStatement', CreditCardMonthlyStatementSchema);
+	const CreditCardStatementPaymentModel = mongoose.model('CreditCardStatementPayment', CreditCardStatementPaymentSchema);
 	const ExpenseModel = mongoose.model('Expense', ExpenseSchema);
 	const IncomeModel = mongoose.model('Income', IncomeSchema);
 	const SavingModel = mongoose.model('Saving', SavingSchema);
@@ -51,6 +55,7 @@ const config = {
 		await ExpenseModel.deleteMany({userId});
 		await IncomeModel.deleteMany({userId});
 		await SavingModel.deleteMany({userId});
+		await  CreditCardStatementPaymentModel.deleteMany({userId});
 		await  CreditCardMonthlyStatementModel.deleteMany({userId});
 		const budgets = await BudgetModel.find({userId});
 		for (const budget of budgets) {
