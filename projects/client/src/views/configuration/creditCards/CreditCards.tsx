@@ -1019,7 +1019,6 @@ const CreditCards = () => {
                         >
                             <div
                                 className="divide-y cursor-pointer"
-                                onClick={() => handleClickCreditCard(c)}
                             >
                                 <div className="grid grid-cols-2 pb-4 items-center p-4">
                                     <div className="flex flex-col">
@@ -1055,12 +1054,14 @@ const CreditCards = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="p-4 hidden">
+                                <div className="p-4">
                                     <Button
                                         block
                                         variant="twoTone"
                                         size="sm"
                                         icon={<HiEye />}
+                                        data-tn="view-detail-btn"
+                                        onClick={() => handleClickCreditCard(c)}
                                     >
                                         {t('actions.viewDetail')}
                                     </Button>
@@ -1070,7 +1071,7 @@ const CreditCards = () => {
                     ))}
                     <Card
                         bordered
-                        className="my-4 bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
+                        className="bg-transparent dark:bg-transparent cursor-pointer hover:border-purple-500 border-4 border-dashed"
                         bodyClass="flex flex-col justify-center items-center h-full"
                         data-tn="add-credit-card-btn"
                         style={{ minHeight: '240px' }}
