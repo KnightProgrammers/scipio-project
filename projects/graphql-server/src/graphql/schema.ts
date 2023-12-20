@@ -66,6 +66,26 @@ const schema = `
     closeDate: String!
     creditCard: CreditCard!
     expenses: [Expense]!
+    payment: CreditCardStatementPayment
+  }
+  
+  enum CreditCardStatementPaymentType {
+    TOTAL
+    PARTIAL
+    MINIMUM
+  }
+  
+  type CreditCardStatementPaymentItemCurrency {
+    currency: UserCurrency!
+    type: CreditCardStatementPaymentType!
+    amount: Float!
+  }
+
+  type CreditCardStatementPayment {
+    id: String!
+    paymentDate: String!
+    monthlyStatement: CreditCardMonthlyStatement!
+    currencies: [CreditCardStatementPaymentItemCurrency]!
   }
   
   enum CategoryType {
@@ -197,6 +217,9 @@ const schema = `
     deleteCreditCard(id: String!): Boolean!
 
     createCreditCardMonthlyStatement(creditCardId: String!, closeDate: String!): CreditCardMonthlyStatement
+
+    createCreditCardStatementPayment(input: CreditCardStatementPaymentInput!): CreditCardStatementPayment
+    deleteCreditCardStatementPayment(id: String!): Boolean
     
     createCategory(input: CategoryInput!): Category!
     updateCategory(id: String!, input: CategoryInput!): Category!
@@ -292,6 +315,18 @@ const schema = `
     description: String
     incomeDate: String!
     bankAccountId: String!
+  }
+
+  input CreditCardStatementPaymentItemCurrencyInput {
+    currencyCode: String!
+    type: CreditCardStatementPaymentType!
+    amount: Float!
+  }
+
+  input CreditCardStatementPaymentInput {
+    paymentDate: String!
+    monthlyStatementId: String!
+    currencies: [CreditCardStatementPaymentItemCurrencyInput]!
   }
 `;
 export default schema;
