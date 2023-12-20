@@ -114,7 +114,7 @@ test.beforeAll(async ({ browser }) => {
 
 test.afterEach(async () => {
 	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
-})
+});
 
 test.afterAll(async () => {
 	try {
