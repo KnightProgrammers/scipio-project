@@ -91,6 +91,15 @@ export async function apiGetCreditCard(id: string): Promise<any> {
                             monthlyStatements {
                                 id
                                 closeDate
+                                payment {
+                                    id
+                                    paymentDate
+                                    currencies { 
+                                        currency { id code } 
+                                        amount
+                                        type
+                                    }
+                                }
                                 expenses {
                                   id
                                   billableDate

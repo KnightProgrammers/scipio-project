@@ -117,7 +117,9 @@
                 "emptyState": {
                     "nextStatement": "No hay gastos reportados",
                     "existingStatement": "No hay gastos para este cierre"
-                }
+                },
+                "pendingPayment": "Cierre sin pago resgistrado",
+                "payStatementAction": "Pagar Tarjeta"
             }
         },
         "categories": {
@@ -271,7 +273,8 @@
         "tryAgain": "Volver a intentar",
         "update": "Actualizar",
         "updating": "Actualizando",
-        "viewDetail": "Ver Detalle"
+        "viewDetail": "Ver Detalle",
+        "viewMovements": "Ver Movimientos"
     },
     "fields": {
         "amount": "Monto",
@@ -375,9 +378,11 @@
         "all": "Todos",
         "country": "Selecciona un pais",
         "currentMonth": "Mes actual",
-        "lastMonth": "Mes anterior",
         "currentYear": "Año actual",
+        "expenses": "Gastos",
+        "lastMonth": "Mes anterior",
         "lastYear": "Año anterior",
+        "payment": "Pago",
         "other": "Otro",
         "searchByName": "Buscar por Nombre",
         "total": "Total"
@@ -437,5 +442,10 @@
         "CASH": "Efectivo",
         "CREDIT_CARD": "Tarjeta de Crédito",
         "BANK_ACCOUNT": "Cuenta de Banco"
+    },
+    "creditCardStatementPaymentType": {
+        "TOTAL": "Total",
+        "PARTIAL": "Parcial",
+        "MINIMUM": "Mínimo"
     }
 }

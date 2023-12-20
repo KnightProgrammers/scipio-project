@@ -1,5 +1,6 @@
 import {
     Avatar,
+    Alert,
     Badge,
     Button,
     Card,
@@ -12,7 +13,8 @@ import {
     ModalForm,
     Segment,
     Select,
-    Tabs,
+    Tooltip,
+    Dialog,
 } from '@/components/ui'
 import { BsCreditCard2Front } from 'react-icons/bs'
 import {
@@ -33,7 +35,7 @@ import EmptyState from '@/components/shared/EmptyState'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { useMemo, useState } from 'react'
-import { MdOutlineAttachMoney } from 'react-icons/md'
+import { MdOutlineAttachMoney , MdOutlineDangerous } from 'react-icons/md'
 import { SelectFieldItem } from '@/components/ui/Form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiGetUserCurrencies } from '@/services/AccountService'
@@ -47,12 +49,10 @@ import {
     apiGetCreditCard,
     apiCreateCreditCardMonthlyStatement,
 } from '@/services/CreditCardService'
-import TabList from '@/components/ui/Tabs/TabList'
-import TabNav from '@/components/ui/Tabs/TabNav'
-import TabContent from '@/components/ui/Tabs/TabContent'
 import { DateTime } from 'luxon'
 import { useAppSelector } from '@/store'
 import { LuFilter } from 'react-icons/lu'
+import { PiWarningCircle, PiCheckCircle } from 'react-icons/pi'
 
 const CREDIT_CARD_STATUSES = ['ACTIVE', 'BLOCKED', 'EXPIRED']
 
@@ -251,13 +251,104 @@ const CreditCardFilter = (props: {
     )
 }
 
+const ExpenseListModal = (props: {
+    isOpen: boolean
+    title: string
+    expenses: any[]
+    onDialogClose: () => void
+}) => {
+    const { isOpen, title, expenses = [], onDialogClose } = props
+
+    const userState = useAppSelector((state) => state.auth.user)
+
+    const { t, i18n } = useTranslation()
+
+    return (
+        <Dialog
+            isOpen={isOpen}
+            className="h-5/6"
+            contentClassName="pb-0 px-0 bg-gray-100 dark:bg-gray-700"
+            onClose={onDialogClose}
+            onRequestClose={onDialogClose}
+        >
+            <div
+                className="overflow-hidden pb-6"
+                style={{ height: 'calc(100% - 76px)' }}
+            >
+                <div className="px-6">
+                    <h5 className="mb-4">{title}</h5>
+                </div>
+                <div
+                    className={`h-full overflow-y-auto pb-6 px-6 bg-white dark:bg-white ${
+                        expenses.length === 0 ? 'flex items-center' : ''
+                    }`}
+                >
+                    {expenses.map((e: any) => (
+                        <Card
+                            key={e.id}
+                            bordered
+                            className="mt-2"
+                            data-tn={`expense-item-${e.id}`}
+                        >
+                            <div className="w-full flex justify-between items-center">
+                                <small>{e.category.name}</small>
+                                <small>
+                                    {DateTime.fromISO(e.billableDate).toFormat(
+                                        'dd/MM/yyyy',
+                                    )}
+                                </small>
+                            </div>
+                            <div className="w-full flex justify-between items-center">
+                                <span>
+                                    {e.description
+                                        ? e.description
+                                        : t(
+                                              'pages.expenses.genericDescription',
+                                              {
+                                                  billableDate:
+                                                      DateTime.fromISO(
+                                                          e.billableDate,
+                                                      ).toFormat('dd/MM/yyyy'),
+                                              },
+                                          )}
+                                </span>
+                                <span className="text-right font-bold">
+                                    {currencyFormat(
+                                        e.amount,
+                                        e.currency.code,
+                                        i18n.language,
+                                        userState.country?.code,
+                                    )}
+                                </span>
+                            </div>
+                        </Card>
+                    ))}
+                    {expenses.length === 0 && (
+                        <EmptyState bordered className="border-0 w-full">
+                            <h4 className="text-2xl text-gray-500">
+                                {t(
+                                    'pages.creditCards.detailView.emptyState.existingStatement',
+                                )}
+                            </h4>
+                        </EmptyState>
+                    )}
+                </div>
+            </div>
+            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center">
+                <Button block variant="solid">
+                    Add Expense
+                </Button>
+            </div>
+        </Dialog>
+    )
+}
+
 const CreditCardDrawer = (props: {
     isOpen: boolean
     creditCard: any
     onClose: () => void
 }) => {
     const { isOpen, creditCard, onClose } = props
-    const [activeTab, setActiveTab] = useState<string>('next')
     const [showCreateStatementForm, setShowCreateStatementForm] =
         useState<boolean>(false)
 
@@ -292,50 +383,6 @@ const CreditCardDrawer = (props: {
     })
 
     if (!isOpen || !creditCard) return null
-
-    const ExpenseList = (props: { expenses: any }) => {
-        const { expenses } = props
-        return (
-            <>
-                {expenses.map((e: any) => (
-                    <Card
-                        key={e.id}
-                        bordered
-                        className="mt-2"
-                        data-tn={`expense-item-${e.id}`}
-                    >
-                        <div className="w-full flex justify-between items-center">
-                            <small>{e.category.name}</small>
-                            <small>
-                                {DateTime.fromISO(e.billableDate).toFormat(
-                                    'dd/MM/yyyy',
-                                )}
-                            </small>
-                        </div>
-                        <div className="w-full flex justify-between items-center">
-                            <span>
-                                {e.description
-                                    ? e.description
-                                    : t('pages.expenses.genericDescription', {
-                                          billableDate: DateTime.fromISO(
-                                              e.billableDate,
-                                          ).toFormat('dd/MM/yyyy'),
-                                      })}
-                            </span>
-                            <span className="text-right font-bold">
-                                {currencyFormat(
-                                    e.amount,
-                                    e.currency.code,
-                                    i18n.language,
-                                    userState.country?.code,
-                                )}
-                            </span>
-                        </div>
-                    </Card>
-                ))}
-            </>
-        )
-    }
 
     const CreateStatementForm = () => {
         const [closeDate, setCloseDate] = useState<Date>(new Date())
@@ -375,8 +422,8 @@ const CreditCardDrawer = (props: {
                             <Button
                                 variant="solid"
                                 data-tn="save-btn"
-                                onClick={() => {
-                                    createCreditCardMonthlyStatementMutation.mutate(
+                                onClick={async () => {
+                                    await createCreditCardMonthlyStatementMutation.mutateAsync(
                                         {
                                             creditCardId: creditCard.id,
                                             closeDate:
@@ -400,6 +447,171 @@ const CreditCardDrawer = (props: {
         )
     }
 
+    const StatementCard = (props: {
+        title: string
+        expenses: any[]
+        hasStatus?: boolean
+        isClosed?: boolean
+        payment?: any
+    }) => {
+        const { title, expenses, payment, isClosed = true } = props
+        const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
+
+        const totalByCurrency: any = {}
+
+        for (const e of expenses) {
+            if (!totalByCurrency[e.currency.code]) {
+                totalByCurrency[e.currency.code] = 0
+            }
+            totalByCurrency[e.currency.code] += e.amount
+        }
+
+        const PaymentAmountWithStatus = (props: {
+            amount: number
+            currencyCode: string
+            type: string
+        }) => {
+            const { amount, currencyCode, type } = props
+
+            let icon = <PiCheckCircle className="text-lg" />
+            let color = 'text-emerald-500'
+
+            if (type === 'PARTIAL') {
+                icon = <PiWarningCircle className="text-lg" />
+                color = 'text-yellow-500'
+            }
+
+            if (type === 'MINIMUM') {
+                icon = <MdOutlineDangerous className="text-lg" />
+                color = 'text-red-500'
+            }
+
+            return (
+                <Tooltip title={t(`creditCardStatementPaymentType.${type}`)}>
+                    <IconText
+                        className={`${color} text-sm font-semibold`}
+                        icon={icon}
+                    >
+                        {currencyFormat(
+                            amount,
+                            currencyCode,
+                            i18n.language,
+                            userState.country?.code,
+                        )}
+                    </IconText>
+                </Tooltip>
+            )
+        }
+
+        return (
+            <Card bordered className="my-2">
+                <h5 className="mb-2">{title}</h5>
+                {payment && (
+                    <>
+                        <hr className="my-2" />
+                        <div>
+                            <h6 className="mb-2">
+                                {t('placeholders.payment')}
+                            </h6>
+                            {payment.currencies.map((c: any) => (
+                                <p
+                                    key={`payment-${c.currency.code}`}
+                                    className="flex"
+                                >
+                                    <span className="font-bold mr-2">
+                                        {c.currency.code}:
+                                    </span>
+                                    <PaymentAmountWithStatus
+                                        amount={c.amount}
+                                        currencyCode={c.currency.code}
+                                        type={c.type}
+                                    />
+                                </p>
+                            ))}
+                        </div>
+                    </>
+                )}
+                {!payment && isClosed && (
+                    <>
+                        <hr className="my-2" />
+                        <Alert showIcon>
+                            {t('pages.creditCards.detailView.pendingPayment')}
+                        </Alert>
+                    </>
+                )}
+                <hr className="my-2" />
+                <div>
+                    <h6 className="mb-2">{t('placeholders.expenses')}</h6>
+                    {expenses.length > 0 &&
+                        Object.keys(totalByCurrency)
+                            .sort()
+                            .map((k: string) => (
+                                <p key={k} className="">
+                                    <span className="font-bold">{k}:</span>
+                                    <span className="ml-2">
+                                        {currencyFormat(
+                                            totalByCurrency[k],
+                                            k,
+                                            i18n.language,
+                                            userState.country?.code,
+                                        )}
+                                    </span>
+                                </p>
+                            ))}
+                    {expenses.length === 0 && (
+                        <Alert showIcon type="info">
+                            {t(
+                                'pages.creditCards.detailView.emptyState.nextStatement',
+                            )}
+                        </Alert>
+                    )}
+                </div>
+                <hr className="my-2" />
+                <div
+                    className={`gap-2 grid grid-cols-${
+                        isClosed && payment ? '1' : '2'
+                    } mt-2`}
+                >
+                    <Button
+                        block
+                        size="xs"
+                        variant="twoTone"
+                        data-tn="view-expenses-button"
+                        onClick={() => setIsExpenseModalOpen(true)}
+                    >
+                        {t('actions.viewMovements')}
+                    </Button>
+                    {!isClosed && (
+                        <Button
+                            block
+                            size="xs"
+                            variant="twoTone"
+                            data-tn="new-statement-button"
+                            onClick={() => setShowCreateStatementForm(true)}
+                        >
+                            {t(
+                                'pages.creditCards.detailView.newStatementButton',
+                            )}
+                        </Button>
+                    )}
+                    {!payment && isClosed && (
+                        <Button block size="xs" variant="twoTone">
+                            {t(
+                                'pages.creditCards.detailView.payStatementAction',
+                            )}
+                        </Button>
+                    )}
+                </div>
+                <ExpenseListModal
+                    isOpen={isExpenseModalOpen}
+                    expenses={expenses}
+                    title={`${t('placeholders.expenses')} - ${title}`}
+                    onDialogClose={() => setIsExpenseModalOpen(false)}
+                />
+            </Card>
+        )
+    }
+
     const DrawerContent = () => {
         if (!creditCardDetail || isFetchingCreditCardDetail) {
             return <Loading loading />
@@ -410,113 +622,31 @@ const CreditCardDrawer = (props: {
         }
 
         return (
-            <Tabs
-                value={activeTab}
-                defaultValue="next"
-                className="h-full overflow-hidden"
-                onChange={(tabValue) => setActiveTab(tabValue)}
-            >
-                <TabList>
-                    <TabNav
-                        value="next"
-                        style={{ minWidth: 'fit-content' }}
-                        data-tn="next-statement"
-                    >
-                        {t('pages.creditCards.detailView.nextStatement')}
-                    </TabNav>
-                    {creditCardDetail.monthlyStatements.map((ms: any) => (
-                        <TabNav
-                            key={`ms-tab-nav-${ms.id}`}
-                            value={ms.id}
-                            style={{ minWidth: 'fit-content' }}
-                            data-tn={`statement-${ms.id}`}
-                        >
-                            {DateTime.fromISO(ms.closeDate)
-                                .setLocale(i18n.language)
-                                .toFormat('MMMM')}
-                        </TabNav>
-                    ))}
-                </TabList>
-
-                <TabContent
-                    value="next"
-                    className={activeTab === 'next' ? 'h-full' : ''}
-                >
-                    <div
-                        className={
-                            creditCardDetail.expensesNextStatement.length
-                                ? 'overflow-y-auto'
-                                : 'flex flex-col justify-center'
-                        }
-                        style={{
-                            height: 'calc(100% - 70px - 38px)',
-                        }}
-                    >
-                        {creditCardDetail.expensesNextStatement.length ? (
-                            <ExpenseList
-                                expenses={
-                                    creditCardDetail.expensesNextStatement
-                                }
-                            />
-                        ) : (
-                            <EmptyState bordered className="mt-4 border-0">
-                                <h4 className="text-2xl text-gray-500">
-                                    {t(
-                                        'pages.creditCards.detailView.emptyState.nextStatement',
-                                    )}
-                                </h4>
-                            </EmptyState>
-                        )}
-                    </div>
-                    <Button
-                        block
-                        variant="solid"
-                        className="mt-4"
-                        data-tn="new-statement-button"
-                        onClick={() => setShowCreateStatementForm(true)}
-                    >
-                        {t('pages.creditCards.detailView.newStatementButton')}
-                    </Button>
-                </TabContent>
+            <div>
+                <StatementCard
+                    title={t('pages.creditCards.detailView.nextStatement')}
+                    expenses={creditCardDetail.expensesNextStatement}
+                    isClosed={false}
+                />
                 {creditCardDetail.monthlyStatements.map((ms: any) => (
-                    <TabContent
-                        key={`ms-content-${ms.id}`}
-                        value={ms.id}
-                        className={activeTab === ms.id ? 'h-full' : ''}
-                    >
-                        <div
-                            className={
-                                ms.expenses.length
-                                    ? 'overflow-y-auto'
-                                    : 'flex flex-col justify-center'
-                            }
-                            style={{
-                                height: 'calc(100% - 70px)',
-                            }}
-                        >
-                            {ms.expenses.length ? (
-                                <ExpenseList expenses={ms.expenses} />
-                            ) : (
-                                <EmptyState bordered className="mt-4 border-0">
-                                    <h4 className="text-2xl text-gray-500">
-                                        {t(
-                                            'pages.creditCards.detailView.emptyState.existingStatement',
-                                        )}
-                                    </h4>
-                                </EmptyState>
-                            )}
-                        </div>
-                    </TabContent>
+                    <StatementCard
+                        key={ms.id}
+                        title={DateTime.fromISO(ms.closeDate)
+                            .setLocale(i18n.language)
+                            .toFormat('MMMM')}
+                        expenses={ms.expenses}
+                        payment={ms.payment}
+                    />
                 ))}
-            </Tabs>
+            </div>
         )
     }
 
     return (
         <Drawer
-            headerClass="!items-start !bg-gray-100 dark:!bg-gray-700"
-            bodyClass={`overflow-hidden ${
-                showCreateStatementForm ? 'bg-gray-300' : ''
+            headerClass="!items-start !bg-white dark:!bg-white"
+            bodyClass={`${
+                showCreateStatementForm ? 'bg-gray-300' : 'bg-gray-200'
             }`}
             title={
                 <div className="flex flex-col w-full divide-y">
