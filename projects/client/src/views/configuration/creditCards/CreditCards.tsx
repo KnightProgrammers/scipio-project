@@ -335,7 +335,7 @@ const ExpenseListModal = (props: {
                     )}
                 </div>
             </div>
-            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center">
+            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center hidden">
                 <Button block variant="solid">
                     {t('pages.expenses.addExpenseButton')}
                 </Button>
