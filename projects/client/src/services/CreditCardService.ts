@@ -316,3 +316,41 @@ export async function apiCreateCreditCardMonthlyStatement(body: {
     })
     return response.data
 }
+
+export async function apiPayCreditCardMonthlyStatement(body: {
+    monthlyStatementId: string
+    paymentDate: string
+    currencies: any[]
+}): Promise<any> {
+    const { monthlyStatementId, paymentDate, currencies } = body
+    const response = await BaseService.request({
+        url: '/graphql',
+        method: 'POST',
+        data: {
+            operationName: 'createCreditCardStatementPayment',
+            query: `
+            mutation createCreditCardStatementPayment(
+                $paymentDate: String!
+                $monthlyStatementId: String!
+                $currencies: [CreditCardStatementPaymentItemCurrencyInput]!
+            ) {
+                createCreditCardStatementPayment(
+                    input: {
+                        paymentDate: $paymentDate, 
+                        monthlyStatementId: $monthlyStatementId, 
+                        currencies: $currencies
+                    }
+                ) {
+                    id
+                }
+              }
+            `,
+            variables: {
+                monthlyStatementId,
+                paymentDate,
+                currencies,
+            },
+        },
+    })
+    return response.data
+}

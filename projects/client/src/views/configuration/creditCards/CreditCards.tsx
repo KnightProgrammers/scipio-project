@@ -35,7 +35,7 @@ import EmptyState from '@/components/shared/EmptyState'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { useMemo, useState } from 'react'
-import { MdOutlineAttachMoney , MdOutlineDangerous } from 'react-icons/md'
+import { MdOutlineAttachMoney, MdOutlineDangerous } from 'react-icons/md'
 import { SelectFieldItem } from '@/components/ui/Form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiGetUserCurrencies } from '@/services/AccountService'
@@ -48,6 +48,7 @@ import {
     apiDeleteCreditCard,
     apiGetCreditCard,
     apiCreateCreditCardMonthlyStatement,
+    apiPayCreditCardMonthlyStatement,
 } from '@/services/CreditCardService'
 import { DateTime } from 'luxon'
 import { useAppSelector } from '@/store'
@@ -351,6 +352,10 @@ const CreditCardDrawer = (props: {
     const { isOpen, creditCard, onClose } = props
     const [showCreateStatementForm, setShowCreateStatementForm] =
         useState<boolean>(false)
+    const [showPayStatementForm, setShowPayStatementForm] =
+        useState<boolean>(false)
+    const [selectedStatementId, setSelectedStatementId] = useState<string>('')
+    const [totalToPayByCurrency, setTotalToPayByCurrency] = useState<any>({})
 
     const { t, i18n } = useTranslation()
 
@@ -371,7 +376,23 @@ const CreditCardDrawer = (props: {
         onSuccess: async () => {
             toast.push(
                 <Notification
-                    title={t('notifications.creditCard.created') || ''}
+                    title={t('notifications.creditCardStatement.closed') || ''}
+                    type="success"
+                />,
+                {
+                    placement: 'top-center',
+                },
+            )
+            await refetchCreditCardDetail()
+        },
+    })
+
+    const payCreditCardMonthlyStatementMutation = useMutation({
+        mutationFn: apiPayCreditCardMonthlyStatement,
+        onSuccess: async () => {
+            toast.push(
+                <Notification
+                    title={t('notifications.creditCardStatement.paid') || ''}
                     type="success"
                 />,
                 {
@@ -383,6 +404,149 @@ const CreditCardDrawer = (props: {
     })
 
     if (!isOpen || !creditCard) return null
+
+    const PayStatementForm = () => {
+        const [paymentDate, setPaymentDate] = useState<Date>(new Date())
+        const [currencies, setCurrencies] = useState<any>({})
+
+        const saving = payCreditCardMonthlyStatementMutation.isPending
+
+        return (
+            <div className="h-full flex flex-col justify-center">
+                <Loading type="cover" loading={saving}>
+                    <Card>
+                        <h3 className="mb-4">
+                            {t(
+                                'pages.creditCards.detailView.payStatementAction',
+                            )}
+                        </h3>
+                        <DatePicker
+                            inputtable
+                            locale={i18n.language}
+                            defaultValue={paymentDate}
+                            inputFormat="DD/MM/YYYY"
+                            className="mb-4"
+                            clearable={false}
+                            data-tn="close-date-input"
+                            onChange={(newDate) =>
+                                newDate && setPaymentDate(newDate)
+                            }
+                        />
+                        {Object.keys(totalToPayByCurrency).map((c: any) => (
+                            <div key={`input-group-${c}`} className="mb-4">
+                                <h6 className="mb-2">{c}</h6>
+                                <Input
+                                    type="number"
+                                    size="sm"
+                                    placeholder={t('fields.amount')}
+                                    className="mb-2"
+                                    defaultValue={totalToPayByCurrency[
+                                        c
+                                    ].toFixed(2)}
+                                    onChange={(e) => {
+                                        const newValue = { ...currencies }
+                                        newValue[c] = {
+                                            ...newValue[c],
+                                            amount: parseFloat(e.target.value),
+                                        }
+                                        setCurrencies(newValue)
+                                    }}
+                                />
+                                <Select
+                                    size="sm"
+                                    placeholder="Please Select"
+                                    defaultValue={{
+                                        value: 'TOTAL',
+                                        label: t(
+                                            'creditCardStatementPaymentType.TOTAL',
+                                        ),
+                                    }}
+                                    options={[
+                                        {
+                                            value: 'TOTAL',
+                                            label: t(
+                                                'creditCardStatementPaymentType.TOTAL',
+                                            ),
+                                        },
+                                        {
+                                            value: 'PARTIAL',
+                                            label: t(
+                                                'creditCardStatementPaymentType.PARTIAL',
+                                            ),
+                                        },
+                                        {
+                                            value: 'MINIMUM',
+                                            label: t(
+                                                'creditCardStatementPaymentType.MINIMUM',
+                                            ),
+                                        },
+                                    ]}
+                                    onChange={(v: any) => {
+                                        const newValue = { ...currencies }
+                                        newValue[c] = {
+                                            ...newValue[c],
+                                            type: v.value,
+                                        }
+                                        setCurrencies(newValue)
+                                    }}
+                                />
+                            </div>
+                        ))}
+                        <div className="mt-4 grid grid-cols-2 gap-4">
+                            <Button
+                                data-tn="cancel-btn"
+                                onClick={() => {
+                                    setShowPayStatementForm(false)
+                                    setTotalToPayByCurrency({})
+                                    setPaymentDate(new Date())
+                                }}
+                            >
+                                {t('actions.cancel')}
+                            </Button>
+                            <Button
+                                variant="solid"
+                                data-tn="save-btn"
+                                onClick={async () => {
+                                    await payCreditCardMonthlyStatementMutation.mutateAsync(
+                                        {
+                                            monthlyStatementId:
+                                                selectedStatementId,
+                                            paymentDate:
+                                                DateTime.fromJSDate(
+                                                    paymentDate,
+                                                ).toISO() ?? '',
+                                            currencies: Object.keys(
+                                                totalToPayByCurrency,
+                                            ).map((c: any) => ({
+                                                currencyCode: c,
+                                                amount:
+                                                    currencies[c]?.amount ??
+                                                    parseFloat(
+                                                        totalToPayByCurrency[
+                                                            c
+                                                        ].toFixed(2),
+                                                    ),
+                                                type:
+                                                    currencies[c]?.type ??
+                                                    'TOTAL',
+                                            })),
+                                        },
+                                    )
+                                    setShowPayStatementForm(false)
+                                    setTotalToPayByCurrency({})
+                                    setPaymentDate(new Date())
+                                }}
+                            >
+                                {saving
+                                    ? t('actions.saving')
+                                    : t('actions.save')}
+                            </Button>
+                        </div>
+                    </Card>
+                </Loading>
+            </div>
+        )
+    }
 
     const CreateStatementForm = () => {
         const [closeDate, setCloseDate] = useState<Date>(new Date())
@@ -449,12 +613,13 @@ const CreditCardDrawer = (props: {
 
     const StatementCard = (props: {
         title: string
+        statementId?: string
         expenses: any[]
         hasStatus?: boolean
         isClosed?: boolean
         payment?: any
     }) => {
-        const { title, expenses, payment, isClosed = true } = props
+        const { title, statementId, expenses, payment, isClosed = true } = props
         const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
 
         const totalByCurrency: any = {}
@@ -513,21 +678,25 @@ const CreditCardDrawer = (props: {
                             <h6 className="mb-2">
                                 {t('placeholders.payment')}
                             </h6>
-                            {payment.currencies.map((c: any) => (
-                                <p
-                                    key={`payment-${c.currency.code}`}
-                                    className="flex"
-                                >
-                                    <span className="font-bold mr-2">
-                                        {c.currency.code}:
-                                    </span>
-                                    <PaymentAmountWithStatus
-                                        amount={c.amount}
-                                        currencyCode={c.currency.code}
-                                        type={c.type}
-                                    />
-                                </p>
-                            ))}
+                            {payment.currencies
+                                .sort((a: any, b: any) =>
+                                    a.currency.code > b.currency.code ? 1 : -1,
+                                )
+                                .map((c: any) => (
+                                    <p
+                                        key={`payment-${c.currency.code}`}
+                                        className="flex"
+                                    >
+                                        <span className="font-bold mr-2">
+                                            {c.currency.code}:
+                                        </span>
+                                        <PaymentAmountWithStatus
+                                            amount={c.amount}
+                                            currencyCode={c.currency.code}
+                                            type={c.type}
+                                        />
+                                    </p>
+                                ))}
                         </div>
                     </>
                 )}
@@ -595,7 +764,17 @@ const CreditCardDrawer = (props: {
                         </Button>
                     )}
                     {!payment && isClosed && (
-                        <Button block size="xs" variant="twoTone">
+                        <Button
+                            block
+                            size="xs"
+                            variant="twoTone"
+                            onClick={() => {
+                                statementId &&
+                                    setSelectedStatementId(statementId)
+                                setTotalToPayByCurrency(totalByCurrency)
+                                setShowPayStatementForm(true)
+                            }}
+                        >
                             {t(
                                 'pages.creditCards.detailView.payStatementAction',
                             )}
@@ -621,6 +800,10 @@ const CreditCardDrawer = (props: {
             return <CreateStatementForm />
         }
 
+        if (showPayStatementForm) {
+            return <PayStatementForm />
+        }
+
         return (
             <div>
                 <StatementCard
@@ -636,6 +819,7 @@ const CreditCardDrawer = (props: {
                             .toFormat('MMMM')}
                         expenses={ms.expenses}
                         payment={ms.payment}
+                        statementId={ms.id}
                     />
                 ))}
             </div>

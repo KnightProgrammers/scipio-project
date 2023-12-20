@@ -341,9 +341,13 @@
             "deleted": "Budget successfully deleted"
         },
         "creditCard": {
-            "created": "Credit card successfully created",
-            "updated": "Credit card successfully updated",
-            "deleted": "Credit card successfully deleted"
+            "created": "Credit Card successfully created",
+            "updated": "Credit Card successfully updated",
+            "deleted": "Credit Card successfully deleted"
+        },
+        "creditCardStatement": {
+            "closed": "Credit Card Statement successfully closed",
+            "paid": "Credit Card Statement successfully paid"
         },
         "category": {
             "created": "Category successfully created",

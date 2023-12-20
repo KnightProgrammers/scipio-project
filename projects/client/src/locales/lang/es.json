@@ -345,6 +345,10 @@
             "updated": "Tarjeta de crédito actualizada correctamente",
             "deleted": "Tarjeta de crédito eliminada correctamente"
         },
+        "creditCardStatement": {
+            "closed": "La Tarjeta de crédito ha sido cerrada correctamente",
+            "paid": "Cierre de Tarjeta de crédito pagado correctamente"
+        },
         "category": {
             "created": "Categoría creada correctamente",
             "updated": "Categoría actualizada correctamente",
