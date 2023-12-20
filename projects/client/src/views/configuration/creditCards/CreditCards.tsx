@@ -1017,7 +1017,7 @@ const CreditCards = () => {
                                 </div>
                             }
                         >
-                            <div className="divide-y cursor-pointer">
+                            <div className="divide-y">
                                 <div className="grid grid-cols-2 pb-4 items-center p-4">
                                     <div className="flex flex-col">
                                         <small className="font-light">
@@ -1044,7 +1044,7 @@ const CreditCards = () => {
                                         <p className="text-gray-500 font-light">
                                             {t(`fields.creditLimitAmount`)}
                                         </p>
-                                        <p className="text-4xl font-semibold text-center">
+                                        <p className="text-4xl font-semibold">
                                             {currencyFormat(
                                                 c.creditLimitAmount,
                                                 c.creditLimitCurrency.code,
