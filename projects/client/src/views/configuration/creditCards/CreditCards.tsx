@@ -1017,9 +1017,7 @@ const CreditCards = () => {
                                 </div>
                             }
                         >
-                            <div
-                                className="divide-y cursor-pointer"
-                            >
+                            <div className="divide-y cursor-pointer">
                                 <div className="grid grid-cols-2 pb-4 items-center p-4">
                                     <div className="flex flex-col">
                                         <small className="font-light">
