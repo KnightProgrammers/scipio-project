@@ -21,8 +21,6 @@ test.describe.configure({ mode: 'serial' });
 
 let page: Page;
 
-const CREDIT_CARD_STATEMENT_DRAWER_LOCATOR: string = 'div[data-tn="credit-card-detail-drawer"]';
-
 test.beforeAll(async ({ browser }) => {
 	const defaultUserData = getDefaultUserData();
 	email = defaultUserData.email;
@@ -61,6 +59,5 @@ test('User can open the credit card view to see the monthly statements', async (
 	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
 	await waitForCreditCards;
 	await openCreditCardDetailView(page, creditCardId);
-	const isNextStatementSelected: string = await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="next-statement"]`).getAttribute('aria-selected');
-	expect(isNextStatementSelected).toEqual('true');
+	await expect(page.locator('div[data-tn="statement-card-next-statement"]')).toBeVisible();
 });
