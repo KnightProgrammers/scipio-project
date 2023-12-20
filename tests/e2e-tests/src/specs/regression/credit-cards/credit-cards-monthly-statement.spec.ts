@@ -107,7 +107,6 @@ test.beforeAll(async ({ browser }) => {
 	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
 	await waitForCreditCards;
 	await openCreditCardDetailView(page, creditCardId);
-	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 });
 
 test.afterAll(async () => {
@@ -122,6 +121,7 @@ test.afterAll(async () => {
 });
 
 test('`Next Statement` card - List of expenses', async () => {
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 	await expect(
 		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
@@ -144,6 +144,7 @@ test('Create Statement', async () => {
 	statementId = await createMonthlyStatement(page, new Date());
 });
 test('`Next Statement` card - After statement Creation', async () => {
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 	await expect(
 		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
@@ -159,6 +160,7 @@ test('`Next Statement` card - After statement Creation', async () => {
 	await expect(
 		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[4]}"]`)
 	).not.toBeVisible();
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
 });
 test('New statement tab - List of expenses', async () => {
 	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="view-expenses-button"]`).click();

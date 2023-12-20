@@ -107,6 +107,7 @@ test.beforeAll(async ({ browser }) => {
 	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
 	await waitForCreditCards;
 	await openCreditCardDetailView(page, creditCardId);
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 });
 
 test.afterEach(async () => {
