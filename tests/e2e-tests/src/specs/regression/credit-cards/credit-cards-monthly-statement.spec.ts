@@ -105,7 +105,16 @@ test.beforeAll(async ({ browser }) => {
 		});
 		expenseIds.push(expense.id);
 	}
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	await waitForCreditCards;
+	await openCreditCardDetailView(page, creditCardId);
+	await page.locator('div[data-tn="statement-card-next-statement"] button[data-tn="view-expenses-button"]').click();
 });
+
+test.afterEach(async () => {
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
+})
 
 test.afterAll(async () => {
 	try {
@@ -119,10 +128,6 @@ test.afterAll(async () => {
 });
 
 test('`Next Statement` tab - List of expenses', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	await waitForCreditCards;
-	await openCreditCardDetailView(page, creditCardId);
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
@@ -144,8 +149,6 @@ test('Create Statement', async () => {
 	statementId = await createMonthlyStatement(page, new Date());
 });
 test('`Next Statement` tab - After statement Creation', async () => {
-	const isNextStatementSelected: string = await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="next-statement"]`).getAttribute('aria-selected');
-	expect(isNextStatementSelected).toEqual('true');
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
@@ -163,10 +166,7 @@ test('`Next Statement` tab - After statement Creation', async () => {
 	).not.toBeVisible();
 });
 test('New statement tab - List of expenses', async () => {
-	const newStatementTab = page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${statementId}"]`);
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('false');
-	await newStatementTab.click();
-	expect(await newStatementTab.getAttribute('aria-selected')).toEqual('true');
+	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();

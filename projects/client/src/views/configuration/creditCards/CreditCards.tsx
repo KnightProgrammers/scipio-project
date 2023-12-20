@@ -337,7 +337,7 @@ const ExpenseListModal = (props: {
             </div>
             <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center">
                 <Button block variant="solid">
-                    Add Expense
+                    {t('pages.expenses.addExpenseButton')}
                 </Button>
             </div>
         </Dialog>
@@ -669,7 +669,13 @@ const CreditCardDrawer = (props: {
         }
 
         return (
-            <Card bordered className="my-2">
+            <Card
+                bordered
+                className="my-2"
+                data-tn={`statement-card-${
+                    statementId ? statementId : 'next-statement'
+                }`}
+            >
                 <h5 className="mb-2">{title}</h5>
                 {payment && (
                     <>

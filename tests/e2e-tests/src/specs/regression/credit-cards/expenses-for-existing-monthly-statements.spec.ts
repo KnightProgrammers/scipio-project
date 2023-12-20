@@ -105,7 +105,15 @@ test.beforeAll(async ({ browser }) => {
 		});
 		expenseIds.push(expense.id);
 	}
+	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
+	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
+	await waitForCreditCards;
+	await openCreditCardDetailView(page, creditCardId);
 });
+
+test.afterEach(async () => {
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
+})
 
 test.afterAll(async () => {
 	try {
@@ -119,10 +127,6 @@ test.afterAll(async () => {
 });
 
 test('Today\'s expense has no statement', async () => {
-	const waitForCreditCards = waitForRequest(page, 'userCreditCards');
-	await navigateMenu(page, NAV_MENU.CREDIT_CARDS);
-	await waitForCreditCards;
-	await openCreditCardDetailView(page, creditCardId);
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).toBeVisible();
@@ -135,7 +139,7 @@ test('Today\'s expense has no statement', async () => {
 });
 
 test('One month ago expense on the last month statement', async () => {
-	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[0]}"]`).click();
+	await page.locator(`div[data-tn="statement-card-${monthlyStatementIds[0]}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
@@ -148,7 +152,7 @@ test('One month ago expense on the last month statement', async () => {
 });
 
 test('Two months ago expense on the two months ago statement', async () => {
-	await page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div.tab-nav[data-tn="statement-${monthlyStatementIds[1]}"]`).click();
+	await page.locator(`div[data-tn="statement-card-${monthlyStatementIds[1]}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
 		page.locator(`${CREDIT_CARD_STATEMENT_DRAWER_LOCATOR} div[data-tn="expense-item-${expenseIds[0]}"]`)
 	).not.toBeVisible();
