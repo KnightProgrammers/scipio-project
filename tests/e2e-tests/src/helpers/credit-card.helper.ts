@@ -165,7 +165,7 @@ export const confirmDeleteCreditCard = async (page: Page, creditCardId: string) 
 
 export const openCreditCardDetailView = async (page: Page, creditCardId: string) => {
 	const waitForCreditCardRequest = waitForRequest(page, 'userCreditCard');
-	await page.locator(`div[data-tn="credit-card-${creditCardId}"] div.card-body`).click();
+	await page.locator(`div[data-tn="credit-card-${creditCardId}"] button[data-tn="view-detail-btn"]`).click();
 	const creditCardRequest = await waitForCreditCardRequest;
 	// Wait for the drawer animation
 	await page.waitForTimeout(2000);
