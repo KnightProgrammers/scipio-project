@@ -29,6 +29,7 @@ import { MdOutlineAttachMoney } from 'react-icons/md'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import {
+    Badge,
     Button,
     Card,
     Checkbox,
@@ -228,12 +229,14 @@ const IncomeFilter = (props: {
                 <span className="mr-2">{selectedDateFilterText}</span>
                 <BsCalendarRange />
             </span>
-            <Button
-                size="sm"
-                data-tn="open-income-filter-btn"
-                icon={<LuFilter />}
-                onClick={() => setIsOpen(true)}
-            />
+            <Badge>
+                <Button
+                    size="sm"
+                    data-tn="open-income-filter-btn"
+                    icon={<LuFilter />}
+                    onClick={() => setIsOpen(true)}
+                />
+            </Badge>
             <Drawer
                 title={
                     <div>

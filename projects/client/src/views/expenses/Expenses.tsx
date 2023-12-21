@@ -1,4 +1,5 @@
 import {
+    Badge,
     Button,
     Card,
     Checkbox,
@@ -602,12 +603,14 @@ const ExpenseFilter = (props: {
                 <span className="mr-2">{selectedDateFilterText}</span>
                 <BsCalendarRange />
             </span>
-            <Button
-                size="sm"
-                data-tn="open-expense-filter-btn"
-                icon={<LuFilter />}
-                onClick={() => setIsOpen(true)}
-            />
+            <Badge>
+                <Button
+                    size="sm"
+                    data-tn="open-expense-filter-btn"
+                    icon={<LuFilter />}
+                    onClick={() => setIsOpen(true)}
+                />
+            </Badge>
             <Drawer
                 title={
                     <div>
@@ -1315,6 +1318,14 @@ const Expenses = () => {
             }
             return uc
         })
+
+    if (!rows.length && isFetchingExpenses && isFetchingUserCurrencies) {
+        return (
+            <Container>
+                <Loading loading type="cover" />
+            </Container>
+        )
+    }
 
     if (!rows.length) {
         return (
