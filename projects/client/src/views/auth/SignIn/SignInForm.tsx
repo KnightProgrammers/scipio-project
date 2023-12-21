@@ -1,6 +1,5 @@
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
-import Checkbox from '@/components/ui/Checkbox'
 import { FormItem, FormContainer } from '@/components/ui/Form'
 import Alert from '@/components/ui/Alert'
 import PasswordInput from '@/components/shared/PasswordInput'
@@ -155,13 +154,6 @@ const SignInForm = (props: SignInFormProps) => {
                                         />
                                     </FormItem>
                                     <div className="flex justify-between mb-6">
-                                        <Field
-                                            className="mb-0"
-                                            name="rememberMe"
-                                            component={Checkbox}
-                                        >
-                                            {t('fields.rememberMe')}
-                                        </Field>
                                         <ActionLink
                                             to={forgotPasswordUrl}
                                             data-tn="forgot-password-link"

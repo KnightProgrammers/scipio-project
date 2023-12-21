@@ -1,3 +1,4 @@
+import { useMemo, useState, useEffect } from 'react'
 import {
     Avatar,
     Alert,
@@ -34,7 +35,6 @@ import currencyFormat from '@/utils/currencyFormat'
 import EmptyState from '@/components/shared/EmptyState'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
-import { useMemo, useState } from 'react'
 import { MdOutlineAttachMoney, MdOutlineDangerous } from 'react-icons/md'
 import { SelectFieldItem } from '@/components/ui/Form'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -51,6 +51,7 @@ import {
     apiPayCreditCardMonthlyStatement,
 } from '@/services/CreditCardService'
 import { DateTime } from 'luxon'
+import useURLQuery from '@/utils/hooks/useQuery'
 import { useAppSelector } from '@/store'
 import { LuFilter } from 'react-icons/lu'
 import { PiWarningCircle, PiCheckCircle } from 'react-icons/pi'
@@ -909,6 +910,23 @@ const CreditCards = () => {
         queryFn: async () =>
             apiGetCreditCardList({ statuses: filters.statuses }),
     })
+
+    const queryParams = useURLQuery()
+
+    const creditCardIdByParams = useMemo(
+        () => queryParams.get('selected-credit-card'),
+        [queryParams],
+    )
+
+    useEffect(() => {
+        if (creditCardList && creditCardIdByParams) {
+            const card = creditCardList.find(
+                (c: any) => c.id === creditCardIdByParams,
+            )
+            setSelectedCreditCard(card)
+            setShowCreditCardInfo(true)
+        }
+    }, [creditCardIdByParams, creditCardList])
 
     const onMutationSuccess = async (title: string) => {
         refetchCreditCards()

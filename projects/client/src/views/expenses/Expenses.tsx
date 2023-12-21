@@ -107,8 +107,8 @@ const GrowShrink = ({ value }: { value: number }) => {
                         'text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20',
                 )}
             >
-                {value > 0 && <HiOutlineTrendingUp />}
-                {value < 0 && <HiOutlineTrendingDown />}
+                {value < 0 && <HiOutlineTrendingUp />}
+                {value > 0 && <HiOutlineTrendingDown />}
                 {value === 0 && <HiOutlineCheck />}
             </span>
             <span
@@ -924,7 +924,7 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
     const handleClick = () => {
         if (expense.type === 'CREDIT_CARD') {
             navigate(
-                `/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`,
+                `/conf/credit-cards?selected-credit-card=${expense.creditCard.id}`,
             )
         }
         if (expense.type === 'BANK_ACCOUNT') {
@@ -1151,6 +1151,7 @@ const Expenses = () => {
                             variant="twoTone"
                             size="sm"
                             icon={<HiPlus />}
+                            className="hidden sm:flex"
                             data-tn={`add-expense-cat-${row.original.id}-btn`}
                             onClick={() => {
                                 setIsFormOpen(true)
@@ -1319,17 +1320,17 @@ const Expenses = () => {
             return uc
         })
 
-    if (!rows.length && isFetchingExpenses && isFetchingUserCurrencies) {
+    if (!rows.length && isFetchingExpenses) {
         return (
-            <Container>
-                <Loading loading type="cover" />
-            </Container>
+            <div className="flex h-full mx-auto w-0" data-tn="expenses-page">
+                <Loading loading />
+            </div>
         )
     }
 
     if (!rows.length) {
         return (
-            <Container>
+            <Container data-tn="expenses-page">
                 <div className="flex flex-col md:flex-row justify-between mb-4">
                     <h2 className="mb-2">{t('pages.expenses.header')}</h2>
                     <ExpenseFilter
@@ -1369,7 +1370,7 @@ const Expenses = () => {
     }
 
     return (
-        <Container>
+        <Container data-tn="expenses-page">
             <Loading
                 type="cover"
                 loading={isFetchingExpenses || isFetchingUserCurrencies}
