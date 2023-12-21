@@ -10,7 +10,7 @@ on:
         description: "Environment Target"
         required: true
   schedule:
-    -cron: '0 3 * * *'
+    - cron: '0 3 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
