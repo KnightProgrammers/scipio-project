@@ -924,7 +924,7 @@ const ExpenseTypeIcon = (props: { expense: any }) => {
     const handleClick = () => {
         if (expense.type === 'CREDIT_CARD') {
             navigate(
-                `/conf/credit-cards?=selected-credit-card=${expense.creditCard.id}`,
+                `/conf/credit-cards?selected-credit-card=${expense.creditCard.id}`,
             )
         }
         if (expense.type === 'BANK_ACCOUNT') {
