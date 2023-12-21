@@ -46,7 +46,6 @@ export const signInUser = async (page: Page, data: {
 	await page.locator('input[name="email"]').fill(email);
 	await page.locator('input[name="password"]').click();
 	await page.locator('input[name="password"]').fill(password);
-	await page.getByLabel('Remember Me').check();
 	await page.getByRole('button', { name: 'Sign In', exact: true }).waitFor({ state: 'visible', timeout: 30000 });
 	const waitForUserProfileRequest = waitForRequest(page, 'currentUserInfo');
 	await page.getByRole('button', { name: 'Sign In', exact: true }).click();
