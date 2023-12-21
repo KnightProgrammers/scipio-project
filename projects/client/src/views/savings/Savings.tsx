@@ -1,6 +1,7 @@
 import {
     Alert,
     Avatar,
+    Badge,
     Button,
     Card,
     Checkbox,
@@ -398,16 +399,20 @@ const SavingFilter = (props: {
         setIsOpen(false)
     }
 
+    const isFilterApplied = statuses.length !== SAVING_STATUSES.length
+
     return (
         <>
-            <Button
-                variant="default"
-                size="sm"
-                data-tn="open-saving-filter-btn"
-                className="p-2 ml-2"
-                icon={<LuFilter />}
-                onClick={() => setIsOpen(true)}
-            />
+            <Badge enabled={isFilterApplied}>
+                <Button
+                    variant="default"
+                    size="sm"
+                    data-tn="open-saving-filter-btn"
+                    className="p-2 ml-2"
+                    icon={<LuFilter />}
+                    onClick={() => setIsOpen(true)}
+                />
+            </Badge>
             <Drawer
                 title={
                     <div>

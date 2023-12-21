@@ -46,6 +46,17 @@ const Wrapper = () => {
         },
     })
 
+    const onError = (error: Error) => {
+        console.error(error)
+        if (
+            error.message.includes(
+                'Failed to fetch dynamically imported module',
+            )
+        ) {
+            window.location.reload()
+        }
+    }
+
     return (
         <ErrorBoundary
             fallbackRender={({ resetErrorBoundary }) => (
@@ -69,6 +80,7 @@ const Wrapper = () => {
                     </Button>
                 </Container>
             )}
+            onError={onError}
             onReset={reset}
         >
             <Layout />
