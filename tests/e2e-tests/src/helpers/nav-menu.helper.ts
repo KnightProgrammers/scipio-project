@@ -3,10 +3,10 @@ import { Page } from '@playwright/test';
 export const NAV_MENU = {
 	HOME: ['nav-menu-item-home'],
 	EXPENSES: ['nav-menu-item-expenses'],
-	BUDGET: ['nav-menu-item-budgets'],
-	SAVINGS: ['nav-menu-item-savings'],
 	INCOMES: ['nav-menu-item-incomes'],
-	BANK_ACCOUNTS: ['nav-menu-collapse-configuration', 'nav-menu-item-bank-accounts'],
+	SAVINGS: ['nav-menu-item-savings'],
+	BANK_ACCOUNTS: ['nav-menu-item-bank-accounts'],
+	BUDGET: ['nav-menu-collapse-configuration', 'nav-menu-item-budgets'],
 	CREDIT_CARDS: ['nav-menu-collapse-configuration', 'nav-menu-item-credit-cards'],
 	CATEGORIES: ['nav-menu-collapse-configuration', 'nav-menu-item-categories'],
 	JOBS: ['nav-menu-collapse-configuration', 'nav-menu-item-jobs']
