@@ -427,7 +427,7 @@ const CreditCardDrawer = (props: {
                             inputFormat="DD/MM/YYYY"
                             className="mb-4"
                             clearable={false}
-                            data-tn="close-date-input"
+                            data-tn="payment-date-input"
                             onChange={(newDate) =>
                                 newDate && setPaymentDate(newDate)
                             }
@@ -439,6 +439,7 @@ const CreditCardDrawer = (props: {
                                     type="number"
                                     size="sm"
                                     placeholder={t('fields.amount')}
+                                    name={`amount-${c.toLowerCase()}`}
                                     className="mb-2"
                                     defaultValue={totalToPayByCurrency[
                                         c
@@ -454,6 +455,7 @@ const CreditCardDrawer = (props: {
                                 />
                                 <Select
                                     size="sm"
+                                    id={`payment-type-${c.toLowerCase()}`}
                                     placeholder="Please Select"
                                     defaultValue={{
                                         value: 'TOTAL',
@@ -774,6 +776,7 @@ const CreditCardDrawer = (props: {
                             block
                             size="xs"
                             variant="twoTone"
+                            data-tn="pay-statement-button"
                             onClick={() => {
                                 statementId &&
                                     setSelectedStatementId(statementId)
