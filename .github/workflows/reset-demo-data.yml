@@ -3,6 +3,14 @@ name: Reset Demo Data
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        default: "Staging"
+        type: environment
+        description: "Environment Target"
+        required: true
+  schedule:
+    -cron: '0 3 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,17 +20,10 @@ permissions:
   packages: read
 
 jobs:
-  deploy-services:
-    name: Reset Demo Data - Env ${{ matrix.name }}
+  data-cleaner:
+    name: Reset Demo Data - Env ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    environment: ${{ matrix.key }}
-    strategy:
-      matrix:
-        include:
-          - key: "Staging"
-            name: "Staging"
-          - key: "Production"
-            name: "Production"
+    environment: ${{ inputs.environment }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
