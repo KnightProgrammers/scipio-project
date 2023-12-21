@@ -210,7 +210,7 @@ export const payMonthlyStatement = async (page:Page, statementId: string, data: 
 
 	for (const currency of currencies) {
 		await page.locator(`div[data-tn="credit-card-detail-drawer"] input[name="amount-${currency.currencyCode.toLowerCase()}"]`).fill(currency.amount.toString());
-		await page.locator(`div[data-tn="credit-card-detail-drawer"] #payment-type-${currency.currencyCode.toLowerCase()}`).fill(currency.type);
+		await page.locator(`div[data-tn="credit-card-detail-drawer"] #payment-type-${currency.currencyCode.toLowerCase()}  input.select__input`).fill(currency.type);
 		await page.keyboard.press('Enter');
 	}
 	
