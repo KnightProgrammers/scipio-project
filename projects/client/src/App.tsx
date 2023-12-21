@@ -59,7 +59,6 @@ const Wrapper = () => {
 
     return (
         <ErrorBoundary
-            onError={onError}
             fallbackRender={({ resetErrorBoundary }) => (
                 <Container className="flex flex-col h-full h-screen w-screen justify-center items-center">
                     <img
@@ -81,6 +80,7 @@ const Wrapper = () => {
                     </Button>
                 </Container>
             )}
+            onError={onError}
             onReset={reset}
         >
             <Layout />
