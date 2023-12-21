@@ -1151,6 +1151,7 @@ const Expenses = () => {
                             variant="twoTone"
                             size="sm"
                             icon={<HiPlus />}
+                            className="hidden sm:flex"
                             data-tn={`add-expense-cat-${row.original.id}-btn`}
                             onClick={() => {
                                 setIsFormOpen(true)
@@ -1319,17 +1320,17 @@ const Expenses = () => {
             return uc
         })
 
-    if (!rows.length && isFetchingExpenses && isFetchingUserCurrencies) {
+    if (!rows.length && isFetchingExpenses) {
         return (
-            <Container>
-                <Loading loading type="cover" />
-            </Container>
+            <div className="flex h-full mx-auto w-0" data-tn="expenses-page">
+                <Loading loading />
+            </div>
         )
     }
 
     if (!rows.length) {
         return (
-            <Container>
+            <Container data-tn="expenses-page">
                 <div className="flex flex-col md:flex-row justify-between mb-4">
                     <h2 className="mb-2">{t('pages.expenses.header')}</h2>
                     <ExpenseFilter
@@ -1369,7 +1370,7 @@ const Expenses = () => {
     }
 
     return (
-        <Container>
+        <Container data-tn="expenses-page">
             <Loading
                 type="cover"
                 loading={isFetchingExpenses || isFetchingUserCurrencies}

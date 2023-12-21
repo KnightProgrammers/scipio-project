@@ -5,11 +5,9 @@ import {
     PAGE_CONTAINER_GUTTER_X,
     PAGE_CONTAINER_GUTTER_Y,
 } from '@/constants/theme.constant'
-import Footer from '@/components/template/Footer'
 import type { CommonProps } from '@/@types/common'
 import type { Meta } from '@/@types/routes'
 import type { ElementType, ComponentPropsWithRef } from 'react'
-import type { FooterPageContainerType } from '@/components/template/Footer'
 import { useTranslation } from 'react-i18next'
 
 export interface PageContainerProps extends CommonProps, Meta {
@@ -33,14 +31,13 @@ const PageContainer = (props: PageContainerProps) => {
         header,
         contained = false,
         extraHeader,
-        footer = true,
     } = props
 
     const { t } = useTranslation()
 
     return (
-        <div className="h-full flex flex-auto flex-col justify-between">
-            <main className="h-full">
+        <div className="flex flex-auto flex-col justify-between overflow-hidden">
+            <main className="h-[100vh] mb-8 overflow-y-auto">
                 <div
                     className={classNames(
                         'page-container relative h-full flex flex-auto flex-col',
@@ -53,8 +50,8 @@ const PageContainer = (props: PageContainerProps) => {
                     {(header || extraHeader) && (
                         <div
                             className={classNames(
-                                contained && 'container mx-auto',
-                                'flex items-center justify-between mb-4',
+                                contained &&
+                                    'flex flex-auto flex-col h-[100vh] min-h-screen min-w-0 overflow-hidden relative w-full',
                             )}
                         >
                             <div>
@@ -84,13 +81,6 @@ const PageContainer = (props: PageContainerProps) => {
                     )}
                 </div>
             </main>
-            {footer && (
-                <Footer
-                    pageContainerType={
-                        pageContainerType as FooterPageContainerType
-                    }
-                />
-            )}
         </div>
     )
 }

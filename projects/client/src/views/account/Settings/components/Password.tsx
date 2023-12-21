@@ -1,4 +1,3 @@
-import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
@@ -6,6 +5,7 @@ import { FormContainer } from '@/components/ui/Form'
 import FormDescription from './FormDescription'
 import FormRow from '../../../../components/shared/FormRow'
 import { Field, Form, Formik } from 'formik'
+import PasswordInput from '@/components/shared/PasswordInput'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import { updatePassword } from 'firebase/auth'
@@ -109,7 +109,7 @@ const Password = () => {
                                         autoComplete="off"
                                         name="newPassword"
                                         placeholder={t('fields.newPassword')}
-                                        component={Input}
+                                        component={PasswordInput}
                                     />
                                 </FormRow>
                                 <FormRow
@@ -127,7 +127,7 @@ const Password = () => {
                                         placeholder={t(
                                             'fields.confirmPassword',
                                         )}
-                                        component={Input}
+                                        component={PasswordInput}
                                     />
                                 </FormRow>
                                 <div className="mt-4 ltr:text-right">
