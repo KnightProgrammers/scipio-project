@@ -18,26 +18,20 @@ export const protectedRoutes = [
         authority: [],
     },
     {
-        key: 'savings',
-        path: '/savings',
-        component: lazy(() => import('@/views/savings')),
-        authority: [],
-    },
-    {
-        key: 'budgets',
-        path: '/budgets',
-        component: lazy(() => import('@/views/budgets')),
-        authority: [],
-    },
-    {
         key: 'incomes',
         path: '/incomes',
         component: lazy(() => import('@/views/incomes')),
         authority: [],
     },
     {
+        key: 'savings',
+        path: '/savings',
+        component: lazy(() => import('@/views/savings')),
+        authority: [],
+    },
+    {
         key: 'bankAccounts',
-        path: '/conf/bank-accounts',
+        path: '/bank-accounts',
         component: lazy(() => import('@/views/configuration/bankAccounts')),
         authority: [],
     },
@@ -45,6 +39,12 @@ export const protectedRoutes = [
         key: 'creditCards',
         path: '/conf/credit-cards',
         component: lazy(() => import('@/views/configuration/creditCards')),
+        authority: [],
+    },
+    {
+        key: 'budgets',
+        path: '/conf/budgets',
+        component: lazy(() => import('@/views/budgets')),
         authority: [],
     },
     {
