@@ -46,8 +46,20 @@ const Wrapper = () => {
         },
     })
 
+    const onError = (error: Error) => {
+        console.error(error)
+        if (
+            error.message.includes(
+                'Failed to fetch dynamically imported module',
+            )
+        ) {
+            window.location.reload()
+        }
+    }
+
     return (
         <ErrorBoundary
+            onError={onError}
             fallbackRender={({ resetErrorBoundary }) => (
                 <Container className="flex flex-col h-full h-screen w-screen justify-center items-center">
                     <img
