@@ -107,8 +107,8 @@ const GrowShrink = ({ value }: { value: number }) => {
                         'text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20',
                 )}
             >
-                {value > 0 && <HiOutlineTrendingUp />}
-                {value < 0 && <HiOutlineTrendingDown />}
+                {value < 0 && <HiOutlineTrendingUp />}
+                {value > 0 && <HiOutlineTrendingDown />}
                 {value === 0 && <HiOutlineCheck />}
             </span>
             <span
