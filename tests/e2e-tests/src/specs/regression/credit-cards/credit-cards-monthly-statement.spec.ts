@@ -8,6 +8,7 @@ import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import {
 	createMonthlyStatement,
 	openCreditCardDetailView,
+	payMonthlyStatement,
 } from '../../../helpers/credit-card.helper';
 import GraphqlService from '../../../services/graphql.service';
 
@@ -21,6 +22,7 @@ let creditCardId: string;
 let statementId: string;
 
 const expenseIds: string[] = [];
+let userCurrencies: any[];
 
 test.describe.configure({ mode: 'serial' });
 
@@ -39,7 +41,7 @@ test.beforeAll(async ({ browser }) => {
 	// Wait until the save of the profile is completed
 	await page.waitForTimeout(5000);
 
-	const userCurrencies: any[] = await graphqlService.getUserCurrencies();
+	userCurrencies = await graphqlService.getUserCurrencies();
 
 	const currencyId = userCurrencies[0].id;
 
@@ -162,7 +164,7 @@ test('`Next Statement` card - After statement Creation', async () => {
 	).not.toBeVisible();
 	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
 });
-test('New statement tab - List of expenses', async () => {
+test('New statement card - List of expenses', async () => {
 	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="view-expenses-button"]`).click();
 	await expect(
 		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[0]}"]`)
@@ -179,4 +181,18 @@ test('New statement tab - List of expenses', async () => {
 	await expect(
 		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseIds[4]}"]`)
 	).not.toBeVisible();
+	await page.locator('div.dialog-overlay-after-open span.close-btn').click();
+});
+test('Pay the new statement', async () => {
+	await payMonthlyStatement(page, statementId, {
+		paymentDate: new Date(),
+		currencies: [
+			{
+				currencyCode: userCurrencies[0].code,
+				amount: 400,
+				type: 'TOTAL'
+			}
+		]
+	});
+	await expect(page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="pay-statement-button"]`)).not.toBeVisible();
 });

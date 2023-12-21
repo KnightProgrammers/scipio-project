@@ -193,6 +193,41 @@ export const createMonthlyStatement = async (page:Page, closeDate: Date): Promis
 	return id;
 };
 
+export const payMonthlyStatement = async (page:Page, statementId: string, data: {
+	paymentDate: Date
+	currencies: {
+		currencyCode: string
+		type: 'TOTAL'|'PARTIAL'|'MINIMUM'
+		amount: number
+	}[]
+}): Promise<string> => {
+	const {
+		paymentDate,
+		currencies
+	} = data;
+	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="pay-statement-button"]`).click();
+	await page.locator('div[data-tn="credit-card-detail-drawer"] input[data-tn="payment-date-input"]').fill(DateTime.fromJSDate(paymentDate).toFormat('dd/MM/yyyy'));
+
+	for (const currency of currencies) {
+		await page.locator(`div[data-tn="credit-card-detail-drawer"] input[name="amount-${currency.currencyCode.toLowerCase()}"]`).fill(currency.amount.toString());
+		await page.locator(`div[data-tn="credit-card-detail-drawer"] #payment-type-${currency.currencyCode.toLowerCase()}  input.select__input`).fill(currency.type);
+		await page.keyboard.press('Enter');
+	}
+	
+	const waitForPayCreditCardMonthlyStatement = waitForRequest(page, 'createCreditCardStatementPayment');
+	const waitForCreditCardRequest = waitForRequest(page, 'userCreditCard');
+	await page.locator('div[data-tn="credit-card-detail-drawer"] button[data-tn="save-btn"]').click();
+	const payStatementRequest = await waitForPayCreditCardMonthlyStatement;
+	await waitForCreditCardRequest;
+	const payStatementResponse = await payStatementRequest.response();
+	const {
+		data: {
+			createCreditCardStatementPayment: { id },
+		},
+	} = await payStatementResponse.json();
+	return id;
+};
+
 export const setCreditCardFilters = async (page: Page, filters: CreditCardFilterType) => {
 	await page.locator('button[data-tn="open-saving-filter-btn"]').click();
 	if (filters.statuses) {
