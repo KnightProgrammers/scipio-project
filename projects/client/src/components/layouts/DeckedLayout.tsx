@@ -28,7 +28,7 @@ const DeckedLayout = () => {
     return (
         <div className="app-layout-simple flex flex-auto flex-col min-h-screen">
             <div className="flex flex-auto min-w-0">
-                <div className="flex flex-auto flex-col h-[100vh] min-h-screen min-w-0 overflow-hidden relative w-full">
+                <div className="lex flex-col flex-auto min-h-screen min-w-0 relative w-full">
                     <Header
                         container
                         className="shadow dark:shadow-2xl"

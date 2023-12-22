@@ -36,8 +36,8 @@ const PageContainer = (props: PageContainerProps) => {
     const { t } = useTranslation()
 
     return (
-        <div className="flex flex-auto flex-col justify-between overflow-hidden">
-            <main className="h-[100vh] mb-8 overflow-y-auto">
+        <div className="h-full flex flex-auto flex-col justify-between overflow-hidden">
+            <main className="h-full mb-8 overflow-y-auto">
                 <div
                     className={classNames(
                         'page-container relative h-full flex flex-auto flex-col',
@@ -50,8 +50,8 @@ const PageContainer = (props: PageContainerProps) => {
                     {(header || extraHeader) && (
                         <div
                             className={classNames(
-                                contained &&
-                                    'flex flex-auto flex-col h-[100vh] min-h-screen min-w-0 overflow-hidden relative w-full',
+                                contained && 'container mx-auto',
+                                'flex items-center justify-between mb-4',
                             )}
                         >
                             <div>
