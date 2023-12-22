@@ -578,7 +578,7 @@ const ExpenseListModal = (props: {
                 <Button
                     block
                     variant="solid"
-                    data-tn="add-expense-button"
+                    data-tn="add-expense-btn"
                     onClick={() => setIsNewExpenseFormOpen(true)}
                 >
                     {t('pages.expenses.addExpenseButton')}
