@@ -213,7 +213,7 @@ export const payMonthlyStatement = async (page:Page, statementId: string, data: 
 		await page.locator(`div[data-tn="credit-card-detail-drawer"] #payment-type-${currency.currencyCode.toLowerCase()}  input.select__input`).fill(currency.type);
 		await page.keyboard.press('Enter');
 	}
-	
+
 	const waitForPayCreditCardMonthlyStatement = waitForRequest(page, 'createCreditCardStatementPayment');
 	const waitForCreditCardRequest = waitForRequest(page, 'userCreditCard');
 	await page.locator('div[data-tn="credit-card-detail-drawer"] button[data-tn="save-btn"]').click();
@@ -242,4 +242,43 @@ export const setCreditCardFilters = async (page: Page, filters: CreditCardFilter
 		}
 	}
 	await page.locator('button[data-tn="apply-credit-card-filter-btn"]').click();
+};
+
+export const createCreditCardExpense = async (page: Page, data: {
+	billableDate: Date
+	description: string
+	amount: number
+	currencyCode: string
+	categoryId: string
+}) => {
+	const {
+		billableDate= new Date(),
+		description = '',
+		amount,
+		currencyCode,
+		categoryId,
+	} = data;
+	await page.locator('button[data-tn="add-expense-btn"]').click();
+	await page.locator('input[data-tn="billable-date-input"]').fill(DateTime.fromJSDate(billableDate).toFormat('dd/MM/yyyy'));
+	await page.locator('input[name="description"]').fill(description);
+	await page.locator('input[name="amount"]').fill(amount.toString());
+	await page.locator('#currency-select input.select__input').fill(currencyCode);
+	await page.keyboard.press('Enter');
+	await page.locator('#category-select input.select__input').fill(categoryId);
+	await page.keyboard.press('Enter');
+	const saveExpenseWaitForRequest = waitForRequest(page, 'createExpense');
+	await page.locator('button[data-tn="modal-form-save-btn"]').click();
+	const saveExpenseRequest = await saveExpenseWaitForRequest;
+	const saveExpenseResponse = await saveExpenseRequest.response();
+	const { data: { createExpense: newExpense } } = await saveExpenseResponse.json();
+	expect(newExpense.id).toBeDefined();
+	return newExpense.id;
+};
+export const deleteCreditCardExpense = async (page: Page, expenseId: string) => {
+	await page.locator(`div[data-tn="expense-item-${expenseId}"] button[data-tn="dropdown-expense-btn"]`).click();
+	await page.locator(`div[data-tn="expense-item-${expenseId}"] li[data-tn="delete-expense-btn"]`).click();
+	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).toBeVisible();
+	const deleteExpenseWaitForRequest = waitForRequest(page, 'deleteExpense');
+	await page.locator('button[data-tn="confirm-dialog-confirm-btn"]').click();
+	await deleteExpenseWaitForRequest;
 };
