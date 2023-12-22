@@ -1,14 +1,15 @@
 import { expect, Page, test } from '@playwright/test';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
-import { signInUser, signUpUser } from '../../../helpers/auth.helper';
+import { DEFAULT_USER_CURRENCIES, signInUser, signUpUser } from '../../../helpers/auth.helper';
 import firebaseService from '../../../services/firebase.service';
 import { waitForRequest } from '../../../helpers/generic.helper';
 import { NAV_MENU, navigateMenu } from '../../../helpers/nav-menu.helper';
 import {
-	createMonthlyStatement,
+	createCreditCardExpense,
+	createMonthlyStatement, deleteCreditCardExpense,
 	openCreditCardDetailView,
-	payMonthlyStatement,
+	payMonthlyStatement
 } from '../../../helpers/credit-card.helper';
 import GraphqlService from '../../../services/graphql.service';
 
@@ -20,6 +21,8 @@ let graphqlService: GraphqlService;
 
 let creditCardId: string;
 let statementId: string;
+let categoryId: string;
+let expenseId: string;
 
 const expenseIds: string[] = [];
 let userCurrencies: any[];
@@ -50,7 +53,7 @@ test.beforeAll(async ({ browser }) => {
 		type: 'WANT',
 		isFixedPayment: false
 	});
-	const categoryId = category.id;
+	categoryId = category.id;
 
 	const creditCard1 = await graphqlService.createCreditCard({
 		label: 'Platinum',
@@ -195,4 +198,24 @@ test('Pay the new statement', async () => {
 		]
 	});
 	await expect(page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="pay-statement-button"]`)).not.toBeVisible();
+});
+
+test('Add expense to the `Next Statement`', async () => {
+	await page.locator(`div[data-tn="statement-card-${statementId}"] button[data-tn="view-expenses-button"]`).click();
+	expenseId = await createCreditCardExpense(page, {
+		categoryId,
+		amount: Math.round(Math.random() * 1000),
+		billableDate: new Date(),
+		description: 'New Credit Card Expense',
+		currencyCode: DEFAULT_USER_CURRENCIES[0]
+	});
+	await expect(
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseId}"]`)
+	).toBeVisible();
+});
+test('Delete expense on the `Next Statement`', async () => {
+	await deleteCreditCardExpense(page, expenseId);
+	await expect(
+		page.locator(`div.dialog-overlay-after-open div[data-tn="expense-item-${expenseId}"]`)
+	).not.toBeVisible();
 });

@@ -37,7 +37,7 @@ import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
 import * as Yup from 'yup'
 import { MdOutlineAttachMoney, MdOutlineDangerous } from 'react-icons/md'
 import { SelectFieldItem } from '@/components/ui/Form'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGetUserCurrencies } from '@/services/AccountService'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
@@ -55,8 +55,170 @@ import useURLQuery from '@/utils/hooks/useQuery'
 import { useAppSelector } from '@/store'
 import { LuFilter } from 'react-icons/lu'
 import { PiWarningCircle, PiCheckCircle } from 'react-icons/pi'
+import { apiGetCategoryList } from '@/services/CategoryService'
+import { apiCreateExpense, apiDeleteExpense } from '@/services/ExpenseService'
 
 const CREDIT_CARD_STATUSES = ['ACTIVE', 'BLOCKED', 'EXPIRED']
+
+const ExpenseFormForCreditCard = (props: {
+    open: boolean
+    userCurrencies: any[]
+    categories: any[]
+    creditCardId: string
+    onFormClose: () => void
+    onFormSubmit: (value: any) => void
+    isSaving: boolean
+}) => {
+    const {
+        open,
+        userCurrencies,
+        categories,
+        creditCardId,
+        isSaving,
+        onFormClose,
+        onFormSubmit,
+    } = props
+
+    const { t, i18n } = useTranslation()
+
+    const handleSubmit = (data: any) => {
+        onFormSubmit({
+            ...data,
+            creditCardId,
+        })
+    }
+
+    const validationSchema = Yup.object().shape({
+        billableDate: Yup.string().required(t('validations.required') || ''),
+        amount: Yup.string().required(t('validations.required') || ''),
+        currencyId: Yup.string().required(t('validations.required') || ''),
+        categoryId: Yup.string().required(t('validations.required') || ''),
+    })
+
+    return (
+        <ModalForm
+            isOpen={open}
+            entity={{
+                billableDate: DateTime.now().toISO(),
+            }}
+            title={t('pages.expenses.form.newTitle')}
+            validationSchema={validationSchema}
+            fields={(
+                errors: FormikErrors<any>,
+                touched: FormikTouched<any>,
+            ) => (
+                <>
+                    <FormItem
+                        asterisk
+                        label={t(`fields.date`) || ''}
+                        invalid={
+                            !!errors.billableDate || !!touched.billableDate
+                        }
+                        errorMessage={errors.billableDate?.toString()}
+                    >
+                        <Field name="billableDate" placeholder="DD/MM/YYYY">
+                            {({ field, form }: FieldProps) => (
+                                <DatePicker
+                                    inputtable
+                                    inputtableBlurClose={false}
+                                    inputFormat="DD/MM/YYYY"
+                                    defaultValue={new Date()}
+                                    locale={i18n.language}
+                                    clearable={false}
+                                    data-tn="billable-date-input"
+                                    onChange={(value: Date | null) => {
+                                        const d = value
+                                            ? DateTime.fromJSDate(value)
+                                            : DateTime.now()
+                                        form.setFieldValue(
+                                            field.name,
+                                            d.toISO(),
+                                        )
+                                    }}
+                                />
+                            )}
+                        </Field>
+                    </FormItem>
+                    <FormItem
+                        label={t(`fields.description`) || ''}
+                        invalid={!!errors.description || !!touched.description}
+                        errorMessage={errors.description?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="description"
+                            placeholder={t(`fields.description`)}
+                            component={Input}
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t(`fields.amount`) || ''}
+                        invalid={!!errors.amount || !!touched.amount}
+                        errorMessage={errors.amount?.toString()}
+                    >
+                        <Field
+                            type="number"
+                            autoComplete="off"
+                            name="amount"
+                            placeholder={t(`fields.amount`)}
+                            component={Input}
+                            prefix={
+                                <MdOutlineAttachMoney className="text-xl" />
+                            }
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t('fields.currency') || ''}
+                        invalid={!!errors.currencyId || !!touched.currencyId}
+                        errorMessage={errors.currencyId?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="currencyId"
+                            placeholder={t('fields.currency')}
+                            options={userCurrencies.map((c) => ({
+                                value: c.id,
+                                label: `${c.code} - ${t(
+                                    `currencies.${c.code}`,
+                                )}`,
+                            }))}
+                            className="currency-select"
+                            id="currency-select"
+                            component={SelectFieldItem}
+                        />
+                    </FormItem>
+                    <FormItem
+                        asterisk
+                        label={t('fields.category') || ''}
+                        invalid={!!errors.categoryId || !!touched.categoryId}
+                        errorMessage={errors.categoryId?.toString()}
+                    >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="categoryId"
+                            placeholder={t('fields.category')}
+                            options={categories.map((c: any) => ({
+                                value: c.id,
+                                label: c.name,
+                            }))}
+                            className="category-select"
+                            id="category-select"
+                            component={SelectFieldItem}
+                        />
+                    </FormItem>
+                </>
+            )}
+            isSaving={isSaving}
+            onClose={onFormClose}
+            onSubmit={handleSubmit}
+        />
+    )
+}
 
 function limit(val: string, max: string) {
     if (val.length === 1 && val[0] > max[0]) {
@@ -255,15 +417,56 @@ const CreditCardFilter = (props: {
 
 const ExpenseListModal = (props: {
     isOpen: boolean
+    isLoading: boolean
     title: string
+    creditCardId: string
     expenses: any[]
+    userCurrencies: any[]
+    categories: any[]
     onDialogClose: () => void
 }) => {
-    const { isOpen, title, expenses = [], onDialogClose } = props
+    const {
+        isOpen,
+        isLoading,
+        title,
+        expenses = [],
+        categories,
+        userCurrencies,
+        creditCardId,
+        onDialogClose,
+    } = props
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
+    const [isNewExpenseFormOpen, setIsNewExpenseFormOpen] = useState(false)
+    const [selectedExpense, setSelectedExpense] = useState<any>(undefined)
 
     const userState = useAppSelector((state) => state.auth.user)
 
     const { t, i18n } = useTranslation()
+
+    const queryClient = useQueryClient()
+
+    const onMutationSuccess = (title: string) => {
+        toast.push(<Notification title={title} type="success" />, {
+            placement: 'top-center',
+        })
+        queryClient.invalidateQueries({
+            queryKey: [`user-creditCard-${creditCardId}`],
+        })
+    }
+
+    const deleteExpenseMutation = useMutation({
+        mutationFn: apiDeleteExpense,
+        onSuccess: () => {
+            onMutationSuccess(t('notifications.expenses.deleted') || '')
+        },
+    })
+
+    const createExpenseMutation = useMutation({
+        mutationFn: apiCreateExpense,
+        onSuccess: () => {
+            onMutationSuccess(t('notifications.expenses.created') || '')
+        },
+    })
 
     return (
         <Dialog
@@ -280,7 +483,13 @@ const ExpenseListModal = (props: {
                 <div className="px-6">
                     <h5 className="mb-4">{title}</h5>
                 </div>
-                <div
+                <Loading
+                    loading={
+                        deleteExpenseMutation.isPending ||
+                        createExpenseMutation.isPending ||
+                        isLoading
+                    }
+                    type="cover"
                     className={`h-full overflow-y-auto pb-6 px-6 bg-white dark:bg-white ${
                         expenses.length === 0 ? 'flex items-center' : ''
                     }`}
@@ -291,15 +500,44 @@ const ExpenseListModal = (props: {
                             bordered
                             className="mt-2"
                             data-tn={`expense-item-${e.id}`}
+                            bodyClass="pt-0"
+                            headerClass="relative"
+                            headerBorder={false}
+                            header={
+                                <div className="w-full flex justify-between items-center">
+                                    <div className="w-full">
+                                        <small>
+                                            {e.category.name} -{' '}
+                                            {DateTime.fromISO(
+                                                e.billableDate,
+                                            ).toFormat('dd/MM/yyyy')}
+                                        </small>
+                                    </div>
+                                    <Dropdown
+                                        placement="bottom-end"
+                                        renderTitle={
+                                            <EllipsisButton data-tn="dropdown-expense-btn" />
+                                        }
+                                    >
+                                        <Dropdown.Item
+                                            eventKey="delete"
+                                            data-tn="delete-expense-btn"
+                                            onClick={() => {
+                                                setIsConfirmDeleteOpen(true)
+                                                setSelectedExpense(e)
+                                            }}
+                                        >
+                                            <IconText
+                                                className="text-red-400 hover:text-red-600 text-sm font-semibold w-full"
+                                                icon={<HiOutlineTrash />}
+                                            >
+                                                {t('actions.delete')}
+                                            </IconText>
+                                        </Dropdown.Item>
+                                    </Dropdown>
+                                </div>
+                            }
                         >
-                            <div className="w-full flex justify-between items-center">
-                                <small>{e.category.name}</small>
-                                <small>
-                                    {DateTime.fromISO(e.billableDate).toFormat(
-                                        'dd/MM/yyyy',
-                                    )}
-                                </small>
-                            </div>
                             <div className="w-full flex justify-between items-center">
                                 <span>
                                     {e.description
@@ -334,29 +572,81 @@ const ExpenseListModal = (props: {
                             </h4>
                         </EmptyState>
                     )}
-                </div>
+                </Loading>
             </div>
-            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center hidden">
-                <Button block variant="solid">
+            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg flex items-center">
+                <Button
+                    block
+                    variant="solid"
+                    data-tn="add-expense-btn"
+                    onClick={() => setIsNewExpenseFormOpen(true)}
+                >
                     {t('pages.expenses.addExpenseButton')}
                 </Button>
             </div>
+            <ExpenseFormForCreditCard
+                open={isNewExpenseFormOpen}
+                isSaving={createExpenseMutation.isPending}
+                creditCardId={creditCardId}
+                categories={categories}
+                userCurrencies={userCurrencies}
+                onFormClose={() => setIsNewExpenseFormOpen(false)}
+                onFormSubmit={async (data) => {
+                    await createExpenseMutation.mutateAsync(data)
+                    setIsNewExpenseFormOpen(false)
+                }}
+            />
+            <ConfirmDialog
+                isOpen={isConfirmDeleteOpen}
+                type="danger"
+                title={t('pages.expenses.deleteConfirmation.title')}
+                confirmButtonColor="red-600"
+                confirmText={t('actions.delete')}
+                cancelText={t('actions.cancel')}
+                data-tn="confirm-delete-dialog"
+                onClose={() => setIsConfirmDeleteOpen(false)}
+                onRequestClose={() => setIsConfirmDeleteOpen(false)}
+                onCancel={() => setIsConfirmDeleteOpen(false)}
+                onConfirm={() => {
+                    setIsConfirmDeleteOpen(false)
+                    selectedExpense &&
+                        deleteExpenseMutation.mutate(selectedExpense.id)
+                }}
+            >
+                <p>
+                    {t('pages.expenses.deleteConfirmation.description', {
+                        description: selectedExpense?.description
+                            ? selectedExpense.description
+                            : t('pages.expenses.genericDescription', {
+                                  billableDate: selectedExpense
+                                      ? DateTime.fromISO(
+                                            selectedExpense.billableDate,
+                                        ).toFormat('dd/MM/yyyy')
+                                      : '',
+                              }),
+                    })}
+                </p>
+            </ConfirmDialog>
         </Dialog>
     )
 }
 
 const CreditCardDrawer = (props: {
     isOpen: boolean
+    userCurrencies: any[]
+    categories: any[]
     creditCard: any
     onClose: () => void
 }) => {
-    const { isOpen, creditCard, onClose } = props
+    const { isOpen, creditCard, userCurrencies, categories, onClose } = props
     const [showCreateStatementForm, setShowCreateStatementForm] =
         useState<boolean>(false)
     const [showPayStatementForm, setShowPayStatementForm] =
         useState<boolean>(false)
     const [selectedStatementId, setSelectedStatementId] = useState<string>('')
     const [totalToPayByCurrency, setTotalToPayByCurrency] = useState<any>({})
+    const [selectedStatement, setSelectedStatement] = useState<any>(null)
+    const [selectedExpenses, setSelectedExpenses] = useState<any[]>([])
 
     const { t, i18n } = useTranslation()
 
@@ -623,7 +913,12 @@ const CreditCardDrawer = (props: {
         payment?: any
     }) => {
         const { title, statementId, expenses, payment, isClosed = true } = props
-        const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
+
+        useEffect(() => {
+            if (title === selectedStatement) {
+                setSelectedExpenses(expenses)
+            }
+        }, [expenses, title])
 
         const totalByCurrency: any = {}
 
@@ -755,7 +1050,10 @@ const CreditCardDrawer = (props: {
                         size="xs"
                         variant="twoTone"
                         data-tn="view-expenses-button"
-                        onClick={() => setIsExpenseModalOpen(true)}
+                        onClick={() => {
+                            setSelectedStatement(title)
+                            setSelectedExpenses(expenses)
+                        }}
                     >
                         {t('actions.viewMovements')}
                     </Button>
@@ -791,18 +1089,12 @@ const CreditCardDrawer = (props: {
                         </Button>
                     )}
                 </div>
-                <ExpenseListModal
-                    isOpen={isExpenseModalOpen}
-                    expenses={expenses}
-                    title={`${t('placeholders.expenses')} - ${title}`}
-                    onDialogClose={() => setIsExpenseModalOpen(false)}
-                />
             </Card>
         )
     }
 
     const DrawerContent = () => {
-        if (!creditCardDetail || isFetchingCreditCardDetail) {
+        if (!creditCardDetail && isFetchingCreditCardDetail) {
             return <Loading loading />
         }
 
@@ -815,7 +1107,7 @@ const CreditCardDrawer = (props: {
         }
 
         return (
-            <div>
+            <Loading type="cover" loading={isFetchingCreditCardDetail}>
                 <StatementCard
                     title={t('pages.creditCards.detailView.nextStatement')}
                     expenses={creditCardDetail.expensesNextStatement}
@@ -832,7 +1124,7 @@ const CreditCardDrawer = (props: {
                         statementId={ms.id}
                     />
                 ))}
-            </div>
+            </Loading>
         )
     }
 
@@ -877,6 +1169,16 @@ const CreditCardDrawer = (props: {
             onRequestClose={onClose}
         >
             <DrawerContent />
+            <ExpenseListModal
+                isOpen={!!selectedStatement}
+                isLoading={isFetchingCreditCardDetail}
+                expenses={selectedExpenses}
+                creditCardId={creditCard.id}
+                categories={categories}
+                userCurrencies={userCurrencies}
+                title={`${t('placeholders.expenses')} - ${selectedStatement}`}
+                onDialogClose={() => setSelectedStatement(null)}
+            />
         </Drawer>
     )
 }
@@ -909,6 +1211,11 @@ const CreditCards = () => {
         queryKey: ['user-credit-cards'],
         queryFn: async () =>
             apiGetCreditCardList({ statuses: filters.statuses }),
+    })
+
+    const { data: categories, isFetching: isFetchingCategories } = useQuery({
+        queryKey: ['user-categories'],
+        queryFn: apiGetCategoryList,
     })
 
     const queryParams = useURLQuery()
@@ -1233,7 +1540,7 @@ const CreditCards = () => {
         setSelectedCreditCard(creditCard)
     }
 
-    if (!creditCardList) {
+    if (!creditCardList || isFetchingCategories || isFetchingUserCurrencies) {
         return (
             <div
                 className="flex h-full mx-auto w-0"
@@ -1448,6 +1755,8 @@ const CreditCards = () => {
             <CreditCardDrawer
                 isOpen={showCreditCardInfo}
                 creditCard={selectedCreditCard}
+                categories={categories ?? []}
+                userCurrencies={userCurrencies ?? []}
                 onClose={() => setShowCreditCardInfo(false)}
             />
         </Container>

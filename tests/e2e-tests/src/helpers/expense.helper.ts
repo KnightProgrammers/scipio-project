@@ -99,7 +99,6 @@ export const confirmDeleteExpense = async (page: Page, expenseId: string, catego
 	expect(foundCategory).toBeTruthy();
 	const foundExpense = foundCategory.expenses.find(e => e.id === expenseId);
 	expect(foundExpense).toBeFalsy();
-
 	await expect(page.locator('div[data-tn="confirm-delete-dialog"]')).not.toBeVisible();
 };
 export const applyExpenseFilter = async (page: Page, filters: ExpenseFilterType) => {
