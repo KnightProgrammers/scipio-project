@@ -33,8 +33,8 @@ jobs:
         run: |
           case "${{ github.event.deployment.environment }}" in
           Production) echo "Environment Production"
-            echo "BASE_URL=https://scipio-client-production.up.railway.app" >> $GITHUB_ENV
-            echo "API_BASE_URL=https://scipio-server-production.up.railway.app" >> $GITHUB_ENV
+            echo "BASE_URL=https://scipiofinances.com" >> $GITHUB_ENV
+            echo "API_BASE_URL=https://api.scipiofinances.com" >> $GITHUB_ENV
             ;;
           Staging) echo "Environment Staging"
             echo "BASE_URL=https://staging.scipiofinances.com" >> $GITHUB_ENV
