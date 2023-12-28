@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: https://scipio-client-production.up.railway.app
+      url: https://scipiofinances.com
     steps:
       - name: Verify if Tag exist
         uses: actions/github-script@v7
