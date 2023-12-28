@@ -21,9 +21,9 @@ permissions:
 
 jobs:
   data-cleaner:
-    name: Reset Demo Data - Env ${{ inputs.environment || "Staging" }}
+    name: Reset Demo Data - Env ${{ inputs.environment || 'Staging' }}
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || "Staging" }}
+    environment: ${{ inputs.environment || 'Staging' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
