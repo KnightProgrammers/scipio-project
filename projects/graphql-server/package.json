@@ -37,7 +37,7 @@
     "mongoose": "8.0.3"
   },
   "devDependencies": {
-    "@sentry/cli": "2.23.0",
+    "@sentry/cli": "2.23.1",
     "@types/gravatar": "1.8.6",
     "@types/luxon": "3.3.7",
     "@types/node": "20.10.5",
