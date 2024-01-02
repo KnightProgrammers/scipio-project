@@ -41,7 +41,7 @@
         "mongoose": "8.0.3",
         "node-cron": "3.0.3",
         "nodemailer": "6.9.7",
-        "pino": "8.17.1",
+        "pino": "8.17.2",
         "pino-pretty": "10.3.0"
     }
 }
