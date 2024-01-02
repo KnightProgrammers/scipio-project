@@ -75,7 +75,7 @@
     "@types/lodash": "4.14.202",
     "@types/luxon": "3.3.7",
     "@types/node": "20.10.5",
-    "@types/react": "18.2.45",
+    "@types/react": "18.2.46",
     "@types/react-beautiful-dnd": "13.1.7",
     "@types/react-dom": "18.2.18",
     "@types/react-highlight-words": "0.16.7",
