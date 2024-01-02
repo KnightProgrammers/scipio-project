@@ -27,7 +27,7 @@
     "@types/node": "20.10.6",
     "@types/uuid": "9.0.7",
     "@typescript-eslint/eslint-plugin": "6.17.0",
-    "dd-trace": "4.21.0",
+    "dd-trace": "4.22.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-alias": "1.1.2",
