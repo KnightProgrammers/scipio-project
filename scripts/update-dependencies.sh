@@ -1,14 +1,14 @@
 #!/bin/bash
 
-declare -A projects=(
-    ["graphql-server"]="/projects/graphql-server"
-    ["db-seed"]="/projects/db-seed"
-    ["cron-jobs"]="/projects/cron-jobs"
-    ["data-cleaner"]="/projects/data-cleaner"
-    ["client"]="/projects/client"
-    ["infra-lib"]="/packages/infra"
-    ["db-schemas-lib"]="/packages/db-schemas"
-    ["e2e-tests"]="/tests/e2e-tests"
+projects=(
+    "graphql-server::/projects/graphql-server"
+    "db-seed::/projects/db-seed"
+    "cron-jobs::/projects/cron-jobs"
+    "data-cleaner::/projects/data-cleaner"
+    "client::/projects/client"
+    "infra-lib::/packages/infra"
+    "db-schemas-lib::/packages/db-schemas"
+    "e2e-tests::/tests/e2e-tests"
 )
 
 # Get root directory
@@ -21,14 +21,17 @@ npm i -g npm-check-updates
 git checkout -b update-dependencies
 
 # For every npm project
-for key in "${!projects[@]}"; do
+for index in "${projects[@]}" ; do
+    key="${index%%::*}"
+    project="${index##*::}"
   printf "%s\n" "$key"
     # Chenge directory
-    cd "${root_dir}/${projects[$key]}"
+    cd "${root_dir}/${project}" || exit 1
     # Check of updates
     npm-check-updates -u
     # Install Updates
     npm i
     # Commit Changes
-    git commit -am "Maint: Update dependencies for $key" # includes project name
+    git add .
+    git commit -m "Maint: Update dependencies for $key" # includes project name
 done
