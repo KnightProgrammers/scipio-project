@@ -17,7 +17,7 @@
     "@fastify/cors": "8.5.0",
     "@fastify/mongodb": "8.0.0",
     "@fastify/sensible": "5.5.0",
-    "@fastify/type-provider-typebox": "3.5.0",
+    "@fastify/type-provider-typebox": "4.0.0",
     "@immobiliarelabs/fastify-sentry": "7.1.1",
     "@knightprogrammers/scpio-db-schemas": "1.4.0",
     "@sentry/node": "7.88.0",
