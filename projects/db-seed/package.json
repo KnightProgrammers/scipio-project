@@ -17,13 +17,13 @@
     "luxon": "3.4.4",
     "mongoose": "8.0.3",
     "pino": "8.17.1",
-    "pino-pretty": "10.3.0",
+    "pino-pretty": "10.3.1",
     "typescript": "5.3.3"
   },
   "devDependencies": {
     "@types/luxon": "3.3.7",
     "@typescript-eslint/eslint-plugin": "6.17.0",
-    "@typescript-eslint/parser": "6.15.0",
+    "@typescript-eslint/parser": "6.17.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-alias": "1.1.2",
