@@ -11,6 +11,7 @@ on:
           - major
           - minor
           - patch
+        default: patch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,6 +19,9 @@ concurrency:
 
 permissions:
   packages: write
+  contents: write
+  repository-projects: write
+  pull-requests: write
 
 jobs:
   release-new-version:
@@ -43,6 +47,8 @@ jobs:
         run:  npm version ${{inputs.type}}
       - name: Publish version
         run:  npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Config git user
         shell: bash
         run: |
@@ -53,7 +59,6 @@ jobs:
         shell: bash
         run: |
           TEMP_BRANCH_PREFIX="infra-version_${{ github.run_id }}-${{ github.run_attempt }}"
-          echo "::set-output name=value::$base_branch"
           echo "value=$TEMP_BRANCH_PREFIX" >> $GITHUB_OUTPUT
       - name: Commit and push the changes to a temporary branch
         shell: bash
@@ -66,3 +71,5 @@ jobs:
         shell: bash
         run: |
           gh pr create --base ${{ github.ref_name }} --head ${{ steps.temp_branch.outputs.value }} --title "Maint: Infra Lib Release" --body ""
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
