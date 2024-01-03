@@ -73,3 +73,11 @@ jobs:
           gh pr create --base ${{ github.ref_name }} --head ${{ steps.temp_branch.outputs.value }} --title "Maint: Infra Lib Release" --body ""
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger CI for the new PR
+        shell: bash
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{secrets.GITHUB_TOKEN}}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/dispatches \
+            -d '{"event_type": "create-pull-request"}'
