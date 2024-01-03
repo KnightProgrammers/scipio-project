@@ -336,14 +336,3 @@ jobs:
         with:
           environment: staging
           working_directory: './projects/client/'
-      - name: Create Sentry release for Server
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: ${{ secrets.SENTRY_SERVER_PROJECT }}
-          SENTRY_URL: https://sentry.io/
-        with:
-          environment: staging
-          working_directory: './projects/graphql-server/'
-
