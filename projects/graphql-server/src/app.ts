@@ -2,9 +2,6 @@ import 'module-alias/register';
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import cors from '@fastify/cors';
-import * as Sentry from '@sentry/node';
-import * as FastifySentry from '@immobiliarelabs/fastify-sentry';
-import { ProfilingIntegration } from '@sentry/profiling-node';
 import mongoose from 'mongoose';
 import mercurius from 'mercurius';
 import mercuriusAuth from 'mercurius-auth';
@@ -27,21 +24,6 @@ const options: any = {
 
 const app: any = async (fastify: any, opts: any): Promise<void> => {
 	fastify.log.info(config.db.uri);
-
-	if(['staging'].includes(config.app.environment)){
-		fastify.register(FastifySentry, {
-			dsn: process.env.SENTRY_DSN,
-			environment: config.app.environment,
-			integrations: [
-				new ProfilingIntegration(),
-				new Sentry.Integrations.GraphQL()
-			],
-			// Performance Monitoring
-			tracesSampleRate: 1.0,
-			// Set sampling rate for profiling - this is relative to tracesSampleRate
-			profilesSampleRate: 1.0,
-		});
-	}
 
 	mongoose
 		.connect(config.db.uri)
