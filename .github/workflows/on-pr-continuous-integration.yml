@@ -3,8 +3,7 @@ name: Continuous Integration - On Pull Request
 on:
   pull_request:
     branches: [ 'main' ]
-  repository_dispatch:
-    types: [ 'create-pull-request' ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
