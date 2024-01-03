@@ -22,6 +22,7 @@ permissions:
   contents: write
   repository-projects: write
   pull-requests: write
+  actions: write
 
 jobs:
   release-new-version:
