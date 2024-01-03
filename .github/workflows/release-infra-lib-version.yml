@@ -43,6 +43,8 @@ jobs:
         run:  npm version ${{inputs.type}}
       - name: Publish version
         run:  npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Config git user
         shell: bash
         run: |
