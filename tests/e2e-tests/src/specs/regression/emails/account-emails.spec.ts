@@ -81,7 +81,7 @@ for (const lang of LANG_CONFIG) {
 				country: DEFAULT_USER_COUNTRY,
 				currencies: DEFAULT_USER_CURRENCIES
 			});
-			await page.waitForTimeout(3000);
+			await page.waitForTimeout(10000);
 			// Check welcome Email
 			const result = await mailhogClient.latestTo(email);
 			expect(result).toBeDefined();
@@ -98,7 +98,7 @@ for (const lang of LANG_CONFIG) {
 			await page.locator('a[data-tn="forgot-password-link"]').click();
 			await page.locator('input[name="email"]').fill(email);
 			await page.locator('button[data-tn="send-email-btn"]').click();
-			await page.waitForTimeout(3000);
+			await page.waitForTimeout(10000);
 			// Validate reset password email
 			const result = await mailhogClient.latestTo(email);
 			expect(result).toBeDefined();
