@@ -6,22 +6,22 @@ import i18n from '@/locales';
 import UserService from '@/services/user.service';
 
 export const ForgotPasswordBody = Type.Object({
-	email: Type.Required(Type.String({ format: 'email' })),
-	baseUrl: Type.Required(Type.String()),
+	email: Type.String({ format: 'email' }),
+	baseUrl: Type.String(),
 });
 
 export const UserRegistration = Type.Object({
-	name: Type.Required(Type.String()),
-	email: Type.Required(Type.String({ format: 'email' })),
-	password: Type.Required(Type.String()),
+	name: Type.String(),
+	email: Type.String({ format: 'email' }),
+	password: Type.String()
 });
 
 const User = Type.Object({
 	id: Type.Readonly(Type.String()),
-	name: Type.Required(Type.String()),
-	email: Type.Required(Type.String({ format: 'email' })),
+	name: Type.String(),
+	email: Type.String({ format: 'email' }),
 	avatar: Type.Readonly(Type.Union([Type.String(), Type.Null()])),
-	country: Type.Required(Type.String()),
+	country: Type.String(),
 });
 
 const auth: any = async (fastify: any): Promise<void> => {
