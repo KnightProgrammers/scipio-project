@@ -1,6 +1,6 @@
 {
   "name": "@knightprogrammers/scipio-infra",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "main": "src/index.js",
   "bin": {
     "scipio-infra": "./src/index.js"
