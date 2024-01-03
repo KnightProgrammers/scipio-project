@@ -71,3 +71,5 @@ jobs:
         shell: bash
         run: |
           gh pr create --base ${{ github.ref_name }} --head ${{ steps.temp_branch.outputs.value }} --title "Maint: Infra Lib Release" --body ""
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
