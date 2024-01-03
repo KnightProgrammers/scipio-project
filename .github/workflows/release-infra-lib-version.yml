@@ -1,17 +1,7 @@
 name: Release Infra Lib version
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
-    inputs:
-      type:
-        type: choice
-        description: Type of Release
-        options:
-          - major
-          - minor
-          - patch
-        default: patch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,14 +9,10 @@ concurrency:
 
 permissions:
   packages: write
-  contents: write
-  repository-projects: write
-  pull-requests: write
-  actions: write
 
 jobs:
   release-new-version:
-    name: ""
+    name: "Release New Version"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -44,39 +30,7 @@ jobs:
         run:  npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Increase version
-        run:  npm version ${{inputs.type}}
       - name: Publish version
         run:  npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Config git user
-        shell: bash
-        run: |
-          git config --global user.name "${GITHUB_ACTOR}"
-          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Build temporary branch name
-        id: temp_branch
-        shell: bash
-        run: |
-          TEMP_BRANCH_PREFIX="infra-version_${{ github.run_id }}-${{ github.run_attempt }}"
-          echo "value=$TEMP_BRANCH_PREFIX" >> $GITHUB_OUTPUT
-      - name: Commit and push the changes to a temporary branch
-        shell: bash
-        run: |
-          git checkout -b ${{ steps.temp_branch.outputs.value }}
-          git add --all
-          git commit -m "Maint: Upgrade version"
-          git push -u origin ${{ steps.temp_branch.outputs.value }}
-      - name: Create Pull Request
-        shell: bash
-        run: |
-          gh pr create --base ${{ github.ref_name }} --head ${{ steps.temp_branch.outputs.value }} --title "Maint: Infra Lib Release" --body ""
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Trigger CI for the new PR
-        shell: bash
-        run: |
-          gh workflow run on-pr-continuous-integration.yml --ref ${{ steps.temp_branch.outputs.value }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
