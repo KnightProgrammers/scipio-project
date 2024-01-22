@@ -33,7 +33,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@knightprogrammers'
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: projects/graphql-server/node_modules
           key: graphql-server-node_modules-${{hashFiles('package-lock.json')}}
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: 20
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: projects/client/node_modules
           key: client-node_modules-${{hashFiles('package-lock.json')}}
@@ -87,7 +87,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@knightprogrammers'
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: projects/db-seed/node_modules
           key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
@@ -112,7 +112,7 @@ jobs:
         with:
           node-version: 20
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: packages/infra/node_modules
           key: infra-node_modules-${{hashFiles('package-lock.json')}}
@@ -135,7 +135,7 @@ jobs:
         with:
           node-version: 20
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: tests/e2e-tests/node_modules
           key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}
@@ -161,7 +161,7 @@ jobs:
           scope: '@knightprogrammers'
           always-auth: true
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path:  projects/cron-jobs/node_modules
           key: cron-jobs-node_modules-${{hashFiles('package-lock.json')}}
@@ -189,7 +189,7 @@ jobs:
           scope: '@knightprogrammers'
           always-auth: true
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path:  projects/data-cleaner/node_modules
           key: data-cleaner-node_modules-${{hashFiles('package-lock.json')}}
@@ -217,7 +217,7 @@ jobs:
           scope: '@knightprogrammers'
           always-auth: true
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path:  projects/cron-jobs/node_modules
           key: cron-jobs-node_modules-${{hashFiles('package-lock.json')}}
@@ -256,7 +256,7 @@ jobs:
         with:
           node-version: 20
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: tests/e2e-tests/node_modules
           key: e2e-tests-node_modules-${{hashFiles('package-lock.json')}}

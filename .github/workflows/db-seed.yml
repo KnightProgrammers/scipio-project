@@ -34,7 +34,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@knightprogrammers'
       - name: Cache DB Seed node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: projects/db-seed/node_modules
           key: db-seed-node_modules-${{hashFiles('package-lock.json')}}
