@@ -445,7 +445,7 @@
     "expensePaymentType": {
         "CASH": "Cash",
         "CREDIT_CARD": "Credit Card",
-        "BANK_ACCOUNT": "Cuenta de Banco"
+        "BANK_ACCOUNT": "Bank Account"
     },
     "creditCardStatementPaymentType": {
         "TOTAL": "Total",
