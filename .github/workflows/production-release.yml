@@ -20,7 +20,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  
+
   deploy-services:
     name: "Deploy Services"
     runs-on: ubuntu-latest
@@ -79,14 +79,4 @@ jobs:
         with:
           environment: production
           working_directory: './projects/client/'
-      - name: Create Sentry release for Server
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "scipio-finances"
-          SENTRY_PROJECT: ${{ secrets.SENTRY_SERVER_PROJECT }}
-          SENTRY_URL: https://sentry.io/
-        with:
-          environment: production
-          working_directory: './projects/graphql-server/'
 
