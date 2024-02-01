@@ -22,7 +22,7 @@
         "@jest/globals": "29.7.0",
         "@size-limit/preset-small-lib": "11.0.2",
         "@tsconfig/recommended": "1.0.3",
-        "@types/jest": "29.5.11",
+        "@types/jest": "29.5.12",
         "@types/luxon": "3.4.2",
         "@types/node-cron": "3.0.11",
         "@types/nodemailer": "6.4.14",
