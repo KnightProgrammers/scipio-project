@@ -20,7 +20,7 @@
     "@fastify/type-provider-typebox": "4.0.0",
     "@knightprogrammers/scpio-db-schemas": "1.4.0",
     "@sinclair/typebox": "0.32.13",
-    "bullmq": "5.1.5",
+    "bullmq": "5.1.6",
     "fastify": "4.25.2",
     "fastify-cli": "6.0.1",
     "fastify-plugin": "4.5.1",
