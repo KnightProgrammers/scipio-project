@@ -26,7 +26,7 @@
     "fastify-plugin": "4.5.1",
     "firebase-admin": "12.0.0",
     "gravatar": "1.8.2",
-    "i18next": "23.7.20",
+    "i18next": "23.8.2",
     "luxon": "3.4.4",
     "mercurius": "13.3.3",
     "mercurius-auth": "5.0.0",
