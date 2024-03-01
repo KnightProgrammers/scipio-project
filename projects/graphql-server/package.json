@@ -39,7 +39,7 @@
     "@types/node": "20.11.19",
     "@types/tap": "15.0.11",
     "@typescript-eslint/eslint-plugin": "7.0.1",
-    "@typescript-eslint/parser": "7.0.1",
+    "@typescript-eslint/parser": "7.1.0",
     "concurrently": "8.2.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
