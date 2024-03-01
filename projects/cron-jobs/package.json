@@ -35,7 +35,7 @@
     },
     "dependencies": {
         "@knightprogrammers/scpio-db-schemas": "1.4.0",
-        "bullmq": "5.2.1",
+        "bullmq": "5.4.1",
         "dotenv": "16.4.4",
         "luxon": "3.4.4",
         "mongoose": "8.1.3",
