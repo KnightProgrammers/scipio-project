@@ -18,7 +18,7 @@
     "@fullcalendar/interaction": "6.1.11",
     "@fullcalendar/react": "6.1.11",
     "@fullcalendar/timegrid": "6.1.11",
-    "@reduxjs/toolkit": "2.2.2",
+    "@reduxjs/toolkit": "2.2.3",
     "@sentry/integrations": "7.109.0",
     "@sentry/react": "7.109.0",
     "@sentry/vite-plugin": "2.16.0",
